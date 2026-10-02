@@ -14,6 +14,39 @@ export interface MockCode {
 
 export const badgeText = "Demo · mock data";
 
+// Q3 and Q5 [MICHAEL 2026-10-02]
+export const demoTitle = "See zzThis in action.";
+
+export const demoLead =
+  "A person writes a code; a phone connects it to a record and a next step.";
+
+export const demoPrototypesHeading = "Current prototypes";
+
+export const demoPrototypeLinks: readonly {
+  name: string;
+  href: string;
+  text: string;
+}[] = [
+  {
+    name: "zzthing.com",
+    href: "https://zzthing.com",
+    text: "Broader showcase.",
+  },
+  {
+    name: "zzthat.com",
+    href: "https://zzthat.com",
+    text: "Simpler scanner and creator exploration.",
+  },
+];
+
+export const demoPlannedApp =
+  "Planned public app: zzThat will be a free app for web, Android, and iOS at zzthat.com.";
+
+export const demoTryHeading = "Try a workflow";
+
+export const demoTryText =
+  "Mark, read, and link a code below; then see the photo-to-action concept.";
+
 export const demoIntro =
   "This is a scripted demonstration. No recognition runs; every result is prewritten mock data.";
 

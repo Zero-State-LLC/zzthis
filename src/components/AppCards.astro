@@ -3,6 +3,7 @@ import { applications, applicationsHome } from "../content/applications";
 import { images } from "../content/images";
 import { objectPosition } from "../lib/image";
 import { url } from "../lib/url";
+import { conceptLabels } from "../content/labels";
 ---
 
 <div class="apps">
@@ -30,6 +31,9 @@ import { url } from "../lib/url";
                 ))}
               </div>
               <div class="apps__text">
+                {app.homeImages.some(
+                  (id) => images[id].status === "concept",
+                ) && <p class="concept-tag">{conceptLabels.standalone}</p>}
                 <h3>{app.title}</h3>
                 <p class="caption">{app.story}</p>
               </div>

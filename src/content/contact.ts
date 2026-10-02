@@ -17,7 +17,8 @@ export interface Prototype {
 
 export const aboutPage = {
   title: "About zzThis",
-  intro: "Michael Chung is the founder and project lead.",
+  intro:
+    "A code a person can write anywhere, linked to a digital record and the next work.",
   contactCardHeading: "Contact",
   contactCardText: "Invite collaboration and test partners.",
   explorationsHeading: "Current explorations",
@@ -42,6 +43,6 @@ export const prototypes: readonly Prototype[] = [
   {
     name: "zzthat.com",
     href: "https://zzthat.com",
-    text: "Simpler scanner/creator exploration.",
+    text: "Scanner/creator prototype; planned free web, Android, and iOS app.",
   },
 ];

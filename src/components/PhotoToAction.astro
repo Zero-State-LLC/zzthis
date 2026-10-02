@@ -4,6 +4,7 @@ import Series from "./Series.astro";
 import ConceptLabel from "./ConceptLabel.astro";
 import { images } from "../content/images";
 import { photoToAction } from "../content/workflows";
+import { conceptLabels } from "../content/labels";
 
 interface Props {
   headingLevel?: 3 | 4;
@@ -15,7 +16,7 @@ const { headingLevel = 3, showConceptLabel = true } = Astro.props;
 
 <div class="pta">
   <p>{photoToAction.intro}</p>
-  {showConceptLabel && <ConceptLabel />}
+  {showConceptLabel && <ConceptLabel text={conceptLabels.group} />}
   <ol class="pta__sequence" aria-label={photoToAction.sequenceLabel}>
     {photoToAction.sequence.map((step) => (
       <li>

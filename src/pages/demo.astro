@@ -3,6 +3,13 @@ import BaseLayout from "../layouts/BaseLayout.astro";
 import {
   badgeText,
   demoIntro,
+  demoLead,
+  demoPlannedApp,
+  demoPrototypeLinks,
+  demoPrototypesHeading,
+  demoTitle,
+  demoTryHeading,
+  demoTryText,
   flowAStepIds,
   flowASteps,
   flowATitle,
@@ -11,13 +18,32 @@ import {
 } from "../content/demo";
 ---
 
-<BaseLayout title="zzThis demo | zzThis" description={demoIntro}>
+<BaseLayout title="See zzThis in action | zzThis" description={demoIntro}>
   <div class="container demo">
     <p class="eyebrow demo-eyebrow">
       <span class="regmark"></span>
       {badgeText}
     </p>
-    <h1>zzThis demo</h1>
+    <h1>{demoTitle}</h1>
+    <p class="demo-lead">{demoLead}</p>
+
+    <section class="demo-context">
+      <h2>{demoPrototypesHeading}</h2>
+      <ul class="demo-prototypes">
+        {demoPrototypeLinks.map((site) => (
+          <li>
+            <a class="code" href={site.href}>
+              {site.name}
+            </a>
+            : {site.text}
+          </li>
+        ))}
+      </ul>
+      <p>{demoPlannedApp}</p>
+    </section>
+
+    <p class="eyebrow demo-try">{demoTryHeading}</p>
+    <p>{demoTryText}</p>
     <p class="demo-intro">{demoIntro}</p>
 
     <div id="demo-fallback" class="demo-fallback">
@@ -56,6 +82,30 @@ import {
     flex-direction: column;
     gap: var(--s-5);
     padding-block: var(--s-7);
+  }
+
+  .demo-lead {
+    font-size: var(--fs-h3);
+    line-height: 1.4;
+    color: var(--text-muted);
+  }
+
+  .demo-context {
+    display: flex;
+    flex-direction: column;
+    gap: var(--s-3);
+  }
+
+  .demo-prototypes {
+    list-style: none;
+    display: grid;
+    gap: var(--s-2);
+  }
+
+  .demo-prototypes a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
   }
 
   .demo-eyebrow {

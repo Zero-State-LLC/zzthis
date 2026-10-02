@@ -3,15 +3,23 @@ import Card from "./Card.astro";
 import { coreIdentity } from "../content/workflows";
 import { images } from "../content/images";
 import { url } from "../lib/url";
+import ConceptLabel from "./ConceptLabel.astro";
+import { conceptLabels } from "../content/labels";
 
 interface Props {
   headingLevel?: 3 | 4;
+  showConceptLabel?: boolean;
 }
 
-const { headingLevel = 3 } = Astro.props;
+const { headingLevel = 3, showConceptLabel = false } = Astro.props;
 ---
 
 <div class="steps">
+  <p class="steps__example">
+    {`${coreIdentity.exampleLabel}: `}
+    <span class="code">{coreIdentity.exampleCode}</span>
+  </p>
+  {showConceptLabel && <ConceptLabel text={conceptLabels.group} />}
   <ol class="steps__list">
     {coreIdentity.steps.map((step) => (
       <li>
