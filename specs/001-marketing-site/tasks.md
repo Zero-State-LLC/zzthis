@@ -28,7 +28,7 @@ Workflows for every implementing task: anti-slop-code, production-systems, googl
 
 ## Phase 5: US4, Demo (P2)
 
-- [ ] T010 Remove "Did you mean" suggestions from Flow B. A miss returns "No match" without revealing codes. Update `src/lib/resolver.ts`, `src/content/demo.ts`, tests, and `docs/SPEC.md` Section 4.4. Closes issue #12. Depends on Q20 only for wording; the security rule already stands (constitution III).
+- [x] T010 Remove "Did you mean" suggestions from Flow B. A miss returns "No match" without revealing codes. Update `src/lib/resolver.ts`, `src/content/demo.ts`, tests, and `docs/SPEC.md` Section 4.4. Closes issue #12. Depends on Q20 only for wording; the security rule already stands (constitution III).
 - [ ] T011 [P] Align demo handling verbs once Q21 is answered.
 
 ## Phase 6: US5, Contact (P1)

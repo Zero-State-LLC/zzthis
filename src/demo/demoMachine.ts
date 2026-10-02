@@ -5,7 +5,7 @@ import {
   type HandlingOption,
 } from "../content/demo";
 import type { ParseFailure } from "../lib/grammar";
-import { resolve, type Suggestion } from "../lib/resolver";
+import { resolve } from "../lib/resolver";
 
 export interface FlowAState {
   step: FlowAStepId;
@@ -112,7 +112,6 @@ export function stepAnnouncement(step: FlowAStepId): string {
 export type FlowBView<T> =
   | { state: "B0" }
   | { state: "B1"; code: T }
-  | { state: "B2"; suggestions: readonly Suggestion<T>[] }
   | { state: "B3" }
   | { state: "B4"; reason: ParseFailure };
 
@@ -126,15 +125,9 @@ export function lookup<T extends { code: string }>(
   switch (result.kind) {
     case "resolved":
       return { state: "B1", code: result.code };
-    case "suggest":
-      return { state: "B2", suggestions: result.suggestions };
     case "abstain-unknown":
       return { state: "B3" };
     case "abstain-malformed":
       return { state: "B4", reason: result.reason };
   }
-}
-
-export function confirmSuggestion<T>(code: T): FlowBView<T> {
-  return { state: "B1", code };
 }
