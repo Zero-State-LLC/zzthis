@@ -581,25 +581,32 @@ Fonts are self-hosted WOFF2 files in `public/fonts` (Latin subset). Spacing toke
 
 **Stack:** Astro (static output), INFERRED. Astro builds static HTML with no client JavaScript by default, so only the demo ships JavaScript, as one TypeScript island. The build makes no runtime external requests and includes no analytics. The site has no service worker. IBM Plex is self-hosted through `@fontsource` packages [OPERATOR 2026-10-01].
 
-**Hosting:** GitHub Pages, deployed from the public repo `Zero-State-LLC/zzthis` (organization plan Team). The repo and the Pages site are both public, so nothing private (source documents, costs, credentials) may be committed. The project-site URL is `https://zero-state-llc.github.io/zzthis/`. The site has no custom domain, no DNS, and no Vercel [OPERATOR 2026-10-01].
+**Hosting:** GitHub Pages, deployed from the private repo `Zero-State-LLC/zzthis` (organization plan Team). The repo became private on 2026-10-02 [OPERATOR 2026-10-02]. On the Team plan the Pages site stays publicly visible, so rendered copy still follows the public-site rules. Repo access needs an organization seat; outside collaborators on a private repo use a paid seat. Source documents, costs, and credentials still stay out of the repo. The project-site URL is `https://zero-state-llc.github.io/zzthis/`. The site has no custom domain, no DNS, and no Vercel [OPERATOR 2026-10-01].
 
 **Base path:** `astro.config.mjs` sets `output: 'static'`, `site: 'https://zero-state-llc.github.io'`, and `base: '/zzthis/'`. Every internal link and image URL is built from `import.meta.env.BASE_URL`. The source contains no absolute root paths such as `/images/...` or `/demo` [OPERATOR 2026-10-01]. A small helper in `src/lib/url.ts` that joins `BASE_URL` with a relative path keeps this consistent (INFERRED).
 
 ```
 .github/workflows/
-  ci.yml        (from PR #1; do not edit or duplicate)
-  pages.yml     (deploy)
-  site-ci.yml   (optional: typecheck and test)
+  ci.yml                   (required `build` check; do not edit or duplicate)
+  pages.yml                (deploy)
+  site-ci.yml              (typecheck and test)
+  free-security-scan.yml   (security scan)
+  project-collaboration.yml (project board automation)
+.specify/memory/           constitution.md
+specs/                     001 to 004 feature specs, README.md, analysis
 src/
   pages/        index.astro how-it-works.astro applications.astro about.astro contact.astro demo.astro 404.astro
-  components/   Card.astro Series.astro SwipeRow.astro ComparisonCards.astro Steps.astro
-                AdvisorCard.astro ConceptLabel.astro ThemeToggle.astro Header.astro Footer.astro
-  demo/         Demo.ts (island) demoMachine.ts
-  lib/          grammar.ts resolver.ts url.ts
+  components/   AdvisorCard AppCards Card ComparisonCards ConceptLabel Eyebrow Footer Header
+                PhotoToAction Series Steps SwipeRow ThemeToggle (.astro)
+  layouts/      BaseLayout.astro
+  demo/         Demo.ts (island) demoMachine.ts dom.ts renderA.ts renderB.ts
+  lib/          grammar.ts image.ts resolver.ts url.ts
   content/      *.ts (Section 3.7)
   styles/       tokens.css base.css
-tests/          grammar.test.ts resolver.test.ts demoMachine.test.ts url.test.ts
-public/images/  (branch `assets`)
+scripts/        check-dist.mjs check-agents-md.sh security-scan.sh
+tests/          content demo-guard demoMachine grammar image resolver url (.test.ts)
+public/images/  optimized WebP images
+LICENSE         proprietary, all rights reserved
 package-lock.json
 ```
 
@@ -619,7 +626,7 @@ package-lock.json
 | Optional CI | `.github/workflows/site-ci.yml` may run typecheck and test on `pull_request` (Node 24, INFERRED to match `ci.yml`). It must not repeat lint or build [OPERATOR 2026-10-01]. |
 | Deploy | `.github/workflows/pages.yml` triggers on `push` to `main` and on `workflow_dispatch`. Permissions: `pages: write`, `id-token: write`, `contents: read`. Concurrency group `pages`. Steps: `npm ci`, `npm run build`, `actions/configure-pages`, `actions/upload-pages-artifact` (path `dist`), and `actions/deploy-pages`. Pull requests do not deploy [OPERATOR 2026-10-01]. |
 | Docs | Repo `AGENTS.md` says start at `README.md`, then the spec, which lives at `docs/SPEC.md` [OPERATOR 2026-10-01] |
-| Secrets | No passwords, tokens, the tinyurl password, or private source documents in the repo |
+| Secrets | No passwords, tokens, or private source documents in the repo |
 
 ## 7. Workflows
 

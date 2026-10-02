@@ -13,8 +13,8 @@
 
 [Live site](https://zero-state-llc.github.io/zzthis/) · [Demo](https://zero-state-llc.github.io/zzthis/demo/) · [Project board](https://github.com/orgs/Zero-State-LLC/projects/24) · [Specs](specs/README.md) · [Spec source](docs/SPEC.md)
 
-[![build](https://img.shields.io/github/actions/workflow/status/Zero-State-LLC/zzthis/ci.yml?branch=main&label=build)](https://github.com/Zero-State-LLC/zzthis/actions/workflows/ci.yml)
-[![Pages deploy](https://img.shields.io/github/actions/workflow/status/Zero-State-LLC/zzthis/pages.yml?branch=main&label=pages)](https://github.com/Zero-State-LLC/zzthis/actions/workflows/pages.yml)
+[![build](https://github.com/Zero-State-LLC/zzthis/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/Zero-State-LLC/zzthis/actions/workflows/ci.yml)
+[![Pages deploy](https://github.com/Zero-State-LLC/zzthis/actions/workflows/pages.yml/badge.svg?branch=main)](https://github.com/Zero-State-LLC/zzthis/actions/workflows/pages.yml)
 [![Node 24](https://img.shields.io/badge/node-24-1c1b19)](package.json)
 [![Astro](https://img.shields.io/badge/astro-7-1c1b19)](https://astro.build/)
 [![status: prototype](https://img.shields.io/badge/status-prototype-f85000)](#status-and-disclaimer)
@@ -24,7 +24,7 @@ Topics: `human-readable-codes` `handwritten-codes` `logistics` `astro` `github-p
 
 zzThis is a human-readable, human-writable code that works alongside barcodes and QR codes. A person writes a code such as `zz-copper-lantern-sky-zz` on tape, a crate, a parcel, or a sign, links it to a digital record, and finds that record later.
 
-This repository holds the marketing site and a scripted click-through demo. It is a static [Astro](https://astro.build/) site published on GitHub Pages under `/zzthis/`.
+This repository holds the marketing site and a scripted click-through demo. It is a static [Astro](https://astro.build/) site published on GitHub Pages under `/zzthis/`. The repository is private; the published site is public.
 
 ## Contents
 
@@ -198,7 +198,7 @@ Track work on the [project board](https://github.com/orgs/Zero-State-LLC/project
 ## Contributing
 
 1. Read [`AGENTS.md`](AGENTS.md) and the active file in [`intent/`](intent/).
-2. For non-trivial work, start from the relevant spec in [`specs/`](specs/README.md). Branch from `main` and open a pull request. `main` is protected: direct pushes are blocked, the `build` check must pass, and one approving review is required. [`CODEOWNERS`](.github/CODEOWNERS) requests reviewers.
+2. Repository access requires a seat in the Zero-State-LLC organization. For non-trivial work, start from the relevant spec in [`specs/`](specs/README.md). Branch from `main` and open a pull request. `main` is protected: direct pushes are blocked, the `build` check must pass, and one approving review is required. [`CODEOWNERS`](.github/CODEOWNERS) requests reviewers.
 3. Before you push, run `npm run lint`, `npm run typecheck`, `npm run test`, and `npm run build` on Node 24.
 4. Edit copy in `src/content/`, not in pages. Keep product claims inside what [`docs/SPEC.md`](docs/SPEC.md) supports.
 5. Use the issue templates for bugs, features, and questions.
