@@ -8,7 +8,7 @@ Harness adapters (`CLAUDE.md`, optional `CODEX.md`) only point here.
 ## Intent
 
 Read the active intent under [`intent/`](intent/) before editing.
-Next stage is `spec.md` — do not skip to code.
+Specs live in [`specs/`](specs/) (Spec Kit). Do not skip to code.
 
 If the change is non-trivial and no intent exists, draft one from
 [`intent/_TEMPLATE.md`](intent/_TEMPLATE.md) and wait for a human to
@@ -66,7 +66,7 @@ Pull `--ff-only` before trusting a local copy.
 
 Name only skills that already exist. Do not invent skills or bots.
 
-See `spec.md` `## Workflows` for this repo's named skills and Actions.
+See the `## Workflows` section in each `specs/*/spec.md` for this repo's named skills and Actions.
 Defaults when that section is empty: `anti-slop-code`, `production-systems`,
 `google-developer-style`.
 
