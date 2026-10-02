@@ -1,0 +1,97 @@
+---
+import { images, type ImageId } from "../content/images";
+import type { ImageMeta } from "../content/types";
+import { objectPosition } from "../lib/image";
+import { url } from "../lib/url";
+
+interface Props {
+  image: ImageId | ImageMeta;
+  title: string;
+  caption?: string;
+  headingLevel?: 2 | 3 | 4;
+  loading?: "lazy" | "eager";
+  numeral?: string;
+  accent?: boolean;
+}
+
+const {
+  image,
+  title,
+  caption,
+  headingLevel = 3,
+  loading = "lazy",
+  numeral,
+  accent = false,
+} = Astro.props;
+
+const meta: ImageMeta = typeof image === "string" ? images[image] : image;
+const Heading = `h${headingLevel}` as "h2" | "h3" | "h4";
+---
+
+<div class:list={["card", "mount", { "mount--accent": accent }]}>
+  <div class="mount__shadow" aria-hidden="true"></div>
+  <div class="mount__edge">
+    <div class="mount__body">
+      <img
+        class="card__image"
+        src={url(meta.src)}
+        width={meta.width}
+        height={meta.height}
+        alt={meta.alt}
+        loading={loading}
+        decoding="async"
+        style={`object-position: ${objectPosition(meta.focal)}`}
+      />
+      <div class="card__text">
+        {numeral && <span class="card__numeral">{numeral}</span>}
+        <Heading class="card__title">{title}</Heading>
+        {caption && <p class="card__caption">{caption}</p>}
+        <slot />
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  .card__image {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 1.618 / 1;
+    object-fit: cover;
+  }
+
+  .card__text {
+    display: flex;
+    flex-direction: column;
+    gap: var(--s-2);
+    padding: var(--s-4) var(--s-4) var(--s-5);
+  }
+
+  .card__numeral {
+    font-family: var(--font-mono);
+    font-size: var(--fs-label);
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    color: var(--text-muted);
+  }
+
+  .card__numeral::before {
+    content: "";
+    display: inline-block;
+    width: 6px;
+    height: 6px;
+    margin-inline-end: var(--s-2);
+    vertical-align: middle;
+    background: var(--accent);
+  }
+
+  .card__title {
+    font-size: var(--fs-h3);
+  }
+
+  .card__caption {
+    font-size: var(--fs-caption);
+    line-height: 1.45;
+    color: var(--text-muted);
+  }
+</style>

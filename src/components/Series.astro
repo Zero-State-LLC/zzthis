@@ -1,0 +1,47 @@
+---
+interface Props {
+  columns: "2" | "3" | "4";
+  ordered?: boolean;
+  label?: string;
+}
+
+const { columns, ordered = false, label } = Astro.props;
+const List = ordered ? "ol" : "ul";
+---
+
+<List class:list={["series", `series--${columns}`]} aria-label={label}>
+  <slot />
+</List>
+
+<style>
+  .series {
+    list-style: none;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    grid-auto-rows: 1fr;
+    gap: var(--s-5);
+    padding: 0;
+  }
+
+  .series > :global(li) {
+    min-width: 0;
+  }
+
+  @media (min-width: 600px) {
+    .series {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  @media (min-width: 900px) {
+    .series--3 {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+  }
+
+  @media (min-width: 1200px) {
+    .series--4 {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+  }
+</style>

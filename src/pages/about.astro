@@ -1,0 +1,252 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import AdvisorCard from "../components/AdvisorCard.astro";
+import ConceptLabel from "../components/ConceptLabel.astro";
+import Eyebrow from "../components/Eyebrow.astro";
+import Series from "../components/Series.astro";
+import { aboutPage, mailto, prototypes } from "../content/contact";
+import { advisors, founder, peopleHeadings } from "../content/people";
+import { images } from "../content/images";
+import { contactEmail } from "../content/navigation";
+import { objectPosition } from "../lib/image";
+import { url } from "../lib/url";
+
+const handwritten = [
+  images["hw-hackerdojo"],
+  images["hw-helloworld"],
+  images["hw-roto"],
+];
+---
+
+<BaseLayout title="About zzThis" description={aboutPage.intro} current="about">
+  <div class="container">
+    <section class="row row--intro">
+      <div class="intro">
+        <h1>{aboutPage.title}</h1>
+        <p class="intro__lead">{aboutPage.intro}</p>
+      </div>
+      <div class="mount mount--accent">
+        <div class="mount__shadow" aria-hidden="true"></div>
+        <div class="mount__edge">
+          <div class="mount__body panel">
+            <p class="eyebrow">{aboutPage.contactCardHeading}</p>
+            <a class="code" href={mailto}>
+              {contactEmail}
+            </a>
+            <p class="caption">{aboutPage.contactCardText}</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <Eyebrow index="01" />
+      <h2>{aboutPage.explorationsHeading}</h2>
+      <ConceptLabel text={aboutPage.prototypeLabel} />
+      <Series columns="2">
+        {prototypes.map((site) => (
+          <li>
+            <div class="mount">
+              <div class="mount__shadow" aria-hidden="true" />
+              <div class="mount__edge">
+                <div class="mount__body panel">
+                  <h3>
+                    <a class="code" href={site.href}>
+                      {site.name}
+                    </a>
+                  </h3>
+                  <p class="caption">{site.text}</p>
+                </div>
+              </div>
+            </div>
+          </li>
+        ))}
+      </Series>
+    </section>
+
+    <section class="section">
+      <Eyebrow index="02" />
+      <h2>{peopleHeadings.founder}</h2>
+      <div class="row row--founder">
+        <div class="mount founder-tile">
+          <div class="mount__shadow" aria-hidden="true"></div>
+          <div class="mount__edge">
+            <div class="mount__body tile" aria-hidden="true">
+              {founder.initials}
+            </div>
+          </div>
+        </div>
+        <div class="bio">
+          <h3>{founder.name}</h3>
+          <p class="eyebrow">{founder.role}</p>
+          <p>{founder.bio}</p>
+          <a
+            class="tap"
+            href={founder.profileUrl}
+            aria-label={`LinkedIn profile for ${founder.name}`}
+          >
+            LinkedIn
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <Eyebrow index="03" />
+      <h2>{peopleHeadings.advisors}</h2>
+      <Series columns="3">
+        {advisors.map((person) => (
+          <li>
+            <AdvisorCard person={person} />
+          </li>
+        ))}
+      </Series>
+    </section>
+
+    <section class="section">
+      <Eyebrow index="04" />
+      <h2>{aboutPage.handwrittenHeading}</h2>
+      <p class="caption">{aboutPage.handwrittenLabel}</p>
+      <Series columns="3">
+        {handwritten.map((photo) => (
+          <li>
+            <figure class="mount">
+              <div class="mount__shadow" aria-hidden="true" />
+              <div class="mount__edge">
+                <div class="mount__body">
+                  <img
+                    class="photo"
+                    src={url(photo.src)}
+                    width={photo.width}
+                    height={photo.height}
+                    alt={photo.alt}
+                    loading="lazy"
+                    decoding="async"
+                    style={`object-position: ${objectPosition(photo.focal)}`}
+                  />
+                  <figcaption class="panel">
+                    <span class="code">{photo.title}</span>
+                    <span class="caption">{photo.caption}</span>
+                  </figcaption>
+                </div>
+              </div>
+            </figure>
+          </li>
+        ))}
+      </Series>
+    </section>
+
+    <section class="section">
+      <Eyebrow index="05" />
+      <h2>{aboutPage.stageHeading}</h2>
+      <p>{aboutPage.stageText}</p>
+    </section>
+
+    <div class="pair">
+      <section class="section">
+        <Eyebrow index="06" />
+        <h2>{aboutPage.locationHeading}</h2>
+        <p>{aboutPage.locationText}</p>
+      </section>
+      <section class="section">
+        <Eyebrow index="07" />
+        <h2>{aboutPage.nextHeading}</h2>
+        <p>
+          <a href={mailto}>{aboutPage.nextText}</a>
+        </p>
+      </section>
+    </div>
+  </div>
+</BaseLayout>
+
+<style>
+  .row {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--s-5);
+  }
+
+  .row--intro {
+    padding-block-start: var(--s-6);
+  }
+
+  .intro {
+    display: flex;
+    flex-direction: column;
+    gap: var(--s-4);
+  }
+
+  .intro__lead {
+    font-size: var(--fs-h3);
+    line-height: 1.4;
+    color: var(--text-muted);
+  }
+
+  .panel {
+    display: flex;
+    flex-direction: column;
+    gap: var(--s-2);
+    padding: var(--s-4) var(--s-4) var(--s-5);
+  }
+
+  .founder-tile {
+    width: 100%;
+    max-width: 220px;
+    height: auto;
+  }
+
+  .tile {
+    display: grid;
+    place-items: center;
+    aspect-ratio: 1 / 1;
+    font-family: var(--font-mono);
+    font-size: 42px;
+    font-weight: 500;
+  }
+
+  .bio {
+    display: flex;
+    flex-direction: column;
+    gap: var(--s-3);
+  }
+
+  .tap {
+    align-self: flex-start;
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+  }
+
+  .photo {
+    width: 100%;
+    aspect-ratio: 3 / 4;
+    object-fit: cover;
+  }
+
+  .pair {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    column-gap: var(--s-6);
+  }
+
+  @media (min-width: 900px) {
+    .row--intro {
+      grid-template-columns: minmax(0, 1.618fr) minmax(0, 1fr);
+      align-items: start;
+      padding-block-start: var(--s-7);
+    }
+
+    .row--founder {
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1.618fr);
+      align-items: start;
+    }
+
+    .founder-tile {
+      justify-self: end;
+    }
+
+    .pair {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+</style>

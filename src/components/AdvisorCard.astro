@@ -1,0 +1,89 @@
+---
+import type { Person } from "../content/people";
+
+interface Props {
+  person: Person;
+}
+
+const { person } = Astro.props;
+const future = person.initials === undefined;
+---
+
+{future ? (
+  <div class="advisor advisor--future">
+    <div class="advisor__tile advisor__tile--future" aria-hidden="true" />
+    <div class="advisor__text">
+      <h3>{person.name}</h3>
+      <p class="caption">{person.role}</p>
+    </div>
+  </div>
+) : (
+  <div class="mount">
+    <div class="mount__shadow" aria-hidden="true" />
+    <div class="mount__edge">
+      <div class="mount__body advisor">
+        <div class="advisor__tile" aria-hidden="true">
+          <span>{person.initials}</span>
+        </div>
+        <div class="advisor__text">
+          <h3>{person.name}</h3>
+          <p class="caption">{person.role}</p>
+          {person.profileUrl && (
+            <a
+              class="advisor__link"
+              href={person.profileUrl}
+              aria-label={`LinkedIn profile for ${person.name}`}
+            >
+              LinkedIn
+            </a>
+          )}
+        </div>
+      </div>
+    </div>
+  </div>
+)}
+
+<style>
+  .advisor {
+    gap: var(--s-4);
+    padding: var(--s-4) var(--s-4) var(--s-5);
+  }
+
+  .advisor__tile {
+    display: grid;
+    place-items: center;
+    width: 110px;
+    aspect-ratio: 1 / 1;
+    border: 1px solid var(--edge);
+    background: var(--surface);
+    font-family: var(--font-mono);
+    font-size: 42px;
+    font-weight: 500;
+    letter-spacing: 0.04em;
+  }
+
+  .advisor__tile--future {
+    border-style: dashed;
+    background: transparent;
+  }
+
+  .advisor__text {
+    display: flex;
+    flex-direction: column;
+    gap: var(--s-2);
+  }
+
+  .advisor__link {
+    align-self: flex-start;
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+  }
+
+  .advisor--future {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    border: 1px dashed var(--text-muted);
+  }
+</style>

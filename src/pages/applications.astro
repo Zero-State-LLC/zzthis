@@ -1,0 +1,60 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import Card from "../components/Card.astro";
+import ConceptLabel from "../components/ConceptLabel.astro";
+import Eyebrow from "../components/Eyebrow.astro";
+import Series from "../components/Series.astro";
+import { applications, applicationsPage } from "../content/applications";
+import { images } from "../content/images";
+
+const columnsFor = (count: number): "2" | "3" => (count > 2 ? "3" : "2");
+---
+
+<BaseLayout
+  title="Applications | zzThis"
+  description={applicationsPage.intro}
+  current="applications"
+>
+  <div class="container">
+    <header class="page-head">
+      <h1>{applicationsPage.title}</h1>
+      <p>{applicationsPage.intro}</p>
+      <ConceptLabel />
+    </header>
+
+    {applications.map((app, index) => (
+      <section class="section" id={app.id}>
+        <Eyebrow index={String(index + 1).padStart(2, "0")} />
+        <h2>{app.title}</h2>
+        <p>{app.story}</p>
+        {app.pageExtra && <p>{app.pageExtra}</p>}
+        <Series columns={columnsFor(app.pageImages.length)}>
+          {app.pageImages.map((id) => (
+            <li>
+              <Card
+                image={id}
+                title={images[id].title}
+                caption={images[id].caption}
+              />
+            </li>
+          ))}
+        </Series>
+      </section>
+    ))}
+  </div>
+</BaseLayout>
+
+<style>
+  .page-head {
+    display: flex;
+    flex-direction: column;
+    gap: var(--s-4);
+    padding-block-start: var(--s-6);
+  }
+
+  @media (min-width: 900px) {
+    .page-head {
+      padding-block-start: var(--s-7);
+    }
+  }
+</style>
