@@ -1,0 +1,52 @@
+---
+import { navItems, contactEmail } from "../content/navigation";
+import { url } from "../lib/url";
+---
+
+<footer class="site-footer">
+  <div class="container footer-inner">
+    <nav aria-label="Footer">
+      <ul class="footer-nav">
+        {navItems.map((item) => (
+          <li>
+            <a href={url(item.path)}>{item.label}</a>
+          </li>
+        ))}
+        <li>
+          <a href={url("demo")}>Demo</a>
+        </li>
+      </ul>
+    </nav>
+    <p>
+      Contact: <a href={`mailto:${contactEmail}`}>{contactEmail}</a>
+    </p>
+    <p class="caption">Patent pending.</p>
+  </div>
+</footer>
+
+<style>
+  .site-footer {
+    margin-block-start: var(--section-gap);
+    border-top: 1px solid var(--edge);
+    padding-block: var(--s-6);
+  }
+
+  .footer-inner {
+    display: grid;
+    gap: var(--s-4);
+  }
+
+  .footer-nav {
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0 var(--s-5);
+  }
+
+  .footer-nav a,
+  .footer-inner p a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+  }
+</style>

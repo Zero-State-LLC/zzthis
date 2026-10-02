@@ -1,0 +1,38 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import { contactPage, mailto } from "../content/contact";
+import { contactEmail } from "../content/navigation";
+---
+
+<BaseLayout
+  title="Contact | zzThis"
+  description={contactPage.text}
+  current="contact"
+>
+  <div class="container contact">
+    <h1>{contactPage.title}</h1>
+    <p>{contactPage.text}</p>
+    <p>
+      <a class="code email" href={mailto}>
+        {contactEmail}
+      </a>
+    </p>
+    <p class="caption">{contactPage.location}</p>
+  </div>
+</BaseLayout>
+
+<style>
+  .contact {
+    display: flex;
+    flex-direction: column;
+    gap: var(--s-5);
+    padding-block-start: var(--s-7);
+  }
+
+  .email {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    font-size: var(--fs-h2);
+  }
+</style>

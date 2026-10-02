@@ -1,0 +1,27 @@
+---
+interface Props {
+  text?: string;
+}
+
+const {
+  text = "Concept renderings. The panel images on this page show intended use, not a deployed system.",
+} = Astro.props;
+---
+
+<p class="concept-label" role="note">
+  <span class="regmark" aria-hidden="true"></span>
+  <span>{text}</span>
+</p>
+
+<style>
+  .concept-label {
+    display: flex;
+    align-items: baseline;
+    gap: var(--s-3);
+    font-family: var(--font-mono);
+    font-size: var(--fs-label);
+    font-weight: 500;
+    line-height: 1.4;
+    color: var(--text-muted);
+  }
+</style>

@@ -1,0 +1,104 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import Card from "../components/Card.astro";
+import ConceptLabel from "../components/ConceptLabel.astro";
+import Eyebrow from "../components/Eyebrow.astro";
+import Series from "../components/Series.astro";
+import Steps from "../components/Steps.astro";
+import PhotoToAction from "../components/PhotoToAction.astro";
+import { coreIdentity, howItWorksPage } from "../content/workflows";
+import { images } from "../content/images";
+import { url } from "../lib/url";
+
+const page = howItWorksPage;
+---
+
+<BaseLayout
+  title="How it works | zzThis"
+  description={page.intro}
+  current="how"
+>
+  <div class="container">
+    <header class="intro">
+      <h1>{page.title}</h1>
+      <p>{page.intro}</p>
+      <ConceptLabel />
+    </header>
+
+    <section class="section">
+      <Eyebrow index="01" />
+      <h2>{page.coreHeading}</h2>
+      <p>{coreIdentity.intro}</p>
+      <Steps />
+    </section>
+
+    <section class="section">
+      <Eyebrow index="02" />
+      <h2>{page.readWays.heading}</h2>
+      <ul class="methods">
+        {page.readWays.methods.map((method) => (
+          <li>
+            <h3>{method}</h3>
+          </li>
+        ))}
+      </ul>
+      <p>{page.readWays.line}</p>
+      <Series columns="2">
+        {page.readWays.images.map((id) => (
+          <li>
+            <Card
+              image={id}
+              title={images[id].title}
+              caption={images[id].caption}
+            />
+          </li>
+        ))}
+      </Series>
+    </section>
+
+    <section class="section">
+      <Eyebrow index="03" />
+      <h2>{page.uncertain.heading}</h2>
+      <p>{page.uncertain.text}</p>
+    </section>
+
+    <section class="section">
+      <Eyebrow index="04" />
+      <h2>{page.aiHeading}</h2>
+      <PhotoToAction showConceptLabel={false} />
+    </section>
+
+    <section class="section">
+      <Eyebrow index="05" />
+      <h2>{page.publicRecord.heading}</h2>
+      <p>{page.publicRecord.text}</p>
+      <p>
+        <a href={url("demo")}>{coreIdentity.demoLinkText}</a>
+      </p>
+    </section>
+  </div>
+</BaseLayout>
+
+<style>
+  .intro {
+    display: flex;
+    flex-direction: column;
+    gap: var(--s-4);
+    padding-block-start: var(--s-6);
+  }
+
+  .methods {
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--s-3);
+  }
+
+  .methods h3 {
+    padding: var(--s-2) var(--s-4);
+    border: 1px solid var(--edge);
+    font-family: var(--font-mono);
+    font-size: var(--fs-mono);
+    font-weight: 500;
+  }
+</style>

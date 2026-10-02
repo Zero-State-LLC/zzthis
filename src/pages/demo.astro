@@ -1,0 +1,282 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import {
+  badgeText,
+  demoIntro,
+  flowAStepIds,
+  flowASteps,
+  flowATitle,
+  flowBOutcomes,
+  flowBTitle,
+} from "../content/demo";
+---
+
+<BaseLayout title="zzThis demo | zzThis" description={demoIntro}>
+  <div class="container demo">
+    <p class="eyebrow demo-eyebrow">
+      <span class="regmark"></span>
+      {badgeText}
+    </p>
+    <h1>zzThis demo</h1>
+    <p class="demo-intro">{demoIntro}</p>
+
+    <div id="demo-fallback" class="demo-fallback">
+      <h2>All steps</h2>
+      <ol class="demo-fallback__list">
+        {flowAStepIds.map((id) => (
+          <li>
+            <p class="demo-badge">{badgeText}</p>
+            <p class="eyebrow">{flowATitle}</p>
+            <h3>{flowASteps[id].name}</h3>
+            <p>{flowASteps[id].summary}</p>
+          </li>
+        ))}
+        {flowBOutcomes.map((outcome) => (
+          <li>
+            <p class="demo-badge">{badgeText}</p>
+            <p class="eyebrow">{flowBTitle}</p>
+            <h3>{outcome.name}</h3>
+            <p>{outcome.text}</p>
+          </li>
+        ))}
+      </ol>
+    </div>
+
+    <div id="demo-app" class="demo-app" hidden></div>
+  </div>
+</BaseLayout>
+
+<script>
+  import "../demo/Demo.ts";
+</script>
+
+<style is:global>
+  .demo {
+    display: flex;
+    flex-direction: column;
+    gap: var(--s-5);
+    padding-block: var(--s-7);
+  }
+
+  .demo-eyebrow {
+    display: flex;
+    align-items: center;
+    gap: var(--s-3);
+  }
+
+  .demo-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--s-2);
+    align-self: flex-start;
+    font-family: var(--font-mono);
+    font-size: var(--fs-label);
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+  }
+
+  .demo-badge::before {
+    content: "";
+    width: 6px;
+    height: 6px;
+    background: var(--accent);
+  }
+
+  .demo-fallback__list {
+    list-style: none;
+    display: grid;
+    gap: var(--s-4);
+    margin-block-start: var(--s-4);
+  }
+
+  .demo-fallback__list > li {
+    display: flex;
+    flex-direction: column;
+    gap: var(--s-2);
+    padding: var(--s-4);
+    border-inline-start: 1px solid var(--edge);
+  }
+
+  .demo-tablist {
+    display: flex;
+    flex-wrap: wrap;
+    border-bottom: 1px solid var(--edge);
+  }
+
+  .demo-tab {
+    min-height: 44px;
+    padding: var(--s-3) var(--s-4);
+    background: transparent;
+    border: 0;
+    border-bottom: 2px solid transparent;
+    cursor: pointer;
+    font-weight: 500;
+  }
+
+  .demo-tab[aria-selected="true"] {
+    border-bottom-color: var(--accent);
+  }
+
+  .demo-panel {
+    display: flex;
+    flex-direction: column;
+    gap: var(--s-5);
+    padding-block-start: var(--s-5);
+  }
+
+  .demo-flow {
+    display: flex;
+    flex-direction: column;
+    gap: var(--s-4);
+    max-width: 760px;
+  }
+
+  .demo-step {
+    animation: demo-fade 160ms ease-out;
+  }
+
+  .demo-mount-body {
+    gap: var(--s-4);
+    padding: var(--s-5) var(--s-4) var(--s-6);
+  }
+
+  .demo-step__heading:focus-visible {
+    outline-offset: 3px;
+  }
+
+  .demo-image {
+    width: 100%;
+    aspect-ratio: 1.618 / 1;
+    object-fit: cover;
+  }
+
+  .demo-code {
+    font-size: var(--fs-mono);
+  }
+
+  .demo-fields {
+    display: grid;
+    grid-template-columns: minmax(0, max-content) minmax(0, 1fr);
+    gap: var(--s-2) var(--s-4);
+  }
+
+  .demo-fields dt {
+    font-family: var(--font-mono);
+    font-size: var(--fs-label);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+  }
+
+  .demo-fields dd {
+    overflow-wrap: anywhere;
+  }
+
+  .demo-record {
+    display: flex;
+    flex-direction: column;
+    gap: var(--s-3);
+    padding: var(--s-4);
+    border: 1px solid var(--edge);
+  }
+
+  .demo-options {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--s-3);
+  }
+
+  .demo-option {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: var(--s-1);
+    min-height: 68px;
+    padding: var(--s-3) var(--s-4);
+    text-align: start;
+    background: var(--surface);
+    border: 1px solid var(--edge);
+    cursor: pointer;
+  }
+
+  .demo-option:hover {
+    border-color: var(--text-muted);
+  }
+
+  .demo-option[aria-checked="true"] {
+    border: 2px solid var(--accent);
+  }
+
+  .demo-option__name {
+    font-weight: 600;
+  }
+
+  .demo-option__hint {
+    font-family: var(--font-mono);
+    font-size: var(--fs-label);
+    color: var(--text-muted);
+  }
+
+  .demo-chip {
+    align-self: flex-start;
+    padding-inline: var(--s-4);
+  }
+
+  .demo-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--s-3);
+  }
+
+  .demo-lookup {
+    display: flex;
+    flex-direction: column;
+    gap: var(--s-2);
+  }
+
+  .demo-lookup__row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--s-3);
+  }
+
+  .demo-input {
+    flex: 1 1 220px;
+    min-width: 0;
+    min-height: 44px;
+    padding: 0 var(--s-3);
+    background: var(--surface);
+    border: 1px solid var(--text-muted);
+    border-radius: 0;
+  }
+
+  .demo-chips,
+  .demo-suggestions {
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--s-3);
+  }
+
+  .demo-chips .demo-chip {
+    font-size: var(--fs-label);
+    overflow-wrap: anywhere;
+  }
+
+  @keyframes demo-fade {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .demo-step {
+      animation: none;
+    }
+  }
+</style>

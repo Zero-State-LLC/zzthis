@@ -1,0 +1,61 @@
+:root {
+  color-scheme: light dark;
+
+  --surface: light-dark(#f4efe4, #1c1b19);
+  --mount: light-dark(#eae3d4, #262421);
+  --text: light-dark(#1c1b19, #f4efe4);
+  --text-muted: light-dark(#4a463f, #c9c2b4);
+  --edge: light-dark(#cfc6b4, #3a3732);
+  --accent: #f85000;
+  --on-accent: #1c1b19;
+  --shadow-color: light-dark(rgb(28 27 25 / 0.12), rgb(0 0 0 / 0.35));
+
+  --s-1: 4px;
+  --s-2: 6px;
+  --s-3: 10px;
+  --s-4: 16px;
+  --s-5: 26px;
+  --s-6: 42px;
+  --s-7: 68px;
+  --s-8: 110px;
+
+  --cut: 16px;
+  --gutter: 16px;
+  --section-gap: var(--s-7);
+  --measure: 68ch;
+
+  --font-sans: "IBM Plex Sans", system-ui, sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, monospace;
+
+  --fs-h1: 32px;
+  --fs-h2: 26px;
+  --fs-h3: 20px;
+  --fs-body: 17px;
+  --fs-caption: 14px;
+  --fs-mono: 15px;
+  --fs-label: 13px;
+}
+
+:root[data-theme="light"] {
+  color-scheme: light;
+}
+
+:root[data-theme="dark"] {
+  color-scheme: dark;
+}
+
+@media (min-width: 600px) {
+  :root {
+    --gutter: 26px;
+  }
+}
+
+@media (min-width: 900px) {
+  :root {
+    --fs-h1: 52px;
+    --fs-h2: 34px;
+    --fs-h3: 21px;
+    --fs-mono: 16px;
+    --section-gap: var(--s-8);
+  }
+}
