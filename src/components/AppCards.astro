@@ -102,7 +102,12 @@ import { url } from "../lib/url";
 
     .apps__media {
       flex: 0 0 38%;
-      align-content: start;
+      align-content: stretch;
+      min-height: 140px;
+    }
+
+    .apps__media img {
+      aspect-ratio: auto;
     }
   }
 </style>

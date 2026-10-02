@@ -21,7 +21,7 @@ const future = person.initials === undefined;
   <div class="mount">
     <div class="mount__shadow" aria-hidden="true" />
     <div class="mount__edge">
-      <div class="mount__body">
+      <div class="mount__body advisor">
         <div class="advisor__tile" aria-hidden="true">
           <span>{person.initials}</span>
         </div>
@@ -44,27 +44,33 @@ const future = person.initials === undefined;
 )}
 
 <style>
+  .advisor {
+    gap: var(--s-4);
+    padding: var(--s-4) var(--s-4) var(--s-5);
+  }
+
   .advisor__tile {
     display: grid;
     place-items: center;
+    width: 110px;
     aspect-ratio: 1 / 1;
-    max-height: 220px;
-    border-bottom: 1px solid var(--edge);
+    border: 1px solid var(--edge);
+    background: var(--surface);
     font-family: var(--font-mono);
     font-size: 42px;
     font-weight: 500;
-    letter-spacing: 0.06em;
+    letter-spacing: 0.04em;
   }
 
   .advisor__tile--future {
-    border-bottom: 1px dashed var(--edge);
+    border-style: dashed;
+    background: transparent;
   }
 
   .advisor__text {
     display: flex;
     flex-direction: column;
     gap: var(--s-2);
-    padding: var(--s-4) var(--s-4) var(--s-5);
   }
 
   .advisor__link {

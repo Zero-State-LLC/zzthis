@@ -10,23 +10,50 @@ import { contactEmail } from "../content/navigation";
   current="contact"
 >
   <div class="container contact">
-    <h1>{contactPage.title}</h1>
-    <p>{contactPage.text}</p>
-    <p>
-      <a class="code email" href={mailto}>
-        {contactEmail}
-      </a>
-    </p>
-    <p class="caption">{contactPage.location}</p>
+    <div class="contact__text">
+      <span class="regmark" aria-hidden="true"></span>
+      <h1>{contactPage.title}</h1>
+      <p class="contact__lead">{contactPage.text}</p>
+    </div>
+    <div class="mount mount--accent">
+      <div class="mount__shadow" aria-hidden="true"></div>
+      <div class="mount__edge">
+        <div class="mount__body contact__card">
+          <p>
+            <a class="code email" href={mailto}>
+              {contactEmail}
+            </a>
+          </p>
+          <p class="caption">{contactPage.location}</p>
+        </div>
+      </div>
+    </div>
   </div>
 </BaseLayout>
 
 <style>
   .contact {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--s-6);
+    padding-block: var(--s-7);
+  }
+
+  .contact__text {
     display: flex;
     flex-direction: column;
-    gap: var(--s-5);
-    padding-block-start: var(--s-7);
+    gap: var(--s-4);
+  }
+
+  .contact__lead {
+    font-size: var(--fs-h3);
+    line-height: 1.4;
+    color: var(--text-muted);
+  }
+
+  .contact__card {
+    gap: var(--s-4);
+    padding: var(--s-5) var(--s-5) var(--s-6);
   }
 
   .email {
@@ -34,5 +61,13 @@ import { contactEmail } from "../content/navigation";
     align-items: center;
     min-height: 44px;
     font-size: var(--fs-h2);
+  }
+
+  @media (min-width: 900px) {
+    .contact {
+      grid-template-columns: minmax(0, 1.618fr) minmax(0, 1fr);
+      align-items: end;
+      padding-block: var(--s-8);
+    }
   }
 </style>

@@ -130,7 +130,6 @@ import {
     display: flex;
     flex-direction: column;
     gap: var(--s-4);
-    max-width: 760px;
   }
 
   .demo-step {
@@ -142,8 +141,14 @@ import {
     padding: var(--s-5) var(--s-4) var(--s-6);
   }
 
+  .demo-step__heading:focus {
+    outline: none;
+  }
+
   .demo-step__heading:focus-visible {
-    outline-offset: 3px;
+    outline: none;
+    padding-inline-start: var(--s-3);
+    box-shadow: inset 3px 0 0 var(--accent);
   }
 
   .demo-image {
@@ -263,6 +268,29 @@ import {
   .demo-chips .demo-chip {
     font-size: var(--fs-label);
     overflow-wrap: anywhere;
+  }
+
+  @media (min-width: 900px) {
+    .demo-step .demo-mount-body {
+      display: grid;
+      grid-template-columns: minmax(0, 1.618fr) minmax(0, 1fr);
+      grid-auto-rows: min-content;
+      align-content: start;
+      column-gap: var(--s-6);
+      row-gap: var(--s-4);
+      padding: var(--s-5) var(--s-5) var(--s-6);
+    }
+
+    .demo-step .demo-mount-body > * {
+      grid-column: 2;
+      min-width: 0;
+    }
+
+    .demo-step .demo-mount-body > .demo-image {
+      grid-column: 1;
+      grid-row: 1 / span 12;
+      align-self: start;
+    }
   }
 
   @keyframes demo-fade {

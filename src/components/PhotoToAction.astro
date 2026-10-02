@@ -62,7 +62,7 @@ const { headingLevel = 3, showConceptLabel = true } = Astro.props;
   .pta__sequence::before {
     content: "";
     position: absolute;
-    left: 2px;
+    left: 2.5px;
     top: 0;
     bottom: 0;
     width: 1px;
@@ -79,8 +79,8 @@ const { headingLevel = 3, showConceptLabel = true } = Astro.props;
     position: absolute;
     left: calc(-1 * var(--s-5));
     top: var(--s-4);
-    width: 5px;
-    height: 5px;
+    width: 6px;
+    height: 6px;
     background: var(--accent);
   }
 
@@ -91,6 +91,10 @@ const { headingLevel = 3, showConceptLabel = true } = Astro.props;
   }
 
   @media (min-width: 900px) {
+    .pta > .pta__sequence {
+      margin-block-start: var(--s-6);
+    }
+
     .pta__sequence {
       grid-template-columns: repeat(3, minmax(0, 1fr));
       padding-left: 0;
@@ -100,14 +104,14 @@ const { headingLevel = 3, showConceptLabel = true } = Astro.props;
     .pta__sequence::before {
       left: 0;
       right: 0;
-      top: 2px;
+      top: 2.5px;
       bottom: auto;
       width: auto;
       height: 1px;
     }
 
     .pta__sequence > li::before {
-      left: 0;
+      left: var(--s-4);
       top: calc(-1 * var(--s-5));
     }
   }

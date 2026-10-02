@@ -23,7 +23,7 @@ const handwritten = [
     <section class="row row--intro">
       <div class="intro">
         <h1>{aboutPage.title}</h1>
-        <p>{aboutPage.intro}</p>
+        <p class="intro__lead">{aboutPage.intro}</p>
       </div>
       <div class="mount mount--accent">
         <div class="mount__shadow" aria-hidden="true"></div>
@@ -68,7 +68,7 @@ const handwritten = [
       <Eyebrow index="02" />
       <h2>{peopleHeadings.founder}</h2>
       <div class="row row--founder">
-        <div class="mount">
+        <div class="mount founder-tile">
           <div class="mount__shadow" aria-hidden="true"></div>
           <div class="mount__edge">
             <div class="mount__body tile" aria-hidden="true">
@@ -176,6 +176,12 @@ const handwritten = [
     gap: var(--s-4);
   }
 
+  .intro__lead {
+    font-size: var(--fs-h3);
+    line-height: 1.4;
+    color: var(--text-muted);
+  }
+
   .panel {
     display: flex;
     flex-direction: column;
@@ -183,12 +189,16 @@ const handwritten = [
     padding: var(--s-4) var(--s-4) var(--s-5);
   }
 
+  .founder-tile {
+    width: 100%;
+    max-width: 220px;
+    height: auto;
+  }
+
   .tile {
     display: grid;
     place-items: center;
     aspect-ratio: 1 / 1;
-    max-width: 260px;
-    width: 100%;
     font-family: var(--font-mono);
     font-size: 42px;
     font-weight: 500;
@@ -231,8 +241,8 @@ const handwritten = [
       align-items: start;
     }
 
-    .tile {
-      max-width: none;
+    .founder-tile {
+      justify-self: end;
     }
 
     .pair {

@@ -109,24 +109,36 @@ const heroImage = images.b;
       <AppCards />
     </section>
 
-    <div class="closing">
-      <section class="section">
-        <Eyebrow index="07" />
-        <h2>{aboutTeaser.heading}</h2>
-        <p>{aboutTeaser.text}</p>
-        <p>
-          <a href={url("about")}>{aboutTeaser.linkText}</a>
-        </p>
+    <div class="closing section">
+      <section class="mount">
+        <div class="mount__shadow" aria-hidden="true"></div>
+        <div class="mount__edge">
+          <div class="mount__body closing__panel">
+            <Eyebrow index="07" />
+            <h2>{aboutTeaser.heading}</h2>
+            <p>{aboutTeaser.text}</p>
+            <p>
+              <a class="closing__link" href={url("about")}>
+                {aboutTeaser.linkText}
+              </a>
+            </p>
+          </div>
+        </div>
       </section>
-      <section class="section" id="contact">
-        <Eyebrow index="08" />
-        <h2>{contactAction.heading}</h2>
-        <p>{contactAction.text}</p>
-        <p>
-          <a class="code" href={`mailto:${contactEmail}`}>
-            {contactEmail}
-          </a>
-        </p>
+      <section class="mount mount--accent" id="contact">
+        <div class="mount__shadow" aria-hidden="true"></div>
+        <div class="mount__edge">
+          <div class="mount__body closing__panel">
+            <Eyebrow index="08" />
+            <h2>{contactAction.heading}</h2>
+            <p>{contactAction.text}</p>
+            <p>
+              <a class="code closing__link" href={`mailto:${contactEmail}`}>
+                {contactEmail}
+              </a>
+            </p>
+          </div>
+        </div>
       </section>
     </div>
   </div>
@@ -191,7 +203,23 @@ const heroImage = images.b;
   .closing {
     display: grid;
     grid-template-columns: minmax(0, 1fr);
-    column-gap: var(--s-6);
+    grid-auto-rows: 1fr;
+    gap: var(--s-5);
+  }
+
+  .closing.section > * + * {
+    margin-block-start: 0;
+  }
+
+  .closing__panel {
+    gap: var(--s-4);
+    padding: var(--s-5) var(--s-5) var(--s-6);
+  }
+
+  .closing__link {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
   }
 
   @media (min-width: 900px) {
