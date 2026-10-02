@@ -11,7 +11,7 @@
 
 **Write a code on a thing; find its record by camera, typing, or voice.**
 
-[Live site](https://zero-state-llc.github.io/zzthis/) · [Demo](https://zero-state-llc.github.io/zzthis/demo/) · [Project board](https://github.com/orgs/Zero-State-LLC/projects/24) · [Spec](docs/SPEC.md)
+[Live site](https://zero-state-llc.github.io/zzthis/) · [Demo](https://zero-state-llc.github.io/zzthis/demo/) · [Project board](https://github.com/orgs/Zero-State-LLC/projects/24) · [Specs](specs/README.md) · [Spec source](docs/SPEC.md)
 
 [![build](https://img.shields.io/github/actions/workflow/status/Zero-State-LLC/zzthis/ci.yml?branch=main&label=build)](https://github.com/Zero-State-LLC/zzthis/actions/workflows/ci.yml)
 [![Pages deploy](https://img.shields.io/github/actions/workflow/status/Zero-State-LLC/zzthis/pages.yml?branch=main&label=pages)](https://github.com/Zero-State-LLC/zzthis/actions/workflows/pages.yml)
@@ -122,7 +122,8 @@ Fonts: `--font-sans` is IBM Plex Sans; `--font-mono` is IBM Plex Mono.
 | [`docs/BUILD-BRIEF.md`](docs/BUILD-BRIEF.md) | Build constraints and the definition of done |
 | [`docs/ASSETS.md`](docs/ASSETS.md) | Image paths and the panels they map to |
 | [`docs/screenshots/`](docs/screenshots/), [`docs/wireframes/`](docs/wireframes/) | Review screenshots and wireframes |
-| `specs/`, `.specify/` | Spec Kit constitution and feature specs 001 to 004; pending review in [PR #17](https://github.com/Zero-State-LLC/zzthis/pull/17) |
+| [`specs/`](specs/) | Spec Kit feature specs 001 to 004, with an [index](specs/README.md) and the [2026-10-02 analysis](specs/analysis-2026-10-02.md) |
+| [`.specify/`](.specify/) | Spec Kit [constitution](.specify/memory/constitution.md) |
 | [`intent/`](intent/) | Intent files that come before specs |
 | [`AGENTS.md`](AGENTS.md) | Contract for coding agents working in this repo |
 | [`.github/workflows/ci.yml`](.github/workflows/ci.yml) | Required `build` check: lint and build |
@@ -178,7 +179,7 @@ Track work on the [project board](https://github.com/orgs/Zero-State-LLC/project
 - [ ] Demo: remove "did you mean" suggestions of live codes ([#12](https://github.com/Zero-State-LLC/zzthis/issues/12))
 - [ ] Image asset curation ([#7](https://github.com/Zero-State-LLC/zzthis/issues/7))
 - [ ] Domain and DNS, needs Danny's yes ([#6](https://github.com/Zero-State-LLC/zzthis/issues/6))
-- [ ] Review the Spec Kit specs ([PR #17](https://github.com/Zero-State-LLC/zzthis/pull/17))
+- [x] Spec Kit constitution and specs 001 to 004 ([PR #17](https://github.com/Zero-State-LLC/zzthis/pull/17), [`specs/`](specs/README.md))
 - [ ] Automate the remaining manual acceptance checks: contrast, reduced motion, Lighthouse, no cross-origin requests
 
 ### Phase 2: Submission
@@ -196,7 +197,7 @@ Track work on the [project board](https://github.com/orgs/Zero-State-LLC/project
 ## Contributing
 
 1. Read [`AGENTS.md`](AGENTS.md) and the active file in [`intent/`](intent/).
-2. Branch from `main` and open a pull request. `main` is protected: direct pushes are blocked, the `build` check must pass, and one approving review is required. [`CODEOWNERS`](.github/CODEOWNERS) requests reviewers.
+2. For non-trivial work, start from the relevant spec in [`specs/`](specs/README.md). Branch from `main` and open a pull request. `main` is protected: direct pushes are blocked, the `build` check must pass, and one approving review is required. [`CODEOWNERS`](.github/CODEOWNERS) requests reviewers.
 3. Before you push, run `npm run lint`, `npm run typecheck`, `npm run test`, and `npm run build` on Node 24.
 4. Edit copy in `src/content/`, not in pages. Keep product claims inside what [`docs/SPEC.md`](docs/SPEC.md) supports.
 5. Use the issue templates for bugs, features, and questions.
