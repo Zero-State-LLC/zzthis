@@ -18,10 +18,10 @@ Status: Draft for operator review. Owner of this document: Opus 5.5 (spec). Impl
 
 ## How to read this spec
 
-- Square-bracket tags cite the source of each product claim or piece of copy: [BRIEF], [WIRE], [OVERVIEW], [NSF], [OPERATOR]. A dated tag such as [OPERATOR 2026-10-02] marks an operator decision made on that date. [ASSETS] cites the committed image asset manifest on branch `assets`.
+- Square-bracket tags cite the source of each product claim or piece of copy: [BRIEF], [WIRE], [OVERVIEW], [PRODUCT], [OPERATOR]. [PRODUCT] cites Michael's private product write-up dated 2026-09-09, which is not in this repo. A dated tag such as [OPERATOR 2026-10-02] marks an operator decision made on that date. [ASSETS] cites the committed image asset manifest on branch `assets`.
 - **INFERRED** marks a design or engineering choice made in this spec. The implementer may follow it without further approval.
 - **OPEN** marks a decision that Michael must make. Each OPEN item has a default so the build is not blocked.
-- When sources conflict, the [BRIEF] governs the site. For product behavior, [NSF] governs.
+- When sources conflict, the [BRIEF] governs the site. For product behavior, [PRODUCT] governs.
 - Copy shown in a `copy:` block ships verbatim. Copy marked INFERRED is connective text and may be edited during review.
 
 ## Contents
@@ -55,7 +55,7 @@ This spec covers three deliverables and one proposal:
 
 **Honesty rules that apply everywhere:**
 
-- zzThis has no validated codebook and no controlled comparisons yet [NSF]. Recognition, resolver security, and human-factors performance are untested [NSF].
+- zzThis has no validated codebook and no controlled comparisons yet [PRODUCT]. Recognition, resolver security, and human-factors performance are untested [PRODUCT].
 - No performance figure appears on the site or in this repo until it is measured (Q7, Q24).
 - The site makes no claim of pilots, customers, endorsement, or government adoption. The footer shows the words "Patent pending" at Michael's direction [MICHAEL 2026-10-02]; the site makes no other patent claim (Q9 RESOLVED).
 - The xTech panel images are concept renderings [ASSETS]. The handwritten photos are real photos of Michael's handwritten codes [ASSETS].
@@ -66,11 +66,11 @@ This spec covers three deliverables and one proposal:
 
 | Capability | Status | Source |
 |---|---|---|
-| Architecture, syntax, capacity calculations, postal and privacy workflows | Current work (design) | [NSF] |
-| Proof of concept built with Lovable, linked from zzthing.com | Exists; dictionary, generation, and checksum code not yet verified | [NSF] |
-| Word codebook | Not validated; no controlled comparisons | [NSF] |
-| Handwriting and print recognition of zz codes | Untested | [NSF] |
-| Secure resolver | Untested; prototype planned | [NSF] |
+| Architecture, syntax, capacity calculations, postal and privacy workflows | Current work (design) | [PRODUCT] |
+| Proof of concept built with Lovable, linked from zzthing.com | Exists; dictionary, generation, and checksum code not yet verified | [PRODUCT] |
+| Word codebook | Not validated; no controlled comparisons | [PRODUCT] |
+| Handwriting and print recognition of zz codes | Untested | [PRODUCT] |
+| Secure resolver | Untested; prototype planned | [PRODUCT] |
 | Central API, edge layer, and on-device capture (Section 10) | Proposal, not built | [OPERATOR 2026-10-02] |
 | AI photo-to-action, inventory assistant, touch-first handling | Concept, shown as image concepts | [BRIEF] |
 | Panels a–o and demo images | Concept renderings | [ASSETS] |
@@ -78,19 +78,19 @@ This spec covers three deliverables and one proposal:
 
 ### 2.2 Code grammar
 
-**Framing markers.** The standard form opens with `zz-` and closes with `-zz` [BRIEF] [NSF].
+**Framing markers.** The standard form opens with `zz-` and closes with `-zz` [BRIEF] [PRODUCT].
 
-**Words.** The site shows lowercase code words: "MARK a lowercase zz code" [BRIEF]. Codes are built from a controlled word codebook designed for handwriting, reading, speech, recall, correction, optical recognition, and error detection [NSF].
+**Words.** The site shows lowercase code words: "MARK a lowercase zz code" [BRIEF]. Codes are built from a controlled word codebook designed for handwriting, reading, speech, recall, correction, optical recognition, and error detection [PRODUCT].
 
 **Examples from sources:**
 
 | Code | Context | Source |
 |---|---|---|
 | `zz-copper-lantern-sky-zz` | Hero example; crate tape | [BRIEF] [ASSETS] |
-| `zz-apple-sky-lantern` | Postage code written in the label area | [NSF] |
-| `zz-blue-bike-astoria-zz` | Physical thing | [NSF] |
-| `zz-vitalik.eth-zz` | Web3 resource | [NSF] |
-| `zz@-AgentSmith-neo-zz` | Verified agent | [NSF] |
+| `zz-apple-sky-lantern` | Postage code written in the label area | [PRODUCT] |
+| `zz-blue-bike-astoria-zz` | Physical thing | [PRODUCT] |
+| `zz-vitalik.eth-zz` | Web3 resource | [PRODUCT] |
+| `zz@-AgentSmith-neo-zz` | Verified agent | [PRODUCT] |
 | `zz-b2-smith-1-zz`, `zz-b2-4-zz` | Duffel and crate tape (panel a) | [ASSETS] |
 | `(zz) camp bravo four two (zz)` | Circled marker variant on a pallet (panel c) | [BRIEF] [ASSETS] |
 | `zz-river-maple-sky-zz` | Parcel (panel g) | [ASSETS] |
@@ -98,26 +98,26 @@ This spec covers three deliverables and one proposal:
 
 **Circled-zz variant.** Panel c shows a "circled zz marker variant" on a wrapped mixed-goods pallet [BRIEF], written as `(zz) camp bravo four two (zz)` [ASSETS].
 
-**Namespace marker.** The `@` marker appears in the verified-agent example `zz@-AgentSmith-neo-zz` [NSF]. Verification is a resolver concern, not something the printed characters prove (INFERRED).
+**Namespace marker.** The `@` marker appears in the verified-agent example `zz@-AgentSmith-neo-zz` [PRODUCT]. Verification is a resolver concern, not something the printed characters prove (INFERRED).
 
 **Word counts and capacity:**
 
-- With a 5,000-word dictionary, two ordered words give 25 million raw combinations, and three give 125 billion. These counts come before reserving capacity for checks, exclusions, and policy [NSF].
-- [NSF] also proposes a candidate 10,000-word dictionary. Two ordered words from it give 100 million raw combinations, and three give one trillion (arithmetic INFERRED).
-- Two or three data words plus a checksum word produce three or four visible words. The checksum does not increase identifier capacity [NSF].
+- With a 5,000-word dictionary, two ordered words give 25 million raw combinations, and three give 125 billion. These counts come before reserving capacity for checks, exclusions, and policy [PRODUCT].
+- [PRODUCT] also proposes a candidate 10,000-word dictionary. Two ordered words from it give 100 million raw combinations, and three give one trillion (arithmetic INFERRED).
+- Two or three data words plus a checksum word produce three or four visible words. The checksum does not increase identifier capacity [PRODUCT].
 
-**Checksum word.** A checksum word or other redundancy supports error detection [NSF]. The demo does not implement or imply a real checksum algorithm (INFERRED).
+**Checksum word.** A checksum word or other redundancy supports error detection [PRODUCT]. The demo does not implement or imply a real checksum algorithm (INFERRED).
 
-**Formats to model:** two-word, three-word, checksum, prefix, enterprise, one-time, and reusable-account formats [NSF].
+**Formats to model:** two-word, three-word, checksum, prefix, enterprise, one-time, and reusable-account formats [PRODUCT].
 
-**Status of the syntax.** The syntax shown on the site is illustrative. The interaction format is to be selected by measured performance and system cost [NSF].
+**Status of the syntax.** The syntax shown on the site is illustrative. The interaction format is to be selected by measured performance and system cost [PRODUCT].
 
 ### 2.3 Resolver
 
-- **Public identifier versus authorization.** The visible words are a public identifier, not a password or private key. Payment and authorization stay in signed backend records [NSF].
-- **Controls.** The resolver maps the public code to mutable records and enforces single use, expiration, revocation, signed updates, permissions, rate limits, and auditability [NSF].
-- **Uncertain readings.** The system resolves only above a validated threshold; otherwise it requests confirmation, another view, or manual handling [NSF].
-- **Abuse cases.** Copied marks, replay, enumeration, unauthorized updates, and malformed input [NSF].
+- **Public identifier versus authorization.** The visible words are a public identifier, not a password or private key. Payment and authorization stay in signed backend records [PRODUCT].
+- **Controls.** The resolver maps the public code to mutable records and enforces single use, expiration, revocation, signed updates, permissions, rate limits, and auditability [PRODUCT].
+- **Uncertain readings.** The system resolves only above a validated threshold; otherwise it requests confirmation, another view, or manual handling [PRODUCT].
+- **Abuse cases.** Copied marks, replay, enumeration, unauthorized updates, and malformed input [PRODUCT].
 
 ### 2.4 Record linking
 
@@ -128,9 +128,9 @@ This spec covers three deliverables and one proposal:
 ### 2.5 Capture by camera, typing, or voice
 
 - **Input paths.** Read by camera or manual entry. Report the words by voice where useful [BRIEF]. Voice and manual entry are alternate input paths [BRIEF].
-- **Recognition approach.** Distinctive markers and placement cues are combined with existing printed-text and handwriting models, lexicon-constrained decoding, ranked candidates, and checksum validation [NSF].
-- **Decision bands.** Calibrated confidence decides whether the system resolves, asks for confirmation, requests another view, or abstains [NSF]. The pitch frames these as accept, clarify, retry, or abstain decisions, calibrated separately for voice, image, and typed input [NSF].
-- **Read-back.** Panel f shows a radio cue and read-back of three code words [BRIEF]: "Tag: copper, lantern, sky. Break." [ASSETS]. Read-back confirmation errors must be evaluated, not assumed away [NSF].
+- **Recognition approach.** Distinctive markers and placement cues are combined with existing printed-text and handwriting models, lexicon-constrained decoding, ranked candidates, and checksum validation [PRODUCT].
+- **Decision bands.** Calibrated confidence decides whether the system resolves, asks for confirmation, requests another view, or abstains [PRODUCT]. These are accept, clarify, retry, or abstain decisions, calibrated separately for voice, image, and typed input [PRODUCT].
+- **Read-back.** Panel f shows a radio cue and read-back of three code words [BRIEF]: "Tag: copper, lantern, sky. Break." [ASSETS]. Read-back confirmation errors must be evaluated, not assumed away [PRODUCT].
 
 ### 2.6 AI-assisted photo-to-record flow
 
@@ -143,7 +143,7 @@ Workflow: PHOTOGRAPH one or more items → CONFIRM the proposed identification �
 
 ### 2.7 Privacy
 
-Privacy principles: codes are public identifiers, and authorization stays separate [NSF].
+Codes are public identifiers, and authorization stays separate [PRODUCT]. Research targets are not part of this repo (Q24).
 
 ## 3. Marketing site
 
@@ -228,8 +228,7 @@ The controlled swipe row uses CSS scroll snap and a visible peek of the next car
 | 3 | Founder card | Initials card (1) beside the bio (1.618) |
 | 4 | Advisors, one stacked card each [WIRE] | 3 across: Jim White, Patrick Muggler, Arshi Chadha; then Ridham Bhagat, Daniel Meyer, Adam Fry [MICHAEL 2026-10-02] |
 | 5 | Codes written by hand (real photos) | 3 across |
-| 6 | Current stage | Full width |
-| 7 | Location, then Next action | Location and Next action, 2 across [WIRE] |
+| 6 | Location, then Next action | Location and Next action, 2 across [WIRE] |
 
 The 2026-10-02 brief and wireframes list Jim White again ("Local AI and language"), add Adam Fry ("Advisor"), and drop the Future space card [MICHAEL 2026-10-02]. This supersedes the 2026-10-01 wireframe annotation that removed Jim White. Photos: initials cards until Michael supplies approved original headshots, and the implementer does not scrape LinkedIn [MICHAEL 2026-10-02] (Q6 RESOLVED).
 
@@ -369,9 +368,9 @@ Footer: How it works | Applications | Demo | About | Contact, then "1@1000x10.co
 | 1 | H1 "How it works" | Intro: "Two connected workflows: one code for identity, and AI for the work that follows." (INFERRED) | — |
 | 2 | H2 "Core identity" | Same as H.4, using the shared component | [BRIEF] [WIRE] |
 | 3 | H2 "Three ways to read a code" | H3 Camera; H3 Typing; H3 Voice, each one line: "Read by camera or manual entry. Report the words by voice where useful. Voice and manual entry are alternate input paths." Panels d and f | [BRIEF] |
-| 4 | H2 "When a reading is uncertain" | "The design resolves only above a confidence threshold. Otherwise it asks for confirmation, another view, or manual handling." | [NSF] |
+| 4 | H2 "When a reading is uncertain" | "The design resolves only above a confidence threshold. Otherwise it asks for confirmation, another view, or manual handling." | [PRODUCT] |
 | 5 | H2 "AI-assisted work" | Same as H.6, using the shared component | [BRIEF] [WIRE] |
-| 6 | H2 "The code is public; the record is protected" | "The visible words are a public identifier, not a password or private key. Payment and authorization remain in signed backend records." | [NSF] |
+| 6 | H2 "The code is public; the record is protected" | "The visible words are a public identifier, not a password or private key. Payment and authorization remain in signed backend records." | [PRODUCT] |
 | 7 | Demo link | "Try the scripted demo" → /demo | INFERRED |
 
 ### 3.4 Applications (`/applications`)
@@ -395,13 +394,11 @@ The layout follows Section 3.1a.
 |---|---|---|
 | H1 | About zzThis | [WIRE] |
 | Intro | "A code a person can write anywhere, linked to a digital record and the next work." | [MICHAEL 2026-10-02] wireframes |
-| H2 Founder origin | "Michael Chung says he ‘invents business models.’ His earlier ideas explored email organization and electronic payments for civic services. zzThis follows the same impulse: a useful digital connection should be possible wherever a person can write. A handwritten zz code can give a parcel, crate, tool, or public sign a persistent reference, then connect it to a record and the work around it. Michael is developing the idea across logistics, community use, and AI-assisted workflows." A longer founder history can follow later. | [MICHAEL 2026-10-02] (Q8 RESOLVED) |
 | Contact card | "1@1000x10.com. Invite collaboration and test partners." | [WIRE] |
 | H2 Current explorations | zzthing.com: "Broader showcase and label mockups." zzthat.com: "Scanner/creator prototype; planned free web, Android, and iOS app." [MICHAEL 2026-10-02] Concept label 2 (Section 3.1a) | [WIRE] [BRIEF] |
-| H2 Founder | Michael Chung, "Founder and project lead." Bio: "Founder and project lead of zzThis." LinkedIn: https://www.linkedin.com/in/unitynow | [NSF] |
+| H2 Founder | Michael Chung, "Founder and project lead." Bio (founder origin): "Michael Chung says he ‘invents business models.’ His earlier ideas explored email organization and electronic payments for civic services. zzThis follows the same impulse: a useful digital connection should be possible wherever a person can write. A handwritten zz code can give a parcel, crate, tool, or public sign a persistent reference, then connect it to a record and the work around it. Michael is developing the idea across logistics, community use, and AI-assisted workflows." A longer founder history can follow later. LinkedIn: https://www.linkedin.com/in/unitynow | [MICHAEL 2026-10-02] (Q8 RESOLVED); placement [OPERATOR 2026-10-02] (Q24) |
 | H2 Advisors | Cards: Jim White, "Local AI and language"; Patrick Muggler, "Connected logistics and IoT"; Arshi Chadha, "AI security"; Ridham Bhagat, "Robotics and smart-contract security"; Daniel Meyer, "Full-stack development"; Adam Fry, "Advisor". Bios for Patrick, Arshi, Ridham, and Daniel are verbatim from the brief (`src/content/people.ts`). | [MICHAEL 2026-10-02] |
 | H2 Codes written by hand | Real photos: zz-hackerdojo-zz, zz-helloworld-zz, zz-roto-zz. Label: "Real photos of handwritten codes." | [ASSETS]; label INFERRED |
-| H2 Current stage | "Company details will follow." | [NSF] |
 | Location | "Mountain View / Santa Clara area; Hacker Dojo work base." | [WIRE] [BRIEF] |
 | Next action | "Discuss a pilot, test cohort or collaboration." → mailto | [WIRE] |
 
@@ -486,7 +483,7 @@ Code strings come from the sources. Every record field is labeled mock.
 |---|---|---|
 | zz-copper-lantern-sky-zz | [BRIEF] | Crate, field supply. NSN: "MOCK-0000-00-000-0001". Document number: "MOCK-DOC-0001". Hand receipt: "MOCK-HR-01". Photo: demo/01 |
 | zz-river-maple-sky-zz | [ASSETS] | Parcel. Reference: "MOCK-PARCEL-01". Status: "Ready for drop-off (mock)" |
-| zz-blue-bike-astoria-zz | [NSF] | Physical thing: bicycle. Owner contact: "Withheld: public code, protected record (mock)" |
+| zz-blue-bike-astoria-zz | [PRODUCT] | Physical thing: bicycle. Owner contact: "Withheld: public code, protected record (mock)" |
 | zz-b2-4-zz | [ASSETS] | Duffel group B2, item 4. Hand receipt: "MOCK-HR-02" |
 
 Flow A handling options: Pack, Return, Repair, Dispose [BRIEF]. The mock "suggested" option is Return, with the reason "Damaged handle (mock)". The mock confidence is "0.94 (mock)", and the checksum state is "Checksum: OK (mock state, no algorithm runs)".
@@ -649,7 +646,7 @@ package-lock.json
 11. Flow A reaches A7 with the keyboard alone. A7 states that nothing was submitted.
 12. Flow B produces each outcome for the test inputs in Section 4.4.
 13. The demo makes no `getUserMedia`, `fetch`, or storage calls. A grep check runs in CI.
-14. No NSF target figure (for example, 95%, 99.9%, or 0.1%) appears in rendered copy. No page contains the words "pilot customer", "endorsed", or "adopted by".
+14. No unmeasured performance figure (for example, 95%, 99.9%, or 0.1%) appears in rendered copy. No page contains the words "pilot customer", "endorsed", or "adopted by".
 15. Light and dark themes both render correctly at 320, 390, 900, and 1440 px, with no horizontal scroll and no clipped text.
 16. Text contrast is at least 4.5:1 in both themes, checked with axe-core in Playwright or an equivalent tool.
 17. With reduced motion, the demo makes no animated transitions.
@@ -679,12 +676,12 @@ Michael's answers arrived on 2026-10-02 through Danny (issue #10), in an updated
 | Q4 | Which l and m renders are the final corrected versions? | RESOLVED: Field Tablet Turn-In Request Review (l) and Split-screen water stock drops by Day 4 (m), already the primary files; the alternates are not used [MICHAEL 2026-10-02] |
 | Q5 | Should the demo appear in the main nav? | RESOLVED: no; link from How it works and the footer. Add "Try zzThat" to the nav when the free app launches [MICHAEL 2026-10-02] |
 | Q6 | Founder and advisor portraits: should the team supply approved photos? No LinkedIn scraping. | RESOLVED: initials cards until Michael supplies approved original headshots; supplied LinkedIn URLs are profile links [MICHAEL 2026-10-02] |
-| Q7 | Should the NSF targets be published, and where? | RESOLVED: do not publish research targets on the site [MICHAEL 2026-10-02] |
+| Q7 | Should research targets be published, and where? | RESOLVED: do not publish them on the site [MICHAEL 2026-10-02]; removed from the repo (Q24) |
 | Q8 | Michael's origin story for the About page | RESOLVED: short founder origin on About (Section 3.5); room for a longer history later [MICHAEL 2026-10-02] |
 | Q9 | Should a patent notice appear in the footer? | RESOLVED: footer shows the words "Patent pending" [MICHAEL 2026-10-02] |
 | Q10 | Profile URLs and bios for Patrick Muggler, Arshi Chadha, and Daniel Meyer | PARTLY RESOLVED: bios for Patrick, Arshi, and Daniel; LinkedIn URLs for Patrick and Arshi [MICHAEL 2026-10-02]. Still OPEN: Daniel's profile URL and project accomplishments |
 | Q11 | Should the remaining handwritten photos and the zz-code mark be used? | RESOLVED: b hero; a and c field logistics; g parcel; h community; lowercase zz code as text in the explainer [MICHAEL 2026-10-02] |
-| Q12 | Should Adam Fry (named in [NSF]) be listed? | RESOLVED: yes, initials card, role "Advisor" [MICHAEL 2026-10-02]. Still OPEN: his specialty, bio, profile URL, and photo |
+| Q12 | Should Adam Fry (named in [PRODUCT]) be listed? | RESOLVED: yes, initials card, role "Advisor" [MICHAEL 2026-10-02]. Still OPEN: his specialty, bio, profile URL, and photo |
 | Q13 | CI | Closed: PR #1 `ci.yml` (job `build`) is the required check; do not edit or duplicate it; optional `site-ci.yml` runs typecheck and test only [OPERATOR 2026-10-01] |
 | Q14 | Public wording for the technology page | RESOLVED: draft wording supplied (stored in `technology.ts`); no empty page; the page enters navigation only with that content plus an example [MICHAEL 2026-10-02] |
 | Q15 | Domain | Closed for launch: GitHub Pages project URL https://zero-state-llc.github.io/zzthis/, no custom domain or DNS [OPERATOR 2026-10-01] |
@@ -696,14 +693,14 @@ Michael's answers arrived on 2026-10-02 through Danny (issue #10), in an updated
 | Q21 | Touch-first verbs differ across the brief, wireframe, and demo. Which set is canonical? | OPEN; default: keep the demo as built (spec 001) |
 | Q22 | Field logistics panels: a and c [BRIEF], or a, b, and c [WIRE]? | OPEN; default: keep as built (spec 001) |
 | Q23 | Should a real handwritten photo replace the hero render? | OPEN; default: keep panel b with its label (spec 001) |
-| Q24 | Remove the NSF-sourced founder bio, the "Current stage" line, Section 2.7, and the NSF figures in Section 10.8 from the public repo? | OPEN for Danny and Michael; site default: keep until Michael decides; recommendation: remove or move to a private repo |
+| Q24 | Remove the pitch-sourced founder bio, the company-stage line, the research targets, and the related figures from the repo? | RESOLVED: removed; the About page keeps Michael's founder origin [OPERATOR 2026-10-02] |
 | Q25 | How does a person pick a valid code with no device? | OPEN; none chosen (spec 002) |
 | Q26 | Purge window for revoked codes and rate-limit values | OPEN; none chosen (spec 002) |
 | Q27 | Which code formats come first? | OPEN; none chosen (specs 002, 003) |
 | Q28 | Where record-signing keys live and how they rotate | OPEN; none chosen (spec 002) |
 | Q29 | Where the resolver code lives | OPEN; none chosen (spec 002) |
 | Q30 | Error classes the check word must detect | OPEN; minimum: one wrong word (spec 003) |
-| Q31 | Target wordlist size: 5,000 or 10,000 [NSF] versus about 4,000 (Section 10.8) | OPEN; none chosen (spec 003) |
+| Q31 | Target wordlist size: 5,000 or 10,000 [PRODUCT] versus about 4,000 (Section 10.8) | OPEN; none chosen (spec 003) |
 | Q32 | Language and licensing of the word source | OPEN; none chosen (spec 003) |
 | Q33 | zzThat app scope (web, Android, iOS) | OPEN; not specified (spec 004) |
 | Q34 | Source and consent for the real-photo test set | OPEN; none chosen (spec 004) |
@@ -764,13 +761,13 @@ AI reads, grammar verifies [OPERATOR 2026-10-02].
 2. Only the decoded code goes to the API. The photo stays on the device by default [OPERATOR 2026-10-02].
 3. Photos go to the server only on a retry or a hard case. There, a larger cloud vision model can read them [OPERATOR 2026-10-02].
 4. Every model read, on device or in the cloud, is snapped to the closed wordlist, and the checksum word is verified [OPERATOR 2026-10-02].
-5. Low-confidence reads go to clarify or retry, with a human confirm step, using the decision bands in Section 2.5 [OPERATOR 2026-10-02] [NSF].
+5. Low-confidence reads go to clarify or retry, with a human confirm step, using the decision bands in Section 2.5 [OPERATOR 2026-10-02] [PRODUCT].
 
 Which model does the on-device reading is OPEN. Section 10.8 compares the options.
 
 ### 10.4 Security model
 
-The code on paper is public, so security lives in the resolver [OPERATOR 2026-10-02] [NSF].
+The code on paper is public, so security lives in the resolver [OPERATOR 2026-10-02] [PRODUCT].
 
 - **Signed record versions.** Each change to a record is a new version signed by the server.
 - **Single use and short expiry** where the code format calls for them (Section 2.2 formats).
@@ -852,7 +849,7 @@ The table rows are a comparison drawn up in this spec from the operator's factor
 |---|---|---|
 | Hero, featured statement, comparison, nav, destinations, reading order, workflows, categories, panels, advisors, prototypes, contact | [BRIEF] | zzThis - Website Content and Design Brief 2026-10-01.md |
 | Segments, hero subline, j–l sequence, concept label rule, About layout, Jim White removal, golden ratio | [WIRE] | zzThis - Website Wireframes 2026-10-01.md |
-| Capacity, checksum, formats, resolver controls, POC status, code examples | [NSF] | Michael's private product write-up, 2026-09-09 (not in this repo) |
+| Capacity, checksum, formats, resolver controls, POC status, code examples | [PRODUCT] | Michael's private product write-up, 2026-09-09 (not in this repo) |
 | Document index and summary | [OVERVIEW] | zzThis - Overview.md |
 | Image paths, codes in panels, concept versus real status, brand orange #F85000 | [ASSETS] | Asset manifest, branch `assets` |
 | Architecture: central API topology, edge layer, on-device capture, recognition approaches A and B, resolver security model, offline rules, open items (Section 10) | [OPERATOR 2026-10-02] | Operator decision by Daniel Meyer, 2026-10-02 01:21 to 01:22 PT |

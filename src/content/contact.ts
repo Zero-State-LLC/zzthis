@@ -25,9 +25,6 @@ export const aboutPage = {
   prototypeLabel: "Both sites are concept-stage explorations.",
   handwrittenHeading: "Codes written by hand",
   handwrittenLabel: "Real photos of handwritten codes.",
-  stageHeading: "Current stage",
-  stageText:
-    "Company details will follow.",
   locationHeading: "Location",
   locationText: "Mountain View / Santa Clara area; Hacker Dojo work base.",
   nextHeading: "Next action",

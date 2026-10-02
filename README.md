@@ -18,6 +18,7 @@
 [![Node 24](https://img.shields.io/badge/node-24-1c1b19)](package.json)
 [![Astro](https://img.shields.io/badge/astro-7-1c1b19)](https://astro.build/)
 [![status: prototype](https://img.shields.io/badge/status-prototype-f85000)](#status-and-disclaimer)
+[![license: proprietary](https://img.shields.io/badge/license-proprietary-1c1b19)](LICENSE)
 
 Topics: `human-readable-codes` `handwritten-codes` `logistics` `astro` `github-pages` `static-site` `prototype`
 
@@ -204,4 +205,4 @@ Track work on the [project board](https://github.com/orgs/Zero-State-LLC/project
 
 ## License
 
-This repository has no license file yet, so no license is granted. Ask the maintainers before you reuse the code or images.
+Proprietary, all rights reserved. See [`LICENSE`](LICENSE). No use, copying, modification, or distribution is permitted without prior written permission.

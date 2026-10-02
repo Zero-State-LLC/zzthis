@@ -23,7 +23,7 @@ Checked 2026-10-02 against `main` at 40dfa3b and the live site. Items map to `do
 | 9, 10 | Advisor list, initials only | Automated (content tests); no portraits by review |
 | 11, 12, 17 | Demo keyboard path, Flow B outcomes, reduced motion | Flow logic automated (`demoMachine.test.ts`, `resolver.test.ts`); keyboard and motion manual |
 | 13 | No camera, fetch, or storage calls | Automated: `check-dist.mjs` banned APIs |
-| 14 | No NSF figures or claim phrases | Automated: `check-dist.mjs`, content tests |
+| 14 | No unmeasured performance figures or claim phrases | Automated: `check-dist.mjs`, content tests |
 | 15, 16, 18 | Responsive layout, contrast, Lighthouse goals | Manual only. No automated check (T014). |
 | 19 | No cross-origin runtime requests | Partly automated (`check-dist.mjs` external `src`); runtime not checked |
 | 20 | CI green on Node 24 | Automated |

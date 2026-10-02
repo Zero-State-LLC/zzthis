@@ -17,19 +17,21 @@ export interface Origin {
   text: string;
 }
 
-export const founder: Founder = {
-  name: "Michael Chung",
-  initials: "MC",
-  role: "Founder and project lead.",
-  bio: "Founder and project lead of zzThis.",
-  profileUrl: "https://www.linkedin.com/in/unitynow",
-};
-
 // Q8 [MICHAEL 2026-10-02]: short founder origin for About. A longer founder
 // history can follow later.
 export const founderOrigin: Origin = {
   heading: "Founder origin",
   text: "Michael Chung says he ‘invents business models.’ His earlier ideas explored email organization and electronic payments for civic services. zzThis follows the same impulse: a useful digital connection should be possible wherever a person can write. A handwritten zz code can give a parcel, crate, tool, or public sign a persistent reference, then connect it to a record and the work around it. Michael is developing the idea across logistics, community use, and AI-assisted workflows.",
+};
+
+// Q24 [OPERATOR 2026-10-02]: the founder card shows Michael's founder origin
+// as his bio. The earlier bio came from a funding pitch and was removed.
+export const founder: Founder = {
+  name: "Michael Chung",
+  initials: "MC",
+  role: "Founder and project lead.",
+  bio: founderOrigin.text,
+  profileUrl: "https://www.linkedin.com/in/unitynow",
 };
 
 // Q6, Q10, Q12, Q16 [MICHAEL 2026-10-02]: initials cards until approved

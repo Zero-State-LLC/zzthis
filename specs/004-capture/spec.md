@@ -7,7 +7,7 @@ Constitution: [.specify/memory/constitution.md](../../.specify/memory/constituti
 
 ## Why
 
-A person reads a code by camera, typing, or voice [BRIEF]. Handwriting and print recognition of zz codes is untested [NSF]. Capture must turn a messy real-world mark into exactly one code, or ask for help, and never silently pick the wrong one [NSF] [OPERATOR 2026-10-02].
+A person reads a code by camera, typing, or voice [BRIEF]. Handwriting and print recognition of zz codes is untested [PRODUCT]. Capture must turn a messy real-world mark into exactly one code, or ask for help, and never silently pick the wrong one [PRODUCT] [OPERATOR 2026-10-02].
 
 ## User stories
 
@@ -34,14 +34,14 @@ Acceptance: the photo leaves the device only on a retry or hard case [OPERATOR 2
 | FR-001 | Inputs: camera, typing, voice. | [BRIEF] |
 | FR-002 | On-device recognition first; photo stays on the device by default. | [OPERATOR 2026-10-02]; whether Option A must include an on-device model is OPEN (Q18) |
 | FR-003 | Every reading is snapped to the closed wordlist (spec 003) and the check word is verified. | [OPERATOR 2026-10-02] |
-| FR-004 | Calibrated confidence decides accept, clarify, retry, or abstain, separately for voice, image, and typed input. | [NSF]; thresholds OPEN (Q37) |
-| FR-005 | A person confirms low-confidence readings. | [OPERATOR 2026-10-02] [NSF] |
+| FR-004 | Calibrated confidence decides accept, clarify, retry, or abstain, separately for voice, image, and typed input. | [PRODUCT]; thresholds OPEN (Q37) |
+| FR-005 | A person confirms low-confidence readings. | [OPERATOR 2026-10-02] [PRODUCT] |
 | FR-006 | Correction happens on the client against the wordlist and check word, never by asking the server for nearby codes. | [OPERATOR 2026-10-02] |
-| FR-007 | Read-back confirmation errors are measured, not assumed away. | [NSF]; method OPEN (Q37) |
+| FR-007 | Read-back confirmation errors are measured, not assumed away. | [PRODUCT]; method OPEN (Q37) |
 
 ## Success criteria
 
-Not set for this feature. Accuracy targets in `docs/SPEC.md` Section 2.7 are NSF research targets and are flagged for removal from the public repo. Option A and B are compared on the same test set before any switch [OPERATOR 2026-10-02].
+Not set for this feature. Research accuracy targets are not acceptance criteria and are not kept in this repo (Q24). Option A and B are compared on the same test set before any switch [OPERATOR 2026-10-02].
 
 ## Out of scope
 
