@@ -25,7 +25,7 @@ const BANNED_PHRASES = [
   "adopted by",
   "did you mean",
 ];
-const NSF_FIGURES = ["95%", "99%", "99.9%", "0.1%", "30% fewer"];
+const UNMEASURED_FIGURES = ["95%", "99%", "99.9%", "0.1%", "30% fewer"];
 const BANNED_APIS = [
   "getUserMedia",
   "fetch(",
@@ -95,8 +95,8 @@ function checkText(file, html) {
   for (const phrase of BANNED_PHRASES) {
     if (lower.includes(phrase)) report(file, `banned phrase: ${phrase}`);
   }
-  for (const figure of NSF_FIGURES) {
-    if (text.includes(figure)) report(file, `NSF figure: ${figure}`);
+  for (const figure of UNMEASURED_FIGURES) {
+    if (text.includes(figure)) report(file, `unmeasured figure: ${figure}`);
   }
 }
 

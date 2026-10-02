@@ -49,4 +49,4 @@ Workflows for every implementing task: anti-slop-code, production-systems, googl
 
 ## Phase 6: Public repo hygiene
 
-- [ ] T019 Danny decides whether to remove or relocate the NSF Phase I material: `docs/SPEC.md` Section 2.7, the NSF figures in the Section 10.8 data row, the NSF-sourced founder bio, and the "Current stage" line on About (Q24). Owner: Danny. See `specs/analysis-2026-10-02.md`.
+- [x] T019 Remove research targets and pitch-only text from the repo and site (Q24 RESOLVED [OPERATOR 2026-10-02]). The founder card now shows Michael's founder origin.

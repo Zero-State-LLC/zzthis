@@ -25,9 +25,6 @@ export const aboutPage = {
   prototypeLabel: "Both sites are concept-stage explorations.",
   handwrittenHeading: "Codes written by hand",
   handwrittenLabel: "Real photos of handwritten codes.",
-  stageHeading: "Current stage",
-  stageText:
-    "zzThis is currently a sole proprietorship and plans to incorporate. Michael has submitted an NSF SBIR Project Pitch; submitting a pitch does not mean an award.",
   locationHeading: "Location",
   locationText: "Mountain View / Santa Clara area; Hacker Dojo work base.",
   nextHeading: "Next action",

@@ -67,7 +67,7 @@ Acceptance: `/contact`, the Home contact action, the About contact card, and the
 | FR-004 | Each page has exactly one H1; headings follow content hierarchy without skipping levels. | [BRIEF] |
 | FR-005 | Copy in `copy` blocks of `docs/SPEC.md` ships verbatim. Copy lives in typed content objects so that it can change without layout edits. | [BRIEF] |
 | FR-006 | No rendered em dash except the hero line. | [MICHAEL 2026-10-02] |
-| FR-007 | No NSF Phase I target figures, and no claims of pilots, customers, endorsement, or adoption, appear on any page. | [MICHAEL 2026-10-02] [NSF] |
+| FR-007 | No research target or unmeasured performance figures, and no claims of pilots, customers, endorsement, or adoption, appear on any page. | [MICHAEL 2026-10-02] [PRODUCT] |
 | FR-008 | Standalone AI-render panels carry "Concept illustration". Each grouped gallery carries one label above its panels. Captions name the workflow. | [MICHAEL 2026-10-02] |
 | FR-009 | Founder and advisor cards use initials until approved headshots are supplied. No LinkedIn scraping. | [MICHAEL 2026-10-02] [WIRE] |
 | FR-010 | `/technology` is not built and nothing links to it until it has Michael's draft explanation plus a supporting example. | [MICHAEL 2026-10-02] |
@@ -103,7 +103,7 @@ Real recognition, a real resolver, accounts, forms or email backends, analytics,
 | Q21 | Which handling verbs does the demo show? The brief lists pack, ship, return, repair, and dispose [BRIEF]; the 2026-10-02 wireframe shows Pack, Ship, Turn In, Dispose; the demo uses Pack, Return, Repair, Dispose (OBSERVED). | Keep the demo as built |
 | Q22 | Field logistics panels: the brief says a and c; the 2026-10-02 wireframe shows a, b, c. The site shows a, the b alternate, and c (OBSERVED). | Keep as built |
 | Q23 | The brief asks for a real handwritten code beside the hero. Panel b is an AI render, labeled "Concept illustration" (OBSERVED). Should a real photo replace it? | Keep panel b with the label |
-| Q24 | Should the About page keep the founder bio and the "Current stage" sentence that come from the NSF pitch? Neither the brief nor the wireframes ask for them. | Keep until Michael decides |
+| Q24 | Should the About page keep the pitch-sourced founder bio and company-stage sentence? | RESOLVED: removed; the founder card shows Michael's founder origin [OPERATOR 2026-10-02] |
 
 ## Workflows
 

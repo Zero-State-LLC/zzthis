@@ -7,7 +7,7 @@ Constitution: [.specify/memory/constitution.md](../../.specify/memory/constituti
 
 ## Why
 
-The code is made of words that people write, read aloud, and type. If two words look alike in handwriting or sound alike on a radio, a code can resolve to the wrong record. The codebook has to be built for handwriting, reading, speech, recall, correction, optical recognition, and error detection [NSF]. No validated codebook exists yet [NSF].
+The code is made of words that people write, read aloud, and type. If two words look alike in handwriting or sound alike on a radio, a code can resolve to the wrong record. The codebook has to be built for handwriting, reading, speech, recall, correction, optical recognition, and error detection [PRODUCT]. No validated codebook exists yet [PRODUCT].
 
 ## Users
 
@@ -28,7 +28,7 @@ Acceptance: the report lists the count before and after each filter, and compare
 
 ### US2. Catch errors with a check word (P1)
 
-As a reader, I get an error when a code has one wrong word, so that a misread code does not resolve to the wrong record [NSF] [issue #14].
+As a reader, I get an error when a code has one wrong word, so that a misread code does not resolve to the wrong record [PRODUCT] [issue #14].
 
 Acceptance: a library computes and verifies the check word; tests show it detects the error classes named in Q30 once they are chosen.
 
@@ -40,8 +40,8 @@ Acceptance: a library computes and verifies the check word; tests show it detect
 | FR-002 | Remove homophones (distinct sounds). | [issue #14]; method and pass rule OPEN (Q35) |
 | FR-003 | Every pair of words has an edit distance of at least 3. | [issue #14] |
 | FR-004 | Report yield after each filter and the gap to the needed code-space size. | [issue #14] |
-| FR-005 | A check word library tuned to handwriting and voice errors. The check word adds error detection, not capacity. | [issue #14] [NSF] |
-| FR-006 | Codes are written in lowercase words between `zz-` and `-zz`. Other forms (circled `(zz)` marker, `@` namespace, prefixes) are product options, not yet accepted grammar. | [BRIEF] [NSF]; grammar beyond the framing markers OPEN (Q27). Mixed case and dots, as in the NSF examples `zz@-AgentSmith-neo-zz` and `zz-vitalik.eth-zz`, are excluded until Q27 is answered. |
+| FR-005 | A check word library tuned to handwriting and voice errors. The check word adds error detection, not capacity. | [issue #14] [PRODUCT] |
+| FR-006 | Codes are written in lowercase words between `zz-` and `-zz`. Other forms (circled `(zz)` marker, `@` namespace, prefixes) are product options, not yet accepted grammar. | [BRIEF] [PRODUCT]; grammar beyond the framing markers OPEN (Q27). Mixed case and dots, as in the [PRODUCT] examples `zz@-AgentSmith-neo-zz` and `zz-vitalik.eth-zz`, are excluded until Q27 is answered. |
 
 ## Success criteria
 
@@ -61,7 +61,7 @@ Recognition models (spec 004), the resolver (spec 002), and human-factors studie
 |---|---|---|
 | Q27 | Which formats come first? | None chosen |
 | Q30 | Which error classes must the check word detect (one wrong word, swapped words, a dropped word, voice confusions)? | One wrong word (INFERRED minimum) |
-| Q31 | Target wordlist size. Sources differ: 5,000 words and a candidate 10,000 [NSF], and "about 4,000 known words" in the recognition plan [OPERATOR 2026-10-02]. | None chosen |
+| Q31 | Target wordlist size. Sources differ: 5,000 words and a candidate 10,000 [PRODUCT], and "about 4,000 known words" in the recognition plan [OPERATOR 2026-10-02]. | None chosen |
 | Q32 | Language and licensing of the candidate word source | None chosen |
 | Q35 | How are "distinct letter shapes" and "distinct sounds" measured, and what is the pass rule for each? | None chosen; blocks the shape and sound filter tasks |
 
