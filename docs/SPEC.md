@@ -4,21 +4,36 @@ Status: Draft for operator review. Owner of this document: Opus 5.5 (spec). Impl
 
 ## How to read this spec
 
-- Square-bracket tags cite the source of each product claim or piece of copy: [BRIEF], [WIRE], [OVERVIEW], [NSF], [OPERATOR]. [ASSETS] cites the committed image asset manifest on branch `assets`.
+- Square-bracket tags cite the source of each product claim or piece of copy: [BRIEF], [WIRE], [OVERVIEW], [NSF], [OPERATOR]. A dated tag such as [OPERATOR 2026-10-02] marks an operator decision made on that date. [ASSETS] cites the committed image asset manifest on branch `assets`.
 - **INFERRED** marks a design or engineering choice made in this spec. The implementer may follow it without further approval.
 - **OPEN** marks a decision that Michael must make. Each OPEN item has a default so the build is not blocked.
 - When sources conflict, the [BRIEF] governs the site. For product behavior, [NSF] governs.
 - Copy shown in a `copy:` block ships verbatim. Copy marked INFERRED is connective text and may be edited during review.
 
+## Contents
+
+1. Summary and audience
+2. Product spec
+3. Marketing site
+4. Click-through demo (`/demo`)
+5. Visual system and components
+6. Stack, repo layout, and engineering rules
+7. Workflows
+8. Acceptance criteria
+9. Out of scope and OPEN questions
+10. Architecture (proposal, not built)
+11. Provenance
+
 ## 1. Summary and audience
 
 zzThis is a human-readable, human-writable code that works alongside barcodes and QR codes [BRIEF]. A person writes a code such as `zz-copper-lantern-sky-zz` on tape, a crate, a parcel, or a sign. The person links the code to a digital record and finds it later by camera, typing, or voice [BRIEF]. A second layer uses AI to turn a marked or photographed item into the next task and record [BRIEF].
 
-This spec covers three deliverables:
+This spec covers three deliverables and one proposal:
 
 1. The product definition that the site describes (Section 2).
 2. The first marketing site (Section 3).
 3. A scripted click-through demo at `/demo` (Section 4).
+4. A proposed architecture for the real product: central API, edge layer, and on-device capture (Section 10). It is a proposal, not built.
 
 **Audience for the site:** xTechSearch visitors, possible investors, and collaborators [BRIEF].
 
@@ -42,6 +57,7 @@ This spec covers three deliverables:
 | Word codebook | Not validated; no controlled comparisons | [NSF] |
 | Handwriting and print recognition of zz codes | Untested | [NSF] |
 | Secure resolver | Untested; prototype planned | [NSF] |
+| Central API, edge layer, and on-device capture (Section 10) | Proposal, not built | [OPERATOR 2026-10-02] |
 | AI photo-to-action, inventory assistant, touch-first handling | Concept, shown as image concepts | [BRIEF] |
 | Panels a–o and demo images | Concept renderings | [ASSETS] |
 | Handwritten photos of codes on paper | Real photos | [ASSETS] |
@@ -658,8 +674,143 @@ package-lock.json
 | Q15 | Domain | Closed for launch: GitHub Pages project URL https://zero-state-llc.github.io/zzthis/, no custom domain or DNS [OPERATOR 2026-10-01] |
 | Q16 | Ridham Bhagat's role: "robotics and resilient operations" [BRIEF] or "robotics and operations" [WIRE]? | [BRIEF] wording |
 | Q17 | Concept label wording | Section 3.1a text |
+| Q18 | Should we fine-tune our own small model for on-device capture (Option B, Section 10.8)? | OPEN, deferred: ship Option A now, run a 2-week Option B prototype, switch the on-device reader if it wins; cloud vision stays for retries [OPERATOR 2026-10-02] |
+| Q19 | How do partner apps authenticate to the API (Section 10.6)? | OPEN; no default chosen yet [OPERATOR 2026-10-02] |
 
-## 10. Provenance
+## 10. Architecture (proposal, not built)
+
+**Status: proposal.** Nothing in this section is built. It records the architecture direction that Danny set on 2026-10-02, plus the recommendations he accepted [OPERATOR 2026-10-02]. The marketing site and the `/demo` click-through (Sections 3 and 4) stay static and mock-only; they do not call this API. Product behavior in Section 2 still governs where the two differ. Items marked **INFERRED** are sketch details added in this spec, not operator decisions.
+
+### 10.1 Topology
+
+- One central server, hosted on the web, owns codes, records, grants, and the append-only audit log [OPERATOR 2026-10-02].
+- Every app is an API client: the phone app, the web app, and partner systems. No client holds the source of truth [OPERATOR 2026-10-02].
+- Revocation, single use, expiry, and rate limits are enforced centrally, on the server, never in a client [OPERATOR 2026-10-02].
+
+```mermaid
+flowchart LR
+  subgraph Clients["API clients"]
+    Phone["Phone app<br/>on-device recognition"]
+    Web["Web app"]
+    Partner["Partner systems"]
+  end
+  subgraph Edge["Edge layer (Cloudflare Workers)"]
+    Read["Fast reads<br/>resolve, cached signed records"]
+  end
+  subgraph Core["Central server (source of truth)"]
+    API["Write and signing API<br/>issue, revoke, version, grants"]
+    DB[("Portable SQL<br/>codes, records, record_versions,<br/>grants, audit_events")]
+    Blob[("Object storage<br/>retry photos")]
+    Vision["Cloud vision model<br/>hard cases only"]
+  end
+  Phone -->|"decoded code"| Read
+  Web --> Read
+  Partner --> Read
+  Read -->|"writes, signing, misses"| API
+  API --> DB
+  API --> Blob
+  Phone -.->|"photo on retry or hard case"| API
+  API -.-> Vision
+```
+
+### 10.2 Edge layer and hosting
+
+- The API sits behind an edge layer. Cloudflare Workers is the recommended host for the prototype and the pilot, with D1 for the database and R2 for stored photos [OPERATOR 2026-10-02].
+- Reads are fast at the edge. Writes and signing are centralized: one place issues codes, signs record versions, and writes the audit log [OPERATOR 2026-10-02].
+- The schema is portable SQL, so it can move off D1 without a redesign. If a sponsor needs IL4 or IL5, the later path is AWS GovCloud [OPERATOR 2026-10-02].
+- Edge caches hold only signed records for reusable codes. Single-use and short-expiry codes are never served from cache: every resolve of these goes to the central server, which marks a single-use code used in the same write (INFERRED). Revoked codes stop resolving at the edge within a stated purge window (INFERRED: short cache lifetimes plus purge on revoke).
+
+### 10.3 Capture
+
+AI reads, grammar verifies [OPERATOR 2026-10-02].
+
+1. Recognition runs on the device with an AI vision model, preferably a small on-device model [OPERATOR 2026-10-02].
+2. Only the decoded code goes to the API. The photo stays on the device by default [OPERATOR 2026-10-02].
+3. Photos go to the server only on a retry or a hard case. There, a larger cloud vision model can read them [OPERATOR 2026-10-02].
+4. Every model read, on device or in the cloud, is snapped to the closed wordlist, and the checksum word is verified [OPERATOR 2026-10-02].
+5. Low-confidence reads go to clarify or retry, with a human confirm step, using the decision bands in Section 2.5 [OPERATOR 2026-10-02] [NSF].
+
+Which model does the on-device reading is OPEN. Section 10.8 compares the options.
+
+### 10.4 Security model
+
+The code on paper is public, so security lives in the resolver [OPERATOR 2026-10-02] [NSF].
+
+- **Signed record versions.** Each change to a record is a new version signed by the server.
+- **Single use and short expiry** where the code format calls for them (Section 2.2 formats).
+- **Rate limits** per client, per role, and per code, to slow enumeration.
+- **Tiered views.** The resolver returns a view scoped to the caller's role. SD-JWT (selective disclosure) is an option for these views, not a commitment.
+- **Exact match only.** The resolver matches the exact code and never suggests live codes. Fuzzy correction happens on the client against the closed wordlist and checksum, never by asking the server for nearby codes.
+- **Handwriting first.** Handwritten codes must work. Printed marks or steganography are optional add-ons only, never required to resolve.
+
+All bullets above are [OPERATOR 2026-10-02].
+
+### 10.5 Offline
+
+- Apps may briefly cache signed records so a person can read them without a connection [OPERATOR 2026-10-02].
+- Issuing and revocation always go through the server. An offline app cannot issue, revoke, or mark a code used [OPERATOR 2026-10-02].
+- A code written with no device (Section 2.4) is linked later, when the app is back online [BRIEF]. How a person picks a valid code with no device is OPEN: for example, a pre-issued code card, or claiming a handwritten code that the server then checks for checksum and collisions (INFERRED).
+
+### 10.6 API sketch (INFERRED)
+
+A minimal shape for discussion, not a contract. Every call is authenticated and writes an audit event.
+
+| Method and path | Purpose | Notes |
+|---|---|---|
+| `POST /codes` | Issue a code | Server picks the words and checksum. Body sets format, expiry, single use, and the linked record. |
+| `GET /resolve/{code}` | Resolve a code | Exact match only. Response is scoped to the caller's role. Unknown, expired, used, and revoked codes all return the same not-found shape, so callers cannot probe for live codes. Single-use codes always resolve on the central server, which marks them used. |
+| `POST /codes/{id}/revoke` | Revoke a code | Takes effect centrally at once. Edge caches are purged within the stated purge window (Section 10.2). |
+| `POST /records/{id}/versions` | Add a record version | Server validates, signs, and stores a new version. Older versions are kept. |
+| `GET /audit` | Read audit events | Filtered by code, record, or time. Restricted to roles with audit access. |
+
+### 10.7 Data model sketch (INFERRED)
+
+Portable SQL. Column lists are illustrative.
+
+| Table | Purpose | Key fields |
+|---|---|---|
+| `codes` | Issued codes | `id`, `words`, `checksum_word`, `format`, `status` (active, used, revoked, expired), `single_use`, `expires_at`, `record_id`, `issued_by`, `created_at` |
+| `records` | The thing a code points to | `id`, `owner_id`, `current_version_id`, `created_at` |
+| `record_versions` | Signed, immutable history | `id`, `record_id`, `version`, `body`, `signature`, `signing_key_id`, `created_by`, `created_at` |
+| `grants` | Who sees which view | `id`, `subject_id`, `scope` (code, record, or tenant), `role`, `view_tier`, `expires_at` |
+| `audit_events` | Append-only log | `id`, `actor_id`, `action`, `target_type`, `target_id`, `result`, `created_at`. Never updated or deleted. |
+
+### 10.8 Recognition approaches (decision OPEN)
+
+Two ways to build the reader in Section 10.3. Both feed the same grammar: snap to the closed wordlist, verify the checksum word, and confirm with a person when confidence is low [OPERATOR 2026-10-02].
+
+- **Option A: off-the-shelf AI vision.** An existing model does the reading: a cloud vision model, optionally with a small general on-device model. The output is snapped to the wordlist and the checksum is verified [OPERATOR 2026-10-02]. To keep to Section 10.3, the on-device model reads first where it is good enough, and photos go to the cloud model only on a retry or a hard case (INFERRED).
+- **Option B: fine-tune our own small model.** For example TrOCR-small, or a small vision-language model with LoRA, trained on the closed wordlist. This is easier than general handwriting recognition because the model only has to pick from about 4,000 known words, not read any text [OPERATOR 2026-10-02].
+
+**Data for Option B.** Data is the hard part. Start with synthetic data: the wordlist rendered in handwriting fonts, with blur, warping, and cardboard and tape textures. Then add real photos [OPERATOR 2026-10-02]. Training takes hours on a single GPU, and the result is small enough to run on a phone [OPERATOR 2026-10-02].
+
+| Factor | Option A: off-the-shelf vision | Option B: fine-tuned small model |
+|---|---|---|
+| Accuracy in the field | Good on clean text; general models can misread unusual handwriting, but the wordlist snap and checksum catch many errors | Unknown until benchmarked; a model trained only on the wordlist may beat general models on rough handwriting, tape, and cardboard |
+| Cost per read | Cloud reads are billed per call by the vision provider; on-device reads cost nothing per read | Near zero per read on device; the main cost is training runs and data collection |
+| Offline support | Only with the on-device model; cloud reads need a connection | Full offline reading on the phone |
+| Privacy | On-device reads keep the photo on the device; cloud reads send it off the device | Photo stays on the device; only the decoded code is sent |
+| Time to first result | Available now | About 2 weeks for a first prototype |
+| Data needs | None to start; real photos are still needed to measure accuracy | Synthetic data plus real photos |
+| Maintenance | Provider owns the model; versions can change under us, so reads must be re-tested on each change | We own retraining when the wordlist or capture conditions change |
+
+The table rows are a comparison drawn up in this spec from the operator's factors (INFERRED) and are not measured results.
+
+**Recommendation** [OPERATOR 2026-10-02]:
+
+1. Ship with Option A now.
+2. Run a 2-week Option B prototype (synthetic data plus a few hundred real photos), benchmarked against Option A on the same test set.
+3. If Option B wins, switch the on-device reader to Option B.
+4. Keep cloud vision for retries and hard cases either way.
+
+**Decision: OPEN.** Fine-tuning is deferred until the prototype benchmark is in (Q18) [OPERATOR 2026-10-02].
+
+### 10.9 Open items
+
+- **Fine-tune a small handwriting model?** Deferred pending a 2-week prototype benchmark (Section 10.8) [OPERATOR 2026-10-02]. See Q18.
+- **API auth for partner apps.** Not decided [OPERATOR 2026-10-02]. See Q19.
+
+## 11. Provenance
 
 | Claim | Tag | Source file |
 |---|---|---|
@@ -668,3 +819,4 @@ package-lock.json
 | Capacity, checksum, formats, resolver controls, POC status, code examples | [NSF] | Michael's private product write-up, 2026-09-09 (not in this repo) |
 | Document index and summary | [OVERVIEW] | zzThis - Overview.md |
 | Image paths, codes in panels, concept versus real status, brand orange #F85000 | [ASSETS] | Asset manifest, branch `assets` |
+| Architecture: central API topology, edge layer, on-device capture, recognition approaches A and B, resolver security model, offline rules, open items (Section 10) | [OPERATOR 2026-10-02] | Operator decision by Daniel Meyer, 2026-10-02 01:21 to 01:22 PT |
