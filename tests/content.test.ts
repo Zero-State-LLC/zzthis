@@ -5,6 +5,7 @@ import * as contactModule from "../src/content/contact";
 import * as demoModule from "../src/content/demo";
 import * as heroModule from "../src/content/hero";
 import * as imagesModule from "../src/content/images";
+import * as labelsModule from "../src/content/labels";
 import * as navigationModule from "../src/content/navigation";
 import * as peopleModule from "../src/content/people";
 import * as technologyModule from "../src/content/technology";
@@ -13,8 +14,11 @@ import * as workflowsModule from "../src/content/workflows";
 const { applications, applicationsPage } = applicationsModule;
 const { comparisonColumns, comparisonRows } = comparisonModule;
 const { featured, hero } = heroModule;
-const { navItems } = navigationModule;
-const { advisors } = peopleModule;
+const { navItems, footerItems, footerNotice } = navigationModule;
+const { advisors, founderOrigin } = peopleModule;
+const { demoTitle } = demoModule;
+const { technologyDraft } = technologyModule;
+const { conceptLabels } = labelsModule;
 const { coreIdentity, fieldLogistics, photoToAction } = workflowsModule;
 
 const modules: readonly unknown[] = [
@@ -24,6 +28,7 @@ const modules: readonly unknown[] = [
   demoModule,
   heroModule,
   imagesModule,
+  labelsModule,
   navigationModule,
   peopleModule,
   technologyModule,
@@ -48,7 +53,7 @@ const story = (id: string): string | undefined =>
 describe("hero and featured statement (spec 3.2)", () => {
   it("matches the hero copy", () => {
     expect(hero.title).toBe(
-      "Barcodes made things scannable. zzThis makes them writable, and smart.",
+      "Barcodes made things scannable. zzThis makes them writable\u2014and smart.",
     );
     expect(hero.subline).toBe(
       "Write a code on a thing; find its record by camera, typing, or voice.",
@@ -187,15 +192,52 @@ describe("navigation and people", () => {
     ]);
   });
 
-  it("lists the advisors in order, then the Future space card", () => {
+  it("lists the advisors in the 2026-10-02 order, all with initials", () => {
     expect(advisors.map((person) => person.name)).toEqual([
+      "Jim White",
       "Patrick Muggler",
       "Arshi Chadha",
       "Ridham Bhagat",
       "Daniel Meyer",
-      "Future space",
+      "Adam Fry",
     ]);
-    expect(advisors[4]?.initials).toBe(undefined);
+    expect(advisors.every((person) => person.initials !== undefined)).toBe(
+      true,
+    );
+  });
+
+  it("applies Michael's 2026-10-02 answers", () => {
+    const byName = (name: string) =>
+      advisors.find((person) => person.name === name);
+    expect(byName("Ridham Bhagat")?.role).toBe(
+      "Robotics and smart-contract security",
+    );
+    expect(byName("Adam Fry")).toEqual({
+      name: "Adam Fry",
+      initials: "AF",
+      role: "Advisor",
+    });
+    for (const name of [
+      "Patrick Muggler",
+      "Arshi Chadha",
+      "Ridham Bhagat",
+      "Daniel Meyer",
+    ]) {
+      expect(byName(name)?.bio).toBeTruthy();
+    }
+    expect(founderOrigin.text.startsWith("Michael Chung says he")).toBe(true);
+    expect(footerNotice).toBe("Patent pending");
+    expect(footerItems.map((item) => item.label)).toEqual([
+      "How it works",
+      "Applications",
+      "Demo",
+      "About",
+      "Contact",
+    ]);
+    expect(demoTitle).toBe("See zzThis in action.");
+    expect(conceptLabels.standalone).toBe("Concept illustration");
+    expect(technologyDraft.status).toBe("unpublished");
+    expect(fieldLogistics.images).toEqual(["a", "alt-b", "c"]);
   });
 });
 
@@ -204,12 +246,10 @@ describe("content hygiene across all content modules", () => {
     expect(allStrings.length).toBeGreaterThan(100);
   });
 
-  it("contains no em dash", () => {
-    expect(allStrings.filter((text) => text.includes("—"))).toEqual([]);
-  });
-
-  it("never names Jim White", () => {
-    expect(allStrings.filter((text) => text.includes("Jim White"))).toEqual([]);
+  it("contains no em dash outside the hero H1 (Q1)", () => {
+    expect(allStrings.filter((text) => text.includes("—"))).toEqual([
+      hero.title,
+    ]);
   });
 
   it("contains no NSF target figures or endorsement claims", () => {

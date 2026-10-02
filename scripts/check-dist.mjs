@@ -14,6 +14,10 @@ const REQUIRED = [
   "contact/index.html",
   "demo/index.html",
 ];
+// Q1 [MICHAEL 2026-10-02]: the hero H1 keeps its em dash. This is the only
+// em dash allowed in rendered copy.
+const ALLOWED_EM_DASH = "writable\u2014and smart.";
+const FOOTER_NOTICE = "Patent pending";
 const BANNED_PHRASES = ["pilot customer", "endorsed", "adopted by"];
 const NSF_FIGURES = ["95%", "99%", "99.9%", "0.1%", "30% fewer"];
 const BANNED_APIS = [
@@ -79,7 +83,9 @@ function checkExternalOrigins(file, content) {
 function checkText(file, html) {
   const text = renderedText(html);
   const lower = text.toLowerCase();
-  if (text.includes("\u2014")) report(file, "em dash in rendered text");
+  if (text.split(ALLOWED_EM_DASH).join(" ").includes("\u2014"))
+    report(file, "em dash in rendered text");
+  if (!text.includes(FOOTER_NOTICE)) report(file, "missing footer notice");
   for (const phrase of BANNED_PHRASES) {
     if (lower.includes(phrase)) report(file, `banned phrase: ${phrase}`);
   }
@@ -115,7 +121,6 @@ function checkFile(full) {
   const isCss = file.endsWith(".css");
   if (!isHtml && !isJs && !isCss) return size;
   const content = readFileSync(full, "utf8");
-  if (content.includes("Jim White")) report(file, "contains Jim White");
   checkRootPaths(file, content);
   if (isHtml || isJs) checkApis(file, content);
   if (isHtml) {

@@ -28,6 +28,7 @@ const future = person.initials === undefined;
         <div class="advisor__text">
           <h3>{person.name}</h3>
           <p class="caption">{person.role}</p>
+          {person.bio && <p class="advisor__bio">{person.bio}</p>}
           {person.profileUrl && (
             <a
               class="advisor__link"
@@ -71,6 +72,11 @@ const future = person.initials === undefined;
     display: flex;
     flex-direction: column;
     gap: var(--s-2);
+  }
+
+  .advisor__bio {
+    font-size: var(--fs-caption);
+    line-height: 1.5;
   }
 
   .advisor__link {

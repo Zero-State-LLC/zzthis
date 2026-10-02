@@ -28,7 +28,7 @@ This spec covers three deliverables:
 
 - zzThis has no validated codebook and no controlled comparisons yet [NSF]. Recognition, resolver security, and human-factors performance are untested [NSF].
 - NSF Phase I numbers are research targets [NSF]. The site and this spec present them only as "Phase I targets".
-- The site makes no claim of pilots, customers, endorsement, or government adoption. The site makes no patent claim (OPEN Q9).
+- The site makes no claim of pilots, customers, endorsement, or government adoption. The footer shows the words "Patent pending" at Michael's direction [MICHAEL 2026-10-02]; the site makes no other patent claim (Q9 RESOLVED).
 - The xTech panel images are concept renderings [ASSETS]. The handwritten photos are real photos of Michael's handwritten codes [ASSETS].
 
 ## 2. Product spec
@@ -128,7 +128,7 @@ NSF Phase I targets:
 9. Median phone-class resolution below two seconds [NSF].
 10. Rejection of every defined unauthorized-update, replay, and malformed-input test [NSF].
 
-The launch site does not display these targets (INFERRED). They belong in the reserved technology slot. Publishing them is OPEN (Q7).
+The site does not publish these targets anywhere, including a later Technology page [MICHAEL 2026-10-02] (Q7 RESOLVED). They stay in this spec as research targets only.
 
 ## 3. Marketing site
 
@@ -143,12 +143,12 @@ The launch site does not display these targets (INFERRED). They belong in the re
 | `/applications` | Applications | Field logistics, postal and parcel, community use, digital aliases | [BRIEF] |
 | `/about` | About zzThis | Michael, advisors, prototypes, business context | [BRIEF] |
 | `/contact` | Contact | 1@1000x10.com and a collaboration invitation | [BRIEF] |
-| `/demo` | zzThis demo | Scripted click-through, mock data | Operator request; H1 wording INFERRED |
-| `/technology` | (reserved) | Permissioned records, cryptographic logs, shared ledgers, smart contracts | [BRIEF]; not built at launch |
+| `/demo` | See zzThis in action. | Prototype links, planned zzThat app, scripted click-through with mock data | Operator request; H1 [MICHAEL 2026-10-02] |
+| `/technology` | (not built) | Michael's draft wording is stored in `src/content/technology.ts`; the page is built and enters navigation only when it has that explanation plus a supporting example [MICHAEL 2026-10-02] | [BRIEF] [MICHAEL 2026-10-02] |
 
 - `/how-it-works` is a real page that reuses the Home workflow components. Home also exposes `#how-it-works` (INFERRED; the [BRIEF] allows "Anchored Home sections; stable detail route later").
-- The demo is not in the main nav. Links to it appear on `/how-it-works` and in the Home core workflow section (INFERRED; OPEN Q5).
-- **Reserved technology slot:** `src/content/technology.ts` holds a typed stub. No route is generated, and no page links to it, until Michael chooses its public wording [BRIEF] (INFERRED implementation).
+- The demo is not in the main nav. Links to it appear on `/how-it-works`, in the Home core workflow section, and in the footer [MICHAEL 2026-10-02] (Q5 RESOLVED). When the free zzThat app launches, add a prominent "Try zzThat" navigation action that links to zzthat.com [MICHAEL 2026-10-02].
+- **Technology page:** `src/content/technology.ts` holds Michael's public draft wording, marked `unpublished`. No route is generated and no page links to it until the page has that explanation plus a supporting example. Do not publish an empty stub [MICHAEL 2026-10-02] (Q14 RESOLVED).
 - Every page has exactly one H1, then H2 and H3 by content hierarchy, not by menu [BRIEF].
 - Every page has a footer with "Contact: 1@1000x10.com" [BRIEF], the nav links, and a link to `/demo` (INFERRED).
 
@@ -199,8 +199,8 @@ The controlled swipe row uses CSS scroll snap and a visible peek of the next car
 
 **Concept-gallery label rule.** One short concept-gallery label covers the j–n group, and captions explain each step [WIRE]. The [BRIEF] allows concept status once for the demonstration gallery and once on the prototype links [BRIEF].
 
-- Each page that shows panel images renders exactly one concept label (INFERRED). On Home, it sits at the start of the From photo to action group [WIRE]. On `/how-it-works` and `/applications`, it sits above the first panel group.
-- Label copy (INFERRED): "Concept renderings. The panel images on this page show intended use, not a deployed system." The wording covers all panels on the page, so the visitor can see that panels a–i are also renderings (OPEN Q17).
+- Concept labels [MICHAEL 2026-10-02] (Q17 RESOLVED): a standalone AI-render panel carries the tag "Concept illustration" (the Home hero image b, each Home application card, and single-panel sections on `/applications`). A grouped gallery carries one visible label above its panels: on Home, above the core workflow steps, the Field logistics row, and the From photo to action group. `/how-it-works` and `/applications` keep one page label under the H1, which covers their galleries. Captions name the actual workflow.
+- Label copy: standalone tag "Concept illustration" [MICHAEL 2026-10-02]. Group label (INFERRED): "Concept illustrations. These panels show intended use, not a deployed system." Page label (INFERRED): "Concept renderings. The panel images on this page show intended use, not a deployed system." All three live in `src/content/labels.ts`; replace the INFERRED wording if Daniel supplies exact text.
 - The second label appears on the About prototype links. Copy (INFERRED): "Both sites are concept-stage explorations."
 - `/demo` uses its own "Demo · mock data" label instead (Section 4).
 
@@ -211,12 +211,12 @@ The controlled swipe row uses CSS scroll snap and a visible peek of the next car
 | 1 | H1 and intro | H1 and intro (1.618) beside the contact card (1) |
 | 2 | Current explorations, stacked | zzthing.com and zzthat.com, 2 across |
 | 3 | Founder card | Initials card (1) beside the bio (1.618) |
-| 4 | Advisors, one stacked card each [WIRE] | 3 across: Patrick Muggler, Arshi Chadha, Ridham Bhagat; then Daniel Meyer and the Future space card |
+| 4 | Advisors, one stacked card each [WIRE] | 3 across: Jim White, Patrick Muggler, Arshi Chadha; then Ridham Bhagat, Daniel Meyer, Adam Fry [MICHAEL 2026-10-02] |
 | 5 | Codes written by hand (real photos) | 3 across |
 | 6 | Current stage | Full width |
 | 7 | Location, then Next action | Location and Next action, 2 across [WIRE] |
 
-Jim White is removed from the advisor list, per Michael's annotation on the wireframe [WIRE]. Photos are OPEN. The site uses initials cards until approved photos arrive, and the implementer does not scrape LinkedIn [WIRE] (OPEN Q6).
+The 2026-10-02 brief and wireframes list Jim White again ("Local AI and language"), add Adam Fry ("Advisor"), and drop the Future space card [MICHAEL 2026-10-02]. This supersedes the 2026-10-01 wireframe annotation that removed Jim White. Photos: initials cards until Michael supplies approved original headshots, and the implementer does not scrape LinkedIn [MICHAEL 2026-10-02] (Q6 RESOLVED).
 
 **Overrides to H.1–H.3**
 
@@ -225,7 +225,7 @@ Jim White is removed from the advisor list, per Michael's annotation on the wire
 3. H.1 desktop: The text column holds the H1, subline, actions, and paragraph. The image column holds b. The 1:1.618 ratio is unchanged.
 4. H.1: The focal point of image b sits on the tape code, so the mark stays visible in every crop [WIRE]. Caption: "Word code on blue tape beside an obscured barcode." [BRIEF]
 5. H.1: Keep both buttons. The desktop wireframe shows only the primary action, but the [BRIEF] specifies both [BRIEF].
-6. H.1: [WIRE] repeats the [BRIEF] em dash. The style rules still forbid it, so Q1 stays OPEN with the comma default.
+6. H.1: Keep the em dash in "writable—and smart." [MICHAEL 2026-10-02] (Q1 RESOLVED). This is the only em dash allowed in site copy; the no-em-dash rule still applies everywhere else.
 7. H.3: Render the comparison as three cards, one per mark: Barcode, QR code, and zzThis [WIRE]. Each card has three labeled rows (Create the mark, Read the mark, What it connects) that use the [BRIEF] cells verbatim. The cards stack on phones [BRIEF]. The zzThis card has an accent edge.
 8. The Section 3.2 order conflict is resolved by [WIRE]: comparison → How it works → Field logistics → From photo to action. Q2 is closed.
 
@@ -240,13 +240,13 @@ Reading order follows Do / Re / Mi / Fa as rhythm only. No beat labels are print
 Image: `public/images/panels/b-crate-word-code.webp`, eager loaded, `fetchpriority="high"`. At 900 px and wider, the image and text sit side by side at about 1.618:1 (image:text). On phones, the image appears above the text so that the image comes before the description [BRIEF; layout INFERRED].
 
 ```copy
-H1: Barcodes made things scannable. zzThis makes them writable, and smart.
+H1: Barcodes made things scannable. zzThis makes them writable—and smart.
 P:  zzThis is a human-readable, human-writable code alongside barcodes and QR codes. Write zz-copper-lantern-sky-zz on tape, a crate, a parcel, or a sign. Link it to a digital record, then find it by camera, typing, or voice.
 Primary button:   See field logistics   → /#field-logistics
 Secondary button: How it works          → /how-it-works
 ```
 
-[BRIEF] The [BRIEF] uses an em dash between "writable" and "and smart". The style rules forbid em dashes, so the default replaces it with a comma (OPEN Q1). Render the code in IBM Plex Mono (INFERRED).
+[BRIEF] Michael chose to keep the em dash [MICHAEL 2026-10-02] (Q1 RESOLVED). Image b carries the "Concept illustration" tag in its caption [MICHAEL 2026-10-02]. Render the code in IBM Plex Mono (INFERRED).
 
 #### H.2 Featured statement (Do)
 
@@ -280,11 +280,12 @@ Step 1 H3 Mark:   Write the code on tape, a crate, or a pallet.        [image al
 Step 2 H3 Read:   Camera or manual entry.                              [image d]
 Step 3 H3 Link:   Connect to an existing record and photo.             [image e]
 Step 4 H3 Report: Say the code words if a voice handoff is useful.     [image f]
+P:  Example code: zz-copper-lantern-sky-zz   (lowercase, as text)
 P:  For a field code made with no device, link and reconcile later.
 Link: Try the scripted demo → /demo
 ```
 
-Sources: the first paragraph and the closing line are [BRIEF]. The step text is [WIRE]. The link text is INFERRED. In each card, the image sits above the step text.
+Sources: the first paragraph and the closing line are [BRIEF]. The example-code line shows the visible lowercase zz code as text, not as the zz-code logo image [MICHAEL 2026-10-02] (Q11 RESOLVED); the "Example code" label is INFERRED. The step text is [WIRE]. The link text is INFERRED. In each card, the image sits above the step text.
 
 #### H.5 Field logistics (Re), `id="field-logistics"`
 
@@ -301,7 +302,7 @@ Cards: a, b (alternate), c, with captions from the Section 3.8 image plan.
 ```copy
 H2: From photo to action
 P:  A second layer after the handwritten code: see an item, identify it, choose its next task.
-[Concept label, Section 3.1a]
+[Concept group label, Section 3.1a]
 Sequence: j (01 Photograph), k (02 Guide), l (03 Review); then cards m (Inventory assistant) and n (Touch first)
 P:  AI-assisted work: PHOTOGRAPH one or more items → CONFIRM the proposed identification → choose a handling or inventory action by touch or voice → REVIEW the prepared record or form.
 ```
@@ -344,7 +345,7 @@ Link: 1@1000x10.com → mailto:1@1000x10.com
 
 #### Footer (all pages)
 
-Footer nav: How it works | Applications | About | Contact [WIRE]. The footer also shows "1@1000x10.com" [BRIEF] and a "Demo" link (INFERRED). The footer shows no patent notice, because neither the [BRIEF] nor [WIRE] supports one (OPEN Q9).
+Footer: How it works | Applications | Demo | About | Contact, then "1@1000x10.com" [BRIEF] and the words "Patent pending" [MICHAEL 2026-10-02] (Q9 RESOLVED).
 
 ### 3.3 How it works (`/how-it-works`)
 
@@ -378,17 +379,18 @@ The layout follows Section 3.1a.
 | Block | Copy | Source |
 |---|---|---|
 | H1 | About zzThis | [WIRE] |
-| Intro | "Michael Chung is the founder and project lead." | [BRIEF] |
+| Intro | "A code a person can write anywhere, linked to a digital record and the next work." | [MICHAEL 2026-10-02] wireframes |
+| H2 Founder origin | "Michael Chung says he ‘invents business models.’ His earlier ideas explored email organization and electronic payments for civic services. zzThis follows the same impulse: a useful digital connection should be possible wherever a person can write. A handwritten zz code can give a parcel, crate, tool, or public sign a persistent reference, then connect it to a record and the work around it. Michael is developing the idea across logistics, community use, and AI-assisted workflows." A longer founder history can follow later. | [MICHAEL 2026-10-02] (Q8 RESOLVED) |
 | Contact card | "1@1000x10.com. Invite collaboration and test partners." | [WIRE] |
-| H2 Current explorations | zzthing.com: "Broader showcase and label mockups." zzthat.com: "Simpler scanner/creator exploration." Concept label 2 (Section 3.1a) | [WIRE] [BRIEF] |
+| H2 Current explorations | zzthing.com: "Broader showcase and label mockups." zzthat.com: "Scanner/creator prototype; planned free web, Android, and iOS app." [MICHAEL 2026-10-02] Concept label 2 (Section 3.1a) | [WIRE] [BRIEF] |
 | H2 Founder | Michael Chung, "Founder and project lead." Bio: "25 years in commercial real estate, small-business finance, and business operations, followed by 13 years in Silicon Valley technology startups, including 10 years of blockchain research and activity and three years in AI. He works from Hacker Dojo in Mountain View, California." LinkedIn: https://www.linkedin.com/in/unitynow | [NSF] |
-| H2 Advisors | Cards: Patrick Muggler, "Connected logistics and IoT"; Arshi Chadha, "AI security"; Ridham Bhagat, "Robotics and resilient operations"; Daniel Meyer, "Full-stack development"; Future space, "Additional approved advisor or collaborator." Jim White is removed. | [BRIEF] [WIRE] |
+| H2 Advisors | Cards: Jim White, "Local AI and language"; Patrick Muggler, "Connected logistics and IoT"; Arshi Chadha, "AI security"; Ridham Bhagat, "Robotics and smart-contract security"; Daniel Meyer, "Full-stack development"; Adam Fry, "Advisor". Bios for Patrick, Arshi, Ridham, and Daniel are verbatim from the brief (`src/content/people.ts`). | [MICHAEL 2026-10-02] |
 | H2 Codes written by hand | Real photos: zz-hackerdojo-zz, zz-helloworld-zz, zz-roto-zz. Label: "Real photos of handwritten codes." | [ASSETS]; label INFERRED |
 | H2 Current stage | "zzThis is currently a sole proprietorship and plans to incorporate. Michael has submitted an NSF SBIR Project Pitch; submitting a pitch does not mean an award." | [NSF] |
 | Location | "Mountain View / Santa Clara area; Hacker Dojo work base." | [WIRE] [BRIEF] |
 | Next action | "Discuss a pilot, test cohort or collaboration." → mailto | [WIRE] |
 
-**Advisor card (INFERRED).** Each card shows initials in IBM Plex Mono at 42 px inside a 1:1 tile, then the name as H3, then the role line. The card shows a profile link only where the sources supply a URL. Ridham Bhagat's URL is https://www.linkedin.com/in/ridham-bhagat-22a047106/ [NSF]. Other profile URLs, bios, and portraits are OPEN Q6 and Q10. The Future space card has no initials and uses a dashed construction-line edge.
+**Advisor card (INFERRED).** Each card shows initials in IBM Plex Mono at 42 px inside a 1:1 tile, then the name as H3, the role line, the bio where supplied, and a LinkedIn link where a URL was supplied [MICHAEL 2026-10-02]: Michael Chung, Jim White, Patrick Muggler, Arshi Chadha, Ridham Bhagat. Daniel Meyer and Adam Fry have no URL or headshot yet; Adam Fry has no specialty or bio yet (Q10, Q12).
 
 ### 3.6 Contact (`/contact`)
 
@@ -419,7 +421,7 @@ interface ImageMeta {
 }
 ```
 
-The other content files are `hero.ts`, `comparison.ts`, `workflows.ts`, `applications.ts`, `people.ts`, `contact.ts`, `technology.ts` (stub), and `demo.ts`.
+The other content files are `hero.ts`, `comparison.ts`, `workflows.ts`, `applications.ts`, `people.ts`, `contact.ts`, `technology.ts` (unpublished draft), `labels.ts`, and `demo.ts`.
 
 ### 3.8 Image plan
 
@@ -444,12 +446,12 @@ All panel images have status `concept` [ASSETS]. Captions follow the [BRIEF] sce
 | m | panels/m-shelf-inventory.webp | Day 1 and Day 4 shelf photos; water at about two days left with a reorder prompt. | Same shelf across days; lower stock and proposed reorder. [WIRE] | Inventory card |
 | n | panels/n-touch-first.webp | Phone screen with a recognized item being dragged onto large action buttons. | Drag an identified item to an action; offer voice input. [WIRE] | Touch-first card |
 | o | panels/o-pack-and-ship.webp | Phone packing guidance for a guitar and an appliance with a zz parcel code. | Guitar and appliance packing guidance; handwritten zz parcel code. [BRIEF] | Parcel card |
-| l alt, m alt | panels/alt-l-…, alt-m-… | Kept in metadata, not rendered | — | OPEN Q4 |
+| l alt, m alt | removed from `public/` | Not used: Michael confirmed the primary l and m files (Field Tablet Turn-In Request Review, Split-screen water stock drops by Day 4) [MICHAEL 2026-10-02]. The alternates remain on branch `assets`. | — | Q4 RESOLVED |
 | demo 01–05 | demo/*.webp | Per step, Section 4.3 | Per step | /demo |
 | real photos | handwritten/*.webp | For example: "ZZ-HACKERDOJO-ZZ handwritten on paper." | Real photo. [ASSETS] | /about |
 | logos | logos/zzthis-logo-on-light.webp, …-on-dark.webp | "zzThis" | — | Header, swapped by theme |
 
-`zz-dojo-mojo-org-nacho-zz.webp`, `zz-sticky-note.webp`, and `zz-code-tm.webp` are not rendered at launch (OPEN Q11).
+Handwritten-code scenes [MICHAEL 2026-10-02] (Q11 RESOLVED): b in the hero, a and c (with b alternate) in Field logistics, g for parcel, h for community, and the lowercase zz code as text in the explainer. `zz-dojo-mojo-org-nacho-zz.webp`, `zz-sticky-note.webp`, and `zz-code-tm.webp` stay unrendered.
 
 ## 4. Click-through demo (`/demo`)
 
@@ -459,7 +461,7 @@ All panel images have status `concept` [ASSETS]. Captions follow the [BRIEF] sce
 - Every step shows a persistent badge, "Demo · mock data", at the top of the step panel. The badge is not dismissible and is included in each step's accessible name.
 - The intro reads, verbatim: "This is a scripted demonstration. No recognition runs; every result is prewritten mock data." (INFERRED)
 - The UI never uses the words "detected live", "scanning", or a spinner that implies processing. Results appear on button press with the label "Show scripted result".
-- The demo uses the H1 "zzThis demo" and two H2 tabs: "Flow A: Field item" and "Flow B: Look up a code".
+- The demo uses the H1 "See zzThis in action." [MICHAEL 2026-10-02], a lead line, a "Current prototypes" block (zzthing.com, zzthat.com, and the planned free zzThat app), then two H2 tabs: "Flow A: Field item" and "Flow B: Look up a code".
 
 ### 4.2 Mock data (`src/content/demo.ts`)
 
@@ -567,7 +569,7 @@ Fonts are self-hosted WOFF2 files in `public/fonts` (Latin subset). Spacing toke
 
 **Stack:** Astro (static output), INFERRED. Astro builds static HTML with no client JavaScript by default, so only the demo ships JavaScript, as one TypeScript island. The build makes no runtime external requests and includes no analytics. The site has no service worker. IBM Plex is self-hosted through `@fontsource` packages [OPERATOR 2026-10-01].
 
-**Hosting:** GitHub Pages, deployed from the private repo `Zero-State-LLC/zzthis` (organization plan Team). The Pages site is public. The project-site URL is `https://zero-state-llc.github.io/zzthis/`. The site has no custom domain, no DNS, and no Vercel [OPERATOR 2026-10-01].
+**Hosting:** GitHub Pages, deployed from the public repo `Zero-State-LLC/zzthis` (organization plan Team). The repo and the Pages site are both public, so nothing private (source documents, costs, credentials) may be committed. The project-site URL is `https://zero-state-llc.github.io/zzthis/`. The site has no custom domain, no DNS, and no Vercel [OPERATOR 2026-10-01].
 
 **Base path:** `astro.config.mjs` sets `output: 'static'`, `site: 'https://zero-state-llc.github.io'`, and `base: '/zzthis/'`. Every internal link and image URL is built from `import.meta.env.BASE_URL`. The source contains no absolute root paths such as `/images/...` or `/demo` [OPERATOR 2026-10-01]. A small helper in `src/lib/url.ts` that joins `BASE_URL` with a relative path keeps this consistent (INFERRED).
 
@@ -621,13 +623,13 @@ package-lock.json
 
 1. `/zzthis/`, `/zzthis/how-it-works`, `/zzthis/applications`, `/zzthis/about`, `/zzthis/contact`, and `/zzthis/demo` build as static HTML and return content. `/technology` does not exist, and no page links to it.
 2. Each page has exactly one `<h1>`, and no heading level is skipped.
-3. The nav shows, in order: How it works, Applications, About, Contact. The footer shows the same list.
+3. The nav shows, in order: How it works, Applications, About, Contact. The footer shows How it works, Applications, Demo, About, Contact, then "Patent pending" [MICHAEL 2026-10-02].
 4. The hero H1, subline, paragraph, featured statement, comparison cells, workflow lines, and category stories match Sections 3.2–3.4 character for character. This check uses a snapshot test of the content objects.
-5. No rendered copy contains an em dash (—).
+5. No rendered copy contains an em dash (—), except the hero H1 "writable—and smart." [MICHAEL 2026-10-02].
 6. The Home section order matches Section 3.1a. Field logistics and From photo to action contain the most image cards on Home.
 7. Panel placement matches Section 3.8. j, k, and l render as an ordered list labeled 01 to 03.
-8. Each page that shows panels renders exactly one concept label, and the About prototype block has one. `/zzthis/demo` shows the "Demo · mock data" badge on every step, A0–A7 and B0–B4.
-9. The advisor list is Patrick Muggler, Arshi Chadha, Ridham Bhagat, Daniel Meyer, and Future space. "Jim White" does not appear anywhere in the build output.
+8. Concept labels follow Section 3.1a [MICHAEL 2026-10-02]: standalone panels carry "Concept illustration", each grouped gallery has one label above it, and the About prototype block has one. `/zzthis/demo` shows the "Demo · mock data" badge on every step, A0–A7 and B0–B4.
+9. The advisor list is Jim White, Patrick Muggler, Arshi Chadha, Ridham Bhagat, Daniel Meyer, and Adam Fry [MICHAEL 2026-10-02]. Every page footer shows "Patent pending".
 10. No page shows a portrait. Advisor and founder cards use initials.
 11. Flow A reaches A7 with the keyboard alone. A7 states that nothing was submitted.
 12. Flow B produces each outcome for the test inputs in Section 4.4.
@@ -652,25 +654,28 @@ package-lock.json
 
 **Out of scope:** real recognition, camera access, a real resolver, accounts, forms or email backends, analytics, service workers, a custom domain or DNS, Vercel, the technology page, the founder history page (patent, civic payments, HalfHashed Labs, Unity Consensus) [BRIEF], the zzthing.com and zzthat.com apps, and CMS integration. GitHub Pages replaces the earlier Vercel target [OPERATOR 2026-10-01].
 
-| # | Question for Michael and Danny | Default |
+Michael's answers arrived on 2026-10-02 through Danny (issue #10), in an updated content brief and updated wireframes. [MICHAEL 2026-10-02] tags each answer.
+
+| # | Question for Michael and Danny | Default or decision |
 |---|---|---|
-| Q1 | The hero em dash: use a comma or another form? | Comma |
+| Q1 | The hero em dash: use a comma or another form? | RESOLVED: keep the em dash in "writable—and smart." Only this line may use one [MICHAEL 2026-10-02] |
 | Q2 | Home order | Closed by [WIRE] |
-| Q3 | H1 wording for `/demo` | "zzThis demo" |
-| Q4 | Which l and m renders are the final corrected versions? | Primary files |
-| Q5 | Should the demo appear in the main nav? | No; link from How it works and the footer |
-| Q6 | Founder and advisor portraits: should the team supply approved photos? No LinkedIn scraping. | Initials cards |
-| Q7 | Should the NSF targets be published, and where? | Not at launch |
-| Q8 | Michael's origin story for the About page | Omitted |
-| Q9 | Should a patent notice appear in the footer? | No; not shown until the [BRIEF] or [WIRE] supports it |
-| Q10 | Profile URLs and bios for Patrick Muggler, Arshi Chadha, and Daniel Meyer | Role line only |
-| Q11 | Should the remaining handwritten photos and the zz-code mark be used? | Not rendered |
-| Q12 | Should Adam Fry (named in [NSF]) be listed? | No |
+| Q3 | H1 wording for `/demo` | RESOLVED: "See zzThis in action." [MICHAEL 2026-10-02] |
+| Q4 | Which l and m renders are the final corrected versions? | RESOLVED: Field Tablet Turn-In Request Review (l) and Split-screen water stock drops by Day 4 (m), already the primary files; the alternates are not used [MICHAEL 2026-10-02] |
+| Q5 | Should the demo appear in the main nav? | RESOLVED: no; link from How it works and the footer. Add "Try zzThat" to the nav when the free app launches [MICHAEL 2026-10-02] |
+| Q6 | Founder and advisor portraits: should the team supply approved photos? No LinkedIn scraping. | RESOLVED: initials cards until Michael supplies approved original headshots; supplied LinkedIn URLs are profile links [MICHAEL 2026-10-02] |
+| Q7 | Should the NSF targets be published, and where? | RESOLVED: do not publish NSF Phase I targets on the site [MICHAEL 2026-10-02] |
+| Q8 | Michael's origin story for the About page | RESOLVED: short founder origin on About (Section 3.5); room for a longer history later [MICHAEL 2026-10-02] |
+| Q9 | Should a patent notice appear in the footer? | RESOLVED: footer shows the words "Patent pending" [MICHAEL 2026-10-02] |
+| Q10 | Profile URLs and bios for Patrick Muggler, Arshi Chadha, and Daniel Meyer | PARTLY RESOLVED: bios for Patrick, Arshi, and Daniel; LinkedIn URLs for Patrick and Arshi [MICHAEL 2026-10-02]. Still OPEN: Daniel's profile URL and project accomplishments |
+| Q11 | Should the remaining handwritten photos and the zz-code mark be used? | RESOLVED: b hero; a and c field logistics; g parcel; h community; lowercase zz code as text in the explainer [MICHAEL 2026-10-02] |
+| Q12 | Should Adam Fry (named in [NSF]) be listed? | RESOLVED: yes, initials card, role "Advisor" [MICHAEL 2026-10-02]. Still OPEN: his specialty, bio, profile URL, and photo |
 | Q13 | CI | Closed: PR #1 `ci.yml` (job `build`) is the required check; do not edit or duplicate it; optional `site-ci.yml` runs typecheck and test only [OPERATOR 2026-10-01] |
-| Q14 | Public wording for the technology page | Reserved stub |
+| Q14 | Public wording for the technology page | RESOLVED: draft wording supplied (stored in `technology.ts`); no empty page; the page enters navigation only with that content plus an example [MICHAEL 2026-10-02] |
 | Q15 | Domain | Closed for launch: GitHub Pages project URL https://zero-state-llc.github.io/zzthis/, no custom domain or DNS [OPERATOR 2026-10-01] |
-| Q16 | Ridham Bhagat's role: "robotics and resilient operations" [BRIEF] or "robotics and operations" [WIRE]? | [BRIEF] wording |
-| Q17 | Concept label wording | Section 3.1a text |
+| Q16 | Ridham Bhagat's role: "robotics and resilient operations" [BRIEF] or "robotics and operations" [WIRE]? | RESOLVED: "Robotics and smart-contract security", with the supplied bio [MICHAEL 2026-10-02] |
+| Q17 | Concept label wording | RESOLVED: "Concept illustration" on standalone AI-render panels; one label above a grouped gallery (Section 3.1a) [MICHAEL 2026-10-02] |
+| Q20 | Does the demo's code lookup show "no match" (not "did you mean") for unrelated codes such as `zz-apple-sky-zz` vs `zz-b2-4-zz`? | OPEN; asked in issue #10, not yet answered. Default: "no match" |
 
 ## 10. Provenance
 

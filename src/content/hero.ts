@@ -22,8 +22,10 @@ export interface LinkBlock extends TextBlock {
 }
 
 export const hero: HeroContent = {
+  // Q1 [MICHAEL 2026-10-02]: Michael chose to keep the em dash in this one line.
+  // It is the only em dash allowed in site copy (see heroEmDashTitle).
   title:
-    "Barcodes made things scannable. zzThis makes them writable, and smart.",
+    "Barcodes made things scannable. zzThis makes them writable—and smart.",
   subline:
     "Write a code on a thing; find its record by camera, typing, or voice.",
   paragraph: {
