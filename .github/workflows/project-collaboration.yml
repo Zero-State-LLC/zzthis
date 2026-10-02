@@ -14,9 +14,10 @@ permissions:
 
 env:
   ORG_NAME: Zero-State-LLC
-  # Number of the zzThis org board. Empty until the board exists: the
-  # workflow then skips the board step with a warning and still notifies.
-  PROJECT_NUMBER: ''
+  # Number of the zzThis org board:
+  # https://github.com/orgs/Zero-State-LLC/projects/24
+  # If empty, the workflow skips the board step with a warning and still notifies.
+  PROJECT_NUMBER: '24'
   STATUS_FIELD: Status
   STATUS_VALUE: Todo
 
