@@ -29,27 +29,29 @@ import {
       </li>
     ))}
   </ul>
-  <table class="visually-hidden">
-    <caption>{comparisonHeading}</caption>
-    <thead>
-      <tr>
-        <td></td>
-        {comparisonColumns.map((column) => (
-          <th scope="col">{column.name}</th>
-        ))}
-      </tr>
-    </thead>
-    <tbody>
-      {comparisonRows.map((row) => (
+  <div class="visually-hidden">
+    <table>
+      <caption>{comparisonHeading}</caption>
+      <thead>
         <tr>
-          <th scope="row">{row.label}</th>
+          <td></td>
           {comparisonColumns.map((column) => (
-            <td>{column.cells[row.key]}</td>
+            <th scope="col">{column.name}</th>
           ))}
         </tr>
-      ))}
-    </tbody>
-  </table>
+      </thead>
+      <tbody>
+        {comparisonRows.map((row) => (
+          <tr>
+            <th scope="row">{row.label}</th>
+            {comparisonColumns.map((column) => (
+              <td>{column.cells[row.key]}</td>
+            ))}
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  </div>
 </div>
 
 <style>
