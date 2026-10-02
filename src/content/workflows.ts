@@ -42,6 +42,9 @@ export const coreIdentity = {
       image: "f",
     },
   ] satisfies WorkflowStep[],
+  // Q11 [MICHAEL 2026-10-02]: show the lowercase zz code as text in the explainer.
+  exampleLabel: "Example code",
+  exampleCode: "zz-copper-lantern-sky-zz",
   closing: "For a field code made with no device, link and reconcile later.",
   demoLinkText: "Try the scripted demo",
 };

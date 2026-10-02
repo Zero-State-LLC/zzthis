@@ -3,6 +3,7 @@ import { images, type ImageId } from "../content/images";
 import type { ImageMeta } from "../content/types";
 import { objectPosition } from "../lib/image";
 import { url } from "../lib/url";
+import { conceptLabels } from "../content/labels";
 
 interface Props {
   image: ImageId | ImageMeta;
@@ -12,6 +13,7 @@ interface Props {
   loading?: "lazy" | "eager";
   numeral?: string;
   accent?: boolean;
+  conceptTag?: boolean;
 }
 
 const {
@@ -22,6 +24,7 @@ const {
   loading = "lazy",
   numeral,
   accent = false,
+  conceptTag = false,
 } = Astro.props;
 
 const meta: ImageMeta = typeof image === "string" ? images[image] : image;
@@ -43,6 +46,9 @@ const Heading = `h${headingLevel}` as "h2" | "h3" | "h4";
         style={`object-position: ${objectPosition(meta.focal)}`}
       />
       <div class="card__text">
+        {conceptTag && meta.status === "concept" && (
+          <p class="concept-tag">{conceptLabels.standalone}</p>
+        )}
         {numeral && <span class="card__numeral">{numeral}</span>}
         <Heading class="card__title">{title}</Heading>
         {caption && <p class="card__caption">{caption}</p>}

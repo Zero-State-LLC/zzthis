@@ -1,5 +1,5 @@
 ---
-import { navItems, contactEmail } from "../content/navigation";
+import { footerItems, contactEmail, footerNotice } from "../content/navigation";
 import { url } from "../lib/url";
 ---
 
@@ -7,19 +7,17 @@ import { url } from "../lib/url";
   <div class="container footer-inner">
     <nav aria-label="Footer">
       <ul class="footer-nav">
-        {navItems.map((item) => (
+        {footerItems.map((item) => (
           <li>
             <a href={url(item.path)}>{item.label}</a>
           </li>
         ))}
-        <li>
-          <a href={url("demo")}>Demo</a>
-        </li>
       </ul>
     </nav>
     <p>
       Contact: <a href={`mailto:${contactEmail}`}>{contactEmail}</a>
     </p>
+    <p class="footer-notice">{footerNotice}</p>
   </div>
 </footer>
 
@@ -40,6 +38,11 @@ import { url } from "../lib/url";
     display: flex;
     flex-wrap: wrap;
     gap: 0 var(--s-5);
+  }
+
+  .footer-notice {
+    font-size: var(--fs-caption);
+    color: var(--text-muted);
   }
 
   .footer-nav a,

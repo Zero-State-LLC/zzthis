@@ -1,11 +1,11 @@
 ---
+import { conceptLabels } from "../content/labels";
+
 interface Props {
   text?: string;
 }
 
-const {
-  text = "Concept renderings. The panel images on this page show intended use, not a deployed system.",
-} = Astro.props;
+const { text = conceptLabels.page } = Astro.props;
 ---
 
 <p class="concept-label" role="note">
