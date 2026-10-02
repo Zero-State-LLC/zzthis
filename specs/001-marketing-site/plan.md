@@ -20,7 +20,7 @@ anti-slop-code, production-systems, google-developer-style; stop-slop for copy e
 | Styling | CSS tokens in `src/styles/tokens.css`, base rules in `src/styles/base.css` | OBSERVED |
 | Fonts | IBM Plex Sans and Plex Mono through `@fontsource`, self-hosted | OBSERVED (`package.json`) |
 | Tests | Vitest, 100% line and branch coverage on `src/lib/**` and `src/demo/demoMachine.ts` | OBSERVED (`vitest.config.ts`) |
-| Build checks | `scripts/check-dist.mjs`: required pages, one H1, heading order, base-path links, banned phrases and NSF figures, em dash rule, footer notice, banned browser APIs, size budgets | OBSERVED |
+| Build checks | `scripts/check-dist.mjs`: required pages, one H1, heading order, base-path links, banned phrases and unmeasured performance figures, em dash rule, footer notice, banned browser APIs, size budgets | OBSERVED |
 | Hosting | GitHub Pages through `pages.yml` on push to `main` | OBSERVED |
 
 ## Constitution check
@@ -28,8 +28,8 @@ anti-slop-code, production-systems, google-developer-style; stop-slop for copy e
 | Principle | How the site meets it |
 |---|---|
 | III. Exact match, no live-code hints | Met by T010 (issue #12): Flow B matches exactly and shows no other code on a miss. |
-| IV. Honest status | `check-dist.mjs` blocks NSF figures and claim phrases; concept labels on panels. |
-| VI. Public repo hygiene | `scripts/security-scan.sh` in CI. NSF-derived text in `docs/SPEC.md` is flagged for review (see `specs/analysis-2026-10-02.md`). |
+| IV. Honest status | `check-dist.mjs` blocks unmeasured performance figures and claim phrases; concept labels on panels. |
+| VI. Public repo hygiene | `scripts/security-scan.sh` in CI. Research targets and pitch-only text were removed (Q24). |
 | VII. Workflows in the spec | `spec.md` has `## Workflows`. |
 
 ## Structure

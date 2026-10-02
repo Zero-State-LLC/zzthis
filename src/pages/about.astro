@@ -5,12 +5,7 @@ import ConceptLabel from "../components/ConceptLabel.astro";
 import Eyebrow from "../components/Eyebrow.astro";
 import Series from "../components/Series.astro";
 import { aboutPage, mailto, prototypes } from "../content/contact";
-import {
-  advisors,
-  founder,
-  founderOrigin,
-  peopleHeadings,
-} from "../content/people";
+import { advisors, founder, peopleHeadings } from "../content/people";
 import { images } from "../content/images";
 import { contactEmail } from "../content/navigation";
 import { objectPosition } from "../lib/image";
@@ -44,14 +39,8 @@ const handwritten = [
       </div>
     </section>
 
-    <section class="section origin">
-      <Eyebrow index="01" />
-      <h2>{founderOrigin.heading}</h2>
-      <p>{founderOrigin.text}</p>
-    </section>
-
     <section class="section">
-      <Eyebrow index="02" />
+      <Eyebrow index="01" />
       <h2>{aboutPage.explorationsHeading}</h2>
       <ConceptLabel text={aboutPage.prototypeLabel} />
       <Series columns="2">
@@ -76,7 +65,7 @@ const handwritten = [
     </section>
 
     <section class="section">
-      <Eyebrow index="03" />
+      <Eyebrow index="02" />
       <h2>{peopleHeadings.founder}</h2>
       <div class="row row--founder">
         <div class="mount founder-tile">
@@ -103,7 +92,7 @@ const handwritten = [
     </section>
 
     <section class="section">
-      <Eyebrow index="04" />
+      <Eyebrow index="03" />
       <h2>{peopleHeadings.advisors}</h2>
       <Series columns="3">
         {advisors.map((person) => (
@@ -115,7 +104,7 @@ const handwritten = [
     </section>
 
     <section class="section">
-      <Eyebrow index="05" />
+      <Eyebrow index="04" />
       <h2>{aboutPage.handwrittenHeading}</h2>
       <p class="caption">{aboutPage.handwrittenLabel}</p>
       <Series columns="3">
@@ -147,20 +136,14 @@ const handwritten = [
       </Series>
     </section>
 
-    <section class="section">
-      <Eyebrow index="06" />
-      <h2>{aboutPage.stageHeading}</h2>
-      <p>{aboutPage.stageText}</p>
-    </section>
-
     <div class="pair">
       <section class="section">
-        <Eyebrow index="07" />
+        <Eyebrow index="05" />
         <h2>{aboutPage.locationHeading}</h2>
         <p>{aboutPage.locationText}</p>
       </section>
       <section class="section">
-        <Eyebrow index="08" />
+        <Eyebrow index="06" />
         <h2>{aboutPage.nextHeading}</h2>
         <p>
           <a href={mailto}>{aboutPage.nextText}</a>

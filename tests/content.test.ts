@@ -252,7 +252,7 @@ describe("content hygiene across all content modules", () => {
     ]);
   });
 
-  it("contains no NSF target figures or endorsement claims", () => {
+  it("contains no unmeasured performance figures or endorsement claims", () => {
     const banned = [
       "95%",
       "99%",

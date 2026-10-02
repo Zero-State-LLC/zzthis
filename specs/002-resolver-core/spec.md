@@ -7,15 +7,15 @@ Constitution: [.specify/memory/constitution.md](../../.specify/memory/constituti
 
 ## Why
 
-A zz code on paper is public. Anyone can copy it, photograph it, or guess at it. The value of zzThis depends on a resolver that turns a code into the right record for the right person, and nothing else [NSF] [OPERATOR 2026-10-02]. No resolver exists yet; its security is untested [NSF].
+A zz code on paper is public. Anyone can copy it, photograph it, or guess at it. The value of zzThis depends on a resolver that turns a code into the right record for the right person, and nothing else [PRODUCT] [OPERATOR 2026-10-02]. No resolver exists yet; its security is untested [PRODUCT].
 
 ## Users
 
 | User | Need | Source |
 |---|---|---|
 | Person holding a marked item | Read a code and see the record view they are allowed to see | [BRIEF] [OPERATOR 2026-10-02] |
-| Issuer (for example a supply clerk) | Issue a code, link it to a record, update the record, revoke the code | [NSF] [OPERATOR 2026-10-02] |
-| Auditor | See who did what to a code or record, and when | [NSF] |
+| Issuer (for example a supply clerk) | Issue a code, link it to a record, update the record, revoke the code | [PRODUCT] [OPERATOR 2026-10-02] |
+| Auditor | See who did what to a code or record, and when | [PRODUCT] |
 | Partner system | Resolve codes through an API | [OPERATOR 2026-10-02]; authentication OPEN (Q19) |
 
 ## User stories
@@ -32,7 +32,7 @@ Acceptance:
 
 ### US2. Issue and link a code (P1)
 
-As an issuer, I ask for a new code linked to a record, with an optional expiry and single-use flag, so that I can mark an item [NSF] [OPERATOR 2026-10-02].
+As an issuer, I ask for a new code linked to a record, with an optional expiry and single-use flag, so that I can mark an item [PRODUCT] [OPERATOR 2026-10-02].
 
 Acceptance: the server chooses the words and the check word; the code is unique among active codes (INFERRED); the issue is written to the audit log.
 
@@ -63,12 +63,12 @@ As a field user who wrote a code by hand with no device, I can link it to a reco
 | FR-007 | Role-scoped views of a record. | [OPERATOR 2026-10-02] |
 | FR-008 | Issuing, revoking, and marking used always go through the central server, never an offline client. | [OPERATOR 2026-10-02] |
 | FR-009 | Handwritten codes resolve the same way as printed ones; no printed-only feature is required. | [OPERATOR 2026-10-02] |
-| FR-010 | Abuse cases to defend: copied marks, replay, enumeration, unauthorized updates, malformed input. Each abuse case gets a test with a stated pass condition in tasks.md. | [NSF]; test rule INFERRED |
+| FR-010 | Abuse cases to defend: copied marks, replay, enumeration, unauthorized updates, malformed input. Each abuse case gets a test with a stated pass condition in tasks.md. | [PRODUCT]; test rule INFERRED |
 | FR-011 | A lookup for a code that does not exist and a lookup for a revoked code return the same response shape and status, so a caller cannot tell them apart or enumerate codes. | INFERRED from FR-001 and the plan's timing risk |
 
 ## Success criteria
 
-No numeric targets are set for this prototype. The NSF Phase I targets in `docs/SPEC.md` Section 2.7 are research targets for a funded study, not acceptance criteria for this feature, and they are flagged for removal from the public repo (see `specs/analysis-2026-10-02.md`). Acceptance for the prototype is the US1 to US4 scenarios passing in automated tests, including one test per FR-010 abuse case (INFERRED).
+No numeric targets are set for this prototype. Research targets are not acceptance criteria and are not kept in this repo (Q24). Acceptance for the prototype is the US1 to US4 scenarios passing in automated tests, including one test per FR-010 abuse case (INFERRED).
 
 ## Out of scope
 
@@ -81,7 +81,7 @@ Recognition (spec 004), the wordlist and check word (spec 003), payments, partne
 | Q19 | How do partner apps authenticate? | None chosen |
 | Q25 | How does a person pick a valid code with no device: pre-issued code cards, or claiming a handwritten code that the server checks? | None chosen |
 | Q26 | Purge window for revoked codes at the edge, and rate-limit values | None chosen; prototype uses short cache lifetimes (INFERRED) |
-| Q27 | Which code formats does the prototype support first (two-word, three-word, check word, prefix, enterprise, one-time, reusable-account [NSF])? | None chosen |
+| Q27 | Which code formats does the prototype support first (two-word, three-word, check word, prefix, enterprise, one-time, reusable-account [PRODUCT])? | None chosen |
 | Q28 | Where the server's record-signing keys live and how they rotate | None chosen; blocks T001 |
 | Q29 | Where the resolver code lives (this repo or a separate repo) | None chosen; blocks T001 |
 | Q36 | Can the words of a revoked, used, or expired code be issued again? Reissue would let a copied old mark open a new record. | None chosen; "never reissue" proposed for Danny |

@@ -10,13 +10,13 @@ This file is the governing contract for every zzThis spec, plan, and task under 
 - **INFERRED**: a design or engineering choice made in a spec. An implementer may follow it without further approval.
 - **SPECULATIVE**: a guess that needs evidence before anyone builds on it.
 - **OPEN**: a decision for Michael Chung (product and copy) or Danny (operator). Each OPEN item names its default, if one exists, and its question ID in [`docs/SPEC.md` Section 9](../../docs/SPEC.md#9-out-of-scope-and-open-questions).
-- Source tags carry over unchanged from `docs/SPEC.md`: [BRIEF], [WIRE], [OVERVIEW], [NSF], [ASSETS], [OPERATOR date], and [MICHAEL date].
+- Source tags carry over unchanged from `docs/SPEC.md`: [BRIEF], [WIRE], [OVERVIEW], [PRODUCT] (Michael's private product write-up, not in the repo), [ASSETS], [OPERATOR date], and [MICHAEL date].
 
 ## Principles
 
 ### I. The code on paper is public; security lives in the resolver
 
-The visible words are a public identifier, not a password or a key [NSF]. Authorization, payment, revocation, single use, and expiry are enforced by the server, never by a client or by the printed mark [OPERATOR 2026-10-02].
+The visible words are a public identifier, not a password or a key [PRODUCT]. Authorization, payment, revocation, single use, and expiry are enforced by the server, never by a client or by the printed mark [OPERATOR 2026-10-02].
 
 ### II. Handwriting first
 
@@ -28,7 +28,7 @@ A resolver matches the exact code. It never suggests other live codes, and unkno
 
 ### IV. Honest status
 
-zzThis has no validated codebook, no controlled comparisons, and no tested recognition or resolver yet [NSF]. Public copy never claims pilots, customers, endorsement, adoption, or results. Research targets are never presented as results, and NSF Phase I target figures are never published on the site [MICHAEL 2026-10-02]. Concept renderings are labeled as concepts [MICHAEL 2026-10-02].
+zzThis has no validated codebook, no controlled comparisons, and no tested recognition or resolver yet [PRODUCT]. Public copy never claims pilots, customers, endorsement, adoption, or results. Research targets are never presented as results, and research targets are not published on the site or kept in this repo [MICHAEL 2026-10-02] [OPERATOR 2026-10-02]. Concept renderings are labeled as concepts [MICHAEL 2026-10-02].
 
 ### V. Do not invent the code format or the product
 
