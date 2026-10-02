@@ -73,7 +73,7 @@ Acceptance: `/contact`, the Home contact action, the About contact card, and the
 | FR-010 | `/technology` is not built and nothing links to it until it has Michael's draft explanation plus a supporting example. | [MICHAEL 2026-10-02] |
 | FR-011 | The demo is scripted: no recognition, no backend, no camera, microphone, network calls, or storage. Every step shows "Demo · mock data". | [OPERATOR 2026-10-01] |
 | FR-012 | The demo is fully usable by keyboard. Drag is never required. Reduced motion removes transitions. Without JavaScript, a static list of steps appears. | INFERRED (`docs/SPEC.md` Section 4.5) |
-| FR-013 | Flow B (look up a code) never reveals other codes on a miss. | Required by constitution principle III and issue #12. Only the wording of the miss state is OPEN (Q20); the demo uses the existing "No match" sentence as a placeholder. Suggestions removed by T010. |
+| FR-013 | Flow B (look up a code) never reveals other codes on a miss. | Required by constitution principle III and issue #12. The public demo stays exact match only even though deployments may later enable a suggestion policy (Q20 partly resolved, Q40), because the demo exposes real codes. The wording is a placeholder. Suggestions removed by T010. |
 | FR-014 | The site makes no runtime requests to other origins, has no analytics, and has no service worker. | [OPERATOR 2026-10-01] |
 | FR-015 | Light and dark themes both meet text contrast of at least 4.5:1. | `docs/SPEC.md` Section 8, item 16 |
 | FR-016 | When the free zzThat app launches, the main navigation gains a prominent "Try zzThat" action that links to zzthat.com. | [MICHAEL 2026-10-02]; launch trigger OPEN (Q39) |
@@ -97,8 +97,8 @@ Real recognition, a real resolver, accounts, forms or email backends, analytics,
 | ID | Question | Default |
 |---|---|---|
 | Q10 (part) | Daniel Meyer's profile URL and project accomplishments | Role and bio only |
-| Q12 (part) | Adam Fry's specialty, bio, profile URL, and photo | "Advisor" only |
-| Q20 | Flow B behavior on a miss | "No match"; see FR-013 and issue #12 |
+| Q12 (part) | Adam Fry's profile URL and photo | Specialty and bio supplied [MICHAEL 2026-10-02] |
+| Q20 | Flow B behavior on a miss | PARTLY RESOLVED: context dependent [MICHAEL 2026-10-02]; the public demo stays "No match" (FR-013). Policy details: Q40 |
 | Q39 | What event or date counts as the zzThat app launch for FR-016? | None chosen |
 | Q21 | Which handling verbs does the demo show? The brief lists pack, ship, return, repair, and dispose [BRIEF]; the 2026-10-02 wireframe shows Pack, Ship, Turn In, Dispose; the demo uses Pack, Return, Repair, Dispose (OBSERVED). | Keep the demo as built |
 | Q22 | Field logistics panels: the brief says a and c; the 2026-10-02 wireframe shows a, b, c. The site shows a, the b alternate, and c (OBSERVED). | Keep as built |

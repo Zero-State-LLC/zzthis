@@ -54,7 +54,7 @@ As a field user who wrote a code by hand with no device, I can link it to a reco
 
 | ID | Requirement | Source |
 |---|---|---|
-| FR-001 | Exact-match lookup only. No fuzzy matching on the server and no live-code suggestions. | [OPERATOR 2026-10-02] |
+| FR-001 | Exact-match lookup by default. No fuzzy matching on the server and no live-code suggestions unless FR-012 allows them for the tenant. | [OPERATOR 2026-10-02] [MICHAEL 2026-10-02] |
 | FR-002 | Every record change creates a new immutable version signed by the server. | [OPERATOR 2026-10-02] |
 | FR-003 | Append-only audit log for every call that changes state, and for resolves. | [OPERATOR 2026-10-02]; "every call" is INFERRED (`docs/SPEC.md` Section 10.6) |
 | FR-004 | Single-use and expiry where the code format calls for them; a single-use code is marked used in the same write that resolves it. | [OPERATOR 2026-10-02]; same-write rule INFERRED |
@@ -65,6 +65,7 @@ As a field user who wrote a code by hand with no device, I can link it to a reco
 | FR-009 | Handwritten codes resolve the same way as printed ones; no printed-only feature is required. | [OPERATOR 2026-10-02] |
 | FR-010 | Abuse cases to defend: copied marks, replay, enumeration, unauthorized updates, malformed input. Each abuse case gets a test with a stated pass condition in tasks.md. | [PRODUCT]; test rule INFERRED |
 | FR-011 | A lookup for a code that does not exist and a lookup for a revoked code return the same response shape and status, so a caller cannot tell them apart or enumerate codes. | INFERRED from FR-001 and the plan's timing risk |
+| FR-012 | Per-tenant suggestion policy. Off by default. A tenant marked high-security can never turn it on and gets strict pass or fail, possibly graded by the type of misread. Which tenant types may enable it, and what a suggestion may reveal, are OPEN (Q40). | [MICHAEL 2026-10-02]; defaults [OPERATOR 2026-10-02] |
 
 ## Success criteria
 
@@ -84,6 +85,7 @@ Recognition (spec 004), the wordlist and check word (spec 003), payments, partne
 | Q27 | Which code formats does the prototype support first (two-word, three-word, check word, prefix, enterprise, one-time, reusable-account [PRODUCT])? | None chosen |
 | Q28 | Where the server's record-signing keys live and how they rotate | None chosen; blocks T001 |
 | Q29 | Where the resolver code lives (this repo or a separate repo) | None chosen; blocks T001 |
+| Q40 | Suggestion policy details: allowed tenant types, what a suggestion reveals, misread grading for high-security tenants | Off by default; never on for high-security [MICHAEL 2026-10-02] |
 | Q36 | Can the words of a revoked, used, or expired code be issued again? Reissue would let a copied old mark open a new record. | None chosen; "never reissue" proposed for Danny |
 
 ## Workflows

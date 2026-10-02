@@ -41,3 +41,4 @@ Workflows for every implementing task: anti-slop-code, production-systems, googl
 
 - [ ] T014 US5 no-device linking after Q25 is answered.
 - [ ] T015 Partner authentication after Q19 is answered.
+- [ ] T016 Per-tenant suggestion policy (FR-012): off by default, blocked for high-security tenants, with tests for both. Details after Q40 is answered.

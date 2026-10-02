@@ -194,7 +194,6 @@ describe("navigation and people", () => {
 
   it("lists the advisors in the 2026-10-02 order, all with initials", () => {
     expect(advisors.map((person) => person.name)).toEqual([
-      "Jim White",
       "Patrick Muggler",
       "Arshi Chadha",
       "Ridham Bhagat",
@@ -209,19 +208,24 @@ describe("navigation and people", () => {
   it("applies Michael's 2026-10-02 answers", () => {
     const byName = (name: string) =>
       advisors.find((person) => person.name === name);
+    expect(advisors.some((person) => person.name === "Jim White")).toBe(false);
     expect(byName("Ridham Bhagat")?.role).toBe(
-      "Robotics and smart-contract security",
+      "Cybersecurity, cryptography and research methods",
     );
-    expect(byName("Adam Fry")).toEqual({
-      name: "Adam Fry",
-      initials: "AF",
-      role: "Advisor",
-    });
+    expect(byName("Ridham Bhagat")?.bio).toMatch(
+      /^Ridham Bhagat will contribute/,
+    );
+    expect(byName("Adam Fry")?.role).toBe(
+      "AI agents, infrastructure and deployment",
+    );
+    expect(byName("Adam Fry")?.bio).toMatch(/^Adam Fry will contribute/);
+    expect(byName("Adam Fry")?.profileUrl).toBeUndefined();
     for (const name of [
       "Patrick Muggler",
       "Arshi Chadha",
       "Ridham Bhagat",
       "Daniel Meyer",
+      "Adam Fry",
     ]) {
       expect(byName(name)?.bio).toBeTruthy();
     }

@@ -226,11 +226,11 @@ The controlled swipe row uses CSS scroll snap and a visible peek of the next car
 | 1 | H1 and intro | H1 and intro (1.618) beside the contact card (1) |
 | 2 | Current explorations, stacked | zzthing.com and zzthat.com, 2 across |
 | 3 | Founder card | Initials card (1) beside the bio (1.618) |
-| 4 | Advisors, one stacked card each [WIRE] | 3 across: Jim White, Patrick Muggler, Arshi Chadha; then Ridham Bhagat, Daniel Meyer, Adam Fry [MICHAEL 2026-10-02] |
+| 4 | Advisors, one stacked card each [WIRE] | 3 across: Patrick Muggler, Arshi Chadha, Ridham Bhagat; then Daniel Meyer, Adam Fry [MICHAEL 2026-10-02] |
 | 5 | Codes written by hand (real photos) | 3 across |
 | 6 | Location, then Next action | Location and Next action, 2 across [WIRE] |
 
-The 2026-10-02 brief and wireframes list Jim White again ("Local AI and language"), add Adam Fry ("Advisor"), and drop the Future space card [MICHAEL 2026-10-02]. This supersedes the 2026-10-01 wireframe annotation that removed Jim White. Photos: initials cards until Michael supplies approved original headshots, and the implementer does not scrape LinkedIn [MICHAEL 2026-10-02] (Q6 RESOLVED).
+The 2026-10-02 brief and wireframes add Adam Fry and drop the Future space card. Michael's later 2026-10-02 answers remove Jim White from the advisors [MICHAEL 2026-10-02]. Photos: initials cards until Michael supplies approved original headshots, and the implementer does not scrape LinkedIn [MICHAEL 2026-10-02] (Q6 RESOLVED).
 
 **Overrides to H.1–H.3**
 
@@ -397,12 +397,12 @@ The layout follows Section 3.1a.
 | Contact card | "1@1000x10.com. Invite collaboration and test partners." | [WIRE] |
 | H2 Current explorations | zzthing.com: "Broader showcase and label mockups." zzthat.com: "Scanner/creator prototype; planned free web, Android, and iOS app." [MICHAEL 2026-10-02] Concept label 2 (Section 3.1a) | [WIRE] [BRIEF] |
 | H2 Founder | Michael Chung, "Founder and project lead." Bio (founder origin): "Michael Chung says he ‘invents business models.’ His earlier ideas explored email organization and electronic payments for civic services. zzThis follows the same impulse: a useful digital connection should be possible wherever a person can write. A handwritten zz code can give a parcel, crate, tool, or public sign a persistent reference, then connect it to a record and the work around it. Michael is developing the idea across logistics, community use, and AI-assisted workflows." A longer founder history can follow later. LinkedIn: https://www.linkedin.com/in/unitynow | [MICHAEL 2026-10-02] (Q8 RESOLVED); placement [OPERATOR 2026-10-02] (Q24) |
-| H2 Advisors | Cards: Jim White, "Local AI and language"; Patrick Muggler, "Connected logistics and IoT"; Arshi Chadha, "AI security"; Ridham Bhagat, "Robotics and smart-contract security"; Daniel Meyer, "Full-stack development"; Adam Fry, "Advisor". Bios for Patrick, Arshi, Ridham, and Daniel are verbatim from the brief (`src/content/people.ts`). | [MICHAEL 2026-10-02] |
+| H2 Advisors | Cards: Patrick Muggler, "Connected logistics and IoT"; Arshi Chadha, "AI security"; Ridham Bhagat, "Cybersecurity, cryptography and research methods"; Daniel Meyer, "Full-stack development"; Adam Fry, "AI agents, infrastructure and deployment". Bios for Patrick, Arshi, and Daniel are verbatim from the brief; Ridham and Adam bios are verbatim from Michael's later 2026-10-02 answers (`src/content/people.ts`). | [MICHAEL 2026-10-02] |
 | H2 Codes written by hand | Real photos: zz-hackerdojo-zz, zz-helloworld-zz, zz-roto-zz. Label: "Real photos of handwritten codes." | [ASSETS]; label INFERRED |
 | Location | "Mountain View / Santa Clara area; Hacker Dojo work base." | [WIRE] [BRIEF] |
 | Next action | "Discuss a pilot, test cohort or collaboration." → mailto | [WIRE] |
 
-**Advisor card (INFERRED).** Each card shows initials in IBM Plex Mono at 42 px inside a 1:1 tile, then the name as H3, the role line, the bio where supplied, and a LinkedIn link where a URL was supplied [MICHAEL 2026-10-02]: Michael Chung, Jim White, Patrick Muggler, Arshi Chadha, Ridham Bhagat. Daniel Meyer and Adam Fry have no URL or headshot yet; Adam Fry has no specialty or bio yet (Q10, Q12).
+**Advisor card (INFERRED).** Each card shows initials in IBM Plex Mono at 42 px inside a 1:1 tile, then the name as H3, the role line, the bio where supplied, and a LinkedIn link where a URL was supplied [MICHAEL 2026-10-02]: Michael Chung, Patrick Muggler, Arshi Chadha, Ridham Bhagat. Daniel Meyer and Adam Fry have no URL or headshot yet (Q10, Q12).
 
 ### 3.6 Contact (`/contact`)
 
@@ -512,7 +512,7 @@ Input: a text field labeled "Type a zz code", a Look up button, and example chip
 | B0 idle | — | Field and chips |
 | B1 resolved | Normalized input matches a mock code | Record card (mock) |
 | B2 (removed) | Removed on 2026-10-02 (issue #12). A miss never lists or suggests other codes. | None |
-| B3 abstain-unknown | Valid grammar, no exact match | "No match. The demo will not guess. Check the words and try again." Placeholder wording until Q20 is answered |
+| B3 abstain-unknown | Valid grammar, no exact match | "No match. The demo will not guess. Check the words and try again." The public demo stays exact match only (Q20, Q40); wording is a placeholder |
 | B4 abstain-malformed | Parser rejects the input | "This is not a zz code. Use the form zz-word-word-zz." |
 
 **Parser (`src/lib/grammar.ts`, INFERRED, demo only)**
@@ -648,7 +648,7 @@ package-lock.json
 6. The Home section order matches Section 3.1a. Field logistics and From photo to action contain the most image cards on Home.
 7. Panel placement matches Section 3.8. j, k, and l render as an ordered list labeled 01 to 03.
 8. Concept labels follow Section 3.1a [MICHAEL 2026-10-02]: standalone panels carry "Concept illustration", each grouped gallery has one label above it, and the About prototype block has one. `/zzthis/demo` shows the "Demo · mock data" badge on every step, A0–A7 and B0–B4.
-9. The advisor list is Jim White, Patrick Muggler, Arshi Chadha, Ridham Bhagat, Daniel Meyer, and Adam Fry [MICHAEL 2026-10-02]. Every page footer shows "Patent pending".
+9. The advisor list is Patrick Muggler, Arshi Chadha, Ridham Bhagat, Daniel Meyer, and Adam Fry [MICHAEL 2026-10-02]. Every page footer shows "Patent pending".
 10. No page shows a portrait. Advisor and founder cards use initials.
 11. Flow A reaches A7 with the keyboard alone. A7 states that nothing was submitted.
 12. Flow B produces each outcome for the test inputs in Section 4.4.
@@ -688,15 +688,16 @@ Michael's answers arrived on 2026-10-02 through Danny (issue #10), in an updated
 | Q9 | Should a patent notice appear in the footer? | RESOLVED: footer shows the words "Patent pending" [MICHAEL 2026-10-02] |
 | Q10 | Profile URLs and bios for Patrick Muggler, Arshi Chadha, and Daniel Meyer | PARTLY RESOLVED: bios for Patrick, Arshi, and Daniel; LinkedIn URLs for Patrick and Arshi [MICHAEL 2026-10-02]. Still OPEN: Daniel's profile URL and project accomplishments |
 | Q11 | Should the remaining handwritten photos and the zz-code mark be used? | RESOLVED: b hero; a and c field logistics; g parcel; h community; lowercase zz code as text in the explainer [MICHAEL 2026-10-02] |
-| Q12 | Should Adam Fry (named in [PRODUCT]) be listed? | RESOLVED: yes, initials card, role "Advisor" [MICHAEL 2026-10-02]. Still OPEN: his specialty, bio, profile URL, and photo |
+| Q12 | Should Adam Fry (named in [PRODUCT]) be listed? | RESOLVED: yes, initials card; specialty "AI agents, infrastructure and deployment" and bio supplied [MICHAEL 2026-10-02]. Still OPEN: profile URL and photo |
 | Q13 | CI | Closed: PR #1 `ci.yml` (job `build`) is the required check; do not edit or duplicate it; optional `site-ci.yml` runs typecheck and test only [OPERATOR 2026-10-01] |
 | Q14 | Public wording for the technology page | RESOLVED: draft wording supplied (stored in `technology.ts`); no empty page; the page enters navigation only with that content plus an example [MICHAEL 2026-10-02] |
 | Q15 | Domain | Closed for launch: GitHub Pages project URL https://zero-state-llc.github.io/zzthis/, no custom domain or DNS [OPERATOR 2026-10-01] |
-| Q16 | Ridham Bhagat's role: "robotics and resilient operations" [BRIEF] or "robotics and operations" [WIRE]? | RESOLVED: "Robotics and smart-contract security", with the supplied bio [MICHAEL 2026-10-02] |
+| Q16 | Ridham Bhagat's role: "robotics and resilient operations" [BRIEF] or "robotics and operations" [WIRE]? | RESOLVED: "Cybersecurity, cryptography and research methods", with the updated bio from Michael's later answers (replaces "Robotics and smart-contract security") [MICHAEL 2026-10-02] |
 | Q17 | Concept label wording | RESOLVED: "Concept illustration" on standalone AI-render panels; one label above a grouped gallery (Section 3.1a) [MICHAEL 2026-10-02] |
 | Q18 | Should we fine-tune our own small model for on-device capture (Option B, Section 10.8)? | OPEN, deferred: ship Option A now, run a 2-week Option B prototype, switch the on-device reader if it wins; cloud vision stays for retries [OPERATOR 2026-10-02] |
 | Q19 | How do partner apps authenticate to the API (Section 10.6)? | OPEN; no default chosen yet [OPERATOR 2026-10-02] |
-| Q20 | Does the demo's code lookup show "no match" (not "did you mean") for unrelated codes such as `zz-apple-sky-zz` vs `zz-b2-4-zz`? | OPEN; asked in issue #10, not yet answered. Default: "no match" |
+| Q20 | Does the demo's code lookup show "no match" (not "did you mean") for unrelated codes such as `zz-apple-sky-zz` vs `zz-b2-4-zz`? | PARTLY RESOLVED: it depends on context. Suggestions can be acceptable for free public, fully internal, or consumer personal-inventory use; high-security deployments are strict pass or fail, possibly graded by the type of misread [MICHAEL 2026-10-02]. Recorded as a per-deployment suggestion policy (Section 10.4, Q40). The public demo stays exact match only because it exposes real codes [OPERATOR 2026-10-02]. Miss wording still a placeholder |
+| Q40 | Suggestion policy details: which deployment types may enable suggestions, what a suggestion may reveal, and how high-security deployments grade misreads | OPEN [MICHAEL 2026-10-02]; default: off; never on for high-security deployments |
 | Q21 | Touch-first verbs differ across the brief, wireframe, and demo. Which set is canonical? | OPEN; default: keep the demo as built (spec 001) |
 | Q22 | Field logistics panels: a and c [BRIEF], or a, b, and c [WIRE]? | OPEN; default: keep as built (spec 001) |
 | Q23 | Should a real handwritten photo replace the hero render? | OPEN; default: keep panel b with its label (spec 001) |
@@ -780,7 +781,8 @@ The code on paper is public, so security lives in the resolver [OPERATOR 2026-10
 - **Single use and short expiry** where the code format calls for them (Section 2.2 formats).
 - **Rate limits** per client, per role, and per code, to slow enumeration.
 - **Tiered views.** The resolver returns a view scoped to the caller's role. SD-JWT (selective disclosure) is an option for these views, not a commitment.
-- **Exact match only.** The resolver matches the exact code and never suggests live codes. Fuzzy correction happens on the client against the closed wordlist and checksum, never by asking the server for nearby codes.
+- **Exact match by default.** The resolver matches the exact code and does not suggest live codes. Fuzzy correction happens on the client against the closed wordlist and checksum, never by asking the server for nearby codes.
+- **Suggestion policy (OPEN, [MICHAEL 2026-10-02]).** Whether a miss may return suggestions depends on the deployment. It can be acceptable for free public, fully internal, or consumer personal-inventory use; high-security deployments are strict pass or fail, possibly graded by the type of misread. The resolver carries a per-tenant suggestion policy that is off by default and can never be turned on for a high-security tenant. Details are TBD (Q40). The public site demo stays exact match only, because it exposes real codes.
 - **Handwriting first.** Handwritten codes must work. Printed marks or steganography are optional add-ons only, never required to resolve.
 
 All bullets above are [OPERATOR 2026-10-02].
