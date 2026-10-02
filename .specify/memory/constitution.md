@@ -1,6 +1,6 @@
 # zzThis constitution
 
-Version 1.0.0. Ratified: pending (draft for operator acceptance in the PR that adds this file). Amend through a pull request that bumps the version and records the change at the end of this file.
+Version 1.1.0. Ratified: pending (draft for operator acceptance in the PR that adds this file). Amend through a pull request that bumps the version and records the change at the end of this file.
 
 This file is the governing contract for every zzThis spec, plan, and task under `specs/`. When an artifact conflicts with this file, this file wins until it is amended. Product-true locks from the operator win over this file.
 
@@ -22,9 +22,9 @@ The visible words are a public identifier, not a password or a key [PRODUCT]. Au
 
 A code a person writes by hand must work. Printed marks, steganography, and other machine-only features are optional add-ons and are never required to resolve a code [OPERATOR 2026-10-02].
 
-### III. Exact match, no live-code hints
+### III. Exact match, no live-code hints by default
 
-A resolver matches the exact code. It never suggests other live codes, and unknown, used, expired, and revoked codes look the same to a caller. Correction happens on the client against the closed wordlist and the check word [OPERATOR 2026-10-02]. Demos must not teach the opposite pattern (issue #12).
+A resolver matches the exact code. By default it never suggests other live codes, and unknown, used, expired, and revoked codes look the same to a caller. Correction happens on the client against the closed wordlist and the check word [OPERATOR 2026-10-02]. Demos must not teach the opposite pattern (issue #12). A deployment may enable suggestions only through an explicit per-tenant suggestion policy that is off by default and never on for high-security tenants; the details are OPEN (Q40) [MICHAEL 2026-10-02]. The public site demo stays exact match only.
 
 ### IV. Honest status
 
@@ -68,3 +68,4 @@ Do not weaken tests, fixtures, or CI to force green. Open a `bug` issue instead 
 | Version | Date | Change |
 |---|---|---|
 | 1.0.0 | 2026-10-02 | First draft, derived from `docs/SPEC.md`, repo `AGENTS.md`, and operator decisions to date. |
+| 1.1.0 | 2026-10-02 | Principle III allows a per-tenant suggestion policy, off by default and never on for high-security tenants (Michael's Q20 answer, Q40). |

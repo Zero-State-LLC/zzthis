@@ -36,15 +36,9 @@ export const founder: Founder = {
 
 // Q6, Q10, Q12, Q16 [MICHAEL 2026-10-02]: initials cards until approved
 // headshots arrive; profile links only where a URL was supplied. The
-// 2026-10-02 brief and wireframes list Jim White again and drop the Future
-// space card.
+// 2026-10-02 brief and wireframes drop the Future space card. Michael's
+// later 2026-10-02 answers remove Jim White and update Ridham and Adam.
 export const advisors: readonly Person[] = [
-  {
-    name: "Jim White",
-    initials: "JW",
-    role: "Local AI and language",
-    profileUrl: "https://www.linkedin.com/in/jamespaulwhite/",
-  },
   {
     name: "Patrick Muggler",
     initials: "PM",
@@ -62,8 +56,8 @@ export const advisors: readonly Person[] = [
   {
     name: "Ridham Bhagat",
     initials: "RB",
-    role: "Robotics and smart-contract security",
-    bio: "At Addverb, Ridham built deployment and incident-response tools for a fleet of more than 150 robots. His smart-wallet work at Postquant Labs has involved cryptographic components and internal security audits. He advises on resilient operations and cryptographic workflows.",
+    role: "Cybersecurity, cryptography and research methods",
+    bio: "Ridham Bhagat will contribute cybersecurity, cryptography, and research methods. He holds degrees in computer science and cybersecurity, develops post-quantum smart wallets, and performs security audits at Postquant Labs. His Northeastern University research included Internet topology and resilient networking.",
     profileUrl: "https://www.linkedin.com/in/ridham-bhagat-22a047106/",
   },
   {
@@ -72,7 +66,12 @@ export const advisors: readonly Person[] = [
     role: "Full-stack development",
     bio: "Daniel works across front-end and back-end software and supports zzThis application development and integration.",
   },
-  { name: "Adam Fry", initials: "AF", role: "Advisor" },
+  {
+    name: "Adam Fry",
+    initials: "AF",
+    role: "AI agents, infrastructure and deployment",
+    bio: "Adam Fry will contribute AI-agent, infrastructure, and deployment expertise based on more than 20 years supporting mission-critical hospital, government, and enterprise systems and developing local AI-agent systems focused on data ownership, auditability, verification, and reliability.",
+  },
 ];
 
 export const peopleHeadings = {
