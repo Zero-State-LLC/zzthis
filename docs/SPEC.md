@@ -1,5 +1,19 @@
 # zzThis Spec
 
+> **Spec Kit map (2026-10-02).** This file stays as the source for copy, tags, and decisions. Spec Kit artifacts now hold the requirements. See [`specs/README.md`](../specs/README.md).
+>
+> | Section | Now lives in |
+> |---|---|
+> | 2 Product | [`specs/002-resolver-core`](../specs/002-resolver-core/spec.md), [`003-wordlist-checkword`](../specs/003-wordlist-checkword/spec.md), [`004-capture`](../specs/004-capture/spec.md) |
+> | 3 to 5 Site, demo, visual system | [`specs/001-marketing-site/spec.md`](../specs/001-marketing-site/spec.md). Verbatim copy stays here. |
+> | 6 Stack and repo | [`specs/001-marketing-site/plan.md`](../specs/001-marketing-site/plan.md) |
+> | 7 Workflows | Superseded by the Workflows section in each `specs/*/spec.md`. The "OPEN Q13" and "draft PR" text below is stale. |
+> | 8 Acceptance | [`specs/001-marketing-site/checklists/requirements.md`](../specs/001-marketing-site/checklists/requirements.md) |
+> | 9 Questions | Still the decision log. Q21 to Q39 were added on 2026-10-02. |
+> | 10 Architecture | [`specs/002-resolver-core/plan.md`](../specs/002-resolver-core/plan.md), [`specs/004-capture/plan.md`](../specs/004-capture/plan.md) |
+>
+> Research targets, the funding-pitch founder bio, and the company-stage line were removed from this repo on 2026-10-02 (Q24 RESOLVED).
+
 Status: Draft for operator review. Owner of this document: Opus 5.5 (spec). Implementer: cloud coding agent. Reviewer: operator, through the draft PR.
 
 ## How to read this spec
@@ -679,6 +693,25 @@ Michael's answers arrived on 2026-10-02 through Danny (issue #10), in an updated
 | Q18 | Should we fine-tune our own small model for on-device capture (Option B, Section 10.8)? | OPEN, deferred: ship Option A now, run a 2-week Option B prototype, switch the on-device reader if it wins; cloud vision stays for retries [OPERATOR 2026-10-02] |
 | Q19 | How do partner apps authenticate to the API (Section 10.6)? | OPEN; no default chosen yet [OPERATOR 2026-10-02] |
 | Q20 | Does the demo's code lookup show "no match" (not "did you mean") for unrelated codes such as `zz-apple-sky-zz` vs `zz-b2-4-zz`? | OPEN; asked in issue #10, not yet answered. Default: "no match" |
+| Q21 | Touch-first verbs differ across the brief, wireframe, and demo. Which set is canonical? | OPEN; default: keep the demo as built (spec 001) |
+| Q22 | Field logistics panels: a and c [BRIEF], or a, b, and c [WIRE]? | OPEN; default: keep as built (spec 001) |
+| Q23 | Should a real handwritten photo replace the hero render? | OPEN; default: keep panel b with its label (spec 001) |
+| Q24 | Remove the NSF-sourced founder bio, the "Current stage" line, Section 2.7, and the NSF figures in Section 10.8 from the public repo? | OPEN for Danny and Michael; site default: keep until Michael decides; recommendation: remove or move to a private repo |
+| Q25 | How does a person pick a valid code with no device? | OPEN; none chosen (spec 002) |
+| Q26 | Purge window for revoked codes and rate-limit values | OPEN; none chosen (spec 002) |
+| Q27 | Which code formats come first? | OPEN; none chosen (specs 002, 003) |
+| Q28 | Where record-signing keys live and how they rotate | OPEN; none chosen (spec 002) |
+| Q29 | Where the resolver code lives | OPEN; none chosen (spec 002) |
+| Q30 | Error classes the check word must detect | OPEN; minimum: one wrong word (spec 003) |
+| Q31 | Target wordlist size: 5,000 or 10,000 [NSF] versus about 4,000 (Section 10.8) | OPEN; none chosen (spec 003) |
+| Q32 | Language and licensing of the word source | OPEN; none chosen (spec 003) |
+| Q33 | zzThat app scope (web, Android, iOS) | OPEN; not specified (spec 004) |
+| Q34 | Source and consent for the real-photo test set | OPEN; none chosen (spec 004) |
+| Q35 | How to measure distinct letter shapes and distinct sounds | OPEN; none chosen (spec 003) |
+| Q36 | Can retired codes be reissued? | OPEN; "never reissue" proposed (spec 002) |
+| Q37 | Capture confidence thresholds and read-back error method | OPEN; none chosen (spec 004) |
+| Q38 | Where voice input is processed | OPEN; none chosen (spec 004) |
+| Q39 | What counts as the zzThat launch for the "Try zzThat" nav action? | OPEN; none chosen (spec 001) |
 
 ## 10. Architecture (proposal, not built)
 
