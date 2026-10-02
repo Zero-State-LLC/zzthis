@@ -7,7 +7,6 @@ import {
   type HandlingOption,
 } from "../src/content/demo";
 import {
-  confirmSuggestion,
   flowAReducer,
   initialFlowA,
   initialFlowB,
@@ -212,11 +211,13 @@ describe("Flow B", () => {
     });
   });
 
-  it("maps suggest to B2", () => {
-    expect(lookup("zz-coper-lantern-sky-zz", mockCodes)).toEqual({
-      state: "B2",
-      suggestions: [{ code: flowACode, distance: 1 }],
-    });
+  it("maps a near miss to B3 and shows no other code", () => {
+    const view = lookup("zz-coper-lantern-sky-zz", mockCodes);
+    expect(view).toEqual({ state: "B3" });
+    const shown = JSON.stringify(view);
+    for (const entry of mockCodes) {
+      expect(shown).not.toContain(entry.code);
+    }
   });
 
   it("maps abstain-unknown to B3", () => {
@@ -229,11 +230,5 @@ describe("Flow B", () => {
       reason: "no-marker",
     });
     expect(lookup("", mockCodes)).toEqual({ state: "B4", reason: "empty" });
-  });
-
-  it("confirms a suggestion into B1 with the same code object", () => {
-    const view = confirmSuggestion(flowACode);
-    expect(view).toEqual({ state: "B1", code: flowACode });
-    expect(view.state === "B1" && view.code).toBe(flowACode);
   });
 });

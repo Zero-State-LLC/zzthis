@@ -201,8 +201,6 @@ export const flowBCopy = {
   inputLabel: "Type a zz code",
   lookUp: "Look up",
   examplesLabel: "Example codes",
-  didYouMean: "Did you mean",
-  confirmPrefix: "Confirm",
   unknown: "No match. The demo will not guess. Check the words and try again.",
   malformed: "This is not a zz code. Use the form zz-word-word-zz.",
 };
@@ -210,10 +208,6 @@ export const flowBCopy = {
 export const flowBOutcomes: readonly { name: string; text: string }[] = [
   { name: "Type a zz code", text: "Field, Look up button, and example codes." },
   { name: "Record found", text: "Record card (mock)." },
-  {
-    name: "Did you mean",
-    text: "Up to three nearest codes, each with a Confirm button.",
-  },
   { name: "No match", text: flowBCopy.unknown },
   { name: "Not a zz code", text: flowBCopy.malformed },
 ];

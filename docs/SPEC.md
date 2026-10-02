@@ -508,14 +508,14 @@ The voice chip is a button. Activating it selects the option and shows the text 
 
 ### 4.4 Flow B state machine
 
-Input: a text field labeled "Type a zz code", a Look up button, and suggestion chips for the codes in 4.2.
+Input: a text field labeled "Type a zz code", a Look up button, and example chips for the codes in 4.2.
 
 | State | Trigger | Output |
 |---|---|---|
 | B0 idle | — | Field and chips |
 | B1 resolved | Normalized input matches a mock code | Record card (mock) |
-| B2 suggest | Not exact; nearest code at word edit distance ≤ 2 | "Did you mean" list ranked by distance, up to 3, each with a Confirm button → B1 |
-| B3 abstain-unknown | Valid grammar, no code within distance 2 | "No match. The demo will not guess. Check the words and try again." |
+| B2 (removed) | Removed on 2026-10-02 (issue #12). A miss never lists or suggests other codes. | None |
+| B3 abstain-unknown | Valid grammar, no exact match | "No match. The demo will not guess. Check the words and try again." Placeholder wording until Q20 is answered |
 | B4 abstain-malformed | Parser rejects the input | "This is not a zz code. Use the form zz-word-word-zz." |
 
 **Parser (`src/lib/grammar.ts`, INFERRED, demo only)**
@@ -526,13 +526,13 @@ Input: a text field labeled "Type a zz code", a Look up button, and suggestion c
 4. Require 2–5 words, each matching `[a-z0-9]+`.
 5. Return `{ ok, words, variant: "dash" | "circled" }` or `{ ok: false, reason }`.
 
-The resolver mock (`src/lib/resolver.ts`) is pure. It returns `resolved | suggest | abstain-unknown | abstain-malformed`, with suggestions ordered by Levenshtein distance and then alphabetically. Test inputs: `zz-coper-lantern-sky-zz` → suggest copper-lantern-sky. `ZZ COPPER LANTERN SKY ZZ` → resolved. `zz-apple-sky-zz` → abstain-unknown. `copper` → abstain-malformed.
+The resolver mock (`src/lib/resolver.ts`) is pure. It returns `resolved | abstain-unknown | abstain-malformed`. It matches the normalized code exactly and never ranks or suggests other codes (Section 10.4, issue #12). Test inputs: `zz-coper-lantern-sky-zz` → abstain-unknown, with no other code shown. `ZZ COPPER LANTERN SKY ZZ` → resolved. `zz-apple-sky-zz` → abstain-unknown. `copper` → abstain-malformed.
 
 ### 4.5 Accessibility and motion (INFERRED)
 
 - Each step change moves focus to the new step heading, which has `tabindex="-1"`. An `aria-live="polite"` region announces "Step 3 of 8: Read result".
 - All controls are native buttons, reachable by Tab and activated by Enter or Space. Handling targets form a `radiogroup` with arrow-key navigation. Drag is never required.
-- Flow B results render in an `aria-live` region. Suggestions form a list of buttons.
+- Flow B results render in an `aria-live` region.
 - With `prefers-reduced-motion: reduce`, transitions are instant. Otherwise, steps cross-fade in 160 ms or less.
 - Without JavaScript, the demo shows a static ordered list of all steps as a fallback.
 

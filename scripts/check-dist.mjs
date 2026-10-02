@@ -18,7 +18,13 @@ const REQUIRED = [
 // em dash allowed in rendered copy.
 const ALLOWED_EM_DASH = "writable\u2014and smart.";
 const FOOTER_NOTICE = "Patent pending";
-const BANNED_PHRASES = ["pilot customer", "endorsed", "adopted by"];
+// "did you mean": a lookup miss must not suggest other codes (issue #12).
+const BANNED_PHRASES = [
+  "pilot customer",
+  "endorsed",
+  "adopted by",
+  "did you mean",
+];
 const NSF_FIGURES = ["95%", "99%", "99.9%", "0.1%", "30% fewer"];
 const BANNED_APIS = [
   "getUserMedia",

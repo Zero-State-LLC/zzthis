@@ -1,38 +1,15 @@
 import { flowBCopy, mockCodes, type MockCode } from "../content/demo";
-import {
-  confirmSuggestion,
-  initialFlowB,
-  lookup,
-  type FlowBView,
-} from "./demoMachine";
+import { initialFlowB, lookup, type FlowBView } from "./demoMachine";
 import { badge, button, el, mount, recordCard } from "./dom";
 
-type Show = (view: FlowBView<MockCode>, focusResult?: boolean) => void;
+type Show = (view: FlowBView<MockCode>) => void;
 
-function viewBody(view: FlowBView<MockCode>, show: Show): Node[] {
+function viewBody(view: FlowBView<MockCode>): Node[] {
   switch (view.state) {
     case "B0":
       return [];
     case "B1":
       return [recordCard(view.code, "h3")];
-    case "B2":
-      return [
-        el("h3", { text: flowBCopy.didYouMean }),
-        el(
-          "ul",
-          { className: "demo-suggestions" },
-          view.suggestions.map((suggestion) =>
-            el("li", {}, [
-              button(
-                `${flowBCopy.confirmPrefix} ${suggestion.code.code}`,
-                () => {
-                  show(confirmSuggestion(suggestion.code), true);
-                },
-              ),
-            ]),
-          ),
-        ),
-      ];
     case "B3":
       return [el("p", { text: flowBCopy.unknown })];
     case "B4":
@@ -40,12 +17,12 @@ function viewBody(view: FlowBView<MockCode>, show: Show): Node[] {
   }
 }
 
-function renderView(view: FlowBView<MockCode>, show: Show): HTMLElement {
+function renderView(view: FlowBView<MockCode>): HTMLElement {
   const badgeId = "demo-b-badge";
   return el(
     "section",
     { className: "demo-step", attrs: { "aria-labelledby": badgeId } },
-    [mount([badge(badgeId), ...viewBody(view, show)])],
+    [mount([badge(badgeId), ...viewBody(view)])],
   );
 }
 
@@ -65,11 +42,8 @@ export function createFlowB(): HTMLElement {
     className: "demo-results",
     attrs: { "aria-live": "polite" },
   });
-  const show: Show = (view, focusResult = false) => {
-    results.replaceChildren(renderView(view, show));
-    if (focusResult) {
-      results.querySelector<HTMLElement>("h3")?.focus();
-    }
+  const show: Show = (view) => {
+    results.replaceChildren(renderView(view));
   };
   const run = (): void => show(lookup(input.value, mockCodes));
   const submit = el("button", {
