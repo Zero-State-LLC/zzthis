@@ -1,0 +1,13 @@
+dist
+node_modules
+.astro
+coverage
+public
+package-lock.json
+docs
+intent
+*.md
+.github/workflows/ci.yml
+.github/workflows/project-collaboration.yml
+.github/workflows/free-security-scan.yml
+.github/ISSUE_TEMPLATE

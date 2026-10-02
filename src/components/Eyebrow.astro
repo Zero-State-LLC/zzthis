@@ -1,0 +1,26 @@
+---
+interface Props {
+  index: string;
+}
+
+const { index } = Astro.props;
+---
+
+<div class="eyebrow-rule" aria-hidden="true">
+  <span class="regmark"></span>
+  <span class="eyebrow">{index}</span>
+  <span class="eyebrow-rule__line"></span>
+</div>
+
+<style>
+  .eyebrow-rule {
+    display: flex;
+    align-items: center;
+    gap: var(--s-3);
+  }
+
+  .eyebrow-rule__line {
+    flex: 1;
+    border-top: 1px solid var(--edge);
+  }
+</style>

@@ -21,7 +21,8 @@ See [`intent/README.md`](intent/README.md).
 |---|---|
 | AGENTS.md check | `bash scripts/check-agents-md.sh AGENTS.md` |
 | Security scan | `./scripts/security-scan.sh` |
-| Lint / build | Not yet defined. Use the `package.json` scripts once the site lands. |
+| Install | `npm ci` (Node 24) |
+| Lint / typecheck / test / build | `npm run lint`, `npm run typecheck`, `npm run test`, `npm run build` |
 
 Fill the table from this repo's README or package scripts. Do not invent commands.
 
@@ -36,7 +37,7 @@ Fill the table from this repo's README or package scripts. Do not invent command
 ## Graft and docs
 
 If `graft/` exists, run `graft ask "<task>" --source` before grepping.
-Otherwise start at `README.md`, then `spec.md` once it exists.
+Otherwise start at `README.md`, then `docs/SPEC.md`.
 Do not copy a code map into this file.
 
 ## Escalation

@@ -1,0 +1,37 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import { url } from "../lib/url";
+---
+
+<BaseLayout
+  title="Page not found | zzThis"
+  description="That page does not exist on this site."
+>
+  <div class="container notfound">
+    <h1>Page not found</h1>
+    <p>That page does not exist on this site.</p>
+    <div class="actions">
+      <a class="btn btn--primary" href={url("")}>
+        Home
+      </a>
+      <a class="btn btn--secondary" href={url("demo")}>
+        Demo
+      </a>
+    </div>
+  </div>
+</BaseLayout>
+
+<style>
+  .notfound {
+    display: flex;
+    flex-direction: column;
+    gap: var(--s-5);
+    padding-block: var(--s-7);
+  }
+
+  .actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--s-3);
+  }
+</style>
