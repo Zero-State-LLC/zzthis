@@ -27,7 +27,7 @@ anti-slop-code, production-systems, google-developer-style; stop-slop for copy e
 
 | Principle | How the site meets it |
 |---|---|
-| III. Exact match, no live-code hints | Not met yet. Flow B suggests nearby codes. Tracked by issue #12 and T010. |
+| III. Exact match, no live-code hints | Met by T010 (issue #12): Flow B matches exactly and shows no other code on a miss. |
 | IV. Honest status | `check-dist.mjs` blocks NSF figures and claim phrases; concept labels on panels. |
 | VI. Public repo hygiene | `scripts/security-scan.sh` in CI. NSF-derived text in `docs/SPEC.md` is flagged for review (see `specs/analysis-2026-10-02.md`). |
 | VII. Workflows in the spec | `spec.md` has `## Workflows`. |
@@ -47,5 +47,5 @@ scripts/          check-dist.mjs, security-scan.sh, check-agents-md.sh
 
 ## Risks
 
-- The demo resolver mock teaches a "did you mean" pattern that the real resolver must never use (constitution III). Mitigation: T010.
+- The demo resolver mock taught a "did you mean" pattern that the real resolver must never use (constitution III). Removed by T010; `scripts/check-dist.mjs` now fails the build if the phrase returns.
 - The demo grammar parser (`src/lib/grammar.ts`) is demo-only and INFERRED. It must not become the product grammar without spec 003.
