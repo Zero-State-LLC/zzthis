@@ -30,7 +30,7 @@ Acceptance:
 
 1. Home renders the hero, featured statement, comparison, How it works, Field logistics, From photo to action, More applications, About teaser, and Contact action in the order in `docs/SPEC.md` Section 3.1a [WIRE].
 2. Hero, featured statement, comparison cells, workflow lines, and category stories match `docs/SPEC.md` Sections 3.2 to 3.4 character for character [BRIEF].
-3. The hero H1 reads "writable - and smart." as typed in Michael's alternate copy (Q47) [MICHAEL 2026-10-02].
+3. The hero H1 reads "Barcodes made things scannable. zzThis makes things readable-writable — and smart." per Michael's v1.0 change list (Q62 supersedes the Q47 spaced hyphen; this em dash is the one FR-006 exception) [DANNY 2026-10-03; Michael v1.0 change list]. The live build still renders the Q47 H1 until T033 ships.
 4. The core workflow shows the lowercase code as text [MICHAEL 2026-10-02].
 5. The comparison shows four cards with four rows each, per `docs/SPEC.md` Section 3.2 H.3 [MICHAEL 2026-10-02].
 6. Home section 01 includes the Top ways block, 3 across on desktop, per `docs/SPEC.md` H.2a [MICHAEL 2026-10-02].

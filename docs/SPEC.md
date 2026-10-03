@@ -443,13 +443,13 @@ Reading order follows Do / Re / Mi / Fa as rhythm only. No beat labels are print
 Image: `public/images/panels/b-crate-word-code.webp`, eager loaded, `fetchpriority="high"`. At 900 px and wider, the image and text sit side by side at about 1.618:1 (image:text). On phones, the image appears above the text so that the image comes before the description [BRIEF; layout INFERRED].
 
 ```copy
-H1: Barcodes made things scannable. zzThis makes them writable - and smart.
+H1: Barcodes made things scannable. zzThis makes things readable-writable — and smart.
 P:  zzThis is a human-readable, human-writable code for the physical world. Write zz-copper-lantern-sky-zz on tape, a crate, a parcel, or a sign. Link it to a digital record, then find it by camera, typing, or voice.
 Primary button:   See field logistics   → /#field-logistics
 Secondary button: How it works          → /how-it-works
 ```
 
-[BRIEF] The paragraph is the 2026-10-02 text [MICHAEL 2026-10-02] (Q47 RESOLVED). The H1's spaced hyphen ("writable - and smart.") as typed [MICHAEL 2026-10-02] (Q47; Jev decision 2026-10-02) replaced the Q1 em dash, and is SUPERSEDED by Q62: the hero headline keeps the em dash in "readable-writable — and smart." [DANNY 2026-10-03; Michael v1.0 change list]. That hero headline em dash is the one allowed exception. Image b carries the "Concept illustration" tag in its caption [MICHAEL 2026-10-02]. Render the code in IBM Plex Mono (INFERRED).
+[BRIEF] The paragraph is the 2026-10-02 text [MICHAEL 2026-10-02] (Q47 RESOLVED). The H1's spaced hyphen ("writable - and smart.") as typed [MICHAEL 2026-10-02] (Q47; Jev decision 2026-10-02) replaced the Q1 em dash, and is SUPERSEDED by Q62: the hero headline keeps the em dash in "readable-writable — and smart." [DANNY 2026-10-03; Michael v1.0 change list]. That hero headline em dash is the one allowed exception. The H1 above is the v1.0 headline (Michael v1.0 change list §1, second line); the live `src/content/hero.ts`, `scripts/check-dist.mjs`, and `tests/content.test.ts` still carry the Q47 wording until the B v1.0 `src/` PR lands (spec 001 T033). Image b carries the "Concept illustration" tag in its caption [MICHAEL 2026-10-02]. Render the code in IBM Plex Mono (INFERRED).
 
 #### H.2 Featured statement (Do)
 
