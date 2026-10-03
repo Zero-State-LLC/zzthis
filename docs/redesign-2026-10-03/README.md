@@ -14,6 +14,7 @@ B's camera view needs `http://` to draw its dithered "machine view" (over `file:
 | A · Tape | [`a-tape/`](a-tape/index.html) | Cream paper, blue painter's tape, marker handwriting. The code is *written* across the page, then *read* by a machine. |
 | B · Resolver | [`b-resolver/`](b-resolver/index.html) | Dark field instrument. The hero is a working lookup console: camera, typing, or voice → parsed code → mock record. |
 | C · Hi-Vis Manifesto | [`c-manifesto/`](c-manifesto/index.html) | Poster type in charcoal and cream, safety-orange highlights, greyscale panels, one colour photograph. |
+| **B v1.0 (chosen)** | [`b-resolver-v1/`](b-resolver-v1/index.html) | The original B plus Michael's v1.0 change list, extended to [About](b-resolver-v1/about.html) and [Applications](b-resolver-v1/applications.html). See section 5. |
 
 ---
 
@@ -189,6 +190,34 @@ All three:
    human, then a spec delta (001), then a PR that Danny reviews. Pages deploy on merge.
 
 ---
+
+## 5. B v1.0: Michael's change list applied (2026-10-03)
+
+Michael chose sample B. He sent a v1.0 change list (`zzThis_website_v1.0_changes-Claude_to_Daniel.docx`, not committed: it is a private source document).
+
+- **What is applied:** only its "FOR THE WEBSITE AI" blocks, nothing beyond them. The bracketed notes in the doc were for Michael and are not applied.
+- **Starting point:** the original B, which is unchanged in `b-resolver/` for comparison.
+- **New pages:** the list covers About and Applications as well as Home, so B v1.0 adds those two pages in B's design system.
+
+| § | Change | Where | Notes |
+|---|---|---|---|
+| 0 | Section and sub-topic headings about 25% smaller on every page. Hero headline, body text, and the small orange numbers unchanged. | `tokens.css` (`--text-section`, `--text-h2`, `--text-sub`) | Measured: section h2 0.75×, hero 1.00×. Sub-topic h3 stop at the 17 px body size (0.85×), so a heading never reads smaller than its text. |
+| 1 | Headline second line: "zzThis makes things readable-writable — and smart." New paragraph under the buttons, with `zz-code` in monospace. | Home hero | The em dash replaces the spaced hyphen at Michael's direction. This supersedes the spec's Q47 / no-em-dash rule, so `docs/SPEC.md` needs a matching update. |
+| 2 | Two sentences appended to the section 01 paragraph | Home, under "The shortest, smartest distance…" | Heading and existing text unchanged. |
+| 3 | Diagram code 50% smaller. Third label reads "word or check word". | Home diagram | The labels stay at 13 px rather than halving to 6.5 px, which would be unreadable. They now alternate between two tiers with leader lines, so none collide at the smaller size (checked at 800, 1100, and 1440 px). |
+| 4 | "Why the zz markers matter" and "In any language" added below the four code types | Home | One line per language on phones; three columns on desktop. Aramaic is wrapped in `<bdi dir="rtl">` and verified right-to-left between the markers. Korean, Japanese, and Hebrew-script glyphs load as tiny IBM Plex subsets. |
+| 5 | Founder: same headshot size and card as the advisors; new title line; new bio, word for word; LinkedIn kept | About | All six headshots measure 88 × 88. |
+| 6 | Hacker Dojo moved below Advisors; logo removed; new single paragraph; subtitle kept | About | |
+| 7 | "Coupang" removed; heading now "End-to-end anonymous concept use cases"; new privacy line; concept line kept; collage removed; Step 3 reads "drop-off address" | Applications | "Coupang" appears nowhere on the page. |
+
+**Michael needs to confirm or fix these before v1.0 ships:**
+
+1. **Bio version.** The doc contains two versions of the bio. Section 5 reads `I “invent” business models … and solve to the emerging …`. The combined block at the end reads `“I invent" …` and `solve-to`. B v1.0 uses section 5, since the doc's own notes flag the combined block's quotes and "solve-to" as errors. The doc's other suggested bio edits, such as naming the citing companies, are not applied.
+2. **Multilingual codes and the v1 grammar.** The spec makes v1 ASCII-only; any-language codes are a v2 candidate (issue #35). The new block shows non-ASCII codes, but the Home console runs the v1 parser. Typing the Korean example into it returns "This is not a zz code." Either label the block as coming later, or accept that the console is v1-only.
+3. **Native-reader check** for the Korean, Japanese, and Aramaic codes, as the doc itself advises.
+4. **For the production build:**
+   - Self-host the new script fonts: `@fontsource/ibm-plex-sans-kr`, `-jp`, and `-hebrew`.
+   - Update `docs/SPEC.md` to match: the headline dash and the new copy blocks.
 
 ## Sources
 

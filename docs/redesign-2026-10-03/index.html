@@ -42,6 +42,8 @@
       .grid { display: grid; gap: var(--space-lg); }
       .card { display: grid; gap: var(--space-sm); align-content: start; padding-block-start: var(--space-sm); border-top: 3px solid var(--color-ink); }
       .card--before { border-top-color: var(--color-rule); }
+      .card--chosen { border-top-color: var(--color-accent); }
+      .pick { color: var(--color-accent-ink); }
       .shots { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 0.32fr); gap: var(--space-xs); align-items: start; }
       .shots img { width: 100%; border: 1px solid var(--color-rule); }
       .card h2 a { text-decoration: none; }
@@ -69,6 +71,21 @@
         </p>
         <p class="mono muted">Full audit, research, and sources: README.md in this folder.</p>
       </header>
+
+      <article class="card card--chosen">
+        <p class="mono pick">Chosen direction · 2026-10-03</p>
+        <h2><a href="b-resolver-v1/">B v1.0 · Resolver, with Michael's v1.0 changes</a></h2>
+        <div class="shots">
+          <img src="review/bv1-desktop.webp" width="960" height="600" alt="Sample B v1.0 home page at desktop width: the new headline beside the lookup console." />
+          <img src="review/bv1-mobile.webp" width="390" height="844" alt="Sample B v1.0 home page on a phone." />
+        </div>
+        <dl>
+          <div><dt>Pages</dt><dd><a href="b-resolver-v1/index.html">Home</a> · <a href="b-resolver-v1/about.html">About</a> · <a href="b-resolver-v1/applications.html">Applications</a></dd></div>
+          <div><dt>Built from</dt><dd>The original sample B, unchanged, plus every "FOR THE WEBSITE AI" item in <span class="mono">zzThis_website_v1.0_changes</span> (sections 0–7)</dd></div>
+          <div><dt>Change log</dt><dd>README.md, section 5</dd></div>
+        </dl>
+        <a class="open" href="b-resolver-v1/">Open B v1.0</a>
+      </article>
 
       <div class="grid">
         <article class="card card--before">
@@ -100,7 +117,7 @@
         </article>
 
         <article class="card">
-          <h2><a href="b-resolver/">B · Resolver</a></h2>
+          <h2><a href="b-resolver/">B · Resolver (original)</a></h2>
           <div class="shots">
             <img src="review/b-desktop.webp" width="960" height="600" alt="Sample B at desktop width: a lookup console reading the taped code from the crate photo." />
             <img src="review/b-mobile.webp" width="390" height="844" alt="Sample B on a phone." />

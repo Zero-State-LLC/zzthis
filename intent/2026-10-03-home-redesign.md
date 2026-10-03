@@ -44,7 +44,8 @@ Non-goals:
 
 ## Open questions
 
-- Which direction, or which mix?
+- ~~Which direction, or which mix?~~ Sample B. Michael also sent a v1.0 change list, now applied as `docs/redesign-2026-10-03/b-resolver-v1/` (Home, About, Applications).
+- The v1.0 headline uses an em dash, and the Home page now shows non-ASCII example codes. Both depart from the current spec (Q47; v1 ASCII-only grammar). Specify must resolve them.
 - Does Michael approve the new lines each sample adds (listed in the samples README, section 4)?
 - Should the real handwritten photos move onto Home (sample A)? Should the proposed architecture be shown on Home, labelled "Proposal, not built" (sample B)?
 
@@ -56,6 +57,7 @@ Non-goals:
 | The samples use only spec copy, plus the new lines listed in their README | `[verified: docs/redesign-2026-10-03/README.md section 4]` |
 | All three samples pass WCAG AA text contrast in light and dark | `[verified: computed in headless Chromium, 2026-10-03]` |
 | None of the samples scrolls horizontally from 320 to 1440 px | `[verified: headless Chromium at 320, 375, 390, 414, 768, and 1440 px]` |
+| Michael chose sample B and supplied the v1.0 change list | `[assumed: relayed by Luna, 2026-10-03; the change document is private and not in this repo]` |
 
 ## Next
 
