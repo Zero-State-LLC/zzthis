@@ -7,6 +7,7 @@ import Steps from "../components/Steps.astro";
 import SwipeRow from "../components/SwipeRow.astro";
 import PhotoToAction from "../components/PhotoToAction.astro";
 import AppCards from "../components/AppCards.astro";
+import TopWays from "../components/TopWays.astro";
 import { aboutTeaser, contactAction, featured, hero } from "../content/hero";
 import { comparisonHeading } from "../content/comparison";
 import {
@@ -69,6 +70,7 @@ const heroImage = images.b;
       <Eyebrow index="01" />
       <h2>{featured.heading}</h2>
       <p>{featured.text}</p>
+      <TopWays />
     </section>
 
     <section class="section">

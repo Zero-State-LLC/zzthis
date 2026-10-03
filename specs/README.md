@@ -8,7 +8,7 @@ zzThis uses [Spec Kit](https://github.com/github/spec-kit) order: constitution, 
 
 | ID | Feature | Built? | specify | clarify | plan | checklist | tasks | analyze |
 |---|---|---|---|---|---|---|---|---|
-| [001](001-marketing-site/spec.md) | Marketing site and scripted demo | Yes, live on GitHub Pages | Done | Open: Q10, Q12, Q20 (part) to Q24, Q39, Q40, Q41 to Q47 | Done | [Done](001-marketing-site/checklists/requirements.md) | [Done](001-marketing-site/tasks.md) | Done |
+| [001](001-marketing-site/spec.md) | Marketing site and scripted demo | Yes, live on GitHub Pages | Done | Open: Q10, Q12, Q20 (part) to Q24, Q39, Q40, Q48 | Done | [Done](001-marketing-site/checklists/requirements.md) | [Done](001-marketing-site/tasks.md) | Done |
 | [002](002-resolver-core/spec.md) | Resolver core | No | Done | Open: Q19, Q25 to Q29, Q36, Q40 | Proposal | Not started | [Draft](002-resolver-core/tasks.md) | Done |
 | [003](003-wordlist-checkword/spec.md) | Wordlist and check word | No | Done | Open: Q27, Q30 to Q32, Q35 | Proposal | Not started | [Draft](003-wordlist-checkword/tasks.md) | Done |
 | [004](004-capture/spec.md) | Capture by camera, typing, or voice | No | Done | Open: Q18, Q33, Q34, Q37, Q38 | Proposal | Not started | [Draft](004-capture/tasks.md) | Done |

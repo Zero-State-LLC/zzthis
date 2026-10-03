@@ -1,5 +1,6 @@
 ---
 import type { Person } from "../content/people";
+import { url } from "../lib/url";
 
 interface Props {
   person: Person;
@@ -22,9 +23,21 @@ const future = person.initials === undefined;
     <div class="mount__shadow" aria-hidden="true" />
     <div class="mount__edge">
       <div class="mount__body advisor">
-        <div class="advisor__tile" aria-hidden="true">
-          <span>{person.initials}</span>
-        </div>
+        {person.photo ? (
+          <img
+            class="advisor__photo"
+            src={url(person.photo.src)}
+            width={person.photo.width}
+            height={person.photo.height}
+            alt={person.name}
+            loading="lazy"
+            decoding="async"
+          />
+        ) : (
+          <div class="advisor__tile" aria-hidden="true">
+            <span>{person.initials}</span>
+          </div>
+        )}
         <div class="advisor__text">
           <h3>{person.name}</h3>
           <p class="caption">{person.role}</p>
@@ -61,6 +74,13 @@ const future = person.initials === undefined;
     font-size: 42px;
     font-weight: 500;
     letter-spacing: 0.04em;
+  }
+
+  .advisor__photo {
+    width: 110px;
+    aspect-ratio: 1 / 1;
+    object-fit: cover;
+    border: 1px solid var(--edge);
   }
 
   .advisor__tile--future {

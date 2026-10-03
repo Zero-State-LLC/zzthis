@@ -53,22 +53,15 @@ Workflows for every implementing task: anti-slop-code, production-systems, googl
 
 ## Phase 8: Michael's 2026-10-02 shared-folder deltas
 
-- [ ] T020 Comparison: four cards (Barcode, QR code, Alphanumeric code, zzThis) and a fourth row "Easy to say and remember", per `docs/SPEC.md` H.3 and override 7. Changes:
-  - In `src/content/comparison.ts`, add the `remember` key and the Alphanumeric column.
-  - In `ComparisonCards.astro`, use 1 column below 600 px, 2 columns at 600 to 899 px, and 4 columns at ≥ 900 px. Align rows across cards with CSS subgrid at ≥ 900 px.
-  - The hidden table follows the content.
-  - Update `tests/content.test.ts` to 4 row labels and 16 cells.
-- [ ] T021 Add the note under the comparison cards (sentence 2 only), small and muted, full width. Sentence 1 is blocked on Q41.
-- [ ] T022 Change `founder.role` in `src/content/people.ts` to "Founder, system architecting, and project lead."
-- [ ] T023 About "Codes written by hand":
-  - Remove `hw-hackerdojo`, `hw-helloworld`, and `hw-roto` from `about.astro`, `src/content/images.ts`, and `public/images/handwritten/`.
-  - Add `hw-agent-notes` and `hw-usps-tally` as WebP files of 2 MB or less, with the alt text and titles from Section 3.8.
-  - Use `Series columns="2"`.
-- [ ] T024 [P] Add a `check-dist.mjs` rule. It fails when rendered text, `alt`, or `title` contains a standalone "ZZ" (`/\bZZ\b/`) or an uppercase letter inside a zz-framed code. Add a matching content test. Lowercase any rendered mixed-case code. Covers acceptance criterion 29.
-- [ ] T025 Blocked on Michael:
-  - Founder bio (Q43).
-  - Hacker Dojo block and logo (Q44, Q45).
-  - Headshots (Q46).
-  - Capital-ZZ photos (Q42).
-  - Note sentence 1 (Q41).
-  - Alternate hero and featured copy (Q47).
+- [x] T020 Comparison: four cards (Barcode, QR code, Alphanumeric code, zzThis) and the row "Easy to say and remember", with 1 / 2 / 4 columns and subgrid row alignment at 900 px.
+- [x] T021 Comparison note under the cards, both sentences, small and muted, full width (Q41).
+- [x] T022 Founder role set to "Founder, system architecting, and project lead."
+- [x] T023 Codes written by hand: removed the three unused photos and render four real photos in a 2x2, including the two capital-ZZ photos (Q42).
+- [x] T024 check-dist standalone-ZZ rule, no uppercase-inside-code rule, per Q42.
+- [x] T025 Applied Michael's answers Q41-Q47 as given.
+
+## Phase 9: Michael's OneDrive update 2026-10-02b
+
+- [x] T026 Home Top ways block inside section 01 (1 / 2 / 3 columns).
+- [x] T027 Applications galleries and the Card frame variant (`object-fit: contain`, width cap).
+- [x] T028 New images are WebP. The applications set is about 0.6 MB.

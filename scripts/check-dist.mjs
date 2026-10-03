@@ -14,9 +14,8 @@ const REQUIRED = [
   "contact/index.html",
   "demo/index.html",
 ];
-// Q1 [MICHAEL 2026-10-02]: the hero H1 keeps its em dash. This is the only
-// em dash allowed in rendered copy.
-const ALLOWED_EM_DASH = "writable\u2014and smart.";
+// Q47 [MICHAEL 2026-10-02]: the hero H1 now uses Michael's alternate copy
+// ("writable - and smart."), so no em dash is allowed in rendered copy.
 const FOOTER_NOTICE = "Patent pending";
 // "did you mean": a lookup miss must not suggest other codes (issue #12).
 const BANNED_PHRASES = [
@@ -89,8 +88,14 @@ function checkExternalOrigins(file, content) {
 function checkText(file, html) {
   const text = renderedText(html);
   const lower = text.toLowerCase();
-  if (text.split(ALLOWED_EM_DASH).join(" ").includes("\u2014"))
-    report(file, "em dash in rendered text");
+  if (text.includes("\u2014")) report(file, "em dash in rendered text");
+  if (/\bZZ\b/.test(text))
+    report(file, "standalone capital ZZ in rendered text");
+  for (const match of html.matchAll(/\b(?:alt|title)="([^"]*)"/g)) {
+    if (/\bZZ\b/.test(match[1])) {
+      report(file, `standalone capital ZZ in attribute: ${match[0]}`);
+    }
+  }
   if (!text.includes(FOOTER_NOTICE)) report(file, "missing footer notice");
   for (const phrase of BANNED_PHRASES) {
     if (lower.includes(phrase)) report(file, `banned phrase: ${phrase}`);

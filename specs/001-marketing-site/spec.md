@@ -30,21 +30,22 @@ Acceptance:
 
 1. Home renders the hero, featured statement, comparison, How it works, Field logistics, From photo to action, More applications, About teaser, and Contact action in the order in `docs/SPEC.md` Section 3.1a [WIRE].
 2. Hero, featured statement, comparison cells, workflow lines, and category stories match `docs/SPEC.md` Sections 3.2 to 3.4 character for character [BRIEF].
-3. The hero keeps the em dash in "writable—and smart." [MICHAEL 2026-10-02].
+3. The hero H1 reads "writable - and smart." as typed in Michael's alternate copy (Q47) [MICHAEL 2026-10-02].
 4. The core workflow shows the lowercase code as text [MICHAEL 2026-10-02].
 5. The comparison shows four cards with four rows each, per `docs/SPEC.md` Section 3.2 H.3 [MICHAEL 2026-10-02].
+6. Home section 01 includes the Top ways block, 3 across on desktop, per `docs/SPEC.md` H.2a [MICHAEL 2026-10-02].
 
 ### US2. See where it applies (P1)
 
 As a reviewer, I can see field logistics first and largest, then postal and parcel, everyday and community, and digital aliases, so that I see the reach of one code grammar [BRIEF].
 
-Acceptance: `/applications` and the Home applications band show the panels in `docs/SPEC.md` Section 3.8, with field logistics largest [BRIEF].
+Acceptance: `/applications` and the Home applications band show the panels in `docs/SPEC.md` Section 3.8, with field logistics largest [BRIEF]. `/applications` also shows the galleries added for postal and parcel, everyday and community, and digital aliases [MICHAEL 2026-10-02].
 
 ### US3. Know who is behind it (P2)
 
 As an investor or collaborator, I can read the founder origin, see the founder and advisors with roles and short bios, and see the current prototype explorations, so that I know who to talk to [BRIEF] [MICHAEL 2026-10-02].
 
-Acceptance: `/about` follows `docs/SPEC.md` Section 3.5. People use initials cards until approved headshots arrive. Profile links appear only where a URL was supplied [MICHAEL 2026-10-02].
+Acceptance: `/about` follows `docs/SPEC.md` Section 3.5. Founder and advisor cards show a headshot where one was supplied, and initials otherwise. The page includes the Hacker Dojo block. Profile links appear only where a URL was supplied [MICHAEL 2026-10-02].
 
 ### US4. Try it safely (P2)
 
@@ -67,10 +68,10 @@ Acceptance: `/contact`, the Home contact action, the About contact card, and the
 | FR-003 | The footer shows How it works, Applications, Demo, About, Contact, the contact email, and the words "Patent pending". | [MICHAEL 2026-10-02] |
 | FR-004 | Each page has exactly one H1; headings follow content hierarchy without skipping levels. | [BRIEF] |
 | FR-005 | Copy in `copy` blocks of `docs/SPEC.md` ships verbatim. Copy lives in typed content objects so that it can change without layout edits. | [BRIEF] |
-| FR-006 | No rendered em dash except the hero line. | [MICHAEL 2026-10-02] |
+| FR-006 | No rendered em dash (the hero line now uses a spaced hyphen, Q47). | [MICHAEL 2026-10-02] |
 | FR-007 | No research target or unmeasured performance figures, and no claims of pilots, customers, endorsement, or adoption, appear on any page. | [MICHAEL 2026-10-02] [PRODUCT] |
 | FR-008 | Standalone AI-render panels carry "Concept illustration". Each grouped gallery carries one label above its panels. Captions name the workflow. | [MICHAEL 2026-10-02] |
-| FR-009 | Founder and advisor cards use initials until approved headshots are supplied. No LinkedIn scraping. | [MICHAEL 2026-10-02] [WIRE] |
+| FR-009 | Founder and advisor cards show a supplied headshot where one exists (Michael, Patrick, Arshi, Ridham) and initials otherwise (Q46). No LinkedIn scraping. | [MICHAEL 2026-10-02] [WIRE] |
 | FR-010 | `/technology` is not built and nothing links to it until it has Michael's draft explanation plus a supporting example. | [MICHAEL 2026-10-02] |
 | FR-011 | The demo is scripted: no recognition, no backend, no camera, microphone, network calls, or storage. Every step shows "Demo · mock data". | [OPERATOR 2026-10-01] |
 | FR-012 | The demo is fully usable by keyboard. Drag is never required. Reduced motion removes transitions. Without JavaScript, a static list of steps appears. | INFERRED (`docs/SPEC.md` Section 4.5) |
@@ -78,7 +79,7 @@ Acceptance: `/contact`, the Home contact action, the About contact card, and the
 | FR-014 | The site makes no runtime requests to other origins, has no analytics, and has no service worker. | [OPERATOR 2026-10-01] |
 | FR-015 | Light and dark themes both meet text contrast of at least 4.5:1. | `docs/SPEC.md` Section 8, item 16 |
 | FR-016 | When the free zzThat app launches, the main navigation gains a prominent "Try zzThat" action that links to zzthat.com. | [MICHAEL 2026-10-02]; launch trigger OPEN (Q39) |
-| FR-017 | Every zz code in rendered text, titles, and alt text is lowercase, and no page shows a standalone capital "ZZ" as text. | [MICHAEL 2026-10-02] |
+| FR-017 | Site copy (text, headings, captions, titles) writes every zz code in lowercase and never writes a standalone capital "ZZ". Photos and renders may show a capital ZZ mark or uppercase letters inside a code; alt text describes them in words or quotes the code as shown. | [MICHAEL 2026-10-02] |
 
 ## Success criteria
 
@@ -106,13 +107,14 @@ Real recognition, a real resolver, accounts, forms or email backends, analytics,
 | Q22 | Field logistics panels: the brief says a and c; the 2026-10-02 wireframe shows a, b, c. The site shows a, the b alternate, and c (OBSERVED). | Keep as built |
 | Q23 | The brief asks for a real handwritten code beside the hero. Panel b is an AI render, labeled "Concept illustration" (OBSERVED). Should a real photo replace it? | Keep panel b with the label |
 | Q24 | Should the About page keep the pitch-sourced founder bio and company-stage sentence? | RESOLVED: removed; the founder card shows Michael's founder origin [OPERATOR 2026-10-02] |
-| Q41 | Source for the alphanumeric example and character counts | Omit note sentence 1; ship the cell as written |
-| Q42 | Show the two capital-ZZ photos? | Do not render |
-| Q43 | Replace the founder bio with the 2026-10-02 first-person text? | Keep the founder origin |
-| Q44 | Add the Hacker Dojo block? | Keep the Location line |
-| Q45 | Hacker Dojo logo permission | No logo |
-| Q46 | Are the supplied headshots approved originals with consent? | Initials cards |
-| Q47 | Adopt the alternate hero and featured copy Michael shared as a reference? | Keep current copy |
+| Q41 | Source for the alphanumeric example and character counts | RESOLVED: use as given [MICHAEL 2026-10-02]. Both note sentences ship. |
+| Q42 | Show the two capital-ZZ photos? | RESOLVED: use as given [MICHAEL 2026-10-02]. Both photos are on About. |
+| Q43 | Replace the founder bio with the 2026-10-02 first-person text? | RESOLVED: use as given [MICHAEL 2026-10-02]. The longer bio is the founder text. |
+| Q44 | Add the Hacker Dojo block? | RESOLVED: use as given [MICHAEL 2026-10-02]. New section after the founder. Location stays. |
+| Q45 | Hacker Dojo logo permission | RESOLVED: use as given [MICHAEL 2026-10-02]. Logo is on About. Michael will ask Hacker Dojo for permission once the beta is live. |
+| Q46 | Are the supplied headshots approved originals with consent? | RESOLVED: use as given [MICHAEL 2026-10-02]. Four headshots ship. Michael will ask the people pictured for permission once the beta is live. |
+| Q47 | Adopt the alternate hero and featured copy Michael shared as a reference? | RESOLVED: use as given [MICHAEL 2026-10-02]. New paragraph and featured text; the H1 uses the spaced hyphen as typed. |
+| Q48 | Codes shown in supplied images use uppercase letters or spaces (zz-1234ABCD-zz, zz Guest WiFi connect zz). Are codes case- and space-insensitive? | OPEN. Default: show images as supplied; code grammar stays as spec 002/003 define it. |
 
 ## Workflows
 
