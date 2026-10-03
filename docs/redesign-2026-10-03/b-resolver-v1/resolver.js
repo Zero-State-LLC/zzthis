@@ -1,11 +1,18 @@
-// Sample B · Resolver. The parser and resolver are a straight port of the live
-// demo's src/lib/grammar.ts and src/lib/resolver.ts: exact match only, no guesses.
+// Sample B v1.0 · Resolver. ASCII parsing matches the original sample (a port of
+// src/lib/grammar.ts and src/lib/resolver.ts): exact match only, no guesses.
+// A letter outside ASCII is not an error. The console says those scripts come later.
 const reduceMotion = matchMedia("(prefers-reduced-motion: reduce)").matches;
 
 // ---- grammar.ts ----
 const MIN_WORDS = 2;
 const MAX_WORDS = 5;
 const WORD = /^[a-z0-9]+$/;
+// A letter that is not A-Z. Hangul, kana, CJK, Hebrew-script, and accented Latin count.
+const NON_ASCII_LETTER = /(?![A-Za-z])\p{L}/u;
+
+function hasNonAsciiLetter(text) {
+  return NON_ASCII_LETTER.test(text);
+}
 
 function splitMarkers(text) {
   if (text.startsWith("(zz)")) return { variant: "circled", body: text.slice(4).replace(/\(zz\)$/, "") };
@@ -16,6 +23,7 @@ function splitMarkers(text) {
 function parseCode(input) {
   const text = input.trim().toLowerCase();
   if (text === "") return { ok: false, reason: "empty" };
+  if (hasNonAsciiLetter(input)) return { ok: false, reason: "other-script" };
   const marked = splitMarkers(text);
   if (marked === null) return { ok: false, reason: "no-marker" };
   const words = marked.body.split(/[-\s]+/).filter((w) => w !== "");
@@ -29,6 +37,7 @@ const formatCode = (words) => `zz-${words.join("-")}-zz`;
 // ---- resolver.ts ----
 function resolve(input, codes) {
   const parsed = parseCode(input);
+  if (!parsed.ok && parsed.reason === "other-script") return { kind: "coming-later" };
   if (!parsed.ok) return { kind: "abstain-malformed", reason: parsed.reason };
   const normalized = formatCode(parsed.words);
   const exact = codes.find((entry) => entry.code === normalized);
@@ -66,6 +75,8 @@ const MOCK = [
 const COPY = {
   unknown: "No match. The demo will not guess. Check the words and try again.",
   malformed: "This is not a zz code. Use the form zz-word-word-zz.",
+  comingLater:
+    "Codes in other languages and scripts are coming later. This demo reads v1 codes, written with Latin letters and numbers, for now.",
 };
 
 // ---- DOM ----
@@ -86,7 +97,8 @@ let candidate = "";
 function showCandidate(text) {
   candidate = text;
   const parsed = parseCode(text);
-  input.setAttribute("aria-invalid", String(!parsed.ok && parsed.reason !== "empty"));
+  const comingLater = !parsed.ok && parsed.reason === "other-script";
+  input.setAttribute("aria-invalid", String(!parsed.ok && parsed.reason !== "empty" && !comingLater));
   tokensEl.replaceChildren();
   if (parsed.ok) {
     const open = parsed.variant === "circled" ? "(zz)" : "zz";
@@ -100,6 +112,10 @@ function showCandidate(text) {
     const how = parsed.variant === "circled" ? "circled markers" : "dash markers";
     statusEl.textContent = `Parsed: ${how}, ${parsed.words.length} words. Normalized: ${formatCode(parsed.words)}`;
     statusEl.classList.remove("is-bad");
+  } else if (comingLater) {
+    statusEl.textContent = COPY.comingLater;
+    statusEl.classList.remove("is-bad");
+    resultEl.replaceChildren(el("p", "", COPY.comingLater));
   } else {
     statusEl.textContent = parsed.reason === "empty" ? "Type a zz code." : `${COPY.malformed} (reason: ${parsed.reason})`;
     statusEl.classList.toggle("is-bad", parsed.reason !== "empty");
@@ -109,6 +125,10 @@ function showCandidate(text) {
 function renderResult() {
   const r = resolve(candidate, MOCK);
   resultEl.replaceChildren();
+  if (r.kind === "coming-later") {
+    resultEl.append(el("p", "", COPY.comingLater));
+    return null;
+  }
   if (r.kind === "resolved") {
     const card = el("article", "rec");
     const code = el("p", "rec__code", r.code.code);
@@ -155,7 +175,8 @@ $("[data-lookup]").addEventListener("click", lookUp);
 // ---- Typing ----
 input.addEventListener("input", () => {
   showCandidate(input.value);
-  resultEl.replaceChildren();
+  // Other scripts paint their own note. ASCII input still clears the last result.
+  if (parseCode(input.value).reason !== "other-script") resultEl.replaceChildren();
 });
 input.addEventListener("keydown", (e) => {
   if (e.key === "Enter") lookUp();
