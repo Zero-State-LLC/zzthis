@@ -202,7 +202,7 @@ Michael chose sample B. He sent a v1.0 change list (`zzThis_website_v1.0_changes
 | § | Change | Where | Notes |
 |---|---|---|---|
 | 0 | Section and sub-topic headings about 25% smaller on every page. Hero headline, body text, and the small orange numbers unchanged. | `tokens.css` (`--text-section`, `--text-h2`, `--text-sub`) | Measured: section h2 0.75×, hero 1.00×. Sub-topic h3 stop at the 17 px body size (0.85×), so a heading never reads smaller than its text. |
-| 1 | Headline second line: "zzThis makes things readable-writable — and smart." New paragraph under the buttons, with `zz-code` in monospace. | Home hero | The em dash replaces the spaced hyphen at Michael's direction. This supersedes the spec's Q47 / no-em-dash rule, so `docs/SPEC.md` needs a matching update. |
+| 1 | Headline second line: "zzThis makes things readable-writable — and smart." New paragraph under the buttons, with `zz-code` in monospace. | Home hero | The em dash replaces the spaced hyphen at Michael's direction. Decided (Danny 2026-10-03): keep it. Recorded as Q62 in `docs/SPEC.md`, which supersedes Q47 for the H1. The hero headline em dash is the one allowed exception. |
 | 2 | Two sentences appended to the section 01 paragraph | Home, under "The shortest, smartest distance…" | Heading and existing text unchanged. |
 | 3 | Diagram code 50% smaller. Third label reads "word or check word". | Home diagram | The labels stay at 13 px rather than halving to 6.5 px, which would be unreadable. They now alternate between two tiers with leader lines, so none collide at the smaller size (checked at 800, 1100, and 1440 px). |
 | 4 | "Why the zz markers matter" and "In any language" added below the four code types | Home | One line per language on phones; three columns on desktop. Aramaic is wrapped in `<bdi dir="rtl">` and verified right-to-left between the markers. Korean, Japanese, and Hebrew-script glyphs load as tiny IBM Plex subsets. |
@@ -210,14 +210,15 @@ Michael chose sample B. He sent a v1.0 change list (`zzThis_website_v1.0_changes
 | 6 | Hacker Dojo moved below Advisors; logo removed; new single paragraph; subtitle kept | About | |
 | 7 | "Coupang" removed; heading now "End-to-end anonymous concept use cases"; new privacy line; concept line kept; collage removed; Step 3 reads "drop-off address" | Applications | "Coupang" appears nowhere on the page. |
 
-**Michael needs to confirm or fix these before v1.0 ships:**
+**Michael needs to confirm or fix these before v1.0 ships.** Danny decided items 1, 2, and the headline em dash (item 4) on 2026-10-03. Item 3 is still open.
 
-1. **Bio version.** The doc contains two versions of the bio. Section 5 reads `I “invent” business models … and solve to the emerging …`. The combined block at the end reads `“I invent" …` and `solve-to`. B v1.0 uses section 5, since the doc's own notes flag the combined block's quotes and "solve-to" as errors. The doc's other suggested bio edits, such as naming the citing companies, are not applied.
-2. **Multilingual codes and the v1 grammar.** The spec makes v1 ASCII-only; any-language codes are a v2 candidate (issue #35). The new block shows non-ASCII codes, but the Home console runs the v1 parser. Typing the Korean example into it returns "This is not a zz code." Either label the block as coming later, or accept that the console is v1-only.
-3. **Native-reader check** for the Korean, Japanese, and Aramaic codes, as the doc itself advises.
-4. **For the production build:**
+1. **Bio version. Decided (Danny 2026-10-03).** The doc contains two versions of the bio. Section 5 reads `I “invent” business models … and solve to the emerging …`. The combined block at the end reads `“I invent" …` and `solve-to`. B v1.0 keeps the section 5 bio. No change to the bio text. The doc's other suggested bio edits, such as naming the citing companies, are not applied.
+2. **Multilingual codes and the v1 grammar. Decided (Danny 2026-10-03).** Keep the "In any language" examples on the page, including Korean, Japanese, and Aramaic. The Home console does not report a code that contains non-ASCII letters as malformed. It shows a non-error note that codes in other languages and scripts are coming later, and that this demo reads v1 codes written with Latin letters and numbers for now. ASCII input stays exact match only, with no suggestions. Any-language codes remain a v2 candidate (issue #35).
+3. **Native-reader check.** Still pending a human check for the Korean, Japanese, and Aramaic codes, as the doc itself advises. Tracked in a separate issue.
+4. **Headline em dash. Decided (Danny 2026-10-03).** Keep the em dash in "zzThis makes things readable-writable — and smart." Recorded as Q62 in `docs/SPEC.md`, which supersedes Q47's spaced-hyphen ruling for the H1. The hero headline em dash is the one allowed exception.
+5. **For the production build:**
    - Self-host the new script fonts: `@fontsource/ibm-plex-sans-kr`, `-jp`, and `-hebrew`.
-   - Update `docs/SPEC.md` to match: the headline dash and the new copy blocks.
+   - Specify the rest of the B v1.0 copy in spec 001. The headline dash is already recorded (Q62).
 
 ## Sources
 
