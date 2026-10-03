@@ -15,10 +15,10 @@ anti-slop-code, production-systems, google-developer-style; stop-slop for copy e
 | Framework | Astro, static output, base `/zzthis/` | OBSERVED (`astro.config.mjs`) |
 | Language | TypeScript strict, `noUncheckedIndexedAccess`, no `any` | OBSERVED (`tsconfig.json`, `eslint.config.js`) |
 | Runtime for tooling | Node 24 | OBSERVED (CI) |
-| Client JavaScript | One island for `/demo` only | OBSERVED (`src/demo/`) |
 | Content | Typed objects in `src/content/*.ts` | OBSERVED |
-| Styling | CSS tokens in `src/styles/tokens.css`, base rules in `src/styles/base.css` | OBSERVED |
-| Fonts | IBM Plex Sans and Plex Mono through `@fontsource`, self-hosted | OBSERVED (`package.json`) |
+| Styling | Direction B tokens in `src/styles/tokens.css` (OKLCH field instrument). Legacy token names alias them. Home, About, and Applications use the B layout CSS. Other pages keep their components. | Direction B, Section 3.1b |
+| Fonts | IBM Plex Sans, Plex Sans Condensed, and Plex Mono, plus Sans KR, JP, and Hebrew subsets, through `@fontsource`, self-hosted | Direction B |
+| Client JavaScript | `/demo` island, plus the Home console island. Neither uses the network, camera, microphone, or storage. | FR-011, FR-020 |
 | Tests | Vitest, 100% line and branch coverage on `src/lib/**` and `src/demo/demoMachine.ts` | OBSERVED (`vitest.config.ts`) |
 | Build checks | `scripts/check-dist.mjs`: required pages, one H1, heading order, base-path links, banned phrases and unmeasured performance figures, em dash rule, footer notice, banned browser APIs, size budgets | OBSERVED |
 | Hosting | GitHub Pages through `pages.yml` on push to `main` | OBSERVED |
@@ -27,7 +27,7 @@ anti-slop-code, production-systems, google-developer-style; stop-slop for copy e
 
 | Principle | How the site meets it |
 |---|---|
-| III. Exact match, no live-code hints | Met by T010 (issue #12): Flow B matches exactly and shows no other code on a miss. |
+| III. Exact match, no live-code hints | Met by T010 (issue #12) on `/demo`, and by FR-020 on the Home console. A miss shows no other code. |
 | IV. Honest status | `check-dist.mjs` blocks unmeasured performance figures and claim phrases; concept labels on panels. |
 | VI. Public repo hygiene | `scripts/security-scan.sh` in CI. Research targets and pitch-only text were removed (Q24). |
 | VII. Workflows in the spec | `spec.md` has `## Workflows`. |
@@ -39,7 +39,8 @@ src/pages/        one file per route, plus 404.astro
 src/components/   cards, steps, series, labels, header, footer, theme toggle
 src/content/      all copy and image metadata (typed)
 src/demo/         demo island: state machine and renderers
-src/lib/          grammar parser, demo resolver mock, image and URL helpers
+src/console/      Home console island (uses src/lib grammar and resolver)
+src/lib/          grammar parser, demo resolver mock, other-script note, image and URL helpers
 src/styles/       tokens.css, base.css
 tests/            Vitest suites
 scripts/          check-dist.mjs, security-scan.sh, check-agents-md.sh

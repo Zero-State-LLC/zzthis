@@ -10,7 +10,7 @@
 > | 7 Workflows | Superseded by the Workflows section in each `specs/*/spec.md`. The "OPEN Q13" and "draft PR" text below is stale. |
 > | 8 Acceptance | [`specs/001-marketing-site/checklists/requirements.md`](../specs/001-marketing-site/checklists/requirements.md) |
 > | 2.2a v1 text grammar | Accepted 2026-10-03 from Michael's Q48 and Q49 answers; updated the same day from his answers to Q50 to Q61 (draft, pending Danny's merge). Implemented by the spec 003 library (US3). |
-> | 9 Questions | Question table. Q21 to Q39 were added on 2026-10-02; Q49 to Q61 on 2026-10-03, and Q50 to Q61 were answered the same day. Q62 (2026-10-03) keeps the hero headline em dash and supersedes Q47 for the H1. Section 9a is the running decisions log. |
+> | 9 Questions | Question table. Q21 to Q39 were added on 2026-10-02; Q49 to Q61 on 2026-10-03, and Q50 to Q61 were answered the same day. Q62 (2026-10-03) keeps the hero headline em dash and supersedes Q47 for the H1. Section 3.1b records direction B v1.0 (accepted 2026-10-03). Section 9a is the running decisions log. |
 > | 12 Roadmap | v1 scope, exit criteria, and v2 candidates. |
 > | 10 Architecture | [`specs/002-resolver-core/plan.md`](../specs/002-resolver-core/plan.md), [`specs/004-capture/plan.md`](../specs/004-capture/plan.md) |
 >
@@ -430,7 +430,34 @@ The 2026-10-02 brief and wireframes add Adam Fry and drop the Future space card.
 5. H.1: Keep both buttons. The desktop wireframe shows only the primary action, but the [BRIEF] specifies both [BRIEF].
 6. H.1: The H1's spaced hyphen ("writable - and smart."), as typed in Michael's alternate hero copy [MICHAEL 2026-10-02] (Q47; Jev decision 2026-10-02), replaced the Q1 em dash. SUPERSEDED by Q62: the hero headline keeps the em dash in "readable-writable — and smart." [DANNY 2026-10-03; Michael v1.0 change list]. That hero headline em dash is the one allowed exception. No other em dash is allowed in site copy.
 7. H.3: Render the comparison as four cards, in this order: Barcode, QR code, Alphanumeric code, and zzThis [MICHAEL 2026-10-02]. This replaces the three cards in [WIRE] and the [BRIEF] cells. Each card has four labeled rows (Create the mark, Read the mark, What it connects, Easy to say and remember) that use the H.3 cells verbatim. The note under the cards is both H.3 sentences verbatim (Q41 RESOLVED). Keep the section number "02" and the current card design: dark cards, small uppercase monospace row labels set by CSS, divider lines, and the corner detail. Only the zzThis card has the accent edge, and it stays last. Layout: four equal columns at ≥ 900 px, a 2×2 grid at 600–899 px, and stacked single cards below 600 px, with no horizontal scrolling. At ≥ 900 px each row aligns across all four cards, so a longer cell pushes the same row down on every card [MICHAEL 2026-10-02].
-8. The Section 3.2 order conflict is resolved by [WIRE]: comparison → How it works → Field logistics → From photo to action. Q2 is closed.
+8. The Section 3.2 order conflict is resolved by [WIRE]: comparison → How it works → Field logistics → From photo to action. Q2 is closed. SUPERSEDED for Home, About, and Applications presentation by Section 3.1b (direction B v1.0, accepted 2026-10-03).
+
+### 3.1b Direction B v1.0 layout (accepted 2026-10-03)
+
+Danny accepted direction B, with `docs/redesign-2026-10-03/b-resolver-v1/` as the reference [DANNY 2026-10-03]. This section supersedes the Section 3.1a wireframe order and the four-card comparison chrome on Home, the About block order, and the Applications gallery chrome. Copy in the `copy:` blocks below still ships verbatim. Lines the prototype added on its own (console labels, the non-ASCII note, anatomy labels other than "word or check word", decision-band names, and the architecture diagram labels) are marked [prototype 2026-10-03 b-resolver-v1].
+
+**Visual system.** Dark field-instrument. IBM Plex Sans Condensed for display, IBM Plex Sans for body, IBM Plex Mono for codes. Korean, Japanese, and Hebrew-script examples also load IBM Plex Sans KR, JP, and Hebrew. Tokens and type sizes are Section 5. Shared header, footer, theme toggle, and tokens use this system on every page. How it works, the demo, contact, and the 404 keep their existing content.
+
+**Home order** (direct sections, no numbered eyebrows):
+
+| Order | Section | Source |
+|---|---|---|
+| 1 | Hero: two-line H1, subline, actions, paragraph, and the lookup console | H.1; console [prototype 2026-10-03 b-resolver-v1] |
+| 2 | Featured statement, code anatomy, four code forms, why the markers matter, in any language | H.2, H.2b |
+| 3 | Comparison spec-sheet table (H.3 cells) | H.3 |
+| 4 | How it works frames, then the uncertain-reading note and the public-record note | H.4; notes from Section 3.3 |
+| 5 | Top ways | H.2a |
+| 6 | Field logistics | H.5 |
+| 7 | From photo to action | H.6 |
+| 8 | Proposed architecture, labelled "Proposal, not built." | Section 10, drawn as in the prototype |
+| 9 | More applications | H.7 |
+| 10 | About teaser and contact action | H.8, H.9 |
+
+The Home console calls `src/lib/grammar.ts` and `src/lib/resolver.ts` against the existing mock records. Exact match only (issue #12). It does not change v1 grammar or resolver behaviour. Input that contains a letter outside A–Z (for example `zz-구리-등불-하늘-zz`) shows the non-error note in H.1c. It is not `aria-invalid` and it is not error-styled. Camera and voice on Home are simulated: no `getUserMedia`, no network, no storage. Reduced motion removes the scan and the view transition.
+
+**About order:** H1 and intro beside the contact card; current explorations; founder card (same headshot size as the advisors); advisors; Hacker Dojo (below advisors, no logo, one paragraph); codes written by hand; location and next action.
+
+**Applications.** Same four sections and the same galleries, except the delivery collage is removed, the delivery H3 and its intro and Step 3 title are the H.7b lines, and "Coupang" does not appear. Card titles in the galleries are caption titles, not extra heading levels. H3 is only the named sub-topic (the anonymous use cases, and Businesses).
 
 ### 3.2 Home (`/`)
 
@@ -443,13 +470,67 @@ Reading order follows Do / Re / Mi / Fa as rhythm only. No beat labels are print
 Image: `public/images/panels/b-crate-word-code.webp`, eager loaded, `fetchpriority="high"`. At 900 px and wider, the image and text sit side by side at about 1.618:1 (image:text). On phones, the image appears above the text so that the image comes before the description [BRIEF; layout INFERRED].
 
 ```copy
-H1: Barcodes made things scannable. zzThis makes them writable - and smart.
-P:  zzThis is a human-readable, human-writable code for the physical world. Write zz-copper-lantern-sky-zz on tape, a crate, a parcel, or a sign. Link it to a digital record, then find it by camera, typing, or voice.
+H1 line 1: Barcodes made things scannable.
+H1 line 2: zzThis makes things readable-writable — and smart.
+Subline: Write a code on a thing; find its record by camera, typing, or voice.
+P:  zzThis is a human-readable, human-writable code for the physical world. Write a zz-code on tape, a crate, a parcel, an envelope, or a sign, or embed it in text or program code. Link it to a digital record or its information hub, then find it by camera, typing, or voice.
 Primary button:   See field logistics   → /#field-logistics
-Secondary button: How it works          → /how-it-works
+Secondary button: How it works          → /#how-it-works
 ```
 
-[BRIEF] The paragraph is the 2026-10-02 text [MICHAEL 2026-10-02] (Q47 RESOLVED). The H1's spaced hyphen ("writable - and smart.") as typed [MICHAEL 2026-10-02] (Q47; Jev decision 2026-10-02) replaced the Q1 em dash, and is SUPERSEDED by Q62: the hero headline keeps the em dash in "readable-writable — and smart." [DANNY 2026-10-03; Michael v1.0 change list]. That hero headline em dash is the one allowed exception. Image b carries the "Concept illustration" tag in its caption [MICHAEL 2026-10-02]. Render the code in IBM Plex Mono (INFERRED).
+[MICHAEL 2026-10-03 v1.0 change list] The H1 line 2 and the paragraph replace the Q47 hero lines. `zz-code` renders in IBM Plex Mono. The hero headline em dash in "readable-writable — and smart." is the one allowed exception (Q62). Image b carries the "Concept illustration" tag in its caption [MICHAEL 2026-10-02]. The secondary button scrolls to the Home workflow anchor. The main nav still links How it works to `/how-it-works` [BRIEF].
+
+#### H.1b Code anatomy and languages (Do)
+
+Shown under the featured statement. The third anatomy label is [MICHAEL 2026-10-03 v1.0 change list]. The other four labels are [prototype 2026-10-03 b-resolver-v1].
+
+```copy
+Specimen: zz - copper - lantern - sky - zz
+Labels: opening marker; word; word; word or check word; closing marker
+Word code: zz-copper-lantern-sky-zz
+Field code: zz-b2-smith-1-zz
+Handle: zz-@agentsmith-zz
+Circled marker: (zz) camp bravo four two (zz)
+H3: Why the zz markers matter
+P:  The zz markers are to zzThis what the start and stop bars are to a barcode, or the three corner squares to a QR code: a fixed frame that tells people and machines exactly where a code begins and ends. Two lowercase letters, recognizable almost anywhere, in any handwriting.
+H3: In any language
+Korean: zz-구리-등불-하늘-zz
+Japanese: zz-さくら-ねこ-そら-zz (cherry blossom, cat, sky)
+German: zz-kupfer-laterne-himmel-zz
+French: zz-cuivre-lanterne-ciel-zz
+Aramaic: zz-נהורא-שמיא-zz (light, sky)
+```
+
+[MICHAEL 2026-10-03 v1.0 change list] The "Why the zz markers matter" paragraph and the five language lines ship as given. Aramaic is wrapped in `<bdi lang="arc" dir="rtl">` around `נהורא-שמיא`. A native-reader check is still open (Q63, issue #51).
+
+#### H.1c Home console (prototype microcopy)
+
+[prototype 2026-10-03 b-resolver-v1] These lines are the sample's own console text. They are not new marketing claims.
+
+```copy
+H2: Look up a code
+Badge: Demo · mock data
+Tabs: Camera; Typing; Voice
+Button: Photograph (simulated)
+Readout: Confidence: 0.94 (mock)
+Readout: Checksum: OK (mock state, no algorithm runs)
+Label: Type a zz code
+Examples label: Example codes
+Examples: zz-copper-lantern-sky-zz; zz-river-maple-sky-zz; zz-blue-bike-astoria-zz; zz-b2-4-zz; (zz) camp bravo four two (zz); copper lantern sky
+Voice cue: “Tag: copper, lantern, sky. Break.”
+Voice note: No microphone is used. The words below are a prewritten transcript.
+Button: Simulate voice input
+Heard: Simulated voice input: 'copper, lantern, sky'
+Button: Look up
+Empty: Type a zz code.
+Miss: No match. The demo will not guess. Check the words and try again.
+Miss note: Exact match only. A miss never suggests other codes.
+Malformed: This is not a zz code. Use the form zz-word-word-zz.
+Coming later: Codes in other languages and scripts are coming later. This demo reads v1 codes, written with Latin letters and numbers, for now.
+Record foot: Mock record. No network request was made.
+```
+
+The miss and malformed lines match Section 4.4. The coming-later line is the non-error note for letters outside A–Z.
 
 #### H.2 Featured statement (Do)
 
@@ -457,14 +538,14 @@ No image.
 
 ```copy
 H2: The shortest, smartest distance between a physical thing, its digital record, and the work that comes next.
-P:  A zz code gives people a way to create the mark themselves, wherever the work happens. AI can help identify what a camera sees, count what remains, suggest how an item should be handled, and prepare the next task. The same visible code connects the item, its history, and the people responsible for it.
+P:  A zz code gives people a way to create the mark themselves, wherever the work happens. AI can help identify what a camera sees, count what remains, suggest how an item should be handled, and prepare the next task. The same visible code connects the item, its history, and the people responsible for it. It bridges physical things and their digital control: the easiest, smartest way to identify, manage, and act on them. zzThis is designed AI-first, on the principle that AI is the new UI, and the great connector and leveler across big tech stacks.
 ```
 
-[MICHAEL 2026-10-02] (Q47 RESOLVED). The H2 is unchanged.
+[MICHAEL 2026-10-02] (Q47 RESOLVED) for the H2 and the first three sentences. The last two sentences are [MICHAEL 2026-10-03 v1.0 change list]. The H2 is unchanged.
 
 #### H.2a Top ways zzThis is used (Do)
 
-Sub-block of section 01, after the featured paragraph. No new eyebrow. Sections 02 to 08 stay numbered as they are. Layout: 1 column below 600 px, 2 columns from 600 to 899 px, 3 columns at 900 px and wider. Rows in a line share a height. zzthat.com is plain text [MICHAEL 2026-10-02].
+On the B v1.0 Home page this block sits after How it works, as a manifest (Section 3.1b), not inside the featured statement. zzthat.com is plain text [MICHAEL 2026-10-02]. The copy is unchanged.
 
 ```copy
 H3: Top ways zzThis is used
@@ -508,7 +589,7 @@ H2: "How zzThis compares" (INFERRED). Cells are verbatim [MICHAEL 2026-10-02] an
 
 Note under the cards (small, muted, full width), both sentences verbatim [MICHAEL 2026-10-02] (Q41 RESOLVED): "Alphanumeric example: an 8-character handwritten postage code (Deutsche Post) or a 14–22-character parcel tracking number. zz-codes can be words, numbers, or simple hand-drawn symbols such as a smiley or tally marks, and can be read even when written inside a sentence."
 
-Render this table as four cards, per override 7 in Section 3.1a. Also include a visually hidden `<table>` with the same cells so that screen readers can navigate by row and column (INFERRED).
+On Home, render this table as the visible B v1.0 spec sheet (Section 3.1b), not as four cards. Below 768 px the rows stack and each cell names its column, so the page does not scroll sideways. The cells stay verbatim.
 
 #### H.4 How it works (Mi), `id="how-it-works"`
 
@@ -547,6 +628,23 @@ P:  AI-assisted work: PHOTOGRAPH one or more items → CONFIRM the proposed iden
 ```
 
 The first paragraph and the card labels are [WIRE]. The workflow paragraph is [BRIEF]. Keep this section distinct and after the marking example, never under the digital-alias card [BRIEF].
+
+On Home, the uncertain-reading note and the public-record note from Section 3.3 sit under How it works. The decision bands are [prototype 2026-10-03 b-resolver-v1]: Manual, Another view, Confirm, Resolve. The line under them is "Design intent. No threshold has been measured yet."
+
+#### H.6b Proposed architecture
+
+Home shows Section 10 as a diagram labelled "Proposal, not built." The paragraph is the Section 10.1 rules in one sentence. The node names are the Section 10 diagram labels.
+
+```copy
+H2: Proposed architecture
+P:  One central server owns codes, records, grants, and the audit log; every app is an API client. Revocation, single use, expiry, and rate limits are enforced on the server.
+Label: Proposal, not built.
+API clients: Phone app (on-device recognition); Web app; Partner systems
+Edge layer: Fast reads (resolve, cached signed records)
+Central server: Write and signing API (issue, revoke, version, grants); Portable SQL (codes, records, record_versions, grants, audit_events); Object storage (retry photos); Cloud vision model (hard cases only)
+```
+
+[OPERATOR 2026-10-02] for the rules. The one-paragraph form and the on-page diagram are the B v1.0 rendering of that section. Nothing in the diagram is built.
 
 #### H.7 More applications, `id="applications"`
 
@@ -617,13 +715,13 @@ A gallery may include an H3, intro paragraphs, then the cards, then closing para
 
 > By appending a single 'super identifier' to legacy systems, we create a unified data node system to give current analog logistics the new digital-smart AI solutions and network. In the above, in theory, a FedEx overnight shipper can only put the zz-Code ID on the package and its deliverer in the fulfillment chain in anonymous, until the final touch with the receiver.
 
-H3 "Coupang concept use cases". Intro, verbatim: "One human-readable public reference. Sensitive data is revealed only to authorized systems and people." A lead card first shows Michael's 2x2 composite of all four steps (docx image3; title "All four steps", caption "Purchase, fulfillment, last mile, and pickup." INFERRED; Jev decision 2026-10-02 to show the composite and the four steps). Then an ordered group of four (frame 4 / 5). Titles and captions, captions from MICHAEL note:
+H3 "End-to-end anonymous concept use cases" [MICHAEL 2026-10-03 v1.0 change list]. Intro, verbatim: "The merchant never receives the customer's personal data or payment details, only a zz-code and a security code. Nothing personal appears on the outside of the package. The customer picks it up at a drop-off store by giving a secret code or signing with a private key." The group concept line stays: "Concept illustrations. These panels show intended use, not a deployed system." The 2x2 composite lead card is removed. "Coupang" does not appear. Then an ordered group of four (frame 4 / 5). Titles and captions, captions from MICHAEL note:
 
 | Step | Title | Caption |
 |---|---|---|
 | Step 1 | Anonymous customer orders online | Purchase: Customer selects reduced-exposure delivery. |
 | Step 2 | Merchant ships only with the zz-Code | Fulfillment: The parcel displays only a shipment reference. |
-| Step 3 | Delivery man only knows pickup address | Last mile: The assigned courier receives task-limited address access. |
+| Step 3 | Delivery man only knows drop-off address | Last mile: The assigned courier receives task-limited address access. |
 | Step 4 | Anonymous customer gives matching secret code or signature | Pickup: A private credential authorizes release at a secure pickup point. |
 
 Closing paragraphs, verbatim:
@@ -656,8 +754,8 @@ The layout follows Section 3.1a.
 | Intro | "A code a person can write anywhere, linked to a digital record and the next work." | [MICHAEL 2026-10-02] wireframes |
 | Contact card | "1@1000x10.com. Invite collaboration and test partners." | [WIRE] |
 | H2 Current explorations | zzthing.com: "Broader showcase and label mockups." zzthat.com: "Scanner/creator prototype; planned free web, Android, and iOS app." [MICHAEL 2026-10-02] Concept label 2 (Section 3.1a) | [WIRE] [BRIEF] |
-| H2 Founder | Michael Chung, "Founder, system architecting, and project lead." [MICHAEL 2026-10-02] Bio, used as written (Q43 RESOLVED): "I “invent” business models. If you ever used cards for DMV or Gmail tabs, thank me. ; ). In 1992-93, pitched to NYC and initiated a pilot with NYC for possibly the world first electronic payment (by cards) at municipals for motor vehicle fines and fees. In 1995, the NYC DMV began acceptance; and in 1996, the first EZ-Pass for tolls began in NY state. In 2003, my patent application was published for sorting tagged emails to their dedicated tabs (Priority. Address, Bills, etc.), predating Gmail 2013 tabs. Professional experience includes 25 years in real estate and federal GSA RFPs (was awarded two for office spaces, one was a 10-years fixed over $9 million lease-contract), and other small businesses – eateries, supermarkets, merchant credit cards, finance, direct marketing, etc. Recent 13 years in SV in tech startups space, 10+ years in and about the blockchain space, and the recent 3+ years of the AI. A driver of Michael’s business models is purposefully enabling the unity of the deterministic blockchain with the probabilistic AI to solve the current great problematic gaps and the emerging next-phase civilizational opportunities." Headshot: `images/people/michael-chung.webp`. LinkedIn: https://www.linkedin.com/in/unitynow | [MICHAEL 2026-10-02] (Q43 RESOLVED); placement [OPERATOR 2026-10-02] (Q24) |
-| H2 Hacker Dojo | Subtitle: "Innovation community and advisory network." Logo `images/logos/hacker-dojo.webp`, about 96 px square, alt "Hacker Dojo logo". Paragraphs, verbatim: "zzThis is based at Hacker Dojo, the hackers' coworking and maker space in the heart of Silicon Valley, minutes from the headquarters of Google, NVIDIA, ServiceNow, and many more. Every day it gives us direct participation in, access to, and mentoring from one of the world's premier communities for tech innovation, creativity, and cutting-edge work. That means peerless knowledge, know-how, information, and resources." "Its several hundred members cover the full range of skills, from software, hardware, and robotics to physical AI, IoT, security, and design. Many have decades of experience, and many work at the leading edge of their fields. Members build their own projects and run their own meetups and frequent hackathons, including an AI security series led by our advisor Arshi Chadha. Security is an area of growing importance to the Army and the defense community." | [MICHAEL 2026-10-02] (Q44, Q45 RESOLVED) |
+| H2 Founder | Michael Chung, "Founder, business-model architect, and project lead" [MICHAEL 2026-10-03 v1.0 change list]. Bio, word for word (supersedes the Q43 bio): "I “invent” business models. If you've ever paid at the DMV with a card or used Gmail's inbox tabs, thank me. ;) In 1992–93, I pitched New York City and initiated a pilot for possibly the world's first electronic card payments by the municipal agencies for motor-vehicle fines and fees. In 1995, the NYC DMV began accepting cards, and in 1996, the first E-ZPass tolling began in New York State. In 2002, my patent application was published for sorting tagged emails into their dedicated tabs (Priority, Ads, Bills, etc.) and was cited by 158 patent applications, majority by leading tech and Fortune companies. Gmail did their tabs in 2013. My business experience includes 25 years in real estate, including federal GSA RFPs (I was awarded two office space lease-contracts, one an over $9 million 10-year fixed), and other small businesses: eateries, supermarkets, merchant credit cards, finance, and direct marketing. For the past 13 years I've been in Silicon Valley's tech startup space, with 10+ years in and around blockchain and the last 3+ years in AI. A driver of my business models is the discovery and the purposeful enabling unity of the deterministic blockchain with the probabilistic AI to target today's great problematic gaps and solve to the emerging next-phase civilizational opportunities." Headshot: `images/people/michael-chung.webp`. LinkedIn: https://www.linkedin.com/in/unitynow | [MICHAEL 2026-10-02] (Q43 RESOLVED); placement [OPERATOR 2026-10-02] (Q24) |
+| H2 Hacker Dojo | Subtitle: "Innovation community and advisory network." Logo removed from the page [MICHAEL 2026-10-03 v1.0 change list]. One paragraph, verbatim: "Many of us are at Hacker Dojo, a top coworking, maker, and networking space and community in the heart of Silicon Valley, minutes from the headquarters of Google, NVIDIA, Apple, and more. Every day brings direct participation in, and access to, the latest ideas in problem solving, innovation, and creativity, along with cutting-edge work and trends, a deep and broad knowledge base, news, and resources. Its several hundred members cover the full range of skills, from software, hardware, and robotics to physical AI, IoT, security, and design." | [MICHAEL 2026-10-03 v1.0 change list] (Q44 subtitle kept; Q45 logo no longer shown on the page) |
 | H2 Advisors | Cards: Patrick Muggler, "Connected logistics and IoT"; Arshi Chadha, "AI security"; Ridham Bhagat, "Cybersecurity, cryptography and research methods"; Daniel Meyer, "Full-stack development"; Adam Fry, "AI agents, infrastructure and deployment". Bios for Patrick, Arshi, and Daniel are verbatim from the brief; Ridham and Adam bios are verbatim from Michael's later 2026-10-02 answers (`src/content/people.ts`). Headshots for Patrick, Arshi, and Ridham (Q46 RESOLVED). Daniel Meyer and Adam Fry keep initials. | [MICHAEL 2026-10-02] |
 | H2 Codes written by hand | Four real photos in a 2×2 (Section 3.8): hw-agent-notes, hw-usps-tally, hw-mark-on-object, and hw-dog-collar-tag, including the two capital-ZZ photos (Q42 RESOLVED). zz-hackerdojo-zz, zz-helloworld-zz, and zz-roto-zz are removed. Label: "Real photos of handwritten codes." | [MICHAEL 2026-10-02]; label INFERRED |
 | Location | "Mountain View / Santa Clara area; Hacker Dojo work base." Unchanged. | [WIRE] [BRIEF] |
@@ -840,7 +938,32 @@ The resolver mock (`src/lib/resolver.ts`) is pure. It returns `resolved | abstai
 
 ## 5. Visual system and components
 
-### 5.1 Color tokens (INFERRED values; principles from the operator)
+### 5.1 Color tokens (direction B, accepted 2026-10-03)
+
+Dark field-instrument. Values are OKLCH. The brand accent is the logo orange, `oklch(65.9% 0.215 38)`, which is `#F85000`. `light-dark()` pairs are light, then dark. The page defaults to dark when the visitor has no preference override.
+
+| Token | Light | Dark | Use |
+|---|---|---|---|
+| `--color-paper` | oklch(95.3% 0.016 86) | oklch(17.5% 0.006 75) | Page |
+| `--color-panel` | oklch(97.6% 0.009 86) | oklch(21.5% 0.007 75) | Raised panel |
+| `--color-panel-2` | oklch(91.7% 0.021 86) | oklch(25.5% 0.008 75) | Secondary panel |
+| `--color-ink` | oklch(22.2% 0.004 85) | oklch(94% 0.014 86) | Body |
+| `--color-ink-2` | oklch(39.6% 0.013 82) | oklch(78% 0.018 85) | Secondary text |
+| `--color-ink-3` | oklch(46% 0.012 82) | oklch(70% 0.014 85) | Tertiary text |
+| `--color-rule` | oklch(82.9% 0.027 85) | oklch(32% 0.009 80) | Hairline |
+| `--color-rule-strong` | oklch(60% 0.02 85) | oklch(48% 0.012 80) | Strong rule |
+| `--color-accent` | oklch(65.9% 0.215 38) | same | Accent fill |
+| `--color-on-accent` | oklch(22.2% 0.004 85) | same | Text on accent |
+| `--color-accent-ink` | oklch(45% 0.165 38) | oklch(73% 0.17 42) | Accent used as text |
+| `--color-focus` | oklch(52% 0.19 38) | oklch(76% 0.16 44) | Focus ring |
+
+Orange is not used as body text on cream. Accent text uses `--color-accent-ink`, which stays at least 4.5:1 on `--color-paper`. The earlier charcoal/cream hex table is superseded. Legacy names (`--surface`, `--text`, `--accent`, and the spacing scale) alias these tokens so How it works, the demo, contact, and the 404 keep their components.
+
+The theme follows `prefers-color-scheme` and stores nothing, so a manual toggle lasts only until reload.
+
+### 5.1a Previous hex tokens (superseded)
+
+Kept for the record. Do not implement from this table.
 
 | Token | Dark | Light | Use |
 |---|---|---|---|
@@ -852,9 +975,21 @@ The resolver mock (`src/lib/resolver.ts`) is pure. It returns `resolved | abstai
 | `--accent` | #F85000 | #F85000 | Single accent: primary button fill, zzThis card edge, focus ring, step numerals |
 | `--on-accent` | #1C1B19 | #1C1B19 | Text on accent (about 5.0:1) |
 
-Orange on cream is about 3:1, so in light mode the accent never colors body text. Links use `--text` with a 2 px accent underline. The theme follows `prefers-color-scheme` and stores no state, so the toggle resets on reload (INFERRED).
-
 ### 5.2 Type and spacing
+
+| Role | Font | Size | Notes |
+|---|---|---|---|
+| Hero claim and page H1 | IBM Plex Sans Condensed 700 | `--text-display-s`: clamp(2rem, 2.4vw + 1.1rem, 3.4rem) | Hero headline is not reduced |
+| Section H2 | IBM Plex Sans Condensed 600 | `--text-section`: 0.75 × the display size | v1.0: about 25% smaller |
+| Sub-topic H2 | IBM Plex Sans Condensed 600 | `--text-h2`: 0.75 × `--text-xl` | |
+| H3 | IBM Plex Sans Condensed 600 | `--text-sub`: max(body, 0.75 × 1.25rem) | Never smaller than body |
+| Body | IBM Plex Sans 400 | 1.0625rem | Line height 1.6 |
+| Codes | IBM Plex Mono 500 | 0.92em inside text | |
+| Language examples | IBM Plex Sans KR, JP, and Hebrew 500 | with the code | Self-hosted subsets only |
+
+Fonts are self-hosted through `@fontsource`. No Google Fonts and no runtime request to another origin. Spacing steps stay 4, 6, 10, 16, 26, 42, 68, and 110 px. The measure is 62ch.
+
+### 5.2a Previous type scale (superseded)
 
 | Role | Font | Size (mobile → ≥ 900 px) | Line height |
 |---|---|---|---|
@@ -865,9 +1000,9 @@ Orange on cream is about 3:1, so in light mode the accent never colors body text
 | Caption | Plex Sans 400 | 14 px | 1.45 |
 | Codes, labels, badges | IBM Plex Mono 500 | 15–16 px | 1.4 |
 
-Fonts are self-hosted WOFF2 files in `public/fonts` (Latin subset). Spacing tokens follow φ steps of 4, 6, 10, 16, 26, 42, 68, and 110 px. Section gaps use 68 px on phones and 110 px at ≥ 900 px. The maximum line length is 68ch.
-
 ### 5.3 Card specification
+
+The cut-corner card still applies on How it works, the demo, and contact, which this change does not redesign. Home, About, and Applications use the B v1.0 frames instead (hairline rules, no cut corner).
 
 - The card sits on `--mount` with a 1 px `--edge` border.
 - The lower-right corner has a single 16 px cut, made with `clip-path`. The border follows the cut through an SVG overlay or a pseudo-element.
@@ -884,7 +1019,7 @@ Fonts are self-hosted WOFF2 files in `public/fonts` (Latin subset). Spacing toke
 
 ## 6. Stack, repo layout, and engineering rules
 
-**Stack:** Astro (static output), INFERRED. Astro builds static HTML with no client JavaScript by default, so only the demo ships JavaScript, as one TypeScript island. The build makes no runtime external requests and includes no analytics. The site has no service worker. IBM Plex is self-hosted through `@fontsource` packages [OPERATOR 2026-10-01].
+**Stack:** Astro (static output), INFERRED. Astro builds static HTML with no client JavaScript by default. The demo and the Home console each ship one TypeScript island. Neither island calls the network, the camera, the microphone, or storage. The build makes no runtime external requests and includes no analytics. The site has no service worker. IBM Plex Sans, Plex Sans Condensed, Plex Mono, and the KR, JP, and Hebrew faces used by the language examples are self-hosted through `@fontsource` packages [OPERATOR 2026-10-01] [DANNY 2026-10-03].
 
 **Hosting:** GitHub Pages, deployed from the public repo `Zero-State-LLC/zzthis` (organization plan Team). The repo and the Pages site are both public [OPERATOR 2026-10-02], so nothing private (source documents, costs, credentials) may be committed. The project-site URL is `https://zero-state-llc.github.io/zzthis/`. The site has no custom domain, no DNS, and no Vercel [OPERATOR 2026-10-01].
 
@@ -950,7 +1085,7 @@ package-lock.json
 3. The nav shows, in order: How it works, Applications, About, Contact. The footer shows How it works, Applications, Demo, About, Contact, then "Patent pending" [MICHAEL 2026-10-02].
 4. The hero H1, subline, paragraph, featured statement, comparison cells, workflow lines, and category stories match Sections 3.2–3.4 character for character. This check uses a snapshot test of the content objects.
 5. No rendered copy contains an em dash (—) [MICHAEL 2026-10-02], except the hero headline em dash in "readable-writable — and smart." [DANNY 2026-10-03; Michael v1.0 change list] (Q62, which supersedes Q47's spaced hyphen for the H1). That headline em dash is the one allowed exception.
-6. The Home section order matches Section 3.1a. Field logistics and From photo to action contain the most image cards on Home.
+6. The Home section order matches Section 3.1b (direction B v1.0). Field logistics and From photo to action remain the largest image bands on Home.
 7. Panel placement matches Section 3.8. j, k, and l render as an ordered list labeled 01 to 03.
 8. Concept labels follow Section 3.1a [MICHAEL 2026-10-02]: standalone panels carry "Concept illustration", each grouped gallery has one label above it, and the About prototype block has one. `/zzthis/demo` shows the "Demo · mock data" badge on every step, A0–A7 and B0–B4.
 9. The advisor list is Patrick Muggler, Arshi Chadha, Ridham Bhagat, Daniel Meyer, and Adam Fry [MICHAEL 2026-10-02]. Every page footer shows "Patent pending".
@@ -1047,6 +1182,7 @@ Michael's answers arrived on 2026-10-02 through Danny (issue #10), in an updated
 | Q60 | Reserved handles list (issue #47) | RESOLVED [MICHAEL 2026-10-03 #47]: yes, reserves; free users cannot use corporate names or names like admin; premium tier for short names, as ENS (3 or more characters, shorter names cost more). Spec 002 FR-019 |
 | Q61 | Should `zz-` and `zz-zz` count as a bare mark? (issue #48) | RESOLVED [MICHAEL 2026-10-03 #48]: only `zz` and `(zz)` alone, in any case or mix. `zz-` and `zz-zz` fail. Section 2.2a G3; case note in Section 9a |
 | Q62 | Keep the v1.0 hero headline em dash ("zzThis makes things readable-writable — and smart.") in place of the Q47 spaced hyphen? | RESOLVED: yes. Keep the em dash [DANNY 2026-10-03; Michael v1.0 change list]. It is the one allowed exception to the no-em-dash rule. |
+| Q63 | Native-reader check for the Korean, Japanese, and Aramaic examples? | OPEN. Tracked in issue #51. The examples stay on Home (Section 3.1b). |
 
 ## 9a. Decisions log
 
