@@ -50,3 +50,18 @@ Workflows for every implementing task: anti-slop-code, production-systems, googl
 ## Phase 6: Public repo hygiene
 
 - [x] T019 Remove research targets and pitch-only text from the repo and site (Q24 RESOLVED [OPERATOR 2026-10-02]). The founder card now shows Michael's founder origin.
+
+## Phase 8: Michael's 2026-10-02 shared-folder deltas
+
+- [x] T020 Comparison: four cards (Barcode, QR code, Alphanumeric code, zzThis) and the row "Easy to say and remember", with 1 / 2 / 4 columns and subgrid row alignment at 900 px.
+- [x] T021 Comparison note under the cards, both sentences, small and muted, full width (Q41).
+- [x] T022 Founder role set to "Founder, system architecting, and project lead."
+- [x] T023 Codes written by hand: removed the three unused photos and render four real photos in a 2x2, including the two capital-ZZ photos (Q42).
+- [x] T024 check-dist standalone-ZZ rule, no uppercase-inside-code rule, per Q42.
+- [x] T025 Applied Michael's answers Q41-Q47 as given.
+
+## Phase 9: Michael's OneDrive update 2026-10-02b
+
+- [x] T026 Home Top ways block inside section 01 (1 / 2 / 3 columns).
+- [x] T027 Applications galleries and the Card frame variant (`object-fit: contain`, width cap).
+- [x] T028 New images are WebP. The applications set is about 0.6 MB.

@@ -14,5 +14,5 @@ export interface ImageMeta {
   focal: { x: number; y: number };
   destination: Array<Destination>;
   status: PanelStatus;
-  sourceTag: "BRIEF" | "WIRE" | "ASSETS";
+  sourceTag: "BRIEF" | "WIRE" | "ASSETS" | "MICHAEL";
 }

@@ -6,6 +6,7 @@ import Eyebrow from "../components/Eyebrow.astro";
 import Series from "../components/Series.astro";
 import { applications, applicationsPage } from "../content/applications";
 import { images } from "../content/images";
+import { conceptLabels } from "../content/labels";
 
 const columnsFor = (count: number): "2" | "3" => (count > 2 ? "3" : "2");
 ---
@@ -40,6 +41,54 @@ const columnsFor = (count: number): "2" | "3" => (count > 2 ? "3" : "2");
             </li>
           ))}
         </Series>
+        {app.pageGalleries?.map((gallery) => {
+          const metas = gallery.items.map((item) => images[item.image]);
+          const allReal = metas.every((meta) => meta.status === "real-photo");
+          const anyConcept = metas.some((meta) => meta.status === "concept");
+          return (
+            <div class="gallery">
+              {gallery.heading && <h3>{gallery.heading}</h3>}
+              {gallery.intro?.map((paragraph) => (
+                <p>{paragraph}</p>
+              ))}
+              {gallery.label === "group" && anyConcept && (
+                <ConceptLabel text={conceptLabels.group} />
+              )}
+              {allReal && <p class="caption">Real photos.</p>}
+              {gallery.lead && (
+                <Series columns="2">
+                  <li>
+                    <Card
+                      image={gallery.lead}
+                      title={images[gallery.lead].title}
+                      caption={images[gallery.lead].caption}
+                      headingLevel={gallery.heading ? 4 : 3}
+                      frame={`${images[gallery.lead].width} / ${images[gallery.lead].height}`}
+                    />
+                  </li>
+                </Series>
+              )}
+              <Series columns={gallery.columns} ordered={gallery.ordered}>
+                {gallery.items.map((item) => (
+                  <li>
+                    <Card
+                      image={item.image}
+                      title={item.title ?? images[item.image].title}
+                      caption={images[item.image].caption}
+                      headingLevel={gallery.heading ? 4 : 3}
+                      frame={gallery.frame}
+                      numeral={item.numeral}
+                      conceptTag={gallery.label === "standalone"}
+                    />
+                  </li>
+                ))}
+              </Series>
+              {gallery.closing?.map((paragraph) => (
+                <p>{paragraph}</p>
+              ))}
+            </div>
+          );
+        })}
       </section>
     ))}
   </div>
@@ -51,6 +100,12 @@ const columnsFor = (count: number): "2" | "3" => (count > 2 ? "3" : "2");
     flex-direction: column;
     gap: var(--s-4);
     padding-block-start: var(--s-6);
+  }
+
+  .gallery {
+    display: flex;
+    flex-direction: column;
+    gap: var(--s-4);
   }
 
   @media (min-width: 900px) {

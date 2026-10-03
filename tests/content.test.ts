@@ -1,3 +1,5 @@
+import { existsSync, statSync } from "node:fs";
+import { join } from "node:path";
 import { describe, expect, it } from "vitest";
 import * as applicationsModule from "../src/content/applications";
 import * as comparisonModule from "../src/content/comparison";
@@ -9,13 +11,16 @@ import * as labelsModule from "../src/content/labels";
 import * as navigationModule from "../src/content/navigation";
 import * as peopleModule from "../src/content/people";
 import * as technologyModule from "../src/content/technology";
+import * as usesModule from "../src/content/uses";
 import * as workflowsModule from "../src/content/workflows";
 
 const { applications, applicationsPage } = applicationsModule;
-const { comparisonColumns, comparisonRows } = comparisonModule;
+const { comparisonColumns, comparisonNote, comparisonRows } = comparisonModule;
 const { featured, hero } = heroModule;
+const { images } = imagesModule;
 const { navItems, footerItems, footerNotice } = navigationModule;
-const { advisors, founderOrigin } = peopleModule;
+const { advisors, founder, founderOrigin } = peopleModule;
+const { topWays } = usesModule;
 const { demoTitle } = demoModule;
 const { technologyDraft } = technologyModule;
 const { conceptLabels } = labelsModule;
@@ -32,6 +37,7 @@ const modules: readonly unknown[] = [
   navigationModule,
   peopleModule,
   technologyModule,
+  usesModule,
   workflowsModule,
 ];
 
@@ -53,14 +59,14 @@ const story = (id: string): string | undefined =>
 describe("hero and featured statement (spec 3.2)", () => {
   it("matches the hero copy", () => {
     expect(hero.title).toBe(
-      "Barcodes made things scannable. zzThis makes them writable\u2014and smart.",
+      "Barcodes made things scannable. zzThis makes them writable - and smart.",
     );
     expect(hero.subline).toBe(
       "Write a code on a thing; find its record by camera, typing, or voice.",
     );
     const { before, code, after } = hero.paragraph;
     expect(before + code + after).toBe(
-      "zzThis is a human-readable, human-writable code alongside barcodes and QR codes. Write zz-copper-lantern-sky-zz on tape, a crate, a parcel, or a sign. Link it to a digital record, then find it by camera, typing, or voice.",
+      "zzThis is a human-readable, human-writable code for the physical world. Write zz-copper-lantern-sky-zz on tape, a crate, a parcel, or a sign. Link it to a digital record, then find it by camera, typing, or voice.",
     );
     expect(code).toBe("zz-copper-lantern-sky-zz");
     expect(hero.actions.map((action) => action.label)).toEqual([
@@ -74,7 +80,7 @@ describe("hero and featured statement (spec 3.2)", () => {
       "The shortest, smartest distance between a physical thing, its digital record, and the work that comes next.",
     );
     expect(featured.text).toBe(
-      "A writable mark establishes identity where the work happens. AI can help identify loose items from photos, compare inventory over time, suggest handling, and prepare a form or request. Touch and voice shorten the path from what a person sees to what the system can help them do.",
+      "A zz code gives people a way to create the mark themselves, wherever the work happens. AI can help identify what a camera sees, count what remains, suggest how an item should be handled, and prepare the next task. The same visible code connects the item, its history, and the people responsible for it.",
     );
   });
 });
@@ -85,37 +91,65 @@ describe("comparison (spec 3.2 H.3)", () => {
       "Create the mark",
       "Read the mark",
       "What it connects",
+      "Easy to say and remember",
     ]);
   });
 
-  it("matches all nine cells", () => {
+  it("matches all sixteen cells", () => {
     expect(
       comparisonColumns.map((column) => ({
         name: column.name,
+        accent: column.accent,
         cells: column.cells,
       })),
     ).toEqual([
       {
         name: "Barcode",
-        cells: { create: "Print", read: "Scanner", connects: "Item to data" },
+        accent: false,
+        cells: {
+          create: "Print",
+          read: "Scanner",
+          connects: "Item to data",
+          remember: "No",
+        },
       },
       {
         name: "QR code",
+        accent: false,
         cells: {
           create: "Print or display",
           read: "Camera",
           connects: "Surface to digital content",
+          remember: "No",
+        },
+      },
+      {
+        name: "Alphanumeric code",
+        accent: false,
+        cells: {
+          create: "Print or handwrite",
+          read: "Person, scanner, or typing",
+          connects: "Shipment or item to its tracking status",
+          remember: "Hard (8 to 22 random characters)",
         },
       },
       {
         name: "zzThis",
+        accent: true,
         cells: {
-          create: "Write, print, or display",
-          read: "Person, camera, typing, or voice",
-          connects: "Thing to its record and next action",
+          create: "Write, draw, print, or display: words, numbers, or symbols",
+          read: "Person, camera, voice, typing, or within text",
+          connects: "Thing to its record, next action, and authorized macros",
+          remember: "Yes (2 to 4 words, or short words and numbers)",
         },
       },
     ]);
+  });
+
+  it("matches the comparison note", () => {
+    expect(comparisonNote).toBe(
+      "Alphanumeric example: an 8-character handwritten postage code (Deutsche Post) or a 14–22-character parcel tracking number. zz-codes can be words, numbers, or simple hand-drawn symbols such as a smiley or tally marks, and can be read even when written inside a sentence.",
+    );
   });
 });
 
@@ -229,7 +263,23 @@ describe("navigation and people", () => {
     ]) {
       expect(byName(name)?.bio).toBeTruthy();
     }
-    expect(founderOrigin.text.startsWith("Michael Chung says he")).toBe(true);
+    expect(founder.role).toBe(
+      "Founder, system architecting, and project lead.",
+    );
+    expect(founder.bio.startsWith("I “invent” business models.")).toBe(true);
+    expect(founderOrigin.text).toBe(founder.bio);
+    expect(founder.photo?.src).toBe("images/people/michael-chung.webp");
+    expect(byName("Patrick Muggler")?.photo?.src).toBe(
+      "images/people/patrick-muggler.webp",
+    );
+    expect(byName("Arshi Chadha")?.photo?.src).toBe(
+      "images/people/arshi-chadha.webp",
+    );
+    expect(byName("Ridham Bhagat")?.photo?.src).toBe(
+      "images/people/ridham-bhagat.webp",
+    );
+    expect(byName("Daniel Meyer")?.photo).toBeUndefined();
+    expect(byName("Adam Fry")?.photo).toBeUndefined();
     expect(footerNotice).toBe("Patent pending");
     expect(footerItems.map((item) => item.label)).toEqual([
       "How it works",
@@ -245,15 +295,92 @@ describe("navigation and people", () => {
   });
 });
 
+describe("top ways (Home section 01)", () => {
+  it("lists six items with numerals, titles, codes, and text", () => {
+    expect(topWays.heading).toBe("Top ways zzThis is used");
+    expect(topWays.items.map((item) => item.numeral)).toEqual([
+      "01",
+      "02",
+      "03",
+      "04",
+      "05",
+      "06",
+    ]);
+    expect(topWays.items.map((item) => item.title)).toEqual([
+      "Logistics",
+      "Postal",
+      "Everyday use: zzThat",
+      "AI agents",
+      "Blockchain addresses",
+      "Macros",
+    ]);
+    expect(topWays.items.map((item) => item.codes)).toEqual([
+      ["zz-copper-lantern-sky-zz", "zz-fastfreight-c4821-123-zz"],
+      ["zz-post-rock-river-sky-zz"],
+      ["zz-kathy-lost-cat-zz", "zz-moving-box-kitchen-3-zz"],
+      ["zz-acme-support-agent-zz", "zz-@agentsmith-zz"],
+      ["zz-btc-harbor-violet-nine-zz", "zz-harbor-violet-nine-zz"],
+      ["zz-fn-pay-agentsmith-zz", "zz-run-reorder-water-zz"],
+    ]);
+    expect(topWays.items.map((item) => item.text)).toEqual([
+      "Easier handling: mark crates, bags, and parts, then read, link, and hand them off with a phone camera or a few spoken words. For shipping, including across borders, the zz-code can be the shipment's shared identity and hub, where customs, carriers, and payment services find the same information, and its ID on the shared ledger used by every service that handles the goods.",
+      "A handwritten zz-code can serve as proof of postage and a trackable reference: write it in the stamp corner of a letter or parcel, and it links to postage, routing, and tracking.",
+      "Free for everyone. Write a code on a lost-pet flyer, a moving box, a garage-sale item, or a note, and anyone can scan it, like a QR code you can write by hand. Endless imaginative uses. The zzThat app is coming to Android, iOS, and the web at zzthat.com.",
+      "AI agents need identities people can easily know and recognize by name, and enterprises need to name and brand their agents, on the everyday web as well as on blockchains. A zz-code gives an agent a short name people can write, say, and verify, linked to who runs it and what it is allowed to do.",
+      "Wallet, account, smart-contract, and agent addresses on networks such as Bitcoin and Ethereum are long strings of random characters. A zz-code is a readable alias for any of them: easier to write, say, and check on screen before you send.",
+      "A zz-code can also call a function: a short, human-writable command that asks a system to do something, such as reorder supplies, pay an agent, or open a work order. A macro runs only for an authenticated, authorized user who confirms it; the code itself carries no authority.",
+    ]);
+  });
+});
+
+describe("application galleries", () => {
+  const ids = (id: string) =>
+    applications
+      .find((entry) => entry.id === id)
+      ?.pageGalleries?.map((gallery) =>
+        gallery.items.map((item) => item.image),
+      );
+
+  it("keeps parcel, community, and aliases galleries in order", () => {
+    expect(ids("parcel")).toEqual([
+      ["app-super-identifier"],
+      ["app-delivery-1", "app-delivery-2", "app-delivery-3", "app-delivery-4"],
+    ]);
+    expect(ids("community")).toEqual([
+      ["app-for-sale", "app-help-wanted", "app-event-cancelled"],
+      ["app-connect", "app-shop-pay", "app-donate"],
+      ["app-trail-marker"],
+      ["app-share", "app-community", "app-handwritten-works"],
+      ["app-tape-before", "app-tape-after"],
+      ["app-truck-before", "app-truck-after"],
+    ]);
+    expect(ids("aliases")).toEqual([["app-wallet-ens"]]);
+  });
+
+  it("ships every app image under public and at most 2 MB", () => {
+    const appImages = Object.values(images).filter((image) =>
+      image.id.startsWith("app-"),
+    );
+    expect(appImages.length).toBeGreaterThan(0);
+    for (const image of appImages) {
+      const path = join("public", image.src);
+      expect(existsSync(path), path).toBe(true);
+      expect(statSync(path).size).toBeLessThanOrEqual(2 * 1024 * 1024);
+    }
+  });
+});
+
 describe("content hygiene across all content modules", () => {
   it("collects strings from every module", () => {
     expect(allStrings.length).toBeGreaterThan(100);
   });
 
-  it("contains no em dash outside the hero H1 (Q1)", () => {
-    expect(allStrings.filter((text) => text.includes("—"))).toEqual([
-      hero.title,
-    ]);
+  it("contains no standalone capital ZZ", () => {
+    expect(allStrings.filter((text) => /\bZZ\b/.test(text))).toEqual([]);
+  });
+
+  it("contains no em dash (Q47 hero uses a spaced hyphen)", () => {
+    expect(allStrings.filter((text) => text.includes("—"))).toEqual([]);
   });
 
   it("contains no unmeasured performance figures or endorsement claims", () => {
