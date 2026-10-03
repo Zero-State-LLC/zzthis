@@ -2,7 +2,8 @@
 
 Author: Zero State agents (draft for human accept)
 Date: 2026-10-03
-Status: draft
+Status: accepted (Danny + Michael chose B)
+Accepted: 2026-10-03, Danny (direction B, B v1.0 as the reference)
 Product: zzThis (`Zero-State-LLC/zzthis`)
 
 This file is a proto-spec. It comes **before** specify.
@@ -31,7 +32,7 @@ Observable done (a stranger can check this without reading the chat):
 
 Product-true locks (do not reopen in implement):
 
-- Copy in `docs/SPEC.md` `copy:` blocks ships verbatim, including the H1's spaced hyphen.
+- Copy in `docs/SPEC.md` `copy:` blocks ships verbatim. The hero H1 keeps the em dash in "readable-writable — and smart." (Q62 supersedes Q47's spaced hyphen).
 - No capital-letter zz in site copy. Uppercase heading styles must exempt the brand name.
 - Concept labels, "Demo · mock data", "Patent pending", and no unmeasured metrics, as in spec sections 1 and 3.1a.
 - Fonts are self-hosted. The site makes no runtime requests to other origins.
@@ -40,12 +41,14 @@ Product-true locks (do not reopen in implement):
 Non-goals:
 
 - Changing the code grammar, the resolver, or product behavior.
-- Redesigning pages other than Home in this change stream. They follow once the system is chosen.
+- Redesigning pages other than Home, About, and Applications in this change stream. About and Applications follow B v1.0 too, since Michael's change list covers them.
 
 ## Open questions
 
-- ~~Which direction, or which mix?~~ Sample B. Michael also sent a v1.0 change list, now applied as `docs/redesign-2026-10-03/b-resolver-v1/` (Home, About, Applications).
-- The v1.0 headline uses an em dash, and the Home page now shows non-ASCII example codes. Both depart from the current spec (Q47; v1 ASCII-only grammar). Specify must resolve them.
+- ~~Which direction, or which mix?~~ Direction B. B v1.0 (`docs/redesign-2026-10-03/b-resolver-v1/`, Home, About, and Applications) is the reference. Accepted 2026-10-03, Danny.
+- ~~The v1.0 headline em dash?~~ Keep it. Q62 supersedes Q47's spaced hyphen for the H1.
+- ~~Non-ASCII example codes on Home?~~ Keep them. The B v1.0 console shows a non-error "coming later" note for non-ASCII letters. ASCII input stays exact match only.
+- Native-reader check for the Korean, Japanese, and Aramaic codes: open, tracked in a separate issue.
 - Does Michael approve the new lines each sample adds (listed in the samples README, section 4)?
 - Should the real handwritten photos move onto Home (sample A)? Should the proposed architecture be shown on Home, labelled "Proposal, not built" (sample B)?
 
@@ -58,7 +61,8 @@ Non-goals:
 | All three samples pass WCAG AA text contrast in light and dark | `[verified: computed in headless Chromium, 2026-10-03]` |
 | None of the samples scrolls horizontally from 320 to 1440 px | `[verified: headless Chromium at 320, 375, 390, 414, 768, and 1440 px]` |
 | Michael chose sample B and supplied the v1.0 change list | `[assumed: relayed by Luna, 2026-10-03; the change document is private and not in this repo]` |
+| Danny accepted direction B, with B v1.0 as the reference | `[verified: Danny, 2026-10-03]` |
 
 ## Next
 
-A human accepts this file (`Status: accepted`) and names a direction. Then specify the change in spec 001. Do not implement from this file alone.
+Direction B is accepted, with B v1.0 as the reference. Specify that change in spec 001 before any `src/` change. Do not implement from this file alone.
