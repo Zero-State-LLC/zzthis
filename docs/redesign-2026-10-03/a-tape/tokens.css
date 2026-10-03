@@ -1,0 +1,102 @@
+/* Hallmark · tokens · sample A "Tape"
+ * theme: custom (tuned) · vibe: "cream paper, painter's tape, marker ink, safety orange"
+ * paper oklch(95.3% 0.016 86) · accent oklch(65.9% 0.215 38) brand orange #F85000
+ * axes: light / grotesk-sans (variable) / warm
+ */
+:root {
+  color-scheme: light dark;
+
+  /* Paper and ink: the spec's charcoal and cream, converted to OKLCH */
+  --color-paper: light-dark(oklch(95.3% 0.016 86), oklch(22.2% 0.004 85));
+  --color-paper-2: light-dark(oklch(91.7% 0.021 86), oklch(26.1% 0.006 78));
+  --color-paper-3: light-dark(oklch(88.5% 0.026 84), oklch(30% 0.008 80));
+  --color-ink: light-dark(oklch(22.2% 0.004 85), oklch(95.3% 0.016 86));
+  --color-ink-2: light-dark(oklch(39.6% 0.013 82), oklch(81.6% 0.021 85));
+  --color-rule: light-dark(oklch(82.9% 0.027 85), oklch(33.8% 0.01 81));
+  --color-rule-strong: light-dark(oklch(22.2% 0.004 85), oklch(88% 0.016 86));
+
+  /* The single accent: zzThis brand orange from the logo */
+  --color-accent: oklch(65.9% 0.215 38);
+  --color-on-accent: oklch(22.2% 0.004 85);
+  --color-accent-ink: light-dark(oklch(45% 0.165 38), oklch(72% 0.17 42));
+  --color-focus: light-dark(oklch(52% 0.19 38), oklch(74% 0.17 42));
+
+  /* Materials, not accents: the tape and the marker from the field photos */
+  --color-tape: oklch(64% 0.14 250);
+  --color-tape-wash: light-dark(oklch(85% 0.06 248), oklch(36% 0.07 252));
+  --color-kraft: oklch(83% 0.055 82);
+  --color-marker: oklch(19% 0.02 265);
+  --tape-fiber: oklch(100% 0 0 / 0.07);
+  --tape-sheen: oklch(100% 0 0 / 0.16);
+  --tape-shade: oklch(0% 0 0 / 0.1);
+  --color-shadow: light-dark(oklch(22% 0.01 85 / 0.16), oklch(0% 0 0 / 0.5));
+
+  /* Type: one variable grotesk for display and body, a marker hand for codes
+     as written, and Plex Mono for codes as read. Three families, one role each. */
+  --font-display: "Bricolage Grotesque", "Arial Narrow", system-ui, sans-serif;
+  --font-body: "Bricolage Grotesque", system-ui, sans-serif;
+  --font-hand: "Shantell Sans", "Comic Sans MS", cursive;
+  --font-mono: "IBM Plex Mono", ui-monospace, monospace;
+
+  /* Major third from a 17px body */
+  --text-xs: 0.8125rem;
+  --text-sm: 0.875rem;
+  --text-base: 1.0625rem;
+  --text-md: 1.328rem;
+  --text-lg: 1.66rem;
+  --text-xl: 2.075rem;
+  --text-display-s: clamp(2.1rem, 2.6vw + 1.2rem, 3.6rem);
+  --text-display: clamp(2.6rem, 4.6vw + 1rem, 5.25rem);
+  --text-stage: clamp(3.4rem, 9vw, 7.5rem);
+
+  /* The spec's golden-ratio spacing steps, named by role */
+  --space-3xs: 4px;
+  --space-2xs: 6px;
+  --space-xs: 10px;
+  --space-sm: 16px;
+  --space-md: 26px;
+  --space-lg: 42px;
+  --space-xl: 68px;
+  --space-2xl: 110px;
+  --space-3xl: 178px;
+
+  --gutter: 16px;
+  --max: 1240px;
+  --measure: 64ch;
+  --rule-hair: 1px;
+  --rule-thick: 3px;
+  --radius-none: 0;
+  --radius-tag: 2px;
+
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in: cubic-bezier(0.7, 0, 0.84, 0);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+  --dur-micro: 120ms;
+  --dur-short: 220ms;
+  --dur-long: 420ms;
+
+  --z-base: 1;
+  --z-tape: 2;
+  --z-sticky: 10;
+  --z-menu: 20;
+}
+
+:root[data-theme="light"] {
+  color-scheme: light;
+}
+
+:root[data-theme="dark"] {
+  color-scheme: dark;
+}
+
+@media (min-width: 40rem) {
+  :root {
+    --gutter: 26px;
+  }
+}
+
+@media (min-width: 60rem) {
+  :root {
+    --gutter: 42px;
+  }
+}
