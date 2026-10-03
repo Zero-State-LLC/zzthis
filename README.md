@@ -176,8 +176,10 @@ Track work on the [project board](https://github.com/orgs/Zero-State-LLC/project
 
 ### Phase 1: Site decisions and polish
 
-- [ ] Answer the open questions for Michael ([#10](https://github.com/Zero-State-LLC/zzthis/issues/10))
-- [ ] Demo: remove "did you mean" suggestions of live codes ([#12](https://github.com/Zero-State-LLC/zzthis/issues/12))
+- [ ] Answer the open questions for Michael ([#10](https://github.com/Zero-State-LLC/zzthis/issues/10); new grammar and image questions [#36](https://github.com/Zero-State-LLC/zzthis/issues/36) to [#42](https://github.com/Zero-State-LLC/zzthis/issues/42))
+- [x] Demo: remove "did you mean" suggestions of live codes ([#12](https://github.com/Zero-State-LLC/zzthis/issues/12), [PR #19](https://github.com/Zero-State-LLC/zzthis/pull/19))
+- [x] Code rules for case, spacing, the bare mark, and `@` handles ([#33](https://github.com/Zero-State-LLC/zzthis/issues/33), [#34](https://github.com/Zero-State-LLC/zzthis/issues/34); SPEC Section 2.2a)
+- [ ] Demo follows the v1 code rules (spec 001 T029)
 - [ ] Image asset curation ([#7](https://github.com/Zero-State-LLC/zzthis/issues/7))
 - [ ] Domain and DNS, needs Danny's yes ([#6](https://github.com/Zero-State-LLC/zzthis/issues/6))
 - [x] Spec Kit constitution and specs 001 to 004 ([PR #17](https://github.com/Zero-State-LLC/zzthis/pull/17), [`specs/`](specs/README.md))
@@ -194,6 +196,8 @@ Track work on the [project board](https://github.com/orgs/Zero-State-LLC/project
 - [ ] Minimal exact-match resolver ([#13](https://github.com/Zero-State-LLC/zzthis/issues/13))
 - [ ] Capture by camera, typing, or voice; recognition approach still open
 - [ ] Phone and web apps; not yet specified
+
+v1 ends with the prototype above. Candidates for v2, such as any-language codes and a trained reader ([#35](https://github.com/Zero-State-LLC/zzthis/issues/35)), are listed in [SPEC Section 12](docs/SPEC.md).
 
 ## Contributing
 

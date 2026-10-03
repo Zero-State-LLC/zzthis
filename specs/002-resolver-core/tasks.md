@@ -20,12 +20,16 @@ Workflows for every implementing task: anti-slop-code, production-systems, googl
 
 ## Phase 3: US1, resolve (P1)
 
-- [ ] T007 `GET /resolve/{code}`: exact match, role-scoped view, one not-found shape (FR-011). Tests for unknown, used, expired, and revoked codes returning the same shape.
+Depends on spec 003 T010 (grammar library).
+
+- [ ] T007 `GET /resolve/{code}`: re-parse with the spec 003 grammar library, exact match on the canonical form, role-scoped view, one not-found shape (FR-011, FR-013). Tests for unknown, used, expired, and revoked codes returning the same shape; for case, separator, and circled variants resolving the same; for `malformed` (FR-014) and the bare mark (FR-015); and a timing comparison between not-found cases.
+- [ ] T017 Error-state contract tests: one test per row of the spec's Error states table.
 
 ## Phase 4: US2 and US3, issue, update, revoke (P1)
 
-- [ ] T008 `POST /codes` with single use and expiry. Word choice uses the library from spec 003 once it exists; until then, a fixture wordlist marked as test data.
-- [ ] T009 `POST /records/{id}/versions` and `POST /codes/{id}/revoke`.
+- [ ] T008 `POST /codes` with single use and expiry; stored form is canonical (FR-013); concurrent single-use resolve test (US1 acceptance 6). Word choice uses the library from spec 003 once it exists; until then, a fixture wordlist marked as test data.
+- [ ] T009 `POST /records/{id}/versions` and `POST /codes/{id}/revoke`. Tests that a failed signature or audit write stores nothing (FR-018) and that expiry is exclusive at `expires_at`.
+- [ ] T018 Handle issuance (FR-016): authenticated owner only, uniqueness in canonical form, 409 without revealing the owner. Depends on Q56 for anything beyond the default.
 
 ## Phase 5: US4, audit (P2)
 

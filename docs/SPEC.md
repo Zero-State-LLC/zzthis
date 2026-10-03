@@ -9,12 +9,14 @@
 > | 6 Stack and repo | [`specs/001-marketing-site/plan.md`](../specs/001-marketing-site/plan.md) |
 > | 7 Workflows | Superseded by the Workflows section in each `specs/*/spec.md`. The "OPEN Q13" and "draft PR" text below is stale. |
 > | 8 Acceptance | [`specs/001-marketing-site/checklists/requirements.md`](../specs/001-marketing-site/checklists/requirements.md) |
-> | 9 Questions | Still the decision log. Q21 to Q39 were added on 2026-10-02. |
+> | 2.2a v1 text grammar | Accepted 2026-10-03 from Michael's Q48 and Q49 answers. Implemented by the spec 003 library (US3). |
+> | 9 Questions | Still the decision log. Q21 to Q39 were added on 2026-10-02; Q49 to Q56 on 2026-10-03. |
+> | 12 Roadmap | v1 scope, exit criteria, and v2 candidates. |
 > | 10 Architecture | [`specs/002-resolver-core/plan.md`](../specs/002-resolver-core/plan.md), [`specs/004-capture/plan.md`](../specs/004-capture/plan.md) |
 >
 > Research targets, the funding-pitch founder bio, and the company-stage line were removed from this repo on 2026-10-02 (Q24 RESOLVED).
 
-Status: Draft for operator review. Owner of this document: Opus 5.5 (spec). Implementer: cloud coding agent. Reviewer: operator, through the draft PR.
+Status: v1 spec, deepened 2026-10-03 (Section 2.2a grammar, Section 12 roadmap). Owner of this document: Opus 5.5 (spec). Implementer: cloud coding agent or Grok Bot executor. Reviewer: operator (Danny), through a pull request to `main`.
 
 ## How to read this spec
 
@@ -27,7 +29,7 @@ Status: Draft for operator review. Owner of this document: Opus 5.5 (spec). Impl
 ## Contents
 
 1. Summary and audience
-2. Product spec
+2. Product spec (2.2a: v1 text grammar)
 3. Marketing site
 4. Click-through demo (`/demo`)
 5. Visual system and components
@@ -37,6 +39,7 @@ Status: Draft for operator review. Owner of this document: Opus 5.5 (spec). Impl
 9. Out of scope and OPEN questions
 10. Architecture (proposal, not built)
 11. Provenance
+12. Roadmap: v1 scope and v2 candidates
 
 ## 1. Summary and audience
 
@@ -88,21 +91,22 @@ This spec covers three deliverables and one proposal:
 
 **Examples from sources:**
 
-| Code | Context | Source |
-|---|---|---|
-| `zz-copper-lantern-sky-zz` | Hero example; crate tape | [BRIEF] [ASSETS] |
-| `zz-apple-sky-lantern` | Postage code written in the label area | [PRODUCT] |
-| `zz-blue-bike-astoria-zz` | Physical thing | [PRODUCT] |
-| `zz-vitalik.eth-zz` | Web3 resource | [PRODUCT] |
-| `zz@-AgentSmith-neo-zz` | Verified agent | [PRODUCT] |
-| `zz-b2-smith-1-zz`, `zz-b2-4-zz` | Duffel and crate tape (panel a) | [ASSETS] |
-| `(zz) camp bravo four two (zz)` | Circled marker variant on a pallet (panel c) | [BRIEF] [ASSETS] |
-| `zz-river-maple-sky-zz` | Parcel (panel g) | [ASSETS] |
-| `zz-kathy-lost-cat-zz` | Lost-cat flyer (panel h) | [ASSETS] |
+| Code | Context | Source | Under the v1 grammar (Section 2.2a) |
+|---|---|---|---|
+| `zz-copper-lantern-sky-zz` | Hero example; crate tape | [BRIEF] [ASSETS] | Valid, plain |
+| `zz-apple-sky-lantern` | Postage code written in the label area | [PRODUCT] | Fails `no-closing-marker` |
+| `zz-blue-bike-astoria-zz` | Physical thing | [PRODUCT] | Valid, plain |
+| `zz-vitalik.eth-zz` | Web3 resource | [PRODUCT] | Fails `invalid-character` (Q52 default, issue #38) |
+| `zz@-AgentSmith-neo-zz` | Verified agent | [PRODUCT] | Fails `invalid-handle` (Q51 default, issue #37) |
+| `zz-@agentsmith-zz` | AI agent handle (Home, Top ways 04) | [MICHAEL 2026-10-02] | Valid, handle |
+| `zz-b2-smith-1-zz`, `zz-b2-4-zz` | Duffel and crate tape (panel a) | [ASSETS] | Valid, plain (field code) |
+| `(zz) camp bravo four two (zz)` | Circled marker variant on a pallet (panel c) | [BRIEF] [ASSETS] | Valid, plain; canonical `zz-camp-bravo-four-two-zz` |
+| `zz-river-maple-sky-zz` | Parcel (panel g) | [ASSETS] | Valid, plain |
+| `zz-kathy-lost-cat-zz` | Lost-cat flyer (panel h) | [ASSETS] | Valid, plain |
 
 **Circled-zz variant.** Panel c shows a "circled zz marker variant" on a wrapped mixed-goods pallet [BRIEF], written as `(zz) camp bravo four two (zz)` [ASSETS].
 
-**Namespace marker.** The `@` marker appears in the verified-agent example `zz@-AgentSmith-neo-zz` [PRODUCT]. Verification is a resolver concern, not something the printed characters prove (INFERRED).
+**Namespace marker.** The `@` marker appears in the verified-agent example `zz@-AgentSmith-neo-zz` [PRODUCT]. Michael's Q49 answer sets the v1 rule: `@` comes first, right after the opening marker, and marks a handle (Section 2.2a G4) [MICHAEL 2026-10-02 #34]. Verification is a resolver concern, not something the printed characters prove (INFERRED); verifying who runs a handle is a v2 candidate (Section 12).
 
 **Word counts and capacity:**
 
@@ -114,7 +118,156 @@ This spec covers three deliverables and one proposal:
 
 **Formats to model:** two-word, three-word, checksum, prefix, enterprise, one-time, and reusable-account formats [PRODUCT].
 
-**Status of the syntax.** The syntax shown on the site is illustrative. The interaction format is to be selected by measured performance and system cost [PRODUCT].
+**Status of the syntax.** The syntax shown on the site is illustrative. The interaction format is to be selected by measured performance and system cost [PRODUCT]. The text grammar that parsers accept is fixed for v1 in Section 2.2a; the issued formats (which word counts the server issues) stay OPEN (Q27).
+
+### 2.2a v1 text grammar (accepted 2026-10-03)
+
+This section is the accepted v1 grammar for codes written as text. It replaces the "product options, not yet accepted grammar" placeholder in spec 003 FR-006. Sources: Michael's replies on issue #33 (Q48) and issue #34 (Q49) [MICHAEL 2026-10-02 #33] [MICHAEL 2026-10-02 #34], used as given. Where Michael's replies leave a gap, the rule carries a default with its question ID (Q50 to Q56, issues #36 to #42) or is marked INFERRED. Spec 003 owns the library that implements it; specs 002 and 004 and the demo (001 T029) call that one library. Intent: [`intent/2026-10-03-v1-text-grammar.md`](../intent/2026-10-03-v1-text-grammar.md) (accepted by Danny, 2026-10-03 2:52 AM PT).
+
+v1 is ASCII only. Any-language codes are a v2 candidate (issue #35).
+
+**G1. Code types**
+
+| Type | Shape | Example | Source |
+|---|---|---|---|
+| Word code | Dictionary words from the closed wordlist (spec 003) | `zz-copper-lantern-sky-zz` | [MICHAEL 2026-10-02 #34] |
+| Field code | Words or names mixed with numbers | `zz-b2-smith-1-zz` | [MICHAEL 2026-10-02 #34] |
+| Handle | A name for a person, organization, or AI agent. The first part starts with `@` | `zz-@agentsmith-zz` | [MICHAEL 2026-10-02 #34] |
+| Bare mark | `zz` or a circled `(zz)` with no content | `zz` | [MICHAEL 2026-10-02 #33] |
+
+- The parser reports one of three kinds: `plain` (word code or field code), `handle`, or `bare`. Telling a word code from a field code needs the wordlist: a plain code whose parts are all wordlist words is a word code. Every other plain code is a field code, including codes such as `zz-hello-zz` whose words are not on the list. Michael's definition ("words or names mixed with numbers") is extended to cover these (INFERRED).
+- Near-word check before field classification (INFERRED, PR #43 review). A misread wordlist word (`coper` for `copper`) must not turn a word code into a field code. Before the classifier calls a code a field code, it checks every letters-only part that is not on the wordlist. A part within edit distance 2 of a wordlist word is a near-word. A code with a near-word is classified `confirm`, not field, and lists each near-word with its position and its wordlist candidates (nearest first; ties all listed). The client shows a confirm step for each near-word: the candidate words and the part as written. Snapping is off for a part only after the person picks "as written". Picking a candidate snaps it, and the code is classified again. Parts with a digit, handle parts, and parts farther than 2 from every word are never near-words. Because every pair of wordlist words is at least 3 apart (spec 003 FR-003), a part at distance 1 has exactly one candidate. The distance limit is a parameter until the real-photo test set (spec 004 Q37) measures it. Vectors are in G1a.
+- Macro codes such as `zz-fn-pay-agentsmith-zz` and `zz-run-reorder-water-zz` are plain codes to the grammar. Running a macro is an app concern that needs an authorized, confirmed user, and it is not part of v1 [MICHAEL 2026-10-02 #34].
+- Drawn symbols (a smiley, a star) are a separate image-recognition mode, not part of this text grammar [MICHAEL 2026-10-02 #34]. They are a v2 candidate.
+
+**G1a. Classifier vectors.** Fixture wordlist (test data only): `copper`, `lantern`, `sky`, `maple`, `river`, `harbor` (every pair at least 3 apart, as FR-003 requires). The classifier (spec 003 T012) runs after the parser and must return these results.
+
+| Canonical input | Class | Near-words (position: candidates) |
+|---|---|---|
+| `zz-copper-lantern-sky-zz` | word | none |
+| `zz-coper-lantern-sky-zz` | confirm | 1: `copper` |
+| `zz-lanterns-zz` | confirm | 1: `lantern` |
+| `zz-coppr-lantrn-sky-zz` | confirm | 1: `copper`; 2: `lantern` |
+| `zz-skyy-maple-zz` | confirm | 1: `sky` |
+| `zz-rivr-zz` | confirm | 1: `river` |
+| `zz-lntrn-zz` | confirm | 1: `lantern` (distance 2, the limit) |
+| `zz-kopr-zz` | field | none (`copper` is 3 away, past the limit) |
+| `zz-hello-zz` | field | none (no word within 2) |
+| `zz-b2-smith-1-zz` | field | none (digits, and `smith` is farther than 2) |
+| `zz-copper-4-zz` | field | none (`4` has a digit; `copper` is on the list) |
+| `zz-@coper-zz` | handle | none (handles are never near-word checked) |
+| `zz` | bare | none |
+
+After the person confirms `coper` as written, `zz-coper-lantern-sky-zz` is a field code and `coper` is not snapped. After they pick `copper`, it is the word code `zz-copper-lantern-sky-zz`.
+
+**G2. Normalization, in order**
+
+1. Fail with `empty` if the input is empty or only whitespace. Then fail with `too-long` if the raw input is longer than 256 characters (INFERRED guard for FR-010 malformed input in spec 002).
+2. Trim leading and trailing whitespace. Treat line breaks and tabs as spaces, so a code written across two lines is one code [MICHAEL 2026-10-02 #33].
+3. Treat the dash characters U+2010 to U+2015 and U+2212 as a hyphen, because phone keyboards replace typed hyphens (INFERRED).
+4. Lowercase ASCII letters. Case never changes which code it is: `Zz-HELLO-zz`, `zz-Hello-zz`, and `zz-hello-zz` are the same code, and so is the same code written all in capitals [MICHAEL 2026-10-02 #33].
+5. Rewrite an `@` that touches the opening marker (`zz@-name-zz` or `zz@name-zz`) as `zz-@name-zz` (Q51 default, issue #37).
+6. Find the markers (G3), then split the content on separators. Hyphens, spaces, or a mix count as separators, and a run of them counts as one separator [MICHAEL 2026-10-02 #33].
+7. Check each part (G4) and the part count (G5).
+8. Return the canonical form: `zz-` plus the parts joined by single hyphens plus `-zz`. The canonical form of a bare mark is `zz` [MICHAEL 2026-10-02 #33].
+
+**G3. Markers**
+
+- A code with content needs a marker at the start and at the end. A circled `(zz)` counts as a marker [MICHAEL 2026-10-02 #33]. A missing closing marker fails with `no-closing-marker`. This replaces the demo parser's rule that accepted a missing closing marker (Section 4.4).
+- Markers are whole tokens. An opening `zz` must be followed by a separator, and a closing `zz` must follow one: `zzcopper-lantern-zz` and `zzz-x-zz` fail with `no-marker`, and the `zz` at the end of `buzz` is part of the word (INFERRED). A circled marker needs no separator. `(` and `)` appear only inside the exact token `(zz)`.
+- The two ends may mix forms, for example `(zz) camp bravo zz`, because handwriting varies (INFERRED).
+- The circled form is display metadata only. `(zz) camp bravo four two (zz)` and `zz-camp-bravo-four-two-zz` are the same code (INFERRED from "one canonical form" [MICHAEL 2026-10-02 #33]).
+- A bare mark is `zz` or `(zz)` alone, or two markers with nothing but separators between them (`zz-zz`, `(zz) (zz)`), or `zz` followed only by separators [MICHAEL 2026-10-02 #33]; the last three forms are INFERRED. Capital letters are accepted from handwriting: `zz` written in capitals parses as the bare mark `zz`.
+- A part may not be `zz`. `zz-zz-zz` fails with `marker-in-body` (INFERRED).
+
+**G4. Parts**
+
+| Part | Allowed characters after lowercasing | Rule | Source |
+|---|---|---|---|
+| Plain part | `a` to `z`, `0` to `9` | One or more characters | [MICHAEL 2026-10-02 #34] |
+| Handle part | `@`, then `a` to `z`, `0` to `9`, `.`, `_` | `@` only as the first character of the first part. 1 to 32 characters after `@` (INFERRED cap). At least one letter or digit; no leading, trailing, or doubled `.` (INFERRED) | [MICHAEL 2026-10-02 #34] |
+
+- A handle is the only part of its code: `zz-@agentsmith-neo-zz` fails with `invalid-handle` (Q51 default, issue #37).
+- `@` anywhere except the start of the first part fails with `misplaced-at`, for example `zz-ai@-agentsmith-zz`.
+- `.` and `_` outside a handle fail with `invalid-character`, so `zz-vitalik.eth-zz` fails and `zz-@vitalik.eth-zz` passes (Q52 default, issue #38).
+- The reserved symbols `#`, `$`, `/`, and `:` fail with `reserved-symbol`, never as ordinary characters, so they can get meanings later without breaking codes [MICHAEL 2026-10-02 #34].
+- Letters outside ASCII (for example Korean or Cyrillic) fail with `unsupported-script` in v1 (INFERRED; issue #35 tracks any-language codes). Other characters fail with `invalid-character`.
+
+**G5. Part count**
+
+A code with content has 1 to 5 parts, counting a handle as one part (Q50 default, issue #36). More or fewer fail with `part-count`. Codes issued from the wordlist keep the counts in Section 2.2: two or three data words plus a check word [PRODUCT].
+
+**G6. Failure reasons**
+
+The parser returns exactly one reason. When several apply, it returns the first in this order (INFERRED, so tests are stable): `empty`, `too-long`, `no-marker`, `no-closing-marker`, `marker-in-body`, `unsupported-script`, `reserved-symbol`, `misplaced-at`, `invalid-handle`, `invalid-character`, `part-count`.
+
+**G7. Storage and display**
+
+- Store and display the canonical form, lowercase and hyphen-separated, including handles [MICHAEL 2026-10-02 #33] [MICHAEL 2026-10-02 #34].
+- Site copy, images, and documents show lowercase `zz` or the circled `(zz)`, never a capital-letter zz mark on its own or in a code. On its own, a capital Z mark painted on equipment resembles adversary vehicle markings, and these materials go to the Army [MICHAEL 2026-10-02 #33]. Uppercase letters inside code words (as in `zz-1234ABCD-zz` on a sign) are not covered by this rule. Alt text may quote text inside an image as it appears (Section 3.8); prose that names a code uses the canonical form (INFERRED). Test inputs that need capitals are described in words. Images that still show a capital-letter zz are tracked in Q53 (issue #39) and 001 T030.
+
+**G8. Codes inside running text** (Q55 default, issue #41)
+
+- Typed lookup: the whole input must be one code or one bare mark. The parser does not search inside a sentence.
+- Camera and text scanning (spec 004): find every marker pair. A lone `zz` with no content is offered as a bare mark only after the person confirms it.
+
+**G9. Test vectors.** The grammar library and the demo (after 001 T029) must return these results.
+
+| Input | Result | Canonical form or reason |
+|---|---|---|
+| `zz-copper-lantern-sky-zz` | plain | `zz-copper-lantern-sky-zz` |
+| `zz copper lantern sky zz`, all in capitals | plain | `zz-copper-lantern-sky-zz` |
+| `zz-copper` + tab + `lantern-zz` | plain | `zz-copper-lantern-zz` |
+| `zz−copper−lantern−zz` (U+2212 minus signs) | plain | `zz-copper-lantern-zz` |
+| `(zz) camp bravo zz` (mixed markers, INFERRED) | plain | `zz-camp-bravo-zz` |
+| `(zz)camp bravo(zz)` | plain | `zz-camp-bravo-zz` |
+| `zz-buzz-zz` | plain | `zz-buzz-zz` |
+| `Zz-Copper--lantern  sky-zZ` | plain | `zz-copper-lantern-sky-zz` |
+| `zz-copper` + line break + `lantern-sky-zz` | plain | `zz-copper-lantern-sky-zz` |
+| `zz–copper–lantern–zz` (en dashes) | plain | `zz-copper-lantern-zz` |
+| `(zz) camp bravo four two (zz)` | plain | `zz-camp-bravo-four-two-zz` |
+| `zz-hello-zz` | plain | `zz-hello-zz` |
+| `zz-b2-smith-1-zz` | plain | `zz-b2-smith-1-zz` |
+| `zz-1234ABCD-zz` | plain | `zz-1234abcd-zz` |
+| `zz Guest WiFi connect zz` | plain | `zz-guest-wifi-connect-zz` |
+| `zz-fn-pay-agentsmith-zz` | plain | `zz-fn-pay-agentsmith-zz` |
+| `zz-@agentsmith-zz` | handle | `zz-@agentsmith-zz` |
+| `zz-@AgentSmith.eth-zz` | handle | `zz-@agentsmith.eth-zz` |
+| `zz-@acme_support-zz` | handle | `zz-@acme_support-zz` |
+| `zz@-agentsmith-zz` | handle | `zz-@agentsmith-zz` |
+| `zz@agentsmith-zz` | handle | `zz-@agentsmith-zz` |
+| `zz-@` + 32 letters + `-zz` | handle | same, lowercase |
+| `zz` | bare | `zz` |
+| `(zz)` | bare | `zz` |
+| `zz` in capitals | bare | `zz` |
+| `zz-zz` | bare | `zz` |
+| `(zz) (zz)` (INFERRED) | bare | `zz` |
+| `zz-` (INFERRED) | bare | `zz` |
+| (empty or spaces only) | fail | `empty` |
+| 300 spaces | fail | `empty` |
+| `copper` | fail | `no-marker` |
+| `zzcopper-lantern-zz` | fail | `no-marker` |
+| `zzz-x-zz` | fail | `no-marker` |
+| `( zz ) camp ( zz )` | fail | `no-marker` |
+| `zz-copper-lantern-sky` | fail | `no-closing-marker` |
+| `zz-@agentsmith` | fail | `no-closing-marker` |
+| `zz-zz-zz` | fail | `marker-in-body` |
+| `zz-구리-등불-zz` | fail | `unsupported-script` |
+| `zz-#tag-zz` | fail | `reserved-symbol` |
+| `zz-pay-$5-zz` | fail | `reserved-symbol` |
+| `zz-a/b-zz` | fail | `reserved-symbol` |
+| `zz-x:y-zz` | fail | `reserved-symbol` |
+| `zz-ai@-agentsmith-zz` | fail | `misplaced-at` |
+| `zz@-AgentSmith-neo-zz` | fail | `invalid-handle` |
+| `zz-@-zz` | fail | `invalid-handle` |
+| `zz-@.agent-zz` | fail | `invalid-handle` |
+| `zz-@agent.-zz` | fail | `invalid-handle` |
+| `zz-@agent..smith-zz` | fail | `invalid-handle` |
+| `zz-@` + 33 letters + `-zz` | fail | `invalid-handle` |
+| `zz-acme_support-zz` | fail | `invalid-character` |
+| `zz-vitalik.eth-zz` | fail | `invalid-character` |
+| `zz-one-two-three-four-five-six-zz` | fail | `part-count` |
+| 257 characters | fail | `too-long` |
 
 ### 2.3 Resolver
 
@@ -252,7 +405,7 @@ The 2026-10-02 brief and wireframes add Adam Fry and drop the Future space card.
 
 Reading order follows Do / Re / Mi / Fa as rhythm only. No beat labels are printed [BRIEF]. Golden-ratio proportions may inform spacing and image scale [BRIEF].
 
-**Source conflict:** the [BRIEF] destinations row lists "core workflow; field example", while the reading-order table puts Re (field item) before Mi (workflow). This spec follows the reading order and merges both into one Field logistics band (INFERRED; OPEN Q2).
+**Source conflict (closed):** the [BRIEF] destinations row lists "core workflow; field example", while the reading-order table puts Re (field item) before Mi (workflow). [WIRE] settles the order (Section 3.1a override 8, Q2 closed).
 
 #### H.1 Hero (Do)
 
@@ -624,13 +777,25 @@ Input: a text field labeled "Type a zz code", a Look up button, and example chip
 | B3 abstain-unknown | Valid grammar, no exact match | "No match. The demo will not guess. Check the words and try again." The public demo stays exact match only (Q20, Q40); wording is a placeholder |
 | B4 abstain-malformed | Parser rejects the input | "This is not a zz code. Use the form zz-word-word-zz." |
 
-**Parser (`src/lib/grammar.ts`, INFERRED, demo only)**
+**Parser (`src/lib/grammar.ts`, INFERRED, demo only).** This is the parser as built (OBSERVED at d721783). It predates the v1 grammar in Section 2.2a and diverges from it in four ways: it accepts a missing closing marker, it needs 2 to 5 words, it rejects `@` handles and the bare mark, and it reports reserved symbols as ordinary invalid words. 001 T029 moves the demo to the Section 2.2a rules and test vectors.
 
 1. Trim the input and lowercase it.
 2. Accept the markers `zz-…-zz` and `(zz) … (zz)`. Accept a missing closing marker as well.
 3. Treat hyphens and spaces as separators.
 4. Require 2–5 words, each matching `[a-z0-9]+`.
 5. Return `{ ok, words, variant: "dash" | "circled" }` or `{ ok: false, reason }`.
+
+**Flow B after 001 T029 (INFERRED wording, placeholders until Michael edits them).** Valid input that is not a mock code stays B3. A bare mark gets its own state, B5: "A bare zz mark is found by photo and place, not by typing. Try a code with words." Each parser failure (Section 2.2a G6) maps to one B4 line:
+
+| Reason | B4 line |
+|---|---|
+| `empty`, `no-marker`, `marker-in-body`, `part-count`, `invalid-character`, `too-long` | "This is not a zz code. A code starts and ends with zz, like zz-copper-lantern-sky-zz." |
+| `no-closing-marker` | "Add the closing zz at the end of the code." |
+| `misplaced-at`, `invalid-handle` | "An @ handle comes right after the first zz, like zz-@agentsmith-zz." |
+| `reserved-symbol` | "The symbols # $ / : are reserved and are not used in codes yet." |
+| `unsupported-script` | "This demo reads English letters and numbers only." |
+
+No B4 or B5 line names or suggests a mock code other than the fixed example (Section 10.4).
 
 The resolver mock (`src/lib/resolver.ts`) is pure. It returns `resolved | abstain-unknown | abstain-malformed`. It matches the normalized code exactly and never ranks or suggests other codes (Section 10.4, issue #12). Test inputs: `zz-coper-lantern-sky-zz` → abstain-unknown, with no other code shown. `ZZ COPPER LANTERN SKY ZZ` → resolved. `zz-apple-sky-zz` → abstain-unknown. `copper` → abstain-malformed.
 
@@ -741,11 +906,11 @@ package-lock.json
 
 | Item | Value |
 |---|---|
-| Governing workflows | anti-slop-code, production-systems, google-developer-style, frontend-inspiration-lock, stop-slop (copy) |
+| Governing workflows | anti-slop-code, production-systems, google-developer-style; stop-slop for copy. frontend-inspiration-lock applied to the first visual build only (spec 001 Workflows). |
 | Spec owner | Opus 5.5 (this document) |
-| Implementer | Cloud coding agent; opens a draft PR to `main` |
-| Reviewer | Operator, through the draft PR |
-| CI | `.github/workflows/site-ci.yml`, compatible with PR #1's CI (Section 6; OPEN Q13). The operator's original request named this file `ci.yml`; the new name avoids a clash with PR #1. |
+| Implementer | Cloud coding agent or Grok Bot executor; opens a pull request to `main` |
+| Reviewer | Operator (Danny), through the pull request. Agents do not merge. |
+| CI | `ci.yml` (job `build`, required; do not edit), `site-ci.yml` (typecheck and test), `free-security-scan.yml`, `pages.yml` (deploy on push to `main`). Q13 is closed. |
 
 ## 8. Acceptance criteria
 
@@ -777,11 +942,13 @@ package-lock.json
 26. `package-lock.json` is committed, and `npm ci` succeeds from a clean checkout.
 27. `pages.yml` matches Section 6: it triggers only on `push` to `main` and `workflow_dispatch`, uses the listed permissions and concurrency group, and uploads `dist`. The PR does not trigger a deploy.
 28. After merge, `https://zero-state-llc.github.io/zzthis/` serves Home, and every nav link and image loads without a 404.
-29. Site copy (text, headings, captions, titles) writes every zz code in lowercase and never writes a standalone capital "ZZ". Photos and renders may show a capital ZZ mark or uppercase letters inside a code; alt text describes them in words or quotes the code as shown [MICHAEL 2026-10-02] (Q42). A check in `check-dist.mjs` fails on a standalone capital ZZ in rendered text or in an `alt` or `title` attribute, and does not flag uppercase letters inside a code.
+29. Site copy (text, headings, captions, titles) writes every zz code in lowercase and never writes a standalone capital "ZZ". Photos and renders may show uppercase letters inside a code word. Since Michael's Q48 reply they may not show a capital-letter zz mark; the remaining exceptions are tracked in item 31 and Q53; alt text describes them in words or quotes the code as shown [MICHAEL 2026-10-02] (Q42). A check in `check-dist.mjs` fails on a standalone capital ZZ in rendered text or in an `alt` or `title` attribute, and does not flag uppercase letters inside a code.
+30. After 001 T029: Flow B returns, for every input in Section 2.2a G9, the outcome that the grammar gives (plain or handle input that is not a mock code goes to B3, bare goes to B5, each failure goes to its B4 line). A unit test runs the whole G9 table against the demo parser [MICHAEL 2026-10-02 #33] [MICHAEL 2026-10-02 #34].
+31. After 001 T030: no image on the site shows a capital-letter zz mark, on its own or in a code [MICHAEL 2026-10-02 #33]. AI renders are regenerated; real photos are replaced with photos Michael supplies, or removed (Q53, issue #39).
 
 ## 9. Out of scope and OPEN questions
 
-**Out of scope:** real recognition, camera access, a real resolver, accounts, forms or email backends, analytics, service workers, a custom domain or DNS, Vercel, the technology page, the founder history page (patent, civic payments, HalfHashed Labs, Unity Consensus) [BRIEF], the zzthing.com and zzthat.com apps, and CMS integration. GitHub Pages replaces the earlier Vercel target [OPERATOR 2026-10-01].
+**Out of scope for the site:** real recognition, camera access, a real resolver, accounts, forms or email backends, analytics, service workers, a custom domain or DNS, Vercel, the technology page, the founder history page (patent, civic payments, HalfHashed Labs, Unity Consensus) [BRIEF], the zzthing.com and zzthat.com apps, and CMS integration. GitHub Pages replaces the earlier Vercel target [OPERATOR 2026-10-01].
 
 Michael's answers arrived on 2026-10-02 through Danny (issue #10), in an updated content brief and updated wireframes. [MICHAEL 2026-10-02] tags each answer.
 
@@ -828,13 +995,21 @@ Michael's answers arrived on 2026-10-02 through Danny (issue #10), in an updated
 | Q38 | Where voice input is processed | OPEN; none chosen (spec 004) |
 | Q39 | What counts as the zzThat launch for the "Try zzThat" nav action? | OPEN; none chosen (spec 001) |
 | Q41 | Source for the comparison note's alphanumeric example (an 8-character handwritten Deutsche Post postage code; 14 to 22 character parcel tracking numbers) and for the "8 to 22 random characters" cell | RESOLVED: use as given [MICHAEL 2026-10-02]. Both note sentences ship. |
-| Q42 | Two supplied photos (a sticker on a framed print and a dog-collar tag) show a standalone capital "ZZ", which the lowercase rule bars. Show them? | RESOLVED: use as given [MICHAEL 2026-10-02]. Both photos are on About. Alt text says "capital-letter zz" and does not write a standalone capital ZZ. |
+| Q42 | Two supplied photos (a sticker on a framed print and a dog-collar tag) show a standalone capital "ZZ", which the lowercase rule bars. Show them? | RESOLVED: use as given [MICHAEL 2026-10-02]. Both photos are on About. Alt text says "capital-letter zz" and does not write a standalone capital ZZ. SUPERSEDED in part by Michael's Q48 reply, which asks to regenerate any image with a capital-letter zz mark; see Q53. |
 | Q43 | Replace the founder origin with the first-person bio supplied 2026-10-02? It contains unverified firsts, comparisons with other companies' products, and contract figures (FR-007, Q24) | RESOLVED: use as given [MICHAEL 2026-10-02]. The longer first-person bio is the founder text. |
 | Q44 | Add the Hacker Dojo block ("advisory network", mentoring, named nearby companies, an advisor-led series, Army framing)? Needs Hacker Dojo's and Arshi Chadha's confirmation and wording without endorsement or superlatives | RESOLVED: use as given [MICHAEL 2026-10-02]. New About section after the founder. The Location line stays. |
 | Q45 | Permission to use the Hacker Dojo logo | RESOLVED: use as given [MICHAEL 2026-10-02]. The logo is on the About page. Michael will ask Hacker Dojo for permission once the beta is live. |
 | Q46 | Are the supplied headshots (Michael, Patrick, Arshi, Ridham) approved originals with each person's consent, not LinkedIn copies (Q6)? | RESOLVED: use as given [MICHAEL 2026-10-02]. Those four cards show the supplied headshots. Michael will ask the people pictured for permission once the beta is live. |
 | Q47 | Adopt the alternate hero paragraph, featured text, or "deeper section" copy that Michael shared as a reference on 2026-10-02? | RESOLVED: use as given [MICHAEL 2026-10-02]. The new hero paragraph and featured text ship, and the H1 uses the spaced hyphen as typed (Jev decision 2026-10-02). |
-| Q48 | Codes shown in supplied images use uppercase letters or spaces (zz-1234ABCD-zz, zz Guest WiFi connect zz). Are codes case- and space-insensitive? | OPEN. Default: show images as supplied; code grammar stays as spec 002/003 define it. |
+| Q48 | Codes shown in supplied images use uppercase letters or spaces (zz-1234ABCD-zz, zz Guest WiFi connect zz). Are codes case- and space-insensitive? | RESOLVED (issue #33) [MICHAEL 2026-10-02 #33]: yes. Case-insensitive; hyphens, spaces, or a mix are separators and a run counts as one; a code across two lines is one code; one canonical lowercase hyphen form is stored and displayed; a code with content needs a marker at both ends, and `(zz)` counts; a bare `zz` or `(zz)` is its own type, found by photo and place; never show a capital-letter zz mark. Rules in Section 2.2a. |
+| Q49 | Should codes allow `@` handles like `zz-@agentsmith-zz`? | RESOLVED (issue #34) [MICHAEL 2026-10-02 #34]: widen the rules. `@` only as the first character after the opening marker; it marks a handle; letters, numbers, `.` and `_` allowed inside a handle; the closing marker is required; store and display in lowercase; reserve `#`, `$`, `/`, `:` and reject them for now; macros are ordinary words; drawn symbols are a separate camera mode. Rules in Section 2.2a. |
+| Q50 | How many parts can a code have? (issue #36) | OPEN. Default: 1 to 5 parts for any code with content; issued word codes keep Section 2.2 counts |
+| Q51 | Is `zz@-name-zz` the same as `zz-@name-zz`, and can a handle have more words after it? (issue #37) | OPEN. Default: same code, stored as `zz-@name-zz`; a handle is the only part |
+| Q52 | Can `.` appear outside a handle, as in `zz-vitalik.eth-zz` on the ENS image? (issue #38) | OPEN. Default: no; `zz-@vitalik.eth-zz` is valid; the image stays as supplied |
+| Q53 | Three real photos show a capital-letter zz (`hw-mark-on-object`, `hw-dog-collar-tag`, `app-truck-after`). Replace or remove? (issue #39) | OPEN. Default: remove them from the site until Michael sends lowercase replacements, following his Q48 instruction; never AI-edit a real photo. AI renders with a capital-letter zz are regenerated without asking |
+| Q54 | Keep the blockchain and ledger mentions on the site (Top ways 01 and 05, ENS image), given the #34 note about Army-facing pages? (issue #40) | OPEN. Default: keep as given |
+| Q55 | How is a `zz` inside running text treated? (issue #41) | OPEN. Default: typed lookup takes one whole code; scanning finds marker pairs and offers a lone `zz` as a bare mark only after a confirm |
+| Q56 | Who can create a handle, and how is it protected? (issue #42) | OPEN. Default: unique in lowercase; issued only by the server to a signed-in owner; writing a handle does not claim it; verification is v2 |
 
 ## 10. Architecture (proposal, not built)
 
@@ -983,3 +1158,46 @@ The table rows are a comparison drawn up in this spec from the operator's factor
 | Comparison four cards and note, lowercase rule, founder role line, About photo swap | [MICHAEL 2026-10-02] | Michael's shared-folder documents, 2026-10-02 16:36 to 17:40 PT (not in this repo) |
 | Home Top ways, Applications additions | [MICHAEL 2026-10-02] | zz- modification to web home page.docx and zz - More Applications part.docx (OneDrive, 2026-10-02 about 20:07 to 21:15 PT; not in this repo) |
 | Answers to Q41-Q47 | [MICHAEL 2026-10-02] | Michael's answers document via Danny, 2026-10-02 22:09 PT (not in this repo) |
+| Q48 case, spacing, bare mark, display rule | [MICHAEL 2026-10-02 #33] | Michael's reply on issue #33, 2026-10-02 22:59 PT |
+| Q49 handles, reserved symbols, macros, drawn symbols | [MICHAEL 2026-10-02 #34] | Michael's reply on issue #34, 2026-10-02 22:59 PT |
+
+## 12. Roadmap: v1 scope and v2 candidates
+
+Added 2026-10-03. This section draws the v1 line from sources already in the repo. It adds no feature. INFERRED marks where the line itself is a choice.
+
+### 12.1 What v1 is (INFERRED)
+
+v1 is the public site and demo plus an English-only prototype of the three product parts. The boundary follows Section 10.8 (ship Option A, decide Option B after a benchmark) and issue #35, which files our own trained models and any-language codes as v2.
+
+| Part | Spec | State at d721783 | v1 exit criterion |
+|---|---|---|---|
+| Site and demo | 001 | Built and live (PRs #9 to #32) | Section 8 items 1 to 31 pass; items 15 to 19 automated or recorded as manual with a date (001 T014) |
+| v1 text grammar | 003 US3, Section 2.2a | Rules accepted 2026-10-03; demo parser diverges (Section 4.4) | One library passes every G9 vector; the demo uses it (001 T029) |
+| Wordlist and check word | 003 US1, US2 (issue #14) | Not started | List v1 with a yield report; check word detects every single wrong word (Q30 minimum) |
+| Resolver prototype | 002 (issue #13) | Not started | US1 to US4 and one test per FR-010 abuse case pass in CI |
+| Capture prototype, Option A | 004 | Not started | Typed, spoken, and photographed codes go through one grammar, snap, and verify path with accept, clarify, retry, and abstain |
+| Option B benchmark | 004 T008 (Q18) | Not started | Result recorded; it opens or defers v2 track A |
+
+Every OPEN question that blocks a v1 task has a GitHub issue and a default (Q50 to Q56 filed as issues #36 to #42 on 2026-10-03).
+
+### 12.2 v2 candidates (not committed)
+
+| Candidate | Where the repo defers it |
+|---|---|
+| Any-language codes and a trained reader | Issue #35 (label `v2-roadmap`) |
+| Own fine-tuned reader beyond the benchmark | Section 10.8, Q18 |
+| Drawn-symbol camera mode | Q49 reply (issue #34) |
+| Bare mark matched by photo, place, and time | Q48 reply (issue #33); v1 only parses it |
+| AI photo to action, inventory assistant, touch first | Section 2.1 ("Concept"), Section 2.6 |
+| Macro execution | Section 2.2 mark types, Q49 reply |
+| Handle verification; deeper aliases page | Section 2.2 namespace marker, Section 3.4 ("later page") |
+| Shared ledgers and smart contracts | `src/content/technology.ts` (unpublished); not in Section 10 |
+| Meanings for `#`, `$`, `/`, `:` | Q49 reply |
+| AWS GovCloud (IL4 or IL5) | Section 10.2 |
+| No-device issuance and linking | Section 10.5, Q25, 002 T014 |
+| Partner authentication | Q19, 002 T015 |
+| Per-tenant suggestion policy | Q40, 002 T016 |
+| SD-JWT role views | Section 10.4 ("option, not a commitment") |
+| Printed watermark add-on | Section 10.4 ("optional add-ons only") |
+| zzThat and zzThing apps as products | Q33, `specs/README.md` |
+| Long founder history page | Section 9 out of scope, Q8 |

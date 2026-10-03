@@ -1,13 +1,13 @@
 # Requirements checklist: 001-marketing-site
 
-Checked 2026-10-02 against `main` at 40dfa3b and the live site. Items map to `docs/SPEC.md` Section 8.
+Checked 2026-10-02 against `main` at 40dfa3b and the live site; status rows refreshed 2026-10-03 at d721783. Items map to `docs/SPEC.md` Section 8.
 
 ## Completeness
 
 - [x] Spec has a `## Workflows` section naming workflows and CI files.
 - [x] Each user story has acceptance scenarios.
 - [x] Out of scope is stated.
-- [ ] Every OPEN question has an owner and a default. Q21 to Q23 and Q48 still need Michael.
+- [ ] Every OPEN question has an owner and a default. Q21 to Q23, Q53, and Q54 still need Michael. Q48 and Q49 are resolved (issues #33, #34).
 
 ## Verification status of Section 8 criteria
 
@@ -32,8 +32,11 @@ Checked 2026-10-02 against `main` at 40dfa3b and the live site. Items map to `do
 | 26, 27 | Lockfile, `pages.yml` shape | Review |
 | 28 | Live after merge | OBSERVED 2026-10-02 after PR #16 |
 | 29 | Copy-only case rule: lowercase codes in site copy, no standalone capital ZZ; photos may show capitals | Automated: `check-dist.mjs` and content tests (T024) |
+| 30 | Flow B follows the v1 grammar test vectors | Not yet: T029 |
+| 31 | No image shows a capital-letter zz mark | Not yet: T030, Q53 |
 
 ## Clarity and consistency
 
-- [ ] Flow B behavior (Section 4.4 B2) conflicts with constitution III and the architecture rule in `docs/SPEC.md` Section 10.4. Resolve through T010.
-- [ ] Section 7 of `docs/SPEC.md` still says CI is "OPEN Q13" and that the implementer opens a draft PR; both are stale.
+- [x] Flow B behavior (Section 4.4 B2) conflicted with constitution III. Resolved by T010 (PR #19, issue #12).
+- [x] Section 7 of `docs/SPEC.md` said CI is "OPEN Q13" and that the implementer opens a draft PR. Fixed 2026-10-03 (T032).
+- [ ] Flow B's parser diverges from the v1 grammar (`docs/SPEC.md` Section 4.4). Resolve through T029.

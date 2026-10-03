@@ -1,7 +1,7 @@
 # Feature spec: resolver core
 
 Feature ID: 002-resolver-core
-Status: not built. Prototype requested in issue #13.
+Status: not built. Prototype requested in issue #13. Deepened 2026-10-03: canonical-form rules from the v1 grammar, handles, error states, and edge cases.
 Phase: specify (what and why). The how is in [plan.md](plan.md), which carries the architecture proposal from `docs/SPEC.md` Section 10.
 Constitution: [.specify/memory/constitution.md](../../.specify/memory/constitution.md).
 
@@ -29,6 +29,9 @@ Acceptance:
 1. An active code returns the current signed record version, scoped to the caller's role [OPERATOR 2026-10-02].
 2. Unknown, expired, used, and revoked codes all return the same not-found shape [OPERATOR 2026-10-02] (INFERRED shape detail in `docs/SPEC.md` Section 10.6).
 3. The resolver never returns nearby or similar codes [OPERATOR 2026-10-02].
+4. Given an active code `zz-copper-lantern-sky-zz`, when a caller submits `ZZ COPPER LANTERN SKY ZZ` or `(zz) copper lantern sky (zz)`, then the caller gets the same view as for the canonical form (FR-013).
+5. Given input that fails the grammar, then the response is `malformed` with the parser reason, and it is the same whether or not any live code is similar (FR-014).
+6. Given a single-use code and two resolves that arrive at the same time, then exactly one gets the view and the other gets not-found (FR-004).
 
 ### US2. Issue and link a code (P1)
 
@@ -36,11 +39,19 @@ As an issuer, I ask for a new code linked to a record, with an optional expiry a
 
 Acceptance: the server chooses the words and the check word; the code is unique among active codes (INFERRED); the issue is written to the audit log.
 
+1. The issued code parses with the v1 grammar as kind `plain`, and its stored form is the canonical form (FR-013).
+2. Issuing fails, and writes a failed audit event, if the audit write fails (FR-018).
+3. A handle is issued only to an authenticated owner and only if no handle with the same canonical form exists (FR-016).
+
 ### US3. Update and revoke (P1)
 
 As an issuer, I add a new record version or revoke a code, and the change takes effect centrally at once [OPERATOR 2026-10-02].
 
 Acceptance: every record change is a new signed version; older versions are kept; a revoked code stops resolving.
+
+1. Given a revoked reusable code, when a caller resolves it at the central server, then the response is not-found at once; at the edge, within the purge window (Q26).
+2. Given a code with `expires_at` T, a resolve at T or later gets not-found (INFERRED: the boundary is exclusive).
+3. Given a failed signature step, no version is stored (FR-018).
 
 ### US4. Audit (P2)
 
@@ -66,6 +77,37 @@ As a field user who wrote a code by hand with no device, I can link it to a reco
 | FR-010 | Abuse cases to defend: copied marks, replay, enumeration, unauthorized updates, malformed input. Each abuse case gets a test with a stated pass condition in tasks.md. | [PRODUCT]; test rule INFERRED |
 | FR-011 | A lookup for a code that does not exist and a lookup for a revoked code return the same response shape and status, so a caller cannot tell them apart or enumerate codes. | INFERRED from FR-001 and the plan's timing risk |
 | FR-012 | Per-tenant suggestion policy. Off by default. A tenant marked high-security can never turn it on and gets strict pass or fail, possibly graded by the type of misread. Which tenant types may enable it, and what a suggestion may reveal, are OPEN (Q40). | [MICHAEL 2026-10-02]; defaults [OPERATOR 2026-10-02] |
+| FR-013 | The resolver parses every submitted code with the v1 grammar library (spec 003 US3) and looks up the canonical form. It never trusts a client's normalization. Codes are stored only in canonical form, so case, separators, and circled markers never create two codes. | [MICHAEL 2026-10-02 #33]; server-side re-parse INFERRED |
+| FR-014 | Input that fails the grammar gets a `malformed` response with the parser reason. The grammar is public, so the reason reveals nothing about live codes. Malformed calls count toward rate limits. | INFERRED |
+| FR-015 | A bare mark (`zz`) cannot be resolved by text in v1. It returns `unsupported` with reason `bare-mark-needs-context`. Matching a bare mark by photo, place, and time is a v2 candidate. | [MICHAEL 2026-10-02 #33] describes the matching; the v1 split is INFERRED |
+| FR-016 | Handles are unique among all handles ever issued, compared in canonical (lowercase) form. Only the server issues a handle, to an authenticated owner. Writing a handle on a thing does not claim it. Verifying who the owner is comes later. | Q56 default (issue #42) |
+| FR-017 | The canonical form of an active code is unique. Whether a retired code's words can be issued again stays OPEN (Q36); until it is answered, the prototype never reissues. | Q36; default INFERRED |
+| FR-018 | No state change without its audit event: if signing or the audit write fails, the whole call fails and nothing is stored. | INFERRED from FR-002 and FR-003 |
+
+## Error states (INFERRED, prototype contract)
+
+| Call | Outcome | HTTP status | Body |
+|---|---|---|---|
+| `GET /resolve` | Active code, caller may see it | 200 | Role-scoped view of the current signed version |
+| `GET /resolve` | Unknown, expired, used, or revoked | 404 | One fixed not-found body, identical for all four (FR-011) |
+| `GET /resolve` | Grammar failure | 400 | `malformed` and the parser reason (FR-014) |
+| `GET /resolve` | Bare mark | 422 | `unsupported`, reason `bare-mark-needs-context` (FR-015) |
+| Any | Rate limit hit | 429 | One fixed body that does not depend on whether the code exists |
+| Write calls | Not authenticated | 401 | Fixed body |
+| Write calls | Authenticated, not allowed | 403 | Fixed body; audit event written with result `denied` |
+| Write calls | Signing or audit failure | 500 | Nothing stored (FR-018) |
+| `POST /codes` (handle) | Handle taken | 409 | Fixed body; does not reveal the owner |
+
+Status codes are a prototype choice and may change with Q19. The not-found response must also match in timing within a stated budget (plan risk); the budget is set when T007 measures it.
+
+## Edge cases
+
+- Two resolves of one single-use code at the same moment: exactly one view (US1 acceptance 6).
+- A code that differs from a live code by one word: not-found, never a hint (FR-001).
+- `zz-@AgentSmith-zz` and `zz-@agentsmith-zz`: the same handle (FR-013, FR-016).
+- A revoked code still in an edge cache: resolves only until the purge window ends (Q26).
+- A record version whose signature fails verification on read: the resolver returns not-found and writes an audit event with result `integrity-error` (INFERRED).
+- A malformed flood from one client: rate limited like any other call (FR-014).
 
 ## Success criteria
 
@@ -86,6 +128,7 @@ Recognition (spec 004), the wordlist and check word (spec 003), payments, partne
 | Q28 | Where the server's record-signing keys live and how they rotate | None chosen; blocks T001 |
 | Q29 | Where the resolver code lives (this repo or a separate repo) | None chosen; blocks T001 |
 | Q40 | Suggestion policy details: allowed tenant types, what a suggestion reveals, misread grading for high-security tenants | Off by default; never on for high-security [MICHAEL 2026-10-02] |
+| Q56 | Who can create a handle, and how is it protected? (issue #42) | Unique in lowercase; server-issued to a signed-in owner; verification later |
 | Q36 | Can the words of a revoked, used, or expired code be issued again? Reissue would let a copied old mark open a new record. | None chosen; "never reissue" proposed for Danny |
 
 ## Workflows

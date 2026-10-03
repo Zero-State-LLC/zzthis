@@ -1,7 +1,7 @@
 # Feature spec: zzThis marketing site and scripted demo
 
 Feature ID: 001-marketing-site
-Status: built and live (OBSERVED 2026-10-02 at https://zero-state-llc.github.io/zzthis/, `main` at 40dfa3b). This file restates the requirements in `docs/SPEC.md` in Spec Kit form. It is pending Danny's approval through its PR, as the constitution's Governance section requires.
+Status: built and live (OBSERVED 2026-10-03 at https://zero-state-llc.github.io/zzthis/, `main` at d721783 after PR #32). This file restates the requirements in `docs/SPEC.md` in Spec Kit form. It is pending Danny's approval through its PR, as the constitution's Governance section requires.
 Phase: specify (what and why). The how lives in [plan.md](plan.md). Work items live in [tasks.md](tasks.md).
 Constitution: [.specify/memory/constitution.md](../../.specify/memory/constitution.md).
 
@@ -80,14 +80,21 @@ Acceptance: `/contact`, the Home contact action, the About contact card, and the
 | FR-015 | Light and dark themes both meet text contrast of at least 4.5:1. | `docs/SPEC.md` Section 8, item 16 |
 | FR-016 | When the free zzThat app launches, the main navigation gains a prominent "Try zzThat" action that links to zzthat.com. | [MICHAEL 2026-10-02]; launch trigger OPEN (Q39) |
 | FR-017 | Site copy (text, headings, captions, titles) writes every zz code in lowercase and never writes a standalone capital "ZZ". Photos and renders may show a capital ZZ mark or uppercase letters inside a code; alt text describes them in words or quotes the code as shown. | [MICHAEL 2026-10-02] |
+| FR-018 | After T029, Flow B parses input with the v1 grammar (`docs/SPEC.md` Section 2.2a) and maps each result to B1, B3, B4, or the new B5 bare-mark state, using the lines in `docs/SPEC.md` Section 4.4. It still never reveals other codes (FR-013). | [MICHAEL 2026-10-02 #33] [MICHAEL 2026-10-02 #34]; wording INFERRED |
+| FR-019 | Images follow the Q48 display rule: no capital-letter zz mark, on its own or in a code. AI renders that break it are regenerated. Real photos are never AI-edited; a photo that breaks the rule is removed until Michael supplies a replacement (Q53). | [MICHAEL 2026-10-02 #33]; Q53 default (issue #39) |
 
 ## Success criteria
 
-The accepted acceptance criteria are `docs/SPEC.md` Section 8, items 1 to 28. Their verification status is tracked in [checklists/requirements.md](checklists/requirements.md). No new metrics are added here. The Lighthouse goals in item 18 are INFERRED goals, not commitments.
+The accepted acceptance criteria are `docs/SPEC.md` Section 8, items 1 to 31 (items 30 and 31 apply once T029 and T030 land). Their verification status is tracked in [checklists/requirements.md](checklists/requirements.md). No new metrics are added here. The Lighthouse goals in item 18 are INFERRED goals, not commitments.
 
 ## Edge cases
 
-- A visitor types an unrelated but well-formed code in Flow B. Expected result: "No match" with no hints (FR-013, pending Q20).
+- A visitor types an unrelated but well-formed code in Flow B. Expected result: "No match" with no hints (FR-013). Q20 only affects the wording.
+- After T029, a visitor types `zz-@agentsmith-zz` (the handle shown in Top ways 04). Expected result: B3 "No match", not "This is not a zz code" (FR-018).
+- After T029, a visitor types `zz-copper-lantern-sky` with no closing marker. Expected result: B4 "Add the closing zz at the end of the code." Today the demo resolves it; the v1 grammar does not.
+- After T029, a visitor types `zz` alone. Expected result: B5, the bare-mark line.
+- After T029, a visitor types `zz-#tag-zz`. Expected result: the reserved-symbol B4 line.
+- A visitor types `zz copper lantern sky zz` in capitals. Expected result: B1, the mock record (unchanged).
 - A visitor on a phone without JavaScript opens `/demo`. Expected result: the static step list (FR-012).
 - An unknown path under `/zzthis/`. Expected result: `404.html` with working links.
 
@@ -114,7 +121,10 @@ Real recognition, a real resolver, accounts, forms or email backends, analytics,
 | Q45 | Hacker Dojo logo permission | RESOLVED: use as given [MICHAEL 2026-10-02]. Logo is on About. Michael will ask Hacker Dojo for permission once the beta is live. |
 | Q46 | Are the supplied headshots approved originals with consent? | RESOLVED: use as given [MICHAEL 2026-10-02]. Four headshots ship. Michael will ask the people pictured for permission once the beta is live. |
 | Q47 | Adopt the alternate hero and featured copy Michael shared as a reference? | RESOLVED: use as given [MICHAEL 2026-10-02]. New paragraph and featured text; the H1 uses the spaced hyphen as typed. |
-| Q48 | Codes shown in supplied images use uppercase letters or spaces (zz-1234ABCD-zz, zz Guest WiFi connect zz). Are codes case- and space-insensitive? | OPEN. Default: show images as supplied; code grammar stays as spec 002/003 define it. |
+| Q48 | Are codes case- and space-insensitive? | RESOLVED (issue #33): yes; rules in `docs/SPEC.md` Section 2.2a. The display rule (no capital-letter zz in images) feeds Q53. |
+| Q49 | Allow `@` handles like `zz-@agentsmith-zz`? | RESOLVED (issue #34): yes; the Top ways example stays as written. |
+| Q53 | Three real photos show a capital-letter zz. Replace or remove? (issue #39) | Remove until Michael sends lowercase replacements (FR-019) |
+| Q54 | Keep the blockchain and ledger mentions (Top ways 01 and 05, ENS image)? (issue #40) | Keep as given |
 
 ## Workflows
 
