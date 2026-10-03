@@ -214,7 +214,7 @@ Michael chose sample B. He sent a v1.0 change list (`zzThis_website_v1.0_changes
 
 1. **Bio version. Decided (Danny 2026-10-03).** The doc contains two versions of the bio. Section 5 reads `I “invent” business models … and solve to the emerging …`. The combined block at the end reads `“I invent" …` and `solve-to`. B v1.0 keeps the section 5 bio. No change to the bio text. The doc's other suggested bio edits, such as naming the citing companies, are not applied.
 2. **Multilingual codes and the v1 grammar. Decided (Danny 2026-10-03).** Keep the "In any language" examples on the page, including Korean, Japanese, and Aramaic. The Home console does not report a code that contains non-ASCII letters as malformed. It shows a non-error note that codes in other languages and scripts are coming later, and that this demo reads v1 codes written with Latin letters and numbers for now. ASCII input stays exact match only, with no suggestions. Any-language codes remain a v2 candidate (issue #35).
-3. **Native-reader check.** Still pending a human check for the Korean, Japanese, and Aramaic codes, as the doc itself advises. Tracked in a separate issue.
+3. **Native-reader check.** Still pending a human check for the Korean, Japanese, and Aramaic codes, as the doc itself advises. Tracked in #51 (Q63).
 4. **Headline em dash. Decided (Danny 2026-10-03).** Keep the em dash in "zzThis makes things readable-writable — and smart." Recorded as Q62 in `docs/SPEC.md`, which supersedes Q47's spaced-hyphen ruling for the H1. The hero headline em dash is the one allowed exception.
 5. **For the production build:**
    - Self-host the new script fonts: `@fontsource/ibm-plex-sans-kr`, `-jp`, and `-hebrew`.

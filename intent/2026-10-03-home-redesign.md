@@ -48,7 +48,7 @@ Non-goals:
 - ~~Which direction, or which mix?~~ Direction B. B v1.0 (`docs/redesign-2026-10-03/b-resolver-v1/`, Home, About, and Applications) is the reference. Accepted 2026-10-03, Danny.
 - ~~The v1.0 headline em dash?~~ Keep it. Q62 supersedes Q47's spaced hyphen for the H1.
 - ~~Non-ASCII example codes on Home?~~ Keep them. The B v1.0 console shows a non-error "coming later" note for non-ASCII letters. ASCII input stays exact match only.
-- Native-reader check for the Korean, Japanese, and Aramaic codes: open, tracked in a separate issue.
+- Native-reader check for the Korean, Japanese, and Aramaic codes: open, tracked in #51 (Q63).
 - Does Michael approve the new lines each sample adds (listed in the samples README, section 4)?
 - Should the real handwritten photos move onto Home (sample A)? Should the proposed architecture be shown on Home, labelled "Proposal, not built" (sample B)?
 
