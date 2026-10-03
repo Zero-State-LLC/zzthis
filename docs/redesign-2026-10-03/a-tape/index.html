@@ -1,0 +1,492 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>zzThis · Sample A · Tape</title>
+    <meta name="description" content="Write a code on a thing; find its record by camera, typing, or voice." />
+    <meta name="color-scheme" content="light dark" />
+    <!-- Set before first paint so tape can start un-applied without a flash. -->
+    <script>document.documentElement.classList.add("js");</script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wdth,wght@12..96,75..100,300..800&family=IBM+Plex+Mono:wght@400;500&family=Shantell+Sans:wght,BNCE,INFM,SPAC@400..800,-100..100,0..100,0..100&display=swap"
+    />
+    <link rel="stylesheet" href="tokens.css" />
+    <link rel="stylesheet" href="tape.css" />
+    <link rel="preload" as="image" href="../../../public/images/panels/b-crate-word-code.webp" fetchpriority="high" />
+  </head>
+  <body>
+    <a class="skip" href="#main">Skip to content</a>
+
+    <!-- N9 · Edge-aligned minimal: the tape is the loud thing on this page, so the bar stays quiet. -->
+    <header class="bar">
+      <a class="bar__mark" href="#top" aria-label="zzThis home">
+        <img class="only-light" src="../../../public/images/logos/zzthis-logo-on-light.webp" width="464" height="129" alt="" />
+        <img class="only-dark" src="../../../public/images/logos/zzthis-logo-on-dark.webp" width="480" height="140" alt="" />
+      </a>
+      <button class="bar__menu" type="button" aria-expanded="false" aria-controls="nav" data-menu>Menu</button>
+      <nav class="bar__nav" id="nav" aria-label="Main">
+        <a href="#how-it-works">How it works</a>
+        <a href="#applications">Applications</a>
+        <a href="#about">About</a>
+        <a href="#contact">Contact</a>
+        <button class="theme" type="button" data-theme-toggle aria-label="Switch theme">
+          <svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="10" cy="10" r="7.5" /><path d="M10 2.5a7.5 7.5 0 0 1 0 15z" /></svg>
+        </button>
+      </nav>
+    </header>
+
+    <main id="main" class="page">
+      <!-- Hero · H2 split diptych, broken by a full-bleed strip of tape -->
+      <section class="hero" id="top" aria-labelledby="hero-title">
+        <div class="hero__copy">
+          <h1 class="hero__title" id="hero-title">
+            <span class="hero__setup">Barcodes made things scannable.</span>
+            <span class="hero__claim">zzThis makes them <span class="hero__verb">writable</span>&nbsp;- and&nbsp;smart.</span>
+          </h1>
+          <p class="hero__sub">Write a code on a thing; find its record by camera, typing, or voice.</p>
+        </div>
+        <figure class="hero__photo">
+          <img
+            src="../../../public/images/panels/b-crate-word-code.webp"
+            width="1600"
+            height="900"
+            alt="Olive crate with blue tape reading zz-copper-lantern-sky-zz beside an obscured barcode."
+            fetchpriority="high"
+            decoding="async"
+          />
+          <figcaption><span class="tag">Concept illustration</span> Word code on blue tape beside an obscured barcode.</figcaption>
+        </figure>
+      </section>
+
+      <div class="tape-run" aria-hidden="false">
+        <p class="tape tape--hero" data-apply="left" role="img" aria-label="zz-copper-lantern-sky-zz, handwritten on blue tape">
+          <span class="hand" data-write>zz-copper-lantern-sky-zz</span>
+        </p>
+      </div>
+
+      <section class="hero-foot" aria-label="Get started">
+        <div class="hero-foot__actions">
+          <a class="btn btn--primary" href="#field-logistics">See field logistics</a>
+          <a class="btn btn--quiet" href="#how-it-works">How it works</a>
+        </div>
+        <p class="hero-foot__body">
+          zzThis is a human-readable, human-writable code for the physical world. Write
+          <code class="code">zz-copper-lantern-sky-zz</code> on tape, a crate, a parcel, or a sign. Link it to a digital
+          record, then find it by camera, typing, or voice.
+        </p>
+      </section>
+
+      <!-- Featured statement · the "distance" drawn as three marked points -->
+      <section class="thesis" aria-labelledby="thesis-title">
+        <h2 class="thesis__title" id="thesis-title">
+          The shortest, smartest distance between a physical thing, its digital record, and the work that comes next.
+        </h2>
+        <figure class="route" aria-hidden="true">
+          <svg class="route__svg" viewBox="0 0 900 150" preserveAspectRatio="none">
+            <path class="route__line" d="M30 96 C 140 40, 230 128, 330 84 S 520 36, 600 86 S 780 120, 870 70" pathLength="1" />
+          </svg>
+          <ol class="route__stops">
+            <li><span class="route__dot"></span>a physical thing</li>
+            <li><span class="route__dot"></span>its digital record</li>
+            <li><span class="route__dot"></span>the work that comes next</li>
+          </ol>
+        </figure>
+        <p class="thesis__body">
+          A zz code gives people a way to create the mark themselves, wherever the work happens. AI can help identify
+          what a camera sees, count what remains, suggest how an item should be handled, and prepare the next task. The
+          same visible code connects the item, its history, and the people responsible for it.
+        </p>
+      </section>
+
+      <!-- Top ways · a ledger of rows, each code written by a different hand -->
+      <section class="ways" aria-labelledby="ways-title">
+        <h3 class="ways__title" id="ways-title">Top ways zzThis is used</h3>
+        <ol class="ways__list">
+          <li class="way">
+            <h4 class="way__name"><span class="way__n">01</span> Logistics</h4>
+            <p class="way__codes">
+              <span data-apply="left" class="strip" style="--infm: 70; --bnce: 30; --tilt: -1.6deg">zz-copper-lantern-sky-zz</span>
+              <span data-apply="right" class="strip strip--kraft" style="--infm: 40; --bnce: -20; --tilt: 1.1deg">zz-fastfreight-c4821-123-zz</span>
+            </p>
+            <p class="way__text">
+              Easier handling: mark crates, bags, and parts, then read, link, and hand them off with a phone camera or a
+              few spoken words. For shipping, including across borders, the zz-code can be the shipment's shared identity
+              and hub, where customs, carriers, and payment services find the same information, and its ID on the shared
+              ledger used by every service that handles the goods.
+            </p>
+          </li>
+          <li class="way">
+            <h4 class="way__name"><span class="way__n">02</span> Postal</h4>
+            <p class="way__codes">
+              <span data-apply="left" class="strip strip--kraft" style="--infm: 90; --bnce: 60; --tilt: -0.8deg">zz-post-rock-river-sky-zz</span>
+            </p>
+            <p class="way__text">
+              A handwritten zz-code can serve as proof of postage and a trackable reference: write it in the stamp corner
+              of a letter or parcel, and it links to postage, routing, and tracking.
+            </p>
+          </li>
+          <li class="way">
+            <h4 class="way__name"><span class="way__n">03</span> Everyday use: zzThat</h4>
+            <p class="way__codes">
+              <span data-apply="right" class="strip" style="--infm: 100; --bnce: 80; --tilt: 1.8deg">zz-kathy-lost-cat-zz</span>
+              <span data-apply="left" class="strip strip--kraft" style="--infm: 60; --bnce: 10; --tilt: -1.2deg">zz-moving-box-kitchen-3-zz</span>
+            </p>
+            <p class="way__text">
+              Free for everyone. Write a code on a lost-pet flyer, a moving box, a garage-sale item, or a note, and anyone
+              can scan it, like a QR code you can write by hand. Endless imaginative uses. The zzThat app is coming to
+              Android, iOS, and the web at zzthat.com.
+            </p>
+          </li>
+          <li class="way">
+            <h4 class="way__name"><span class="way__n">04</span> AI agents</h4>
+            <p class="way__codes">
+              <span data-apply="right" class="strip" style="--infm: 30; --bnce: 0; --tilt: -0.6deg">zz-acme-support-agent-zz</span>
+              <span data-apply="left" class="strip strip--kraft" style="--infm: 80; --bnce: 40; --tilt: 1.4deg">zz-@agentsmith-zz</span>
+            </p>
+            <p class="way__text">
+              AI agents need identities people can easily know and recognize by name, and enterprises need to name and
+              brand their agents, on the everyday web as well as on blockchains. A zz-code gives an agent a short name
+              people can write, say, and verify, linked to who runs it and what it is allowed to do.
+            </p>
+          </li>
+          <li class="way">
+            <h4 class="way__name"><span class="way__n">05</span> Blockchain addresses</h4>
+            <p class="way__codes">
+              <span data-apply="right" class="strip strip--kraft" style="--infm: 50; --bnce: -40; --tilt: 0.9deg">zz-btc-harbor-violet-nine-zz</span>
+              <span data-apply="left" class="strip" style="--infm: 95; --bnce: 70; --tilt: -1.5deg">zz-harbor-violet-nine-zz</span>
+            </p>
+            <p class="way__text">
+              Wallet, account, smart-contract, and agent addresses on networks such as Bitcoin and Ethereum are long
+              strings of random characters. A zz-code is a readable alias for any of them: easier to write, say, and
+              check on screen before you send.
+            </p>
+          </li>
+          <li class="way">
+            <h4 class="way__name"><span class="way__n">06</span> Macros</h4>
+            <p class="way__codes">
+              <span data-apply="right" class="strip" style="--infm: 20; --bnce: -10; --tilt: 1.2deg">zz-fn-pay-agentsmith-zz</span>
+              <span data-apply="left" class="strip strip--kraft" style="--infm: 75; --bnce: 50; --tilt: -1deg">zz-run-reorder-water-zz</span>
+            </p>
+            <p class="way__text">
+              A zz-code can also call a function: a short, human-writable command that asks a system to do something,
+              such as reorder supplies, pay an agent, or open a work order. A macro runs only for an authenticated,
+              authorized user who confirms it; the code itself carries no authority.
+            </p>
+          </li>
+        </ol>
+      </section>
+
+      <!-- Comparison · a real table; the zzThis column sits on a strip of tape -->
+      <section class="compare" aria-labelledby="compare-title">
+        <h2 id="compare-title">How zzThis compares</h2>
+        <div class="compare__wide">
+          <table class="ledger">
+            <thead>
+              <tr>
+                <td></td>
+                <th scope="col">Barcode</th>
+                <th scope="col">QR code</th>
+                <th scope="col">Alphanumeric code</th>
+                <th scope="col" class="is-zz"><span data-apply="right">zzThis</span></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <th scope="row">Create the mark</th>
+                <td>Print</td>
+                <td>Print or display</td>
+                <td>Print or handwrite</td>
+                <td class="is-zz">Write, draw, print, or display: words, numbers, or symbols</td>
+              </tr>
+              <tr>
+                <th scope="row">Read the mark</th>
+                <td>Scanner</td>
+                <td>Camera</td>
+                <td>Person, scanner, or typing</td>
+                <td class="is-zz">Person, camera, voice, typing, or within text</td>
+              </tr>
+              <tr>
+                <th scope="row">What it connects</th>
+                <td>Item to data</td>
+                <td>Surface to digital content</td>
+                <td>Shipment or item to its tracking status</td>
+                <td class="is-zz">Thing to its record, next action, and authorized macros</td>
+              </tr>
+              <tr>
+                <th scope="row">Easy to say and remember</th>
+                <td>No</td>
+                <td>No</td>
+                <td>Hard (8 to 22 random characters)</td>
+                <td class="is-zz">Yes (2 to 4 words, or short words and numbers)</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="compare__narrow">
+          <dl class="kind kind--zz">
+            <dt>zzThis</dt>
+            <dd><span>Create the mark</span>Write, draw, print, or display: words, numbers, or symbols</dd>
+            <dd><span>Read the mark</span>Person, camera, voice, typing, or within text</dd>
+            <dd><span>What it connects</span>Thing to its record, next action, and authorized macros</dd>
+            <dd><span>Easy to say and remember</span>Yes (2 to 4 words, or short words and numbers)</dd>
+          </dl>
+          <dl class="kind">
+            <dt>Barcode</dt>
+            <dd><span>Create the mark</span>Print</dd>
+            <dd><span>Read the mark</span>Scanner</dd>
+            <dd><span>What it connects</span>Item to data</dd>
+            <dd><span>Easy to say and remember</span>No</dd>
+          </dl>
+          <dl class="kind">
+            <dt>QR code</dt>
+            <dd><span>Create the mark</span>Print or display</dd>
+            <dd><span>Read the mark</span>Camera</dd>
+            <dd><span>What it connects</span>Surface to digital content</dd>
+            <dd><span>Easy to say and remember</span>No</dd>
+          </dl>
+          <dl class="kind">
+            <dt>Alphanumeric code</dt>
+            <dd><span>Create the mark</span>Print or handwrite</dd>
+            <dd><span>Read the mark</span>Person, scanner, or typing</dd>
+            <dd><span>What it connects</span>Shipment or item to its tracking status</dd>
+            <dd><span>Easy to say and remember</span>Hard (8 to 22 random characters)</dd>
+          </dl>
+        </div>
+        <p class="compare__note">
+          Alphanumeric example: an 8-character handwritten postage code (Deutsche Post) or a 14–22-character parcel
+          tracking number. zz-codes can be words, numbers, or simple hand-drawn symbols such as a smiley or tally marks,
+          and can be read even when written inside a sentence.
+        </p>
+      </section>
+
+      <!-- How it works · Narrative Workflow: four stages, the code changing state at each one -->
+      <section class="workflow" id="how-it-works" aria-labelledby="how-title">
+        <div class="workflow__head">
+          <h2 id="how-title">How it works</h2>
+          <p>
+            Core identity: MARK a lowercase zz code → READ it by camera or manual entry → LINK it to a record → REPORT the
+            words by voice where useful.
+          </p>
+          <p class="label">Concept illustrations. These panels show intended use, not a deployed system.</p>
+        </div>
+
+        <ol class="stages">
+          <li class="stage" data-reveal>
+            <div class="stage__rule"><span class="stage__num">1.0</span></div>
+            <h3 class="stage__verb">Mark</h3>
+            <p class="stage__text">Write the code on tape, a crate, or a pallet.</p>
+            <div class="specimen specimen--mark" aria-hidden="true">
+              <span data-apply="right" class="strip strip--lg" style="--infm: 100; --bnce: 60; --tilt: -1.2deg">zz-copper-lantern-sky-zz</span>
+            </div>
+            <figure class="stage__fig">
+              <img src="../../../public/images/panels/alt-c-circled-tape.webp" width="1600" height="664" loading="lazy" decoding="async" alt="Close-up of blue tape reading (zz) camp bravo four two (zz)." />
+            </figure>
+          </li>
+          <li class="stage" data-reveal>
+            <div class="stage__rule"><span class="stage__num">2.0</span></div>
+            <h3 class="stage__verb">Read</h3>
+            <p class="stage__text">Camera or manual entry.</p>
+            <div class="specimen specimen--read" aria-hidden="true">
+              <span class="reticle">
+                <span class="tok tok--mark">zz</span><span class="tok-sep">-</span><span class="tok">copper</span><span class="tok-sep">-</span><span class="tok">lantern</span><span class="tok-sep">-</span><span class="tok">sky</span><span class="tok-sep">-</span><span class="tok tok--mark">zz</span>
+              </span>
+              <span class="tok-legend"><span>marker</span><span>word</span><span>word</span><span>word</span><span>marker</span></span>
+            </div>
+            <figure class="stage__fig">
+              <img src="../../../public/images/panels/d-camera-read.webp" width="1600" height="900" loading="lazy" decoding="async" alt="Phone camera framing a handwritten crate code with offline and checksum indicators." />
+            </figure>
+          </li>
+          <li class="stage" data-reveal>
+            <div class="stage__rule"><span class="stage__num">3.0</span></div>
+            <h3 class="stage__verb">Link</h3>
+            <p class="stage__text">Connect to an existing record and photo.</p>
+            <div class="specimen specimen--link">
+              <p class="record__code"><code>zz-copper-lantern-sky-zz</code> <span class="mock">Mock data</span></p>
+              <dl class="record">
+                <div><dt>NSN</dt><dd>MOCK-0000-00-000-0001</dd></div>
+                <div><dt>Document number</dt><dd>MOCK-DOC-0001</dd></div>
+                <div><dt>Hand receipt</dt><dd>MOCK-HR-01</dd></div>
+                <div><dt>Photo</dt><dd>Attached (mock image)</dd></div>
+              </dl>
+            </div>
+            <figure class="stage__fig">
+              <img src="../../../public/images/panels/e-linked-record.webp" width="1600" height="800" loading="lazy" decoding="async" alt="Tablet record card linking a code to NSN, document number, hand receipt, and photo." />
+            </figure>
+          </li>
+          <li class="stage" data-reveal>
+            <div class="stage__rule"><span class="stage__num">4.0</span></div>
+            <h3 class="stage__verb">Report</h3>
+            <p class="stage__text">Say the code words if a voice handoff is useful.</p>
+            <div class="specimen specimen--report" aria-hidden="true">
+              <p class="radio">“Tag: copper, lantern, sky. Break.”</p>
+            </div>
+            <figure class="stage__fig">
+              <img src="../../../public/images/panels/f-radio-readback.webp" width="1600" height="900" loading="lazy" decoding="async" alt='Two radios with the handoff "Tag: copper, lantern, sky. Break." and a read-back.' />
+            </figure>
+          </li>
+        </ol>
+
+        <div class="workflow__foot">
+          <p><span class="workflow__label">Example code</span> <code class="code">zz-copper-lantern-sky-zz</code></p>
+          <p>For a field code made with no device, link and reconcile later.</p>
+          <p><a class="link-arrow" href="https://zero-state-llc.github.io/zzthis/demo/">Try the scripted demo</a></p>
+        </div>
+      </section>
+
+      <!-- Real photos · the only images on the page that are not renderings -->
+      <section class="hands" aria-labelledby="hands-title">
+        <div class="hands__head">
+          <h2 id="hands-title">Codes written by hand</h2>
+          <p>Real photos of real handwriting. Everything else on this page is a concept rendering.</p>
+        </div>
+        <ul class="hands__wall">
+          <li class="pin" style="--tilt: -2deg">
+            <img src="../../../public/images/handwritten/hw-agent-notes.webp" width="624" height="827" loading="lazy" decoding="async" alt="Handwritten paper notes reading zz-patient name-zz, zz-ai@ agentsmith-zz, and zz dojo mojo glade-zz." />
+            <p>zz-ai@ agentsmith-zz</p>
+          </li>
+          <li class="pin" style="--tilt: 1.5deg">
+            <img src="../../../public/images/handwritten/hw-usps-tally.webp" width="900" height="1200" loading="lazy" decoding="async" alt="Handwritten page with an address sketch marked with a zz-usps-apple code, the line zz- be bold be brave be beautiful-zz, and a circled (zz) bravo code with four tally marks." />
+            <p>zz- be bold be brave be beautiful-zz</p>
+          </li>
+          <li class="pin" style="--tilt: -1deg">
+            <img src="../../../public/images/handwritten/hw-mark-on-object.webp" width="900" height="1200" loading="lazy" decoding="async" alt="A framed Flower Power print with a circled capital-letter zz sticker in the lower left and a handwritten zz note with a smiley in the lower right." />
+            <p>zz mark on an object</p>
+          </li>
+          <li class="pin" style="--tilt: 2.2deg">
+            <img src="../../../public/images/handwritten/hw-dog-collar-tag.webp" width="900" height="1200" loading="lazy" decoding="async" alt="A plush corgi wearing a round red collar tag marked with a capital-letter zz, to identify the dog." />
+            <p>zz tag on a dog collar</p>
+          </li>
+        </ul>
+      </section>
+
+      <!-- Field logistics · one large plate, two small -->
+      <section class="field" id="field-logistics" aria-labelledby="field-title">
+        <h2 id="field-title">Field logistics</h2>
+        <p>Hand-mark mixed items at the point of work; link the mark to a record.</p>
+        <p class="label">Concept illustrations. These panels show intended use, not a deployed system.</p>
+        <ul class="field__plates" tabindex="0" aria-label="Field logistics examples">
+          <li class="plate plate--lead">
+            <img src="../../../public/images/panels/a-duffels-crate.webp" width="1600" height="900" loading="lazy" decoding="async" alt="Olive duffels and a crate with blue tape marked zz-b2-smith-1-zz and zz-b2-4-zz." />
+            <p><strong>No-device items</strong> No-device marking on duffels and a crate.</p>
+          </li>
+          <li class="plate">
+            <img src="../../../public/images/panels/alt-b-weathered-crate.webp" width="1600" height="900" loading="lazy" decoding="async" alt="Weathered crate label with a handwritten blue-tape code over a barcode." />
+            <p><strong>Obscured label</strong></p>
+          </li>
+          <li class="plate">
+            <img src="../../../public/images/panels/c-pallet-circled.webp" width="1600" height="900" loading="lazy" decoding="async" alt="Wrapped pallet hand-printed with (zz) camp bravo four two (zz)." />
+            <p><strong>Wrapped pallet</strong> Wrapped mixed-goods pallet with circled zz marker.</p>
+          </li>
+        </ul>
+      </section>
+
+      <!-- From photo to action · three steps joined by a marker line, then two cards -->
+      <section class="action" id="photo-to-action" aria-labelledby="action-title">
+        <h2 id="action-title">From photo to action</h2>
+        <p>A second layer after the handwritten code: see an item, identify it, choose its next task.</p>
+        <p class="label">Concept illustrations. These panels show intended use, not a deployed system.</p>
+        <ol class="action__steps" aria-label="From photo to action, three steps">
+          <li>
+            <img src="../../../public/images/panels/j-photo-to-action.webp" width="1448" height="1086" loading="lazy" decoding="async" alt="Soldier photographing loose and broken items on a vehicle tailgate." />
+            <p><span class="action__n">01</span> Photograph</p>
+            <p class="cap">Loose or broken items; spoken note.</p>
+          </li>
+          <li>
+            <img src="../../../public/images/panels/k-ai-guidance.webp" width="1448" height="1086" loading="lazy" decoding="async" alt="Rugged phone boxing each item with a proposed next step." />
+            <p><span class="action__n">02</span> Guide</p>
+            <p class="cap">Confirmed item and handling choices.</p>
+          </li>
+          <li>
+            <img src="../../../public/images/panels/l-turn-in-form.webp" width="1448" height="1086" loading="lazy" decoding="async" alt="Tablet turn-in request form with item fields and attached photos." />
+            <p><span class="action__n">03</span> Review</p>
+            <p class="cap">Prepared form and photos.</p>
+          </li>
+        </ol>
+        <div class="action__pair">
+          <figure>
+            <img src="../../../public/images/panels/m-shelf-inventory.webp" width="1448" height="1086" loading="lazy" decoding="async" alt="Day 1 and Day 4 shelf photos; water at about two days left with a reorder prompt." />
+            <figcaption><strong>Inventory assistant</strong> Same shelf across days; lower stock and proposed reorder.</figcaption>
+          </figure>
+          <figure>
+            <img src="../../../public/images/panels/n-touch-first.webp" width="1448" height="1086" loading="lazy" decoding="async" alt="Phone screen with a recognized item being dragged onto large action buttons." />
+            <figcaption><strong>Touch first</strong> Drag an identified item to an action; offer voice input.</figcaption>
+          </figure>
+        </div>
+        <p class="action__flow">
+          AI-assisted work: PHOTOGRAPH one or more items → CONFIRM the proposed identification → choose a handling or
+          inventory action by touch or voice → REVIEW the prepared record or form.
+        </p>
+      </section>
+
+      <!-- More applications · uneven spans, one row of thumbnails each -->
+      <section class="apps" id="applications" aria-labelledby="apps-title">
+        <h2 id="apps-title">More applications</h2>
+        <p>The same writable code works in other settings.</p>
+        <div class="apps__grid">
+          <article class="app app--wide">
+            <div class="app__imgs">
+              <img src="../../../public/images/panels/g-parcel.webp" width="1600" height="900" loading="lazy" decoding="async" alt="Parcel with zz-river-maple-sky-zz handwritten beside the address." />
+              <img src="../../../public/images/panels/o-pack-and-ship.webp" width="1448" height="1086" loading="lazy" decoding="async" alt="Phone packing guidance for a guitar and an appliance with a zz parcel code." />
+            </div>
+            <span class="tag">Concept illustration</span>
+            <h3>Postal and parcel</h3>
+            <p>Write a reference directly on a parcel; photograph loose items and receive packing guidance before choosing a parcel code.</p>
+          </article>
+          <article class="app">
+            <div class="app__imgs"><img src="../../../public/images/panels/j-photo-to-action.webp" width="1448" height="1086" loading="lazy" decoding="async" alt="Soldier photographing loose and broken items on a vehicle tailgate." /></div>
+            <span class="tag">Concept illustration</span>
+            <h3>Field logistics</h3>
+            <p>Hand-mark bags, crates, pallets, and mixed goods; read or relay a code; connect it to existing identifiers. Then photograph loose items, prepare a turn-in, compare inventory, and use touch-first actions.</p>
+          </article>
+          <article class="app">
+            <div class="app__imgs"><img src="../../../public/images/panels/h-lost-cat.webp" width="1600" height="902" loading="lazy" decoding="async" alt="Lost-cat flyer with zz-kathy-lost-cat-zz being scanned by a phone." /></div>
+            <span class="tag">Concept illustration</span>
+            <h3>Everyday and community</h3>
+            <p>A handwritten code on a lost-cat flyer or other public surface can lead to a useful page.</p>
+          </article>
+          <article class="app">
+            <div class="app__imgs"><img src="../../../public/images/panels/i-agent-alias.webp" width="1600" height="900" loading="lazy" decoding="async" alt="Laptop showing a short zz alias mapped to a long agent address." /></div>
+            <span class="tag">Concept illustration</span>
+            <h3>Digital aliases</h3>
+            <p>A short human-readable code can stand in for a long machine address used by software agents.</p>
+          </article>
+        </div>
+        <p><a class="link-arrow" href="https://zero-state-llc.github.io/zzthis/applications/">All applications</a></p>
+      </section>
+
+      <!-- About and contact · the address written on masking tape -->
+      <section class="close" aria-label="About and contact">
+        <div class="close__about" id="about">
+          <h2>About and people</h2>
+          <p>Meet Michael and the advisors; see prototype explorations.</p>
+          <p><a class="link-arrow" href="https://zero-state-llc.github.io/zzthis/about/">About zzThis</a></p>
+        </div>
+        <div class="close__contact" id="contact">
+          <h2>Contact</h2>
+          <p>Discuss field feedback, a pilot, or collaboration.</p>
+          <a class="mailtape" data-apply="right" href="mailto:1@1000x10.com"><span class="hand">1@1000x10.com</span></a>
+        </div>
+      </section>
+    </main>
+
+    <!-- Ft1 · Mast-headed -->
+    <footer class="foot">
+      <img class="foot__mark only-light" src="../../../public/images/logos/zzthis-logo-on-light.webp" width="464" height="129" alt="zzThis" loading="lazy" />
+      <img class="foot__mark only-dark" src="../../../public/images/logos/zzthis-logo-on-dark.webp" width="480" height="140" alt="zzThis" loading="lazy" />
+      <nav class="foot__nav" aria-label="Footer">
+        <a href="#how-it-works">How it works</a>
+        <a href="#applications">Applications</a>
+        <a href="https://zero-state-llc.github.io/zzthis/demo/">Demo</a>
+        <a href="#about">About</a>
+        <a href="#contact">Contact</a>
+      </nav>
+      <p class="foot__meta">Contact: <a href="mailto:1@1000x10.com">1@1000x10.com</a> <span>Patent pending</span></p>
+    </footer>
+
+    <script src="tape.js" defer></script>
+  </body>
+</html>

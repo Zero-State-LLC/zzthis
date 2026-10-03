@@ -1,0 +1,205 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>Applications · zzThis · Sample B v1.0</title>
+    <meta name="description" content="AI belongs across field logistics and parcel workflows. Digital aliases are a separate application." />
+    <meta name="color-scheme" content="dark light" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans+Condensed:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&display=swap"
+    />
+    <link rel="stylesheet" href="tokens.css" />
+    <link rel="stylesheet" href="resolver.css" />
+    <link rel="stylesheet" href="pages.css" />
+  </head>
+  <body>
+    <a class="skip" href="#main">Skip to content</a>
+
+    <header class="nav">
+      <a class="nav__mark" href="index.html" aria-label="zzThis home">
+        <img class="only-dark" src="../../../public/images/logos/zzthis-logo-on-dark.webp" width="480" height="140" alt="" />
+        <img class="only-light" src="../../../public/images/logos/zzthis-logo-on-light.webp" width="464" height="129" alt="" />
+      </a>
+      <a class="pill" href="index.html#lookup" aria-label="Look up a code on the home page (press slash)">
+        <span class="pill__code">zz-···-zz</span>
+        <span class="pill__text">Look up a code</span>
+        <kbd>/</kbd>
+      </a>
+      <nav class="nav__links" id="nav" aria-label="Main">
+        <a href="index.html#how-it-works">How it works</a>
+        <a href="applications.html" aria-current="page">Applications</a>
+        <a href="about.html">About</a>
+        <a href="index.html#contact">Contact</a>
+      </nav>
+      <button class="nav__menu" type="button" aria-expanded="false" aria-controls="nav" data-menu>Menu</button>
+      <button class="theme" type="button" data-theme-toggle aria-label="Switch theme">
+        <svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="10" cy="10" r="7.5" /><path d="M10 2.5a7.5 7.5 0 0 1 0 15z" /></svg>
+      </button>
+    </header>
+
+    <main id="main">
+      <section class="page-head" aria-labelledby="apps-title">
+        <div class="page-head__copy">
+          <h1 id="apps-title">Applications</h1>
+          <p class="page-head__lede">AI belongs across field logistics and parcel workflows. Digital aliases are a separate application.</p>
+          <p class="label">Concept renderings. The panel images on this page show intended use, not a deployed system.</p>
+        </div>
+        <nav aria-label="Applications on this page">
+          <ul class="jump">
+            <li><a href="#field">Field logistics</a></li>
+            <li><a href="#parcel">Postal and parcel</a></li>
+            <li><a href="#community">Everyday and community</a></li>
+            <li><a href="#aliases">Digital aliases</a></li>
+          </ul>
+        </nav>
+      </section>
+
+      <!-- Field logistics -->
+      <section class="app-sec" id="field" aria-labelledby="field-title">
+        <h2 id="field-title">Field logistics</h2>
+        <p class="app-sec__story">Hand-mark bags, crates, pallets, and mixed goods; read or relay a code; connect it to existing identifiers. Then photograph loose items, prepare a turn-in, compare inventory, and use touch-first actions.</p>
+        <ul class="gal gal--panels">
+          <li><figure><img src="../../../public/images/panels/a-duffels-crate.webp" width="1600" height="900" loading="lazy" decoding="async" alt="Olive duffels and a crate with blue tape marked zz-b2-smith-1-zz and zz-b2-4-zz." /><figcaption><b>No-device items</b> No-device marking on duffels and a crate.</figcaption></figure></li>
+          <li><figure><img src="../../../public/images/panels/alt-b-weathered-crate.webp" width="1600" height="900" loading="lazy" decoding="async" alt="Weathered crate label with a handwritten blue-tape code over a barcode." /><figcaption><b>Obscured label</b></figcaption></figure></li>
+          <li><figure><img src="../../../public/images/panels/c-pallet-circled.webp" width="1600" height="900" loading="lazy" decoding="async" alt="Wrapped pallet hand-printed with (zz) camp bravo four two (zz)." /><figcaption><b>Wrapped pallet</b> Wrapped mixed-goods pallet with circled zz marker.</figcaption></figure></li>
+          <li><figure><img src="../../../public/images/panels/d-camera-read.webp" width="1600" height="900" loading="lazy" decoding="async" alt="Phone camera framing a handwritten crate code with offline and checksum indicators." /><figcaption><b>Read</b> Camera or manual entry.</figcaption></figure></li>
+          <li><figure><img src="../../../public/images/panels/e-linked-record.webp" width="1600" height="800" loading="lazy" decoding="async" alt="Tablet record card linking a code to NSN, document number, hand receipt, and photo." /><figcaption><b>Link</b> Code linked to NSN, document number, hand receipt, and photo.</figcaption></figure></li>
+          <li><figure><img src="../../../public/images/panels/f-radio-readback.webp" width="1600" height="900" loading="lazy" decoding="async" alt='Two radios with the handoff "Tag: copper, lantern, sky. Break." and a read-back.' /><figcaption><b>Report</b> Radio cue and read-back: three code words.</figcaption></figure></li>
+          <li><figure><img src="../../../public/images/panels/j-photo-to-action.webp" width="1448" height="1086" loading="lazy" decoding="async" alt="Soldier photographing loose and broken items on a vehicle tailgate." /><figcaption><b>Photograph</b> Loose or broken items; spoken note.</figcaption></figure></li>
+          <li><figure><img src="../../../public/images/panels/k-ai-guidance.webp" width="1448" height="1086" loading="lazy" decoding="async" alt="Rugged phone boxing each item with a proposed next step." /><figcaption><b>Guide</b> Confirmed item and handling choices.</figcaption></figure></li>
+          <li><figure><img src="../../../public/images/panels/l-turn-in-form.webp" width="1448" height="1086" loading="lazy" decoding="async" alt="Tablet turn-in request form with item fields and attached photos." /><figcaption><b>Review</b> Prepared form and photos.</figcaption></figure></li>
+          <li><figure><img src="../../../public/images/panels/m-shelf-inventory.webp" width="1448" height="1086" loading="lazy" decoding="async" alt="Day 1 and Day 4 shelf photos; water at about two days left with a reorder prompt." /><figcaption><b>Inventory assistant</b> Same shelf across days; lower stock and proposed reorder.</figcaption></figure></li>
+          <li><figure><img src="../../../public/images/panels/n-touch-first.webp" width="1448" height="1086" loading="lazy" decoding="async" alt="Phone screen with a recognized item being dragged onto large action buttons." /><figcaption><b>Touch first</b> Drag an identified item to an action; offer voice input.</figcaption></figure></li>
+        </ul>
+      </section>
+
+      <!-- Postal and parcel -->
+      <section class="app-sec" id="parcel" aria-labelledby="parcel-title">
+        <h2 id="parcel-title">Postal and parcel</h2>
+        <p class="app-sec__story">Write a reference directly on a parcel; photograph loose items and receive packing guidance before choosing a parcel code.</p>
+        <ul class="gal gal--2 gal--panels">
+          <li><figure><img src="../../../public/images/panels/g-parcel.webp" width="1600" height="900" loading="lazy" decoding="async" alt="Parcel with zz-river-maple-sky-zz handwritten beside the address." /><figcaption><b>Postal and parcel</b> Handwritten code on a parcel beside the address.</figcaption></figure></li>
+          <li><figure><img src="../../../public/images/panels/o-pack-and-ship.webp" width="1448" height="1086" loading="lazy" decoding="async" alt="Phone packing guidance for a guitar and an appliance with a zz parcel code." /><figcaption><b>Pack and ship</b> Guitar and appliance packing guidance; handwritten zz parcel code.</figcaption></figure></li>
+        </ul>
+
+        <div class="sub">
+          <ul class="gal gal--single">
+            <li><figure><img src="../../../public/images/applications/super-identifier-labels.webp" width="268" height="200" loading="lazy" decoding="async" alt="Stacked UPS, DHL, and FedEx Express shipping labels. The FedEx Large Pak label shows From: PAC-987-654-3210-XYZ and To: PAC-123-456-7890-QTR." /><figcaption><span class="tag">Concept illustration</span><b>One super identifier</b> Carrier labels that can carry one zz-Code ID.</figcaption></figure></li>
+          </ul>
+          <p class="closing">By appending a single 'super identifier' to legacy systems, we create a unified data node system to give current analog logistics the new digital-smart AI solutions and network. In the above, in theory, a FedEx overnight shipper can only put the zz-Code ID on the package and its deliverer in the fulfillment chain in anonymous, until the final touch with the receiver.</p>
+        </div>
+
+        <!-- v1.0 §7: renamed, new privacy line, collage removed, Step 3 corrected. -->
+        <div class="sub" id="anonymous">
+          <h3>End-to-end anonymous concept use cases</h3>
+          <p>The merchant never receives the customer's personal data or payment details, only a zz-code and a security code. Nothing personal appears on the outside of the package. The customer picks it up at a drop-off store by giving a secret code or signing with a private key.</p>
+          <p class="label">Concept illustrations. These panels show intended use, not a deployed system.</p>
+          <ol class="gal gal--4 steps">
+            <li><figure><img src="../../../public/images/applications/delivery-1-purchase.webp" width="337" height="422" loading="lazy" decoding="async" alt="A woman on a sofa orders on her phone. A panel beside her shows a cart, a shoe, and a delivery option switched on." /><figcaption><span class="step-n">Step 1</span><span class="step-t">Anonymous customer orders online</span> Purchase: Customer selects reduced-exposure delivery.</figcaption></figure></li>
+            <li><figure><img src="../../../public/images/applications/delivery-2-fulfillment.webp" width="340" height="421" loading="lazy" decoding="async" alt="A warehouse worker in gloves handles a box on a conveyor. The box label reads zz-apple-sky-5678-zz." /><figcaption><span class="step-n">Step 2</span><span class="step-t">Merchant ships only with the zz-Code</span> Fulfillment: The parcel displays only a shipment reference.</figcaption></figure></li>
+            <li><figure><img src="../../../public/images/applications/delivery-3-last-mile.webp" width="337" height="425" loading="lazy" decoding="async" alt="A courier beside a delivery van checks his phone while holding a box labeled zz-apple-sky-5678-zz." /><figcaption><span class="step-n">Step 3</span><span class="step-t">Delivery man only knows drop-off address</span> Last mile: The assigned courier receives task-limited address access.</figcaption></figure></li>
+            <li><figure><img src="../../../public/images/applications/delivery-4-pickup.webp" width="340" height="425" loading="lazy" decoding="async" alt="A customer holds up her phone at a pickup counter while a staff member hands over a box labeled zz-apple-sky-5678-zz." /><figcaption><span class="step-n">Step 4</span><span class="step-t">Anonymous customer gives matching secret code or signature</span> Pickup: A private credential authorizes release at a secure pickup point.</figcaption></figure></li>
+          </ol>
+          <p class="closing">This is an example of end-to-end anonymous delivery to a drop store and anonymous pickup. The receiver would pick up by identification using private-key to the package’s public key.</p>
+          <p class="closing">This reduces potential for customer data breach by keeping customer information including payment account from the merchants’ applications.</p>
+        </div>
+      </section>
+
+      <!-- Everyday and community -->
+      <section class="app-sec" id="community" aria-labelledby="community-title">
+        <h2 id="community-title">Everyday and community</h2>
+        <p class="app-sec__story">A handwritten code on a lost-cat flyer or other public surface can lead to a useful page.</p>
+        <ul class="gal gal--single gal--panels">
+          <li><figure><img src="../../../public/images/panels/h-lost-cat.webp" width="1600" height="902" loading="lazy" decoding="async" alt="Lost-cat flyer with zz-kathy-lost-cat-zz being scanned by a phone." /><figcaption><span class="tag">Concept illustration</span><b>Everyday and community</b> Lost-cat flyer with handwritten code.</figcaption></figure></li>
+        </ul>
+
+        <div class="sub">
+          <p class="label">Concept illustrations. These panels show intended use, not a deployed system.</p>
+          <ul class="gal gal--3">
+            <li><figure><img src="../../../public/images/applications/for-sale-lamp.webp" width="590" height="488" loading="lazy" decoding="async" alt="A table lamp with a handwritten paper tag reading zz-1234ABCD-zz, under a For Sale banner." /><figcaption><b>For sale</b> A zz-code attached to a lamp (object) for sale.</figcaption></figure></li>
+            <li><figure><img src="../../../public/images/applications/help-wanted-sign.webp" width="595" height="492" loading="lazy" decoding="async" alt="A handwritten HELP WANTED sign on a glass door with zz-1234ABCD-zz written below." /><figcaption><b>Help wanted</b> A help wanted sign with the zz-code.</figcaption></figure></li>
+            <li><figure><img src="../../../public/images/applications/event-cancelled-sign.webp" width="618" height="421" loading="lazy" decoding="async" alt="A handwritten EVENT CANCELLED sign reading zz-123XYZ-zz on a door. A phone beside it shows the zzthis app: Code recognized, Event Update, Event Cancelled." /><figcaption><b>Event cancelled</b> An “Event Cancelled” sign with the zz-code.</figcaption></figure></li>
+          </ul>
+        </div>
+
+        <div class="sub">
+          <p class="label">Concept illustrations. These panels show intended use, not a deployed system.</p>
+          <ul class="gal gal--3">
+            <li><figure><img src="../../../public/images/applications/connect-guest-wifi.webp" width="293" height="328" loading="lazy" decoding="async" alt="A table sign reading zz Guest WiFi connect zz with a Wi-Fi icon. A phone shows the zzthis app opening the guest Wi-Fi details." /><figcaption><b>Connect</b> A sign code opens guest Wi-Fi details.</figcaption></figure></li>
+            <li><figure><img src="../../../public/images/applications/shop-pay-booth.webp" width="294" height="327" loading="lazy" decoding="async" alt="A table sign reading zz Maria flea market booth 12 zz. A phone shows the zzthis app opening the vendor page with items, a pay link, and contact." /><figcaption><b>Shop / Pay</b> A booth code opens the vendor page.</figcaption></figure></li>
+            <li><figure><img src="../../../public/images/applications/donate-booth.webp" width="291" height="333" loading="lazy" decoding="async" alt="A table sign reading zz Hacker Dojo donate 11 zz. A phone shows the zzthis app opening a donation page." /><figcaption><b>Donate</b> A sign code opens a donation page.</figcaption></figure></li>
+          </ul>
+        </div>
+
+        <div class="sub">
+          <ul class="gal gal--single">
+            <li><figure><img src="../../../public/images/applications/trail-marker.webp" width="812" height="431" loading="lazy" decoding="async" alt="A wooden trail sign reading zz-TrailInfo-zz, Trail Info Code, with a hiker nearby. A phone shows the zzthis app with trail updates, a check-in, a safety alert, and a map." /><figcaption><span class="tag">Concept illustration</span><b>Trail marker</b> A trail marker tags in the park that visitors can scan and update with their posts, etc.</figcaption></figure></li>
+          </ul>
+        </div>
+
+        <div class="sub">
+          <p class="label">Concept illustrations. These panels show intended use, not a deployed system.</p>
+          <ul class="gal gal--3">
+            <li><figure><img src="../../../public/images/applications/share-infographic.webp" width="368" height="481" loading="lazy" decoding="async" alt="Infographic titled Share: readable short codes for everyday sharing. Example codes: zz Alex photos wedding zz, zz Maya resume zz, zz Sam playlist zz." /><figcaption><b>Share</b> Wedding photos and other everyday sharing with a zz-code.</figcaption></figure></li>
+            <li><figure><img src="../../../public/images/applications/community-infographic.webp" width="389" height="480" loading="lazy" decoding="async" alt="Infographic titled Community: make flyers actionable without forcing a QR code. A lost dog flyer and a block party sign, with codes zz Lost dog maple street zz, zz Block party RSVP zz, and zz Free couch pickup zz." /><figcaption><b>Community</b> Lost dog and block party signs with a zz-code.</figcaption></figure></li>
+            <li><figure><img src="../../../public/images/applications/handwritten-works-infographic.webp" width="394" height="482" loading="lazy" decoding="async" alt="Infographic titled Handwritten works: no printer, no QR generator, just write the code. Signs for a lemonade stand, a garage sale, and a lost cat, with codes zz Lemonade stand pay zz, zz Garage sale map zz, and zz Lost cat help zz." /><figcaption><b>Handwritten works</b> Lemonade stand and lost cat signs with a zz-code.</figcaption></figure></li>
+          </ul>
+        </div>
+
+        <div class="sub">
+          <h3>Businesses</h3>
+          <p>Businesses can convert their product names with the scannable zz-Codes.</p>
+          <p class="real">Real photos.</p>
+          <ul class="pair">
+            <li><figure><img src="../../../public/images/applications/business-tape-before.webp" width="395" height="300" loading="lazy" decoding="async" alt="Before: yellow company tape on a red post reading 510-786-2004, Western States Tool &amp; Supply, 1950 Alpine Way, Hayward, CA 94545." /><figcaption>Before: product tape with a phone number.</figcaption></figure></li>
+            <li><figure><img src="../../../public/images/applications/business-tape-after.webp" width="425" height="278" loading="lazy" decoding="async" alt="After, with the banner After with UZZ / zzthis: the same yellow tape now reads zz@-WESTERN-STATES-zz, Tool &amp; Supply, 1950 Alpine Way, Hayward, CA 94545." /><figcaption>After: the same tape with a scannable zz-Code.</figcaption></figure></li>
+          </ul>
+        </div>
+
+        <div class="sub">
+          <p>A commercial moving truck signage has a zz mark added to it, and people can scan it for the information.</p>
+          <p class="real">Real photos.</p>
+          <ul class="pair">
+            <li><figure><img src="../../../public/images/applications/truck-sign-before.webp" width="342" height="281" loading="lazy" decoding="async" alt="Before: a box truck with Filco Logistics LLC signage, Professional Moving &amp; Staging Transport, and a partly blurred phone number." /><figcaption>Before: printed company signage on a cargo truck.</figcaption></figure></li>
+            <li><figure><img src="../../../public/images/applications/truck-sign-after.webp" width="342" height="280" loading="lazy" decoding="async" alt="After: the same truck signage with a capital-letter zz mark added before the phone number 650-460." /><figcaption>After: a zz mark added so people can scan it for the information.</figcaption></figure></li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- Digital aliases -->
+      <section class="app-sec" id="aliases" aria-labelledby="aliases-title">
+        <h2 id="aliases-title">Digital aliases</h2>
+        <p class="app-sec__story">A short human-readable code can stand in for a long machine address used by software agents.</p>
+        <p class="app-sec__extra">Deeper blockchain/AI architecture can grow into a later page.</p>
+        <ul class="gal gal--single gal--panels">
+          <li><figure><img src="../../../public/images/panels/i-agent-alias.webp" width="1600" height="900" loading="lazy" decoding="async" alt="Laptop showing a short zz alias mapped to a long agent address." /><figcaption><span class="tag">Concept illustration</span><b>Digital aliases</b> Short agent alias standing in for a long machine address.</figcaption></figure></li>
+        </ul>
+        <div class="sub">
+          <ul class="gal gal--single">
+            <li><figure><img src="../../../public/images/applications/wallet-ens-alias.webp" width="733" height="436" loading="lazy" decoding="async" alt="An acrylic desk sign reading zz-vitalik.eth-zz, Wallet / Contact Code, with a QR code. A phone shows the zzthis app with zz-vitalik.eth-zz marked Verified and options to connect a wallet, add the address, save the contact, verify on-chain, and pay or tip." /><figcaption><span class="tag">Concept illustration</span><b>Wallet address</b> An Ethereum ENS address being scanned by a wallet with a zzThis function.</figcaption></figure></li>
+          </ul>
+        </div>
+      </section>
+    </main>
+
+    <footer class="colophon">
+      <nav aria-label="Footer">
+        <a href="index.html#how-it-works">How it works</a>
+        <a href="applications.html">Applications</a>
+        <a href="https://zero-state-llc.github.io/zzthis/demo/">Demo</a>
+        <a href="about.html">About</a>
+        <a href="index.html#contact">Contact</a>
+      </nav>
+      <p>
+        zzThis. Contact: <a href="mailto:1@1000x10.com">1@1000x10.com</a>. Patent pending. Panel images are concept
+        renderings that show intended use, not a deployed system, except where marked as real photos.
+      </p>
+    </footer>
+
+    <script src="site.js" defer></script>
+  </body>
+</html>

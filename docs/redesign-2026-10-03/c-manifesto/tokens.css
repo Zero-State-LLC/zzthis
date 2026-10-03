@@ -1,0 +1,84 @@
+/* Hallmark · tokens · sample C "Hi-Vis Manifesto"
+ * theme: custom (tuned) · vibe: "safety orange, poster slabs, stencil-grade type"
+ * paper oklch(95.3% 0.016 86) with charcoal bleed slabs · accent oklch(65.9% 0.215 38) brand orange #F85000
+ * axes: light + ink bleed / display-condensed (Archivo, width axis) / warm
+ */
+:root {
+  color-scheme: light dark;
+
+  --color-paper: light-dark(oklch(95.3% 0.016 86), oklch(19% 0.005 80));
+  --color-paper-2: light-dark(oklch(91.7% 0.021 86), oklch(23% 0.006 78));
+  --color-ink: light-dark(oklch(20% 0.005 85), oklch(95% 0.014 86));
+  --color-ink-2: light-dark(oklch(38% 0.013 82), oklch(80% 0.02 85));
+  --color-slab: light-dark(oklch(20% 0.005 85), oklch(27% 0.007 78));
+  --color-on-slab: oklch(95.3% 0.016 86);
+  --color-on-slab-2: oklch(80% 0.02 85);
+  --color-slab-rule: oklch(38% 0.01 80);
+
+  --color-accent: oklch(65.9% 0.215 38);
+  --color-on-accent: oklch(20% 0.005 85);
+  --color-accent-ink: light-dark(oklch(47% 0.17 38), oklch(73% 0.17 42));
+  --color-focus: light-dark(oklch(50% 0.19 38), oklch(76% 0.16 44));
+
+  --font-display: "Archivo", "Arial Narrow", sans-serif;
+  --font-body: "Archivo", system-ui, sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, monospace;
+
+  --text-xs: 0.8125rem;
+  --text-sm: 0.9375rem;
+  --text-base: 1.0625rem;
+  --text-md: 1.3rem;
+  --text-lg: 1.7rem;
+  --text-xl: clamp(2rem, 3vw + 1rem, 3.4rem);
+  --text-display-s: clamp(2.4rem, 4.4vw + 1rem, 5rem);
+  --text-display: clamp(3rem, 7.4vw + 1rem, 7.5rem);
+  --text-numeral: clamp(4rem, 12vw, 10rem);
+
+  --space-3xs: 4px;
+  --space-2xs: 6px;
+  --space-xs: 10px;
+  --space-sm: 16px;
+  --space-md: 26px;
+  --space-lg: 42px;
+  --space-xl: 68px;
+  --space-2xl: 110px;
+  --space-3xl: 178px;
+
+  --gutter: 16px;
+  --max: 1320px;
+  --measure: 60ch;
+  --rule-heavy: 6px;
+  --radius-none: 0;
+
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in: cubic-bezier(0.7, 0, 0.84, 0);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+  --dur-micro: 120ms;
+  --dur-short: 220ms;
+  --dur-long: 420ms;
+  --dur-stretch: 1100ms;
+
+  --z-base: 1;
+  --z-sticky: 10;
+  --z-menu: 20;
+}
+
+:root[data-theme="light"] {
+  color-scheme: light;
+}
+
+:root[data-theme="dark"] {
+  color-scheme: dark;
+}
+
+@media (min-width: 40rem) {
+  :root {
+    --gutter: 26px;
+  }
+}
+
+@media (min-width: 60rem) {
+  :root {
+    --gutter: 42px;
+  }
+}

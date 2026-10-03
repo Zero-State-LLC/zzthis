@@ -10,7 +10,7 @@
 > | 7 Workflows | Superseded by the Workflows section in each `specs/*/spec.md`. The "OPEN Q13" and "draft PR" text below is stale. |
 > | 8 Acceptance | [`specs/001-marketing-site/checklists/requirements.md`](../specs/001-marketing-site/checklists/requirements.md) |
 > | 2.2a v1 text grammar | Accepted 2026-10-03 from Michael's Q48 and Q49 answers; updated the same day from his answers to Q50 to Q61 (draft, pending Danny's merge). Implemented by the spec 003 library (US3). |
-> | 9 Questions | Question table. Q21 to Q39 were added on 2026-10-02; Q49 to Q61 on 2026-10-03, and Q50 to Q61 were answered the same day. Section 9a is the running decisions log. |
+> | 9 Questions | Question table. Q21 to Q39 were added on 2026-10-02; Q49 to Q61 on 2026-10-03, and Q50 to Q61 were answered the same day. Q62 (2026-10-03) keeps the hero headline em dash and supersedes Q47 for the H1. Section 9a is the running decisions log. |
 > | 12 Roadmap | v1 scope, exit criteria, and v2 candidates. |
 > | 10 Architecture | [`specs/002-resolver-core/plan.md`](../specs/002-resolver-core/plan.md), [`specs/004-capture/plan.md`](../specs/004-capture/plan.md) |
 >
@@ -428,7 +428,7 @@ The 2026-10-02 brief and wireframes add Adam Fry and drop the Future space card.
 3. H.1 desktop: The text column holds the H1, subline, actions, and paragraph. The image column holds b. The 1:1.618 ratio is unchanged.
 4. H.1: The focal point of image b sits on the tape code, so the mark stays visible in every crop [WIRE]. Caption: "Word code on blue tape beside an obscured barcode." [BRIEF]
 5. H.1: Keep both buttons. The desktop wireframe shows only the primary action, but the [BRIEF] specifies both [BRIEF].
-6. H.1: The H1 reads "writable - and smart." with a spaced hyphen, as typed in Michael's alternate hero copy [MICHAEL 2026-10-02] (Q47; Jev decision 2026-10-02). This replaces the Q1 em dash. No em dash is allowed anywhere in site copy.
+6. H.1: The H1's spaced hyphen ("writable - and smart."), as typed in Michael's alternate hero copy [MICHAEL 2026-10-02] (Q47; Jev decision 2026-10-02), replaced the Q1 em dash. SUPERSEDED by Q62: the hero headline keeps the em dash in "readable-writable — and smart." [DANNY 2026-10-03; Michael v1.0 change list]. That hero headline em dash is the one allowed exception. No other em dash is allowed in site copy.
 7. H.3: Render the comparison as four cards, in this order: Barcode, QR code, Alphanumeric code, and zzThis [MICHAEL 2026-10-02]. This replaces the three cards in [WIRE] and the [BRIEF] cells. Each card has four labeled rows (Create the mark, Read the mark, What it connects, Easy to say and remember) that use the H.3 cells verbatim. The note under the cards is both H.3 sentences verbatim (Q41 RESOLVED). Keep the section number "02" and the current card design: dark cards, small uppercase monospace row labels set by CSS, divider lines, and the corner detail. Only the zzThis card has the accent edge, and it stays last. Layout: four equal columns at ≥ 900 px, a 2×2 grid at 600–899 px, and stacked single cards below 600 px, with no horizontal scrolling. At ≥ 900 px each row aligns across all four cards, so a longer cell pushes the same row down on every card [MICHAEL 2026-10-02].
 8. The Section 3.2 order conflict is resolved by [WIRE]: comparison → How it works → Field logistics → From photo to action. Q2 is closed.
 
@@ -443,13 +443,13 @@ Reading order follows Do / Re / Mi / Fa as rhythm only. No beat labels are print
 Image: `public/images/panels/b-crate-word-code.webp`, eager loaded, `fetchpriority="high"`. At 900 px and wider, the image and text sit side by side at about 1.618:1 (image:text). On phones, the image appears above the text so that the image comes before the description [BRIEF; layout INFERRED].
 
 ```copy
-H1: Barcodes made things scannable. zzThis makes them writable - and smart.
+H1: Barcodes made things scannable. zzThis makes things readable-writable — and smart.
 P:  zzThis is a human-readable, human-writable code for the physical world. Write zz-copper-lantern-sky-zz on tape, a crate, a parcel, or a sign. Link it to a digital record, then find it by camera, typing, or voice.
 Primary button:   See field logistics   → /#field-logistics
 Secondary button: How it works          → /how-it-works
 ```
 
-[BRIEF] The paragraph is the 2026-10-02 text [MICHAEL 2026-10-02] (Q47 RESOLVED). The H1 uses the alternate draft's spaced hyphen ("writable - and smart.") as typed [MICHAEL 2026-10-02] (Q47; Jev decision 2026-10-02), replacing the Q1 em dash. Image b carries the "Concept illustration" tag in its caption [MICHAEL 2026-10-02]. Render the code in IBM Plex Mono (INFERRED).
+[BRIEF] The paragraph is the 2026-10-02 text [MICHAEL 2026-10-02] (Q47 RESOLVED). The H1's spaced hyphen ("writable - and smart.") as typed [MICHAEL 2026-10-02] (Q47; Jev decision 2026-10-02) replaced the Q1 em dash, and is SUPERSEDED by Q62: the hero headline keeps the em dash in "readable-writable — and smart." [DANNY 2026-10-03; Michael v1.0 change list]. That hero headline em dash is the one allowed exception. The H1 above is the v1.0 headline (Michael v1.0 change list §1, second line); the live `src/content/hero.ts`, `scripts/check-dist.mjs`, and `tests/content.test.ts` still carry the Q47 wording until the B v1.0 `src/` PR lands (spec 001 T033). Image b carries the "Concept illustration" tag in its caption [MICHAEL 2026-10-02]. Render the code in IBM Plex Mono (INFERRED).
 
 #### H.2 Featured statement (Do)
 
@@ -949,7 +949,7 @@ package-lock.json
 2. Each page has exactly one `<h1>`, and no heading level is skipped.
 3. The nav shows, in order: How it works, Applications, About, Contact. The footer shows How it works, Applications, Demo, About, Contact, then "Patent pending" [MICHAEL 2026-10-02].
 4. The hero H1, subline, paragraph, featured statement, comparison cells, workflow lines, and category stories match Sections 3.2–3.4 character for character. This check uses a snapshot test of the content objects.
-5. No rendered copy contains an em dash (—) [MICHAEL 2026-10-02] (Q47: the hero H1 now uses a spaced hyphen).
+5. No rendered copy contains an em dash (—) [MICHAEL 2026-10-02], except the hero headline em dash in "readable-writable — and smart." [DANNY 2026-10-03; Michael v1.0 change list] (Q62, which supersedes Q47's spaced hyphen for the H1). That headline em dash is the one allowed exception.
 6. The Home section order matches Section 3.1a. Field logistics and From photo to action contain the most image cards on Home.
 7. Panel placement matches Section 3.8. j, k, and l render as an ordered list labeled 01 to 03.
 8. Concept labels follow Section 3.1a [MICHAEL 2026-10-02]: standalone panels carry "Concept illustration", each grouped gallery has one label above it, and the About prototype block has one. `/zzthis/demo` shows the "Demo · mock data" badge on every step, A0–A7 and B0–B4.
@@ -1031,7 +1031,7 @@ Michael's answers arrived on 2026-10-02 through Danny (issue #10), in an updated
 | Q44 | Add the Hacker Dojo block ("advisory network", mentoring, named nearby companies, an advisor-led series, Army framing)? Needs Hacker Dojo's and Arshi Chadha's confirmation and wording without endorsement or superlatives | RESOLVED: use as given [MICHAEL 2026-10-02]. New About section after the founder. The Location line stays. |
 | Q45 | Permission to use the Hacker Dojo logo | RESOLVED: use as given [MICHAEL 2026-10-02]. The logo is on the About page. Michael will ask Hacker Dojo for permission once the beta is live. |
 | Q46 | Are the supplied headshots (Michael, Patrick, Arshi, Ridham) approved originals with each person's consent, not LinkedIn copies (Q6)? | RESOLVED: use as given [MICHAEL 2026-10-02]. Those four cards show the supplied headshots. Michael will ask the people pictured for permission once the beta is live. |
-| Q47 | Adopt the alternate hero paragraph, featured text, or "deeper section" copy that Michael shared as a reference on 2026-10-02? | RESOLVED: use as given [MICHAEL 2026-10-02]. The new hero paragraph and featured text ship, and the H1 uses the spaced hyphen as typed (Jev decision 2026-10-02). |
+| Q47 | Adopt the alternate hero paragraph, featured text, or "deeper section" copy that Michael shared as a reference on 2026-10-02? | RESOLVED: use as given [MICHAEL 2026-10-02]. The new hero paragraph and featured text ship, and the H1 uses the spaced hyphen as typed (Jev decision 2026-10-02). SUPERSEDED in its H1 part by Q62: the hero headline keeps the em dash in "readable-writable — and smart." [DANNY 2026-10-03; Michael v1.0 change list] |
 | Q48 | Codes shown in supplied images use uppercase letters or spaces (zz-1234ABCD-zz, zz Guest WiFi connect zz). Are codes case- and space-insensitive? | RESOLVED (issue #33) [MICHAEL 2026-10-02 #33]: yes. Case-insensitive; hyphens, spaces, or a mix are separators and a run counts as one; a code across two lines is one code; one canonical lowercase hyphen form is stored and displayed; a code with content needs a marker at both ends, and `(zz)` counts; a bare `zz` or `(zz)` is its own type, found by photo and place; never show a capital-letter zz mark. Rules in Section 2.2a. |
 | Q49 | Should codes allow `@` handles like `zz-@agentsmith-zz`? | RESOLVED (issue #34) [MICHAEL 2026-10-02 #34]: widen the rules. `@` only as the first character after the opening marker; it marks a handle; letters, numbers, `.` and `_` allowed inside a handle; the closing marker is required; store and display in lowercase; reserve `#`, `$`, `/`, `:` and reject them for now; macros are ordinary words; drawn symbols are a separate camera mode. Rules in Section 2.2a. |
 | Q50 | How many parts can a code have? (issue #36) | RESOLVED [MICHAEL 2026-10-03 #36]: no design limit; three kinds of zz-code (text, drawn, object). One or more parts; the 256-character input guard is the only cap; issued word codes keep Section 2.2 counts. Section 2.2a G5 |
@@ -1046,6 +1046,7 @@ Michael's answers arrived on 2026-10-02 through Danny (issue #10), in an updated
 | Q59 | Should single-part codes open private records? (issue #46) | RESOLVED [MICHAEL 2026-10-03 #46]: early examples; rules grow by context and language. v1: one-part codes for public use; a private record needs two or more parts or a signed-in user (INFERRED). Spec 002 FR-020 |
 | Q60 | Reserved handles list (issue #47) | RESOLVED [MICHAEL 2026-10-03 #47]: yes, reserves; free users cannot use corporate names or names like admin; premium tier for short names, as ENS (3 or more characters, shorter names cost more). Spec 002 FR-019 |
 | Q61 | Should `zz-` and `zz-zz` count as a bare mark? (issue #48) | RESOLVED [MICHAEL 2026-10-03 #48]: only `zz` and `(zz)` alone, in any case or mix. `zz-` and `zz-zz` fail. Section 2.2a G3; case note in Section 9a |
+| Q62 | Keep the v1.0 hero headline em dash ("zzThis makes things readable-writable — and smart.") in place of the Q47 spaced hyphen? | RESOLVED: yes. Keep the em dash [DANNY 2026-10-03; Michael v1.0 change list]. It is the one allowed exception to the no-em-dash rule. |
 
 ## 9a. Decisions log
 

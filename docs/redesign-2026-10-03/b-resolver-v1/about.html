@@ -1,0 +1,205 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>About zzThis · Sample B v1.0</title>
+    <meta name="description" content="A code a person can write anywhere, linked to a digital record and the next work." />
+    <meta name="color-scheme" content="dark light" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans+Condensed:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&display=swap"
+    />
+    <link rel="stylesheet" href="tokens.css" />
+    <link rel="stylesheet" href="resolver.css" />
+    <link rel="stylesheet" href="pages.css" />
+  </head>
+  <body>
+    <a class="skip" href="#main">Skip to content</a>
+
+    <header class="nav">
+      <a class="nav__mark" href="index.html" aria-label="zzThis home">
+        <img class="only-dark" src="../../../public/images/logos/zzthis-logo-on-dark.webp" width="480" height="140" alt="" />
+        <img class="only-light" src="../../../public/images/logos/zzthis-logo-on-light.webp" width="464" height="129" alt="" />
+      </a>
+      <a class="pill" href="index.html#lookup" aria-label="Look up a code on the home page (press slash)">
+        <span class="pill__code">zz-···-zz</span>
+        <span class="pill__text">Look up a code</span>
+        <kbd>/</kbd>
+      </a>
+      <nav class="nav__links" id="nav" aria-label="Main">
+        <a href="index.html#how-it-works">How it works</a>
+        <a href="applications.html">Applications</a>
+        <a href="about.html" aria-current="page">About</a>
+        <a href="index.html#contact">Contact</a>
+      </nav>
+      <button class="nav__menu" type="button" aria-expanded="false" aria-controls="nav" data-menu>Menu</button>
+      <button class="theme" type="button" data-theme-toggle aria-label="Switch theme">
+        <svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="10" cy="10" r="7.5" /><path d="M10 2.5a7.5 7.5 0 0 1 0 15z" /></svg>
+      </button>
+    </header>
+
+    <main id="main">
+      <section class="page-head page-head--about" aria-labelledby="about-title">
+        <div class="page-head__copy">
+          <h1 id="about-title">About zzThis</h1>
+          <p class="page-head__lede">A code a person can write anywhere, linked to a digital record and the next work.</p>
+        </div>
+        <aside class="contact-card" aria-label="Contact">
+          <p class="label">Contact</p>
+          <a class="mail" href="mailto:1@1000x10.com">1@1000x10.com</a>
+          <p>Invite collaboration and test partners.</p>
+        </aside>
+      </section>
+
+      <section class="block" aria-labelledby="explore-title">
+        <h2 id="explore-title">Current explorations</h2>
+        <p class="label">Both sites are concept-stage explorations.</p>
+        <ul class="explore">
+          <li><a href="https://zzthing.com">zzthing.com</a><p>Broader showcase and label mockups.</p></li>
+          <li><a href="https://zzthat.com">zzthat.com</a><p>Scanner/creator prototype; planned free web, Android, and iOS app.</p></li>
+        </ul>
+      </section>
+
+      <!-- v1.0 §5: the founder uses the advisors' card and headshot size. -->
+      <section class="block" aria-labelledby="founder-title">
+        <h2 id="founder-title">Founder</h2>
+        <ul class="people">
+          <li class="person--wide">
+            <article class="person">
+              <div class="person__head">
+                <img class="person__photo" src="../../../public/images/people/michael-chung.webp" width="440" height="440" alt="Michael Chung" loading="lazy" decoding="async" />
+                <div>
+                  <h3 class="person__name">Michael Chung</h3>
+                  <p class="person__role">Founder, business-model architect, and project lead</p>
+                </div>
+              </div>
+              <p class="person__bio">I “invent” business models. If you've ever paid at the DMV with a card or used Gmail's inbox tabs, thank me. ;) In 1992–93, I pitched New York City and initiated a pilot for possibly the world's first electronic card payments by the municipal agencies for motor-vehicle fines and fees. In 1995, the NYC DMV began accepting cards, and in 1996, the first E-ZPass tolling began in New York State. In 2002, my patent application was published for sorting tagged emails into their dedicated tabs (Priority, Ads, Bills, etc.) and was cited by 158 patent applications, majority by leading tech and Fortune companies. Gmail did their tabs in 2013. My business experience includes 25 years in real estate, including federal GSA RFPs (I was awarded two office space lease-contracts, one an over $9 million 10-year fixed), and other small businesses: eateries, supermarkets, merchant credit cards, finance, and direct marketing. For the past 13 years I've been in Silicon Valley's tech startup space, with 10+ years in and around blockchain and the last 3+ years in AI. A driver of my business models is the discovery and the purposeful enabling unity of the deterministic blockchain with the probabilistic AI to target today's great problematic gaps and solve to the emerging next-phase civilizational opportunities.</p>
+              <a class="person__link" href="https://www.linkedin.com/in/unitynow" aria-label="LinkedIn profile for Michael Chung">LinkedIn</a>
+            </article>
+          </li>
+        </ul>
+      </section>
+
+      <section class="block" aria-labelledby="advisors-title">
+        <h2 id="advisors-title">Advisors</h2>
+        <ul class="people">
+          <li>
+            <article class="person">
+              <div class="person__head">
+                <img class="person__photo" src="../../../public/images/people/patrick-muggler.webp" width="300" height="300" alt="Patrick Muggler" loading="lazy" decoding="async" />
+                <div><h3 class="person__name">Patrick Muggler</h3><p class="person__role">Connected logistics and IoT</p></div>
+              </div>
+              <p class="person__bio">Patrick leads product and strategic programs at Trackonomy. His work has connected more than 200,000 assets across over 100 airports and 40 countries. He advises zzThis on logistics workflows, connected assets, and commercialization.</p>
+              <a class="person__link" href="https://www.linkedin.com/in/pmuggler" aria-label="LinkedIn profile for Patrick Muggler">LinkedIn</a>
+            </article>
+          </li>
+          <li>
+            <article class="person">
+              <div class="person__head">
+                <img class="person__photo" src="../../../public/images/people/arshi-chadha.webp" width="440" height="440" alt="Arshi Chadha" loading="lazy" decoding="async" />
+                <div><h3 class="person__name">Arshi Chadha</h3><p class="person__role">AI security</p></div>
+              </div>
+              <p class="person__bio">Arshi is a security engineer at Zscaler and a co-lead of the OWASP Top 10 for LLM Applications work. She earned a master’s degree in information security at Carnegie Mellon and advises zzThis on AI and application security.</p>
+              <a class="person__link" href="https://www.linkedin.com/in/arshichadha/" aria-label="LinkedIn profile for Arshi Chadha">LinkedIn</a>
+            </article>
+          </li>
+          <li>
+            <article class="person">
+              <div class="person__head">
+                <img class="person__photo" src="../../../public/images/people/ridham-bhagat.webp" width="440" height="440" alt="Ridham Bhagat" loading="lazy" decoding="async" />
+                <div><h3 class="person__name">Ridham Bhagat</h3><p class="person__role">Cybersecurity, cryptography and research methods</p></div>
+              </div>
+              <p class="person__bio">Ridham Bhagat will contribute cybersecurity, cryptography, and research methods. He holds degrees in computer science and cybersecurity, develops post-quantum smart wallets, and performs security audits at Postquant Labs. His Northeastern University research included Internet topology and resilient networking.</p>
+              <a class="person__link" href="https://www.linkedin.com/in/ridham-bhagat-22a047106/" aria-label="LinkedIn profile for Ridham Bhagat">LinkedIn</a>
+            </article>
+          </li>
+          <li>
+            <article class="person">
+              <div class="person__head">
+                <span class="person__initials" aria-hidden="true">DM</span>
+                <div><h3 class="person__name">Daniel Meyer</h3><p class="person__role">Full-stack development</p></div>
+              </div>
+              <p class="person__bio">Daniel works across front-end and back-end software and supports zzThis application development and integration.</p>
+            </article>
+          </li>
+          <li>
+            <article class="person">
+              <div class="person__head">
+                <span class="person__initials" aria-hidden="true">AF</span>
+                <div><h3 class="person__name">Adam Fry</h3><p class="person__role">AI agents, infrastructure and deployment</p></div>
+              </div>
+              <p class="person__bio">Adam Fry will contribute AI-agent, infrastructure, and deployment expertise based on more than 20 years supporting mission-critical hospital, government, and enterprise systems and developing local AI-agent systems focused on data ownership, auditability, verification, and reliability.</p>
+            </article>
+          </li>
+        </ul>
+      </section>
+
+      <!-- v1.0 §6: Hacker Dojo now follows Advisors; logo removed; one paragraph. -->
+      <section class="block dojo" aria-labelledby="dojo-title">
+        <div class="dojo__head">
+          <h2 id="dojo-title">Hacker Dojo</h2>
+          <p class="dojo__sub">Innovation community and advisory network</p>
+        </div>
+        <p>Many of us are at Hacker Dojo, a top coworking, maker, and networking space and community in the heart of Silicon Valley, minutes from the headquarters of Google, NVIDIA, Apple, and more. Every day brings direct participation in, and access to, the latest ideas in problem solving, innovation, and creativity, along with cutting-edge work and trends, a deep and broad knowledge base, news, and resources. Its several hundred members cover the full range of skills, from software, hardware, and robotics to physical AI, IoT, security, and design.</p>
+      </section>
+
+      <section class="block" aria-labelledby="hw-title">
+        <h2 id="hw-title">Codes written by hand</h2>
+        <p class="label">Real photos of handwritten codes.</p>
+        <ul class="hw">
+          <li>
+            <figure>
+              <img src="../../../public/images/handwritten/hw-agent-notes.webp" width="624" height="827" loading="lazy" decoding="async" alt="Handwritten paper notes reading zz-patient name-zz, zz-ai@ agentsmith-zz, and zz dojo mojo glade-zz." />
+              <figcaption><code>zz-ai@ agentsmith-zz</code> Real photo.</figcaption>
+            </figure>
+          </li>
+          <li>
+            <figure>
+              <img src="../../../public/images/handwritten/hw-usps-tally.webp" width="900" height="1200" loading="lazy" decoding="async" alt="Handwritten page with an address sketch marked with a zz-usps-apple code, the line zz- be bold be brave be beautiful-zz, and a circled (zz) bravo code with four tally marks." />
+              <figcaption><code>zz- be bold be brave be beautiful-zz</code> Real photo.</figcaption>
+            </figure>
+          </li>
+          <li>
+            <figure>
+              <img src="../../../public/images/handwritten/hw-mark-on-object.webp" width="900" height="1200" loading="lazy" decoding="async" alt="A framed Flower Power print with a circled capital-letter zz sticker in the lower left and a handwritten zz note with a smiley in the lower right." />
+              <figcaption><code>zz mark on an object</code> Real photo.</figcaption>
+            </figure>
+          </li>
+          <li>
+            <figure>
+              <img src="../../../public/images/handwritten/hw-dog-collar-tag.webp" width="900" height="1200" loading="lazy" decoding="async" alt="A plush corgi wearing a round red collar tag marked with a capital-letter zz, to identify the dog." />
+              <figcaption><code>zz tag on a dog collar</code> Real photo.</figcaption>
+            </figure>
+          </li>
+        </ul>
+      </section>
+
+      <section class="where" aria-label="Location and next action">
+        <div>
+          <h2>Location</h2>
+          <p>Mountain View / Santa Clara area; Hacker Dojo work base.</p>
+        </div>
+        <div>
+          <h2>Next action</h2>
+          <p><a href="mailto:1@1000x10.com">Discuss a pilot, test cohort or collaboration.</a></p>
+        </div>
+      </section>
+    </main>
+
+    <footer class="colophon">
+      <nav aria-label="Footer">
+        <a href="index.html#how-it-works">How it works</a>
+        <a href="applications.html">Applications</a>
+        <a href="https://zero-state-llc.github.io/zzthis/demo/">Demo</a>
+        <a href="about.html">About</a>
+        <a href="index.html#contact">Contact</a>
+      </nav>
+      <p>zzThis. Contact: <a href="mailto:1@1000x10.com">1@1000x10.com</a>. Patent pending.</p>
+    </footer>
+
+    <script src="site.js" defer></script>
+  </body>
+</html>

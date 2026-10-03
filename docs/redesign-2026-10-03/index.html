@@ -1,0 +1,160 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>zzThis redesign samples</title>
+    <meta name="color-scheme" content="light dark" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;600;700&display=swap" />
+    <style>
+      /* Hallmark · review hub (index) · macrostructure: Index-First · tone: utilitarian · anchor hue: 38 */
+      :root {
+        color-scheme: light dark;
+        --color-paper: light-dark(oklch(95.3% 0.016 86), oklch(19% 0.005 80));
+        --color-paper-2: light-dark(oklch(91.7% 0.021 86), oklch(24% 0.007 78));
+        --color-ink: light-dark(oklch(22.2% 0.004 85), oklch(95% 0.014 86));
+        --color-ink-2: light-dark(oklch(39.6% 0.013 82), oklch(78% 0.018 85));
+        --color-rule: light-dark(oklch(82.9% 0.027 85), oklch(33% 0.009 80));
+        --color-accent: oklch(65.9% 0.215 38);
+        --color-accent-ink: light-dark(oklch(45% 0.165 38), oklch(73% 0.17 42));
+        --color-on-accent: oklch(22.2% 0.004 85);
+        --font-body: "IBM Plex Sans", system-ui, sans-serif;
+        --font-mono: "IBM Plex Mono", ui-monospace, monospace;
+        --space-xs: 10px; --space-sm: 16px; --space-md: 26px; --space-lg: 42px; --space-xl: 68px;
+        --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+      }
+      *, *::before, *::after { box-sizing: border-box; }
+      * { margin: 0; }
+      html, body { overflow-x: clip; }
+      body { background: var(--color-paper); color: var(--color-ink); font-family: var(--font-body); font-size: 1.0625rem; line-height: 1.6; }
+      img { display: block; max-width: 100%; height: auto; }
+      a { color: inherit; text-decoration-color: var(--color-accent); text-decoration-thickness: 2px; text-underline-offset: 0.2em; }
+      :focus-visible { outline: 2px solid var(--color-accent-ink); outline-offset: 3px; }
+      .wrap { width: min(100% - 32px, 1240px); margin-inline: auto; padding-block: var(--space-xl); display: grid; gap: var(--space-xl); }
+      h1 { font-size: clamp(2rem, 3vw + 1rem, 3.4rem); line-height: 1.05; letter-spacing: -0.02em; font-weight: 700; overflow-wrap: anywhere; }
+      h2 { font-size: clamp(1.4rem, 1vw + 1rem, 1.9rem); line-height: 1.15; font-weight: 700; }
+      p { max-width: 68ch; }
+      .muted { color: var(--color-ink-2); }
+      .mono { font-family: var(--font-mono); font-size: 0.875rem; }
+      .head { display: grid; gap: var(--space-sm); }
+      .grid { display: grid; gap: var(--space-lg); }
+      .card { display: grid; gap: var(--space-sm); align-content: start; padding-block-start: var(--space-sm); border-top: 3px solid var(--color-ink); }
+      .card--before { border-top-color: var(--color-rule); }
+      .card--chosen { border-top-color: var(--color-accent); }
+      .pick { color: var(--color-accent-ink); }
+      .shots { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 0.32fr); gap: var(--space-xs); align-items: start; }
+      .shots img { width: 100%; border: 1px solid var(--color-rule); }
+      .card h2 a { text-decoration: none; }
+      .card h2 a:hover { text-decoration: underline; text-decoration-color: var(--color-accent); }
+      .open { justify-self: start; display: inline-flex; align-items: center; min-height: 44px; padding: 0 var(--space-md); font-weight: 600; white-space: nowrap; text-decoration: none; background: var(--color-accent); color: var(--color-on-accent); transition: transform 120ms var(--ease-out); }
+      .open:hover { transform: translateY(-1px); }
+      dl { display: grid; gap: var(--space-xs); }
+      dl div { display: grid; grid-template-columns: minmax(0, 7.5rem) minmax(0, 1fr); gap: var(--space-sm); }
+      dt { font-family: var(--font-mono); font-size: 0.8125rem; color: var(--color-ink-2); padding-top: 2px; }
+      .docs { display: grid; gap: var(--space-sm); padding: var(--space-md); background: var(--color-paper-2); }
+      @media (min-width: 60rem) {
+        .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: var(--space-xl); }
+      }
+      @media (prefers-reduced-motion: reduce) { .open { transition: none; } }
+    </style>
+  </head>
+  <body>
+    <main class="wrap">
+      <header class="head">
+        <h1>zzThis home page: three redesign samples</h1>
+        <p class="muted">
+          A Hallmark audit of <a href="https://zero-state-llc.github.io/zzthis/">the live site</a>, ten 2026 design
+          techniques, and three directions built from the repo's own images and the spec's verbatim copy. Static
+          prototypes for review: they live under <span class="mono">docs/</span> and never deploy.
+        </p>
+        <p class="mono muted">Full audit, research, and sources: README.md in this folder.</p>
+      </header>
+
+      <article class="card card--chosen">
+        <p class="mono pick">Chosen direction · 2026-10-03</p>
+        <h2><a href="b-resolver-v1/">B v1.0 · Resolver, with Michael's v1.0 changes</a></h2>
+        <div class="shots">
+          <img src="review/bv1-desktop.webp" width="960" height="600" alt="Sample B v1.0 home page at desktop width: the new headline beside the lookup console." />
+          <img src="review/bv1-mobile.webp" width="390" height="844" alt="Sample B v1.0 home page on a phone." />
+        </div>
+        <dl>
+          <div><dt>Pages</dt><dd><a href="b-resolver-v1/index.html">Home</a> · <a href="b-resolver-v1/about.html">About</a> · <a href="b-resolver-v1/applications.html">Applications</a></dd></div>
+          <div><dt>Built from</dt><dd>The original sample B, unchanged, plus every "FOR THE WEBSITE AI" item in <span class="mono">zzThis_website_v1.0_changes</span> (sections 0–7)</dd></div>
+          <div><dt>Change log</dt><dd>README.md, section 5</dd></div>
+        </dl>
+        <a class="open" href="b-resolver-v1/">Open B v1.0</a>
+      </article>
+
+      <div class="grid">
+        <article class="card card--before">
+          <h2><a href="https://zero-state-llc.github.io/zzthis/">Current site</a></h2>
+          <div class="shots">
+            <img src="review/live-desktop.webp" width="960" height="600" alt="Current zzThis home page at desktop width, dark theme." />
+            <img src="review/live-mobile.webp" width="390" height="844" alt="Current zzThis home page on a phone." />
+          </div>
+          <dl>
+            <div><dt>Verdict</dt><dd>Well built and honest, but every section repeats the same shape: numbered eyebrow, heading, grid of equal cards.</dd></div>
+            <div><dt>Findings</dt><dd>2 critical · 7 major · 4 minor</dd></div>
+            <div><dt>Biggest gap</dt><dd>The core idea, writing a code by hand for a machine to read, never happens on the home page.</dd></div>
+          </dl>
+        </article>
+
+        <article class="card">
+          <h2><a href="a-tape/">A · Tape</a></h2>
+          <div class="shots">
+            <img src="review/a-desktop.webp" width="960" height="600" alt="Sample A at desktop width: a full-width strip of blue tape with the code handwritten across it." />
+            <img src="review/a-mobile.webp" width="390" height="844" alt="Sample A on a phone." />
+          </div>
+          <dl>
+            <div><dt>Structure</dt><dd>Narrative Workflow: Mark 1.0 → Read 2.0 → Link 3.0 → Report 4.0, with the code's state shown at each stage</dd></div>
+            <div><dt>Look</dt><dd>Cream paper, painter's tape, marker hand; Bricolage Grotesque + Shantell Sans + Plex Mono</dd></div>
+            <div><dt>2026 moves</dt><dd>Hand-made marks, real photos, variable handwriting axes, scroll-drawn line</dd></div>
+            <div><dt>Best for</dt><dd>Everyone: explains the idea at a glance</dd></div>
+          </dl>
+          <a class="open" href="a-tape/">Open sample A</a>
+        </article>
+
+        <article class="card">
+          <h2><a href="b-resolver/">B · Resolver (original)</a></h2>
+          <div class="shots">
+            <img src="review/b-desktop.webp" width="960" height="600" alt="Sample B at desktop width: a lookup console reading the taped code from the crate photo." />
+            <img src="review/b-mobile.webp" width="390" height="844" alt="Sample B on a phone." />
+          </div>
+          <dl>
+            <div><dt>Structure</dt><dd>Workbench: the hero runs the live demo's parser and exact-match resolver on mock data</dd></div>
+            <div><dt>Look</dt><dd>Dark instrument panel, blueprint grid; the current IBM Plex family</dd></div>
+            <div><dt>2026 moves</dt><dd>Working demo in the hero, View Transitions, anchor positioning, dithered "machine view"</dd></div>
+            <div><dt>Best for</dt><dd>xTechSearch reviewers, engineers, logistics buyers</dd></div>
+          </dl>
+          <a class="open" href="b-resolver/">Open sample B</a>
+        </article>
+
+        <article class="card">
+          <h2><a href="c-manifesto/">C · Hi-Vis Manifesto</a></h2>
+          <div class="shots">
+            <img src="review/c-desktop.webp" width="960" height="600" alt="Sample C at desktop width: poster headline with writable in a safety-orange block." />
+            <img src="review/c-mobile.webp" width="390" height="844" alt="Sample C on a phone." />
+          </div>
+          <dl>
+            <div><dt>Structure</dt><dd>Manifesto: one claim per block, charcoal and cream slabs</dd></div>
+            <div><dt>Look</dt><dd>Archivo on its width axis, safety orange, greyscale panels, one colour photograph</dd></div>
+            <div><dt>2026 moves</dt><dd>Kinetic variable type, CSS subgrid comparison, scroll-driven sweep, restraint</dd></div>
+            <div><dt>Best for</dt><dd>Investors and the brand: the most memorable</dd></div>
+          </dl>
+          <a class="open" href="c-manifesto/">Open sample C</a>
+        </article>
+      </div>
+
+      <section class="docs" aria-labelledby="next">
+        <h2 id="next">Before any of it goes into the repo</h2>
+        <p>
+          Pick a direction or a mix (A's tape and real photos with B's console works well). Michael approves the few new
+          lines each sample adds. Fonts move to self-hosted <span class="mono">@fontsource</span> packages. Then the
+          repo's process applies: an intent file a person accepts, a spec 001 update, and a PR for Danny.
+        </p>
+      </section>
+    </main>
+  </body>
+</html>
