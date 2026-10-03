@@ -8,10 +8,10 @@ zzThis uses [Spec Kit](https://github.com/github/spec-kit) order: constitution, 
 
 | ID | Feature | Built? | specify | clarify | plan | checklist | tasks | analyze |
 |---|---|---|---|---|---|---|---|---|
-| [001](001-marketing-site/spec.md) | Marketing site and scripted demo | Yes, live on GitHub Pages | Done | Open: Q10 (part), Q12 (part), Q20 (part), Q21 to Q23, Q39, Q40, Q53, Q54 | Done | [Done](001-marketing-site/checklists/requirements.md) | [Open: T029 to T031](001-marketing-site/tasks.md) | Done |
-| [002](002-resolver-core/spec.md) | Resolver core | No | Done, deepened 2026-10-03 | Open: Q19, Q25 to Q29, Q36, Q40, Q56 | Proposal | Not started | [Draft](002-resolver-core/tasks.md) | Done |
-| [003](003-wordlist-checkword/spec.md) | Wordlist, check word, and v1 text grammar | No | Done, deepened 2026-10-03 (US3 grammar accepted) | Open: Q27, Q30 to Q32, Q35, Q50 to Q52, Q55 | Proposal | Not started | [Draft](003-wordlist-checkword/tasks.md) | Done |
-| [004](004-capture/spec.md) | Capture by camera, typing, or voice | No | Done, deepened 2026-10-03 | Open: Q18, Q33, Q34, Q37, Q38, Q55 | Proposal | Not started | [Draft](004-capture/tasks.md) | Done |
+| [001](001-marketing-site/spec.md) | Marketing site and scripted demo | Yes, live on GitHub Pages | Done | Open: Q10 (part), Q12 (part), Q20 (part), Q21 to Q23, Q39, Q40 | Done | [Done](001-marketing-site/checklists/requirements.md) | [Open: T029, T030](001-marketing-site/tasks.md) | Done |
+| [002](002-resolver-core/spec.md) | Resolver core | No | Done, deepened 2026-10-03 | Open: Q19, Q25 to Q29, Q36, Q40 | Proposal | Not started | [Draft](002-resolver-core/tasks.md) | Done |
+| [003](003-wordlist-checkword/spec.md) | Wordlist, check word, and v1 text grammar | No | Done, deepened 2026-10-03 (US3 grammar accepted) | Open: Q27, Q30 to Q32, Q35 | Proposal | Not started | [Draft](003-wordlist-checkword/tasks.md) | Done |
+| [004](004-capture/spec.md) | Capture by camera, typing, or voice | No | Done, deepened 2026-10-03 | Open: Q18, Q33, Q34, Q37, Q38 | Proposal | Not started | [Draft](004-capture/tasks.md) | Done |
 
 v1 scope, exit criteria, and v2 candidates: [`docs/SPEC.md` Section 12](../docs/SPEC.md). The v1 text grammar: [`docs/SPEC.md` Section 2.2a](../docs/SPEC.md).
 
@@ -27,7 +27,7 @@ The phone and web apps (zzThat, zzThing) are not specified yet. Q33 tracks their
 | Requirement checklist | `specs/NNN-name/checklists/requirements.md` |
 | Tasks | `specs/NNN-name/tasks.md` |
 | Cross-artifact analysis | [`specs/analysis-2026-10-02.md`](analysis-2026-10-02.md), [`specs/analysis-2026-10-03.md`](analysis-2026-10-03.md) |
-| Decision log | `docs/SPEC.md` Section 9 |
+| Decision log | `docs/SPEC.md` Section 9 (questions) and Section 9a (running decisions log) |
 
 ## Issues to tasks
 
@@ -40,11 +40,12 @@ The phone and web apps (zzThat, zzThing) are not specified yet. Q33 tracks their
 | [#33](https://github.com/Zero-State-LLC/zzthis/issues/33) Q48 case and spacing (answered) | SPEC 2.2a; 003 US3, T010; 001 T029, T030 |
 | [#34](https://github.com/Zero-State-LLC/zzthis/issues/34) Q49 `@` handles (answered) | SPEC 2.2a; 003 FR-010, FR-011; 002 FR-016 |
 | [#35](https://github.com/Zero-State-LLC/zzthis/issues/35) Any-language codes, trained reader | v2 candidate (SPEC 12.2) |
-| [#36](https://github.com/Zero-State-LLC/zzthis/issues/36) to [#38](https://github.com/Zero-State-LLC/zzthis/issues/38) Q50 to Q52 | SPEC 2.2a defaults; 003 |
-| [#39](https://github.com/Zero-State-LLC/zzthis/issues/39) Q53 capital ZZ photos | 001 FR-019, T030 |
-| [#40](https://github.com/Zero-State-LLC/zzthis/issues/40) Q54 blockchain mentions | 001 T031 |
-| [#41](https://github.com/Zero-State-LLC/zzthis/issues/41) Q55 `zz` in running text | SPEC 2.2a G8; 004 FR-013 |
-| [#42](https://github.com/Zero-State-LLC/zzthis/issues/42) Q56 handle issuance | 002 FR-016, T018 |
+| [#36](https://github.com/Zero-State-LLC/zzthis/issues/36) to [#38](https://github.com/Zero-State-LLC/zzthis/issues/38) Q50 to Q52 (answered 2026-10-03) | SPEC 2.2a G4, G5; 003 FR-010, FR-012, FR-023 |
+| [#39](https://github.com/Zero-State-LLC/zzthis/issues/39) Q53 capital ZZ photos (answered: keep) | 001 FR-019, T030 |
+| [#40](https://github.com/Zero-State-LLC/zzthis/issues/40) Q54 blockchain mentions (answered: no change) | 001 T031 |
+| [#41](https://github.com/Zero-State-LLC/zzthis/issues/41) Q55 `zz` in running text (answered) | SPEC 2.2a G8; 004 FR-013 |
+| [#42](https://github.com/Zero-State-LLC/zzthis/issues/42) Q56 handle issuance (answered) | 002 FR-016, T018 |
+| [#44](https://github.com/Zero-State-LLC/zzthis/issues/44) to [#48](https://github.com/Zero-State-LLC/zzthis/issues/48) Q57 to Q61 (answered 2026-10-03) | SPEC 2.2a G3, G10, G11; 002 FR-019 to FR-021; 003 FR-009, FR-022, FR-024; 004 FR-016, FR-017 |
 
 ## Labels
 

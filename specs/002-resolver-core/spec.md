@@ -80,9 +80,13 @@ As a field user who wrote a code by hand with no device, I can link it to a reco
 | FR-013 | The resolver parses every submitted code with the v1 grammar library (spec 003 US3) and looks up the canonical form. It never trusts a client's normalization. Codes are stored only in canonical form, so case, separators, and circled markers never create two codes. | [MICHAEL 2026-10-02 #33]; server-side re-parse INFERRED |
 | FR-014 | Input that fails the grammar gets a `malformed` response with the parser reason. The grammar is public, so the reason reveals nothing about live codes. Malformed calls count toward rate limits. | INFERRED |
 | FR-015 | A bare mark (`zz`) cannot be resolved by text in v1. It returns `unsupported` with reason `bare-mark-needs-context`. Matching a bare mark by photo, place, and time is a v2 candidate. | [MICHAEL 2026-10-02 #33] describes the matching; the v1 split is INFERRED |
-| FR-016 | Handles are unique among all handles ever issued, compared in canonical (lowercase) form. Only the server issues a handle, to an authenticated owner. Writing a handle on a thing does not claim it. Verifying who the owner is comes later. | Q56 default (issue #42) |
+| FR-016 | Every code and handle belongs to a scope (v1 scopes: enterprise, logistics; free public and postal are v2). Handles are unique within their scope, compared in canonical (lowercase) form and on the G10 matching key. In v1, only the server issues a handle, to an authenticated owner; writing a handle on a thing does not claim it. Verifying that the owner really is the named brand comes later. | [MICHAEL 2026-10-03 #42] (Q56); v1 scope list INFERRED |
 | FR-017 | The canonical form of an active code is unique. Whether a retired code's words can be issued again stays OPEN (Q36); until it is answered, the prototype never reissues. | Q36; default INFERRED |
 | FR-018 | No state change without its audit event: if signing or the audit write fails, the whole call fails and nothing is stored. | INFERRED from FR-002 and FR-003 |
+| FR-019 | Reserved handles. The server refuses to issue a reserved handle to a free user, comparing on the G10 matching key so `@adm1n` counts as `@admin`. Seed categories: system names (`admin`, `administrator`, `root`, `support`, `help`, `security`, `official`, `zz`, `zzthis`, `zzthat`, `zzthing`, `zerostate`); brand and trademark names (enterprise only, after verification); government and agency names (for example `usps`, `army`, `irs`); offensive terms (kept in a list outside the public repo). An issued handle has at least 3 characters after `@`. Premium pricing for short handles is v2. | [MICHAEL 2026-10-03 #47] (Q60); seed list and key check INFERRED |
+| FR-020 | A record marked private cannot be opened by a one-part code alone. A one-part code opens a private record only for a signed-in user with permission. One-part codes are fine for public records (signs, community posts). | INFERRED from [MICHAEL 2026-10-03 #46] (Q59) and the issue proposal |
+| FR-021 | A word code's check word is verified (spec 003 FR-018, FR-022) before any lookup. A mismatch never resolves; the caller gets `malformed` with reason `check-mismatch`, and the client asks the person to confirm (spec 004 FR-016). | [MICHAEL 2026-10-03 #45] (Q58) |
+| FR-022 | A `name` code and the same name written as a handle (`zz-vitalik.eth-zz` and `zz-@vitalik.eth-zz`) resolve to the same record. | INFERRED from [MICHAEL 2026-10-03 #38] (Q52) |
 
 ## Error states (INFERRED, prototype contract)
 
@@ -96,7 +100,10 @@ As a field user who wrote a code by hand with no device, I can link it to a reco
 | Write calls | Not authenticated | 401 | Fixed body |
 | Write calls | Authenticated, not allowed | 403 | Fixed body; audit event written with result `denied` |
 | Write calls | Signing or audit failure | 500 | Nothing stored (FR-018) |
-| `POST /codes` (handle) | Handle taken | 409 | Fixed body; does not reveal the owner |
+| `POST /codes` (handle) | Handle taken in this scope | 409 | Fixed body; does not reveal the owner |
+| `POST /codes` (handle) | Reserved or shorter than 3 characters | 422 | `reserved-handle` (FR-019) |
+| `GET /resolve` | Word code whose check word fails | 400 | `malformed`, reason `check-mismatch` (FR-021) |
+| `GET /resolve` | One-part code for a private record, caller not signed in | 404 | The fixed not-found body (FR-020, FR-011) |
 
 Status codes are a prototype choice and may change with Q19. The not-found response must also match in timing within a stated budget (plan risk); the budget is set when T007 measures it.
 
@@ -105,6 +112,8 @@ Status codes are a prototype choice and may change with Q19. The not-found respo
 - Two resolves of one single-use code at the same moment: exactly one view (US1 acceptance 6).
 - A code that differs from a live code by one word: not-found, never a hint (FR-001).
 - `zz-@AgentSmith-zz` and `zz-@agentsmith-zz`: the same handle (FR-013, FR-016).
+- `zz-@agentsmith-neo-zz`: the qualifier `neo` is part of the code, so it can open a different record from `zz-@agentsmith-zz` under the same owner (INFERRED).
+- A reusable account code in a spec example is a word code such as `zz-post-maple-river-zz`, linked privately to the account. A code never carries a phone number or other personal data (Section 9a D-2026-10-03-11).
 - A revoked code still in an edge cache: resolves only until the purge window ends (Q26).
 - A record version whose signature fails verification on read: the resolver returns not-found and writes an audit event with result `integrity-error` (INFERRED).
 - A malformed flood from one client: rate limited like any other call (FR-014).
@@ -128,7 +137,9 @@ Recognition (spec 004), the wordlist and check word (spec 003), payments, partne
 | Q28 | Where the server's record-signing keys live and how they rotate | None chosen; blocks T001 |
 | Q29 | Where the resolver code lives (this repo or a separate repo) | None chosen; blocks T001 |
 | Q40 | Suggestion policy details: allowed tenant types, what a suggestion reveals, misread grading for high-security tenants | Off by default; never on for high-security [MICHAEL 2026-10-02] |
-| Q56 | Who can create a handle, and how is it protected? (issue #42) | Unique in lowercase; server-issued to a signed-in owner; verification later |
+| Q56 | Who can create a handle, and how is it protected? (issue #42) | RESOLVED for v1 [MICHAEL 2026-10-03 #42]: per-scope uniqueness (FR-016); free public duplicates, local priority, and postal account codes are v2 |
+| Q59 | One-part codes and private records (issue #46) | RESOLVED (FR-020) |
+| Q60 | Reserved handles (issue #47) | RESOLVED (FR-019) |
 | Q36 | Can the words of a revoked, used, or expired code be issued again? Reissue would let a copied old mark open a new record. | None chosen; "never reissue" proposed for Danny |
 
 ## Workflows

@@ -81,7 +81,7 @@ Acceptance: `/contact`, the Home contact action, the About contact card, and the
 | FR-016 | When the free zzThat app launches, the main navigation gains a prominent "Try zzThat" action that links to zzthat.com. | [MICHAEL 2026-10-02]; launch trigger OPEN (Q39) |
 | FR-017 | Site copy (text, headings, captions, titles) writes every zz code in lowercase and never writes a standalone capital "ZZ". Photos and renders may show a capital ZZ mark or uppercase letters inside a code; alt text describes them in words or quotes the code as shown. | [MICHAEL 2026-10-02] |
 | FR-018 | After T029, Flow B parses input with the v1 grammar (`docs/SPEC.md` Section 2.2a) and maps each result to B1, B3, B4, or the new B5 bare-mark state, using the lines in `docs/SPEC.md` Section 4.4. It still never reveals other codes (FR-013). | [MICHAEL 2026-10-02 #33] [MICHAEL 2026-10-02 #34]; wording INFERRED |
-| FR-019 | Images follow the Q48 display rule: no capital-letter zz mark, on its own or in a code. AI renders that break it are regenerated. Real photos are never AI-edited; a photo that breaks the rule is removed until Michael supplies a replacement (Q53). | [MICHAEL 2026-10-02 #33]; Q53 default (issue #39) |
+| FR-019 | Images we generate follow the Q48 display rule: no capital-letter zz mark, on its own or in a code; AI renders that break it are regenerated. Real photos are never AI-edited and keep what they show; the three real photos with a capital-letter zz stay. | [MICHAEL 2026-10-02 #33]; [MICHAEL 2026-10-03 #39] (Q53) |
 
 ## Success criteria
 
@@ -123,8 +123,8 @@ Real recognition, a real resolver, accounts, forms or email backends, analytics,
 | Q47 | Adopt the alternate hero and featured copy Michael shared as a reference? | RESOLVED: use as given [MICHAEL 2026-10-02]. New paragraph and featured text; the H1 uses the spaced hyphen as typed. |
 | Q48 | Are codes case- and space-insensitive? | RESOLVED (issue #33): yes; rules in `docs/SPEC.md` Section 2.2a. The display rule (no capital-letter zz in images) feeds Q53. |
 | Q49 | Allow `@` handles like `zz-@agentsmith-zz`? | RESOLVED (issue #34): yes; the Top ways example stays as written. |
-| Q53 | Three real photos show a capital-letter zz. Replace or remove? (issue #39) | Remove until Michael sends lowercase replacements (FR-019) |
-| Q54 | Keep the blockchain and ledger mentions (Top ways 01 and 05, ENS image)? (issue #40) | Keep as given |
+| Q53 | Three real photos show a capital-letter zz. Replace or remove? (issue #39) | RESOLVED: keep them [MICHAEL 2026-10-03 #39] (FR-019) |
+| Q54 | Keep the blockchain and ledger mentions (Top ways 01 and 05, ENS image)? (issue #40) | RESOLVED: no change [MICHAEL 2026-10-03 #40] |
 
 ## Workflows
 
