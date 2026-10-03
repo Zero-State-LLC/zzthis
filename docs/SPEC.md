@@ -122,7 +122,7 @@ This spec covers three deliverables and one proposal:
 
 ### 2.2a v1 text grammar (accepted 2026-10-03)
 
-This section is the accepted v1 grammar for codes written as text. It replaces the "product options, not yet accepted grammar" placeholder in spec 003 FR-006. Sources: Michael's replies on issue #33 (Q48) and issue #34 (Q49) [MICHAEL 2026-10-02 #33] [MICHAEL 2026-10-02 #34], used as given. Where Michael's replies leave a gap, the rule carries a default with its question ID (Q50 to Q56, issues #36 to #42) or is marked INFERRED. Spec 003 owns the library that implements it; specs 002 and 004 and the demo (001 T029) call that one library.
+This section is the accepted v1 grammar for codes written as text. It replaces the "product options, not yet accepted grammar" placeholder in spec 003 FR-006. Sources: Michael's replies on issue #33 (Q48) and issue #34 (Q49) [MICHAEL 2026-10-02 #33] [MICHAEL 2026-10-02 #34], used as given. Where Michael's replies leave a gap, the rule carries a default with its question ID (Q50 to Q56, issues #36 to #42) or is marked INFERRED. Spec 003 owns the library that implements it; specs 002 and 004 and the demo (001 T029) call that one library. Intent: [`intent/2026-10-03-v1-text-grammar.md`](../intent/2026-10-03-v1-text-grammar.md) (accepted by Danny, 2026-10-03 2:52 AM PT).
 
 v1 is ASCII only. Any-language codes are a v2 candidate (issue #35).
 
@@ -136,8 +136,29 @@ v1 is ASCII only. Any-language codes are a v2 candidate (issue #35).
 | Bare mark | `zz` or a circled `(zz)` with no content | `zz` | [MICHAEL 2026-10-02 #33] |
 
 - The parser reports one of three kinds: `plain` (word code or field code), `handle`, or `bare`. Telling a word code from a field code needs the wordlist: a plain code whose parts are all wordlist words is a word code. Every other plain code is a field code, including codes such as `zz-hello-zz` whose words are not on the list. Michael's definition ("words or names mixed with numbers") is extended to cover these (INFERRED).
+- Near-word check before field classification (INFERRED, PR #43 review). A misread wordlist word (`coper` for `copper`) must not turn a word code into a field code. Before the classifier calls a code a field code, it checks every letters-only part that is not on the wordlist. A part within edit distance 2 of a wordlist word is a near-word. A code with a near-word is classified `confirm`, not field, and lists each near-word with its position and its wordlist candidates (nearest first; ties all listed). The client shows a confirm step for each near-word: the candidate words and the part as written. Snapping is off for a part only after the person picks "as written". Picking a candidate snaps it, and the code is classified again. Parts with a digit, handle parts, and parts farther than 2 from every word are never near-words. Because every pair of wordlist words is at least 3 apart (spec 003 FR-003), a part at distance 1 has exactly one candidate. The distance limit is a parameter until the real-photo test set (spec 004 Q37) measures it. Vectors are in G1a.
 - Macro codes such as `zz-fn-pay-agentsmith-zz` and `zz-run-reorder-water-zz` are plain codes to the grammar. Running a macro is an app concern that needs an authorized, confirmed user, and it is not part of v1 [MICHAEL 2026-10-02 #34].
 - Drawn symbols (a smiley, a star) are a separate image-recognition mode, not part of this text grammar [MICHAEL 2026-10-02 #34]. They are a v2 candidate.
+
+**G1a. Classifier vectors.** Fixture wordlist (test data only): `copper`, `lantern`, `sky`, `maple`, `river`, `harbor` (every pair at least 3 apart, as FR-003 requires). The classifier (spec 003 T012) runs after the parser and must return these results.
+
+| Canonical input | Class | Near-words (position: candidates) |
+|---|---|---|
+| `zz-copper-lantern-sky-zz` | word | none |
+| `zz-coper-lantern-sky-zz` | confirm | 1: `copper` |
+| `zz-lanterns-zz` | confirm | 1: `lantern` |
+| `zz-coppr-lantrn-sky-zz` | confirm | 1: `copper`; 2: `lantern` |
+| `zz-skyy-maple-zz` | confirm | 1: `sky` |
+| `zz-rivr-zz` | confirm | 1: `river` |
+| `zz-lntrn-zz` | confirm | 1: `lantern` (distance 2, the limit) |
+| `zz-kopr-zz` | field | none (`copper` is 3 away, past the limit) |
+| `zz-hello-zz` | field | none (no word within 2) |
+| `zz-b2-smith-1-zz` | field | none (digits, and `smith` is farther than 2) |
+| `zz-copper-4-zz` | field | none (`4` has a digit; `copper` is on the list) |
+| `zz-@coper-zz` | handle | none (handles are never near-word checked) |
+| `zz` | bare | none |
+
+After the person confirms `coper` as written, `zz-coper-lantern-sky-zz` is a field code and `coper` is not snapped. After they pick `copper`, it is the word code `zz-copper-lantern-sky-zz`.
 
 **G2. Normalization, in order**
 

@@ -10,7 +10,7 @@ Workflows for every implementing task: anti-slop-code, production-systems, googl
 
 ## Phase 1: Foundational (after spec 003 T008)
 
-- [ ] T003 Snap-to-wordlist and check-word verification on the client, shared with spec 003. Every reading goes through the spec 003 grammar library first (FR-008); handle and field parts are not snapped (FR-010).
+- [ ] T003 Snap-to-wordlist and check-word verification on the client, shared with spec 003. Every reading goes through the spec 003 grammar library first (FR-008); handle and field parts are not snapped (FR-010), and a part counts as a field part only after the near-word confirm step (FR-015), tested with the `docs/SPEC.md` G1a vectors.
 - [ ] T004 Decision bands: accept, clarify, retry, abstain, with a human confirm step. One test per trigger row in the spec's Decision bands table, with thresholds as parameters until Q37.
 - [ ] T009 Multi-line and multi-code reads (FR-009, FR-014); bare mark, non-ASCII, and reserved-symbol handling (FR-011, FR-012); running-text scan (FR-013).
 

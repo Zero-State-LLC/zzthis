@@ -33,7 +33,7 @@ As a reader, I get an error when a code has one wrong word, so that a misread co
 
 Acceptance: a library computes and verifies the check word; tests show it detects the error classes named in Q30 once they are chosen.
 
-1. Given a valid issued word code, when one data word is replaced by any other wordlist word, then verification fails (Q30 minimum, tested over every substitution for a fixed sample of codes).
+1. Given a valid issued word code, when one data word is replaced by any other wordlist word, then verification fails (Q30 minimum). The test covers the whole list, not a fixed sample (FR-020).
 2. Given a valid issued word code, when the check word is removed, then verification fails with `wrong-length`, not `check-mismatch`.
 3. Given a code whose part is not on the list, then verification fails with `unknown-word` and names the position, not a suggested word.
 
@@ -71,12 +71,14 @@ Acceptance:
 | FR-017 | The list is versioned. A published version is never reordered or edited; a change makes a new version, and the check word computation records which version it used. | INFERRED, so old issued codes keep verifying |
 | FR-018 | The check word is one word from the same list, placed last. Verification returns exactly one of `ok`, `check-mismatch`, `unknown-word`, `wrong-length`. | INFERRED placement and result set; the check word itself is [PRODUCT] |
 | FR-019 | The pipeline and the yield report are deterministic: the same input list and settings give byte-identical output. | INFERRED, so the report can be reviewed in a PR |
+| FR-020 | The one-wrong-word guarantee is tested over the whole wordlist, not a fixed sample of codes. The test is one of: (a) exhaustive: for every position and every pair of distinct words at that position, the substitution changes the check word, checked on the fixture list for every code and on the real list through a proof that the check function is one-to-one in each position when the others are fixed, with that per-position property tested directly; or (b) property-based: a seeded generator draws codes and single-word substitutions across every position and the full list, runs in CI with a fixed seed and at least 100,000 cases, and is paired with the exhaustive test on the fixture list. A fixed sample of codes alone does not pass. | INFERRED from the US2 story and the v1 exit criterion, PR #43 review |
+| FR-021 | Word-code versus field-code classification runs the near-word check in `docs/SPEC.md` Section 2.2a G1: a letters-only part within edit distance 2 of a wordlist word makes the code `confirm`, not field, and returns the candidates. The classifier passes every G1a vector. | INFERRED, PR #43 review |
 
 ## Success criteria
 
 Not set for the yield. The size the code space needs depends on the formats chosen (Q27) and the target list size (Q31). The spec does not invent a pass mark for the yield.
 
-The grammar (US3) and the check word (US2) do have pass rules: every G9 vector passes, and every single-word substitution in the sample is detected.
+The grammar (US3) and the check word (US2) do have pass rules: every G9 and G1a vector passes, and every single-word substitution is detected over the whole list (FR-020).
 
 ## Data rules
 

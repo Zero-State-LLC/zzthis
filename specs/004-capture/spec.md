@@ -50,11 +50,12 @@ Acceptance: the photo leaves the device only on a retry or hard case [OPERATOR 2
 | FR-007 | Read-back confirmation errors are measured, not assumed away. | [PRODUCT]; method OPEN (Q37) |
 | FR-008 | Every reading, from camera, typing, or voice, passes through the v1 grammar library (spec 003 US3) before snapping, and the client sends only the canonical form. | [MICHAEL 2026-10-02 #33] [MICHAEL 2026-10-02 #34] |
 | FR-009 | A code written across two lines, or wrapped around an edge, reads as one code when both markers are found. | [MICHAEL 2026-10-02 #33] |
-| FR-010 | Wordlist snapping applies only to parts expected to be wordlist words. Handle parts and field-code parts (names, numbers) are read as written, never snapped, and always shown back for confirmation. | INFERRED, so a name is never turned into a dictionary word |
+| FR-010 | Wordlist snapping applies only to parts expected to be wordlist words. Handle parts and field-code parts (names, numbers) are read as written, never snapped, and always shown back for confirmation. A part is treated as a field part only after the near-word check (FR-015). | INFERRED, so a name is never turned into a dictionary word |
 | FR-011 | A bare mark is reported as a bare mark. v1 does not resolve it; the client says so and offers typed entry. Linking a bare mark by photo, place, and time is a v2 candidate. | [MICHAEL 2026-10-02 #33]; v1 split INFERRED |
 | FR-012 | A reading with letters outside ASCII, or with a reserved symbol (`#`, `$`, `/`, `:`), abstains with the grammar reason. It is never snapped to the nearest valid code. | [MICHAEL 2026-10-02 #34]; abstain rule INFERRED |
 | FR-013 | Codes inside running text: the scanner finds every marker pair; a lone `zz` is offered as a bare mark only after the person confirms it. | Q55 default (issue #41) |
 | FR-014 | When a photo holds more than one code, the client lists them all and the person chooses. | INFERRED from "never silently pick the wrong one" |
+| FR-015 | Before snapping is turned off for a part, the client runs the near-word check (`docs/SPEC.md` Section 2.2a G1, spec 003 FR-021). A letters-only part within edit distance 2 of a wordlist word goes to Clarify with the candidates and the part as written. The part is read as written only after the person picks that. A misread word such as `coper` is never silently kept as field data, and never silently snapped. | INFERRED, PR #43 review |
 
 ## Decision bands and error states
 
@@ -63,7 +64,7 @@ Thresholds stay OPEN (Q37). The triggers below say which band applies; they set 
 | Band | Trigger | What the person sees |
 |---|---|---|
 | Accept | Grammar passes, every snapped word is above the accept threshold, and the check word verifies (word codes) | The canonical code, then the record view |
-| Clarify | Grammar passes, but one or more words fall between the thresholds, or the check word fails with one uncertain word | The uncertain word with wordlist candidates; confirm or type it |
+| Clarify | Grammar passes, but one or more words fall between the thresholds, the check word fails with one uncertain word, or the classifier returns `confirm` (a near-word, FR-015) | The uncertain word with wordlist candidates and the part as written; confirm or type it |
 | Retry | A marker is missing or cut off, the photo is blurred, or glare hides part of the code | "Take another photo" with the reason; after a set number of retries, offer the server read (US3) |
 | Abstain | Grammar fails for any reason other than a missing or cut-off marker (that is Retry), including `unsupported-script` and `reserved-symbol` (FR-012). A bare mark also lands here in v1 (FR-011) | The reason in plain words, and typed entry |
 
