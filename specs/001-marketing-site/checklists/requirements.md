@@ -7,7 +7,7 @@ Checked 2026-10-02 against `main` at 40dfa3b and the live site. Items map to `do
 - [x] Spec has a `## Workflows` section naming workflows and CI files.
 - [x] Each user story has acceptance scenarios.
 - [x] Out of scope is stated.
-- [ ] Every OPEN question has an owner and a default. Q21 to Q24 are new in this restructure and still need Michael.
+- [ ] Every OPEN question has an owner and a default. Q21 to Q23 and Q41 to Q47 still need Michael.
 
 ## Verification status of Section 8 criteria
 
@@ -31,6 +31,7 @@ Checked 2026-10-02 against `main` at 40dfa3b and the live site. Items map to `do
 | 22 | Secret scan clean | Automated: `free-security-scan.yml` |
 | 26, 27 | Lockfile, `pages.yml` shape | Review |
 | 28 | Live after merge | OBSERVED 2026-10-02 after PR #16 |
+| 29 | Lowercase codes, no standalone capital ZZ | Automated: `check-dist.mjs` and content tests (T024) |
 
 ## Clarity and consistency
 

@@ -82,6 +82,10 @@ This spec covers three deliverables and one proposal:
 
 **Words.** The site shows lowercase code words: "MARK a lowercase zz code" [BRIEF]. Codes are built from a controlled word codebook designed for handwriting, reading, speech, recall, correction, optical recognition, and error detection [PRODUCT].
 
+**Case rule.** Every zz code in site text, captions, titles, and alt text is written in lowercase, for example `zz-copper-lantern-sky-zz`. The site never shows a standalone capital "ZZ" [MICHAEL 2026-10-02]. The examples table below is a source record; mixed-case source examples are lowercased wherever the site renders them (INFERRED).
+
+**Mark types.** A zz mark can be words, numbers, or simple hand-drawn symbols such as a smiley or tally marks, and a person can read it even when it is written inside a sentence [MICHAEL 2026-10-02]. A code can connect to authorized macros as well as a record and next action [MICHAEL 2026-10-02]. The site names this as a concept only and does not describe how macros run or are authorized (INFERRED).
+
 **Examples from sources:**
 
 | Code | Context | Source |
@@ -183,7 +187,7 @@ Codes are public identifiers, and authorization stays separate [PRODUCT]. Resear
 
 | Segment | Sections, in order | Panels |
 |---|---|---|
-| 1. First screen and workflow | Logo and nav; hero text beside hero image; featured statement; comparison (3 cards); core workflow (4 steps); field logistics (3 across); photo to action (j, k, l, 3 across) | b; c close-up, d, e, f; a, b (alternate), c; j, k, l |
+| 1. First screen and workflow | Logo and nav; hero text beside hero image; featured statement; comparison (4 cards) [MICHAEL 2026-10-02]; core workflow (4 steps); field logistics (3 across); photo to action (j, k, l, 3 across) | b; c close-up, d, e, f; a, b (alternate), c; j, k, l |
 | 2. More applications | m and n (2 across); Applications grid 2×2 (Field logistics, Postal and parcel, Community, Digital aliases); About and Contact (2 across); footer | m, n; j thumbnail, g and o, h, i |
 
 On phones, the Applications grid omits the Field logistics card, because the field band sits directly above it [WIRE].
@@ -227,7 +231,7 @@ The controlled swipe row uses CSS scroll snap and a visible peek of the next car
 | 2 | Current explorations, stacked | zzthing.com and zzthat.com, 2 across |
 | 3 | Founder card | Initials card (1) beside the bio (1.618) |
 | 4 | Advisors, one stacked card each [WIRE] | 3 across: Patrick Muggler, Arshi Chadha, Ridham Bhagat; then Daniel Meyer, Adam Fry [MICHAEL 2026-10-02] |
-| 5 | Codes written by hand (real photos) | 3 across |
+| 5 | Codes written by hand (real photos) | 2 across [MICHAEL 2026-10-02]; 2×2 if Q42 adds two photos |
 | 6 | Location, then Next action | Location and Next action, 2 across [WIRE] |
 
 The 2026-10-02 brief and wireframes add Adam Fry and drop the Future space card. Michael's later 2026-10-02 answers remove Jim White from the advisors [MICHAEL 2026-10-02]. Photos: initials cards until Michael supplies approved original headshots, and the implementer does not scrape LinkedIn [MICHAEL 2026-10-02] (Q6 RESOLVED).
@@ -240,7 +244,7 @@ The 2026-10-02 brief and wireframes add Adam Fry and drop the Future space card.
 4. H.1: The focal point of image b sits on the tape code, so the mark stays visible in every crop [WIRE]. Caption: "Word code on blue tape beside an obscured barcode." [BRIEF]
 5. H.1: Keep both buttons. The desktop wireframe shows only the primary action, but the [BRIEF] specifies both [BRIEF].
 6. H.1: Keep the em dash in "writable—and smart." [MICHAEL 2026-10-02] (Q1 RESOLVED). This is the only em dash allowed in site copy; the no-em-dash rule still applies everywhere else.
-7. H.3: Render the comparison as three cards, one per mark: Barcode, QR code, and zzThis [WIRE]. Each card has three labeled rows (Create the mark, Read the mark, What it connects) that use the [BRIEF] cells verbatim. The cards stack on phones [BRIEF]. The zzThis card has an accent edge.
+7. H.3: Render the comparison as four cards, in this order: Barcode, QR code, Alphanumeric code, and zzThis [MICHAEL 2026-10-02]. This replaces the three cards in [WIRE] and the [BRIEF] cells. Each card has four labeled rows (Create the mark, Read the mark, What it connects, Easy to say and remember) that use the H.3 cells verbatim. Keep the section number "02" and the current card design: dark cards, small uppercase monospace row labels set by CSS, divider lines, and the corner detail. Only the zzThis card has the accent edge, and it stays last. Layout: four equal columns at ≥ 900 px, a 2×2 grid at 600–899 px, and stacked single cards below 600 px, with no horizontal scrolling. At ≥ 900 px each row aligns across all four cards, so a longer cell pushes the same row down on every card [MICHAEL 2026-10-02].
 8. The Section 3.2 order conflict is resolved by [WIRE]: comparison → How it works → Field logistics → From photo to action. Q2 is closed.
 
 ### 3.2 Home (`/`)
@@ -275,15 +279,18 @@ P:  A writable mark establishes identity where the work happens. AI can help ide
 
 #### H.3 Comparison strip (Do)
 
-H2: "How zzThis compares" (INFERRED). Cells are verbatim [BRIEF]:
+H2: "How zzThis compares" (INFERRED). Cells are verbatim [MICHAEL 2026-10-02] and replace the [BRIEF] cells:
 
-| | Barcode | QR code | zzThis |
-|---|---|---|---|
-| Create the mark | Print | Print or display | Write, print, or display |
-| Read the mark | Scanner | Camera | Person, camera, typing, or voice |
-| What it connects | Item to data | Surface to digital content | Thing to its record and next action |
+| | Barcode | QR code | Alphanumeric code | zzThis |
+|---|---|---|---|---|
+| Create the mark | Print | Print or display | Print or handwrite | Write, draw, print, or display: words, numbers, or symbols |
+| Read the mark | Scanner | Camera | Person, scanner, or typing | Person, camera, voice, typing, or within text |
+| What it connects | Item to data | Surface to digital content | Shipment or item to its tracking status | Thing to its record, next action, and authorized macros |
+| Easy to say and remember | No | No | Hard (8 to 22 random characters) | Yes (2 to 4 words, or short words and numbers) |
 
-Render this table as three cards, per override 7 in Section 3.1a. Also include a visually hidden `<table>` with the same cells so that screen readers can navigate by row and column (INFERRED).
+Note under the cards (small, muted, full width), verbatim [MICHAEL 2026-10-02]: "zz-codes can be words, numbers, or simple hand-drawn symbols such as a smiley or tally marks, and can be read even when written inside a sentence." Michael's first note sentence (an alphanumeric example naming a postal operator and tracking-number lengths) is held until Q41 is answered.
+
+Render this table as four cards, per override 7 in Section 3.1a. Also include a visually hidden `<table>` with the same cells so that screen readers can navigate by row and column (INFERRED).
 
 #### H.4 How it works (Mi), `id="how-it-works"`
 
@@ -396,10 +403,10 @@ The layout follows Section 3.1a.
 | Intro | "A code a person can write anywhere, linked to a digital record and the next work." | [MICHAEL 2026-10-02] wireframes |
 | Contact card | "1@1000x10.com. Invite collaboration and test partners." | [WIRE] |
 | H2 Current explorations | zzthing.com: "Broader showcase and label mockups." zzthat.com: "Scanner/creator prototype; planned free web, Android, and iOS app." [MICHAEL 2026-10-02] Concept label 2 (Section 3.1a) | [WIRE] [BRIEF] |
-| H2 Founder | Michael Chung, "Founder and project lead." Bio (founder origin): "Michael Chung says he ‘invents business models.’ His earlier ideas explored email organization and electronic payments for civic services. zzThis follows the same impulse: a useful digital connection should be possible wherever a person can write. A handwritten zz code can give a parcel, crate, tool, or public sign a persistent reference, then connect it to a record and the work around it. Michael is developing the idea across logistics, community use, and AI-assisted workflows." A longer founder history can follow later. LinkedIn: https://www.linkedin.com/in/unitynow | [MICHAEL 2026-10-02] (Q8 RESOLVED); placement [OPERATOR 2026-10-02] (Q24) |
+| H2 Founder | Michael Chung, "Founder, system architecting, and project lead." [MICHAEL 2026-10-02] Bio (founder origin), unchanged pending Q43: "Michael Chung says he ‘invents business models.’ His earlier ideas explored email organization and electronic payments for civic services. zzThis follows the same impulse: a useful digital connection should be possible wherever a person can write. A handwritten zz code can give a parcel, crate, tool, or public sign a persistent reference, then connect it to a record and the work around it. Michael is developing the idea across logistics, community use, and AI-assisted workflows." A longer founder history can follow later. LinkedIn: https://www.linkedin.com/in/unitynow | [MICHAEL 2026-10-02] (Q8 RESOLVED); placement [OPERATOR 2026-10-02] (Q24) |
 | H2 Advisors | Cards: Patrick Muggler, "Connected logistics and IoT"; Arshi Chadha, "AI security"; Ridham Bhagat, "Cybersecurity, cryptography and research methods"; Daniel Meyer, "Full-stack development"; Adam Fry, "AI agents, infrastructure and deployment". Bios for Patrick, Arshi, and Daniel are verbatim from the brief; Ridham and Adam bios are verbatim from Michael's later 2026-10-02 answers (`src/content/people.ts`). | [MICHAEL 2026-10-02] |
-| H2 Codes written by hand | Real photos: zz-hackerdojo-zz, zz-helloworld-zz, zz-roto-zz. Label: "Real photos of handwritten codes." | [ASSETS]; label INFERRED |
-| Location | "Mountain View / Santa Clara area; Hacker Dojo work base." | [WIRE] [BRIEF] |
+| H2 Codes written by hand | Real photos (Section 3.8): hw-agent-notes and hw-usps-tally. zz-hackerdojo-zz, zz-helloworld-zz, and zz-roto-zz are removed. The two capital-ZZ photos wait on Q42. Label: "Real photos of handwritten codes." | [MICHAEL 2026-10-02]; label INFERRED |
+| Location | "Mountain View / Santa Clara area; Hacker Dojo work base." Unchanged pending Q44 and Q45. | [WIRE] [BRIEF] |
 | Next action | "Discuss a pilot, test cohort or collaboration." → mailto | [WIRE] |
 
 **Advisor card (INFERRED).** Each card shows initials in IBM Plex Mono at 42 px inside a 1:1 tile, then the name as H3, the role line, the bio where supplied, and a LinkedIn link where a URL was supplied [MICHAEL 2026-10-02]: Michael Chung, Patrick Muggler, Arshi Chadha, Ridham Bhagat. Daniel Meyer and Adam Fry have no URL or headshot yet (Q10, Q12).
@@ -460,7 +467,9 @@ All panel images have status `concept` [ASSETS]. Captions follow the [BRIEF] sce
 | o | panels/o-pack-and-ship.webp | Phone packing guidance for a guitar and an appliance with a zz parcel code. | Guitar and appliance packing guidance; handwritten zz parcel code. [BRIEF] | Parcel card |
 | l alt, m alt | removed from `public/` | Not used: Michael confirmed the primary l and m files (Field Tablet Turn-In Request Review, Split-screen water stock drops by Day 4) [MICHAEL 2026-10-02]. The alternates remain on branch `assets`. | — | Q4 RESOLVED |
 | demo 01–05 | demo/*.webp | Per step, Section 4.3 | Per step | /demo |
-| real photos | handwritten/*.webp | For example: "ZZ-HACKERDOJO-ZZ handwritten on paper." | Real photo. [ASSETS] | /about |
+| real photo | handwritten/hw-agent-notes.webp | Handwritten paper notes reading zz-patient name-zz, zz-ai@ agentsmith-zz, and zz dojo mojo glade-zz. Title: zz-ai@ agentsmith-zz | Real photo. [MICHAEL 2026-10-02] | /about |
+| real photo | handwritten/hw-usps-tally.webp | Handwritten page with an address sketch marked with a zz-usps-apple code, the line zz- be bold be brave be beautiful-zz, and a circled (zz) bravo code with four tally marks. Title: zz- be bold be brave be beautiful-zz | Real photo. [MICHAEL 2026-10-02] | /about |
+| removed | handwritten/hw-hackerdojo, hw-helloworld, hw-roto | Not used [MICHAEL 2026-10-02] | — | — |
 | logos | logos/zzthis-logo-on-light.webp, …-on-dark.webp | "zzThis" | — | Header, swapped by theme |
 
 Handwritten-code scenes [MICHAEL 2026-10-02] (Q11 RESOLVED): b in the hero, a and c (with b alternate) in Field logistics, g for parcel, h for community, and the lowercase zz code as text in the explainer. `zz-dojo-mojo-org-nacho-zz.webp`, `zz-sticky-note.webp`, and `zz-code-tm.webp` stay unrendered.
@@ -668,6 +677,7 @@ package-lock.json
 26. `package-lock.json` is committed, and `npm ci` succeeds from a clean checkout.
 27. `pages.yml` matches Section 6: it triggers only on `push` to `main` and `workflow_dispatch`, uses the listed permissions and concurrency group, and uploads `dist`. The PR does not trigger a deploy.
 28. After merge, `https://zero-state-llc.github.io/zzthis/` serves Home, and every nav link and image loads without a 404.
+29. Rendered text, titles, and alt text write every zz code in lowercase, and no page shows a standalone capital "ZZ" as text [MICHAEL 2026-10-02]. A check in `check-dist.mjs` enforces this.
 
 ## 9. Out of scope and OPEN questions
 
@@ -717,6 +727,13 @@ Michael's answers arrived on 2026-10-02 through Danny (issue #10), in an updated
 | Q37 | Capture confidence thresholds and read-back error method | OPEN; none chosen (spec 004) |
 | Q38 | Where voice input is processed | OPEN; none chosen (spec 004) |
 | Q39 | What counts as the zzThat launch for the "Try zzThat" nav action? | OPEN; none chosen (spec 001) |
+| Q41 | Source for the comparison note's alphanumeric example (an 8-character handwritten Deutsche Post postage code; 14 to 22 character parcel tracking numbers) and for the "8 to 22 random characters" cell | OPEN [MICHAEL 2026-10-02]; default: omit the note's first sentence; ship the cell as Michael's copy until he confirms or corrects it |
+| Q42 | Two supplied photos (a sticker on a framed print and a dog-collar tag) show a standalone capital "ZZ", which the lowercase rule bars. Show them? | OPEN [MICHAEL 2026-10-02]; default: do not render them |
+| Q43 | Replace the founder origin with the first-person bio supplied 2026-10-02? It contains unverified firsts, comparisons with other companies' products, and contract figures (FR-007, Q24) | OPEN; default: keep the current founder origin |
+| Q44 | Add the Hacker Dojo block ("advisory network", mentoring, named nearby companies, an advisor-led series, Army framing)? Needs Hacker Dojo's and Arshi Chadha's confirmation and wording without endorsement or superlatives | OPEN; default: keep the current Location line |
+| Q45 | Permission to use the Hacker Dojo logo | OPEN; default: no logo |
+| Q46 | Are the supplied headshots (Michael, Patrick, Arshi, Ridham) approved originals with each person's consent, not LinkedIn copies (Q6)? | OPEN; default: initials cards; files not committed |
+| Q47 | Adopt the alternate hero paragraph, featured text, or "deeper section" copy that Michael shared as a reference on 2026-10-02? | OPEN; default: keep Section 3.2 copy unchanged |
 
 ## 10. Architecture (proposal, not built)
 
@@ -862,3 +879,4 @@ The table rows are a comparison drawn up in this spec from the operator's factor
 | Document index and summary | [OVERVIEW] | zzThis - Overview.md |
 | Image paths, codes in panels, concept versus real status, brand orange #F85000 | [ASSETS] | Asset manifest, branch `assets` |
 | Architecture: central API topology, edge layer, on-device capture, recognition approaches A and B, resolver security model, offline rules, open items (Section 10) | [OPERATOR 2026-10-02] | Operator decision by Daniel Meyer, 2026-10-02 01:21 to 01:22 PT |
+| Comparison four cards and note, lowercase rule, founder role line, About photo swap | [MICHAEL 2026-10-02] | Michael's shared-folder documents, 2026-10-02 16:36 to 17:40 PT (not in this repo) |

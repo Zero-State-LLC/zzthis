@@ -50,3 +50,25 @@ Workflows for every implementing task: anti-slop-code, production-systems, googl
 ## Phase 6: Public repo hygiene
 
 - [x] T019 Remove research targets and pitch-only text from the repo and site (Q24 RESOLVED [OPERATOR 2026-10-02]). The founder card now shows Michael's founder origin.
+
+## Phase 8: Michael's 2026-10-02 shared-folder deltas
+
+- [ ] T020 Comparison: four cards (Barcode, QR code, Alphanumeric code, zzThis) and a fourth row "Easy to say and remember", per `docs/SPEC.md` H.3 and override 7. Changes:
+  - In `src/content/comparison.ts`, add the `remember` key and the Alphanumeric column.
+  - In `ComparisonCards.astro`, use 1 column below 600 px, 2 columns at 600 to 899 px, and 4 columns at ≥ 900 px. Align rows across cards with CSS subgrid at ≥ 900 px.
+  - The hidden table follows the content.
+  - Update `tests/content.test.ts` to 4 row labels and 16 cells.
+- [ ] T021 Add the note under the comparison cards (sentence 2 only), small and muted, full width. Sentence 1 is blocked on Q41.
+- [ ] T022 Change `founder.role` in `src/content/people.ts` to "Founder, system architecting, and project lead."
+- [ ] T023 About "Codes written by hand":
+  - Remove `hw-hackerdojo`, `hw-helloworld`, and `hw-roto` from `about.astro`, `src/content/images.ts`, and `public/images/handwritten/`.
+  - Add `hw-agent-notes` and `hw-usps-tally` as WebP files of 2 MB or less, with the alt text and titles from Section 3.8.
+  - Use `Series columns="2"`.
+- [ ] T024 [P] Add a `check-dist.mjs` rule. It fails when rendered text, `alt`, or `title` contains a standalone "ZZ" (`/\bZZ\b/`) or an uppercase letter inside a zz-framed code. Add a matching content test. Lowercase any rendered mixed-case code. Covers acceptance criterion 29.
+- [ ] T025 Blocked on Michael:
+  - Founder bio (Q43).
+  - Hacker Dojo block and logo (Q44, Q45).
+  - Headshots (Q46).
+  - Capital-ZZ photos (Q42).
+  - Note sentence 1 (Q41).
+  - Alternate hero and featured copy (Q47).

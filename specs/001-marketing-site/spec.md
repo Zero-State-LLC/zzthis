@@ -24,7 +24,7 @@ zzThis needs a public, honest explanation for xTechSearch visitors, possible inv
 
 ### US1. Understand the idea from Home (priority P1)
 
-As a first-time visitor, I can read what zzThis is, see a handwritten code on an object, compare it with barcodes and QR codes, and follow the core workflow, so that I understand the idea in one scroll.
+As a first-time visitor, I can read what zzThis is, see a handwritten code on an object, compare it with barcodes, QR codes, and alphanumeric codes, and follow the core workflow, so that I understand the idea in one scroll.
 
 Acceptance:
 
@@ -32,6 +32,7 @@ Acceptance:
 2. Hero, featured statement, comparison cells, workflow lines, and category stories match `docs/SPEC.md` Sections 3.2 to 3.4 character for character [BRIEF].
 3. The hero keeps the em dash in "writable—and smart." [MICHAEL 2026-10-02].
 4. The core workflow shows the lowercase code as text [MICHAEL 2026-10-02].
+5. The comparison shows four cards with four rows each, per `docs/SPEC.md` Section 3.2 H.3 [MICHAEL 2026-10-02].
 
 ### US2. See where it applies (P1)
 
@@ -77,6 +78,7 @@ Acceptance: `/contact`, the Home contact action, the About contact card, and the
 | FR-014 | The site makes no runtime requests to other origins, has no analytics, and has no service worker. | [OPERATOR 2026-10-01] |
 | FR-015 | Light and dark themes both meet text contrast of at least 4.5:1. | `docs/SPEC.md` Section 8, item 16 |
 | FR-016 | When the free zzThat app launches, the main navigation gains a prominent "Try zzThat" action that links to zzthat.com. | [MICHAEL 2026-10-02]; launch trigger OPEN (Q39) |
+| FR-017 | Every zz code in rendered text, titles, and alt text is lowercase, and no page shows a standalone capital "ZZ" as text. | [MICHAEL 2026-10-02] |
 
 ## Success criteria
 
@@ -104,6 +106,13 @@ Real recognition, a real resolver, accounts, forms or email backends, analytics,
 | Q22 | Field logistics panels: the brief says a and c; the 2026-10-02 wireframe shows a, b, c. The site shows a, the b alternate, and c (OBSERVED). | Keep as built |
 | Q23 | The brief asks for a real handwritten code beside the hero. Panel b is an AI render, labeled "Concept illustration" (OBSERVED). Should a real photo replace it? | Keep panel b with the label |
 | Q24 | Should the About page keep the pitch-sourced founder bio and company-stage sentence? | RESOLVED: removed; the founder card shows Michael's founder origin [OPERATOR 2026-10-02] |
+| Q41 | Source for the alphanumeric example and character counts | Omit note sentence 1; ship the cell as written |
+| Q42 | Show the two capital-ZZ photos? | Do not render |
+| Q43 | Replace the founder bio with the 2026-10-02 first-person text? | Keep the founder origin |
+| Q44 | Add the Hacker Dojo block? | Keep the Location line |
+| Q45 | Hacker Dojo logo permission | No logo |
+| Q46 | Are the supplied headshots approved originals with consent? | Initials cards |
+| Q47 | Adopt the alternate hero and featured copy Michael shared as a reference? | Keep current copy |
 
 ## Workflows
 
