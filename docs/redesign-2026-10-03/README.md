@@ -120,8 +120,11 @@ All three:
 
 ### A · Tape (Narrative Workflow)
 
-- **Idea:** the code is a physical object. A strip of blue painter's tape runs across the full viewport with
-  `zz-copper-lantern-sky-zz` written on it, letter by letter, in a marker hand.
+- **Idea:** the code is a physical object. A strip of blue painter's tape pulls across the full viewport, then
+  `zz-copper-lantern-sky-zz` is written on it, letter by letter, in a marker hand. Every other strip of tape on
+  the page applies itself as it scrolls into view: it unrolls from alternating ends, lifts slightly, and presses
+  flat. The tape on the real photos sticks on the same way. With reduced motion turned on, everything is simply
+  there.
 - **Type:** Bricolage Grotesque (variable: optical size and width) for display and body. Shantell Sans for
   anything written on tape: each strip has its own informality and bounce settings, so no two hands match.
   IBM Plex Mono for the code as a machine reads it.

@@ -6,6 +6,8 @@
     <title>zzThis · Sample A · Tape</title>
     <meta name="description" content="Write a code on a thing; find its record by camera, typing, or voice." />
     <meta name="color-scheme" content="light dark" />
+    <!-- Set before first paint so tape can start un-applied without a flash. -->
+    <script>document.documentElement.classList.add("js");</script>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -61,7 +63,7 @@
       </section>
 
       <div class="tape-run" aria-hidden="false">
-        <p class="tape tape--hero" role="img" aria-label="zz-copper-lantern-sky-zz, handwritten on blue tape">
+        <p class="tape tape--hero" data-apply="left" role="img" aria-label="zz-copper-lantern-sky-zz, handwritten on blue tape">
           <span class="hand" data-write>zz-copper-lantern-sky-zz</span>
         </p>
       </div>
@@ -107,8 +109,8 @@
           <li class="way">
             <h4 class="way__name"><span class="way__n">01</span> Logistics</h4>
             <p class="way__codes">
-              <span class="strip" style="--infm: 70; --bnce: 30; --tilt: -1.6deg">zz-copper-lantern-sky-zz</span>
-              <span class="strip strip--kraft" style="--infm: 40; --bnce: -20; --tilt: 1.1deg">zz-fastfreight-c4821-123-zz</span>
+              <span data-apply="left" class="strip" style="--infm: 70; --bnce: 30; --tilt: -1.6deg">zz-copper-lantern-sky-zz</span>
+              <span data-apply="right" class="strip strip--kraft" style="--infm: 40; --bnce: -20; --tilt: 1.1deg">zz-fastfreight-c4821-123-zz</span>
             </p>
             <p class="way__text">
               Easier handling: mark crates, bags, and parts, then read, link, and hand them off with a phone camera or a
@@ -120,7 +122,7 @@
           <li class="way">
             <h4 class="way__name"><span class="way__n">02</span> Postal</h4>
             <p class="way__codes">
-              <span class="strip strip--kraft" style="--infm: 90; --bnce: 60; --tilt: -0.8deg">zz-post-rock-river-sky-zz</span>
+              <span data-apply="left" class="strip strip--kraft" style="--infm: 90; --bnce: 60; --tilt: -0.8deg">zz-post-rock-river-sky-zz</span>
             </p>
             <p class="way__text">
               A handwritten zz-code can serve as proof of postage and a trackable reference: write it in the stamp corner
@@ -130,8 +132,8 @@
           <li class="way">
             <h4 class="way__name"><span class="way__n">03</span> Everyday use: zzThat</h4>
             <p class="way__codes">
-              <span class="strip" style="--infm: 100; --bnce: 80; --tilt: 1.8deg">zz-kathy-lost-cat-zz</span>
-              <span class="strip strip--kraft" style="--infm: 60; --bnce: 10; --tilt: -1.2deg">zz-moving-box-kitchen-3-zz</span>
+              <span data-apply="right" class="strip" style="--infm: 100; --bnce: 80; --tilt: 1.8deg">zz-kathy-lost-cat-zz</span>
+              <span data-apply="left" class="strip strip--kraft" style="--infm: 60; --bnce: 10; --tilt: -1.2deg">zz-moving-box-kitchen-3-zz</span>
             </p>
             <p class="way__text">
               Free for everyone. Write a code on a lost-pet flyer, a moving box, a garage-sale item, or a note, and anyone
@@ -142,8 +144,8 @@
           <li class="way">
             <h4 class="way__name"><span class="way__n">04</span> AI agents</h4>
             <p class="way__codes">
-              <span class="strip" style="--infm: 30; --bnce: 0; --tilt: -0.6deg">zz-acme-support-agent-zz</span>
-              <span class="strip strip--kraft" style="--infm: 80; --bnce: 40; --tilt: 1.4deg">zz-@agentsmith-zz</span>
+              <span data-apply="right" class="strip" style="--infm: 30; --bnce: 0; --tilt: -0.6deg">zz-acme-support-agent-zz</span>
+              <span data-apply="left" class="strip strip--kraft" style="--infm: 80; --bnce: 40; --tilt: 1.4deg">zz-@agentsmith-zz</span>
             </p>
             <p class="way__text">
               AI agents need identities people can easily know and recognize by name, and enterprises need to name and
@@ -154,8 +156,8 @@
           <li class="way">
             <h4 class="way__name"><span class="way__n">05</span> Blockchain addresses</h4>
             <p class="way__codes">
-              <span class="strip strip--kraft" style="--infm: 50; --bnce: -40; --tilt: 0.9deg">zz-btc-harbor-violet-nine-zz</span>
-              <span class="strip" style="--infm: 95; --bnce: 70; --tilt: -1.5deg">zz-harbor-violet-nine-zz</span>
+              <span data-apply="right" class="strip strip--kraft" style="--infm: 50; --bnce: -40; --tilt: 0.9deg">zz-btc-harbor-violet-nine-zz</span>
+              <span data-apply="left" class="strip" style="--infm: 95; --bnce: 70; --tilt: -1.5deg">zz-harbor-violet-nine-zz</span>
             </p>
             <p class="way__text">
               Wallet, account, smart-contract, and agent addresses on networks such as Bitcoin and Ethereum are long
@@ -166,8 +168,8 @@
           <li class="way">
             <h4 class="way__name"><span class="way__n">06</span> Macros</h4>
             <p class="way__codes">
-              <span class="strip" style="--infm: 20; --bnce: -10; --tilt: 1.2deg">zz-fn-pay-agentsmith-zz</span>
-              <span class="strip strip--kraft" style="--infm: 75; --bnce: 50; --tilt: -1deg">zz-run-reorder-water-zz</span>
+              <span data-apply="right" class="strip" style="--infm: 20; --bnce: -10; --tilt: 1.2deg">zz-fn-pay-agentsmith-zz</span>
+              <span data-apply="left" class="strip strip--kraft" style="--infm: 75; --bnce: 50; --tilt: -1deg">zz-run-reorder-water-zz</span>
             </p>
             <p class="way__text">
               A zz-code can also call a function: a short, human-writable command that asks a system to do something,
@@ -189,7 +191,7 @@
                 <th scope="col">Barcode</th>
                 <th scope="col">QR code</th>
                 <th scope="col">Alphanumeric code</th>
-                <th scope="col" class="is-zz"><span>zzThis</span></th>
+                <th scope="col" class="is-zz"><span data-apply="right">zzThis</span></th>
               </tr>
             </thead>
             <tbody>
@@ -278,7 +280,7 @@
             <h3 class="stage__verb">Mark</h3>
             <p class="stage__text">Write the code on tape, a crate, or a pallet.</p>
             <div class="specimen specimen--mark" aria-hidden="true">
-              <span class="strip strip--lg" style="--infm: 100; --bnce: 60; --tilt: -1.2deg">zz-copper-lantern-sky-zz</span>
+              <span data-apply="right" class="strip strip--lg" style="--infm: 100; --bnce: 60; --tilt: -1.2deg">zz-copper-lantern-sky-zz</span>
             </div>
             <figure class="stage__fig">
               <img src="../../../public/images/panels/alt-c-circled-tape.webp" width="1600" height="664" loading="lazy" decoding="async" alt="Close-up of blue tape reading (zz) camp bravo four two (zz)." />
@@ -466,7 +468,7 @@
         <div class="close__contact" id="contact">
           <h2>Contact</h2>
           <p>Discuss field feedback, a pilot, or collaboration.</p>
-          <a class="mailtape" href="mailto:1@1000x10.com"><span class="hand">1@1000x10.com</span></a>
+          <a class="mailtape" data-apply="right" href="mailto:1@1000x10.com"><span class="hand">1@1000x10.com</span></a>
         </div>
       </section>
     </main>

@@ -74,6 +74,9 @@
   --dur-micro: 120ms;
   --dur-short: 220ms;
   --dur-long: 420ms;
+  --dur-apply: 850ms;
+  --dur-press: 900ms;
+  --mask-solid: oklch(0% 0 0);
 
   --z-base: 1;
   --z-tape: 2;

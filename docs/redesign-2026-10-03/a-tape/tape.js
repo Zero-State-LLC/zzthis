@@ -38,7 +38,31 @@ const reveal = new IntersectionObserver(
 );
 for (const el of document.querySelectorAll("[data-reveal]")) reveal.observe(el);
 
-// 3. Theme toggle (no storage: the spec resets it on reload) and the mobile menu.
+// 3. Tape applies itself as it scrolls in. A second strip in the same row follows a beat later.
+const apply = new IntersectionObserver(
+  (entries) => {
+    for (const entry of entries) {
+      if (entry.isIntersecting || entry.boundingClientRect.top < 0) {
+        const el = entry.target;
+        if (el.classList.contains("hands__wall")) {
+          [...el.children].forEach((pin, i) => {
+            pin.style.setProperty("--apply-delay", `${i * 140}ms`);
+            pin.classList.add("is-applied");
+          });
+        } else {
+          const peers = [...el.parentElement.querySelectorAll(":scope > [data-apply]")];
+          el.style.setProperty("--apply-delay", `${Math.max(0, peers.indexOf(el)) * 180 + (el.classList.contains("tape--hero") ? 150 : 0)}ms`);
+          el.classList.add("is-applied");
+        }
+        apply.unobserve(el);
+      }
+    }
+  },
+  { rootMargin: "0px 0px -12% 0px" },
+);
+for (const el of document.querySelectorAll("[data-apply], .hands__wall")) apply.observe(el);
+
+// 4. Theme toggle (no storage: the spec resets it on reload) and the mobile menu.
 const root = document.documentElement;
 const toggle = document.querySelector("[data-theme-toggle]");
 const isDark = () =>

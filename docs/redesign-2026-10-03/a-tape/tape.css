@@ -364,7 +364,10 @@ code,
 }
 
 .tape--hero {
-  transform: rotate(-1.6deg);
+  --tilt: -1.6deg;
+  --dur-apply: 1100ms;
+  --apply-ease: var(--ease-in-out);
+  transform: rotate(var(--tilt));
   width: 104%;
   margin-inline-start: -2%;
   padding: var(--space-sm) var(--gutter);
@@ -397,7 +400,7 @@ code,
     opacity: 0;
     transform: translateY(0.12em) rotate(-4deg);
     animation: ink var(--dur-short) var(--ease-out) forwards;
-    animation-delay: calc(var(--i) * 42ms + 260ms);
+    animation-delay: calc(var(--i) * 42ms + 1050ms);
   }
 }
 
@@ -808,7 +811,8 @@ code,
   color: var(--color-marker);
   background: var(--color-tape);
   clip-path: polygon(4px 0, calc(100% - 4px) 0, 100% 40%, calc(100% - 3px) 100%, 3px 100%, 0 60%);
-  transform: rotate(-1.5deg);
+  --tilt: -1.5deg;
+  transform: rotate(var(--tilt));
 }
 
 /* ---------- How it works · stages ---------- */
@@ -1049,6 +1053,56 @@ code,
 
 .link-arrow::after {
   content: " →";
+}
+
+/* ---------- Tape applies itself ----------
+ * Each strip starts rolled up at one end. When it scrolls into view it unrolls
+ * along its length (a mask wipe, so the torn ends and the writing stay crisp),
+ * lifted a little off the page, then presses flat. Strips alternate ends.
+ */
+@media (prefers-reduced-motion: no-preference) {
+  .js [data-apply],
+  .js .pin::before {
+    -webkit-mask-image: linear-gradient(var(--mask-solid), var(--mask-solid));
+    mask-image: linear-gradient(var(--mask-solid), var(--mask-solid));
+    -webkit-mask-repeat: no-repeat;
+    mask-repeat: no-repeat;
+    -webkit-mask-position: left center;
+    mask-position: left center;
+    -webkit-mask-size: 0% 100%;
+    mask-size: 0% 100%;
+  }
+  .js [data-apply="right"] {
+    -webkit-mask-position: right center;
+    mask-position: right center;
+  }
+  .js [data-apply].is-applied,
+  .js .pin.is-applied::before {
+    -webkit-mask-size: 100% 100%;
+    mask-size: 100% 100%;
+    animation: unroll var(--dur-apply) var(--ease-out) var(--apply-delay, 0ms) backwards;
+  }
+  .js [data-apply].is-applied {
+    animation:
+      unroll var(--dur-apply) var(--apply-ease, var(--ease-out)) var(--apply-delay, 0ms) backwards,
+      press var(--dur-press) var(--ease-out) var(--apply-delay, 0ms) backwards;
+  }
+}
+
+@keyframes unroll {
+  from {
+    -webkit-mask-size: 0% 100%;
+    mask-size: 0% 100%;
+  }
+}
+
+@keyframes press {
+  from {
+    transform: rotate(calc(var(--tilt, -1deg) * 1.8)) translateY(-5px) scale(1.025);
+  }
+  60% {
+    transform: rotate(var(--tilt, -1deg)) translateY(-1px) scale(1.005);
+  }
 }
 
 /* ---------- Real photos ---------- */
@@ -1387,7 +1441,8 @@ code,
   background-color: var(--color-kraft);
   background-image: repeating-linear-gradient(90deg, var(--tape-fiber) 0 1px, transparent 1px 5px);
   clip-path: polygon(7px 0, calc(100% - 6px) 0, 100% 35%, calc(100% - 5px) 70%, 100% 100%, 5px 100%, 0 65%, 6px 30%);
-  transform: rotate(-1.5deg);
+  --tilt: -1.5deg;
+  transform: rotate(var(--tilt));
   transition: transform var(--dur-short) var(--ease-out);
 }
 
