@@ -1,4 +1,4 @@
-# Agent contract — zzThis
+# Agent contract: zzThis
 
 You are working in **zzThis** (`Zero-State-LLC/zzthis`): human-writable,
 machine-readable codes.
@@ -42,8 +42,8 @@ Do not copy a code map into this file.
 
 ## Escalation
 
-If CI, tests, or validators look wrong — missing coverage, silent skips,
-green-but-inert checks, or a suite that contradicts the spec:
+If CI, tests, or validators look wrong (missing coverage, silent skips,
+green-but-inert checks, or a suite that contradicts the spec):
 
 1. Open a defect issue with label `bug`.
 2. Do **not** patch tests, fixtures, or CI to force green.

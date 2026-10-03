@@ -30,7 +30,7 @@ Acceptance:
 
 1. Home renders the hero, featured statement, comparison, How it works, Field logistics, From photo to action, More applications, About teaser, and Contact action in the order in `docs/SPEC.md` Section 3.1a [WIRE].
 2. Hero, featured statement, comparison cells, workflow lines, and category stories match `docs/SPEC.md` Sections 3.2 to 3.4 character for character [BRIEF].
-3. The hero H1 reads "Barcodes made things scannable. zzThis makes things readable-writable — and smart." per Michael's v1.0 change list (Q62 supersedes the Q47 spaced hyphen; this em dash is the one FR-006 exception) [DANNY 2026-10-03; Michael v1.0 change list]. The live build still renders the Q47 H1 until T033 ships.
+3. The hero H1 reads "Barcodes made things scannable. zzThis makes things readable-writable - and smart." per Michael's v1.0 change list, with a spaced hyphen and no em dash (Q62, FR-006) [DANNY 2026-10-03, revised: "Fix the em dashes"]. The live build still renders the Q47 H1 until T033 ships.
 4. The core workflow shows the lowercase code as text [MICHAEL 2026-10-02].
 5. The comparison shows four cards with four rows each, per `docs/SPEC.md` Section 3.2 H.3 [MICHAEL 2026-10-02].
 6. Home section 01 includes the Top ways block, 3 across on desktop, per `docs/SPEC.md` H.2a [MICHAEL 2026-10-02].
@@ -68,7 +68,7 @@ Acceptance: `/contact`, the Home contact action, the About contact card, and the
 | FR-003 | The footer shows How it works, Applications, Demo, About, Contact, the contact email, and the words "Patent pending". | [MICHAEL 2026-10-02] |
 | FR-004 | Each page has exactly one H1; headings follow content hierarchy without skipping levels. | [BRIEF] |
 | FR-005 | Copy in `copy` blocks of `docs/SPEC.md` ships verbatim. Copy lives in typed content objects so that it can change without layout edits. | [BRIEF] |
-| FR-006 | No rendered em dash, except the hero headline em dash in "readable-writable — and smart." (Q62 supersedes the Q47 spaced hyphen for the H1). | [MICHAEL 2026-10-02]; [DANNY 2026-10-03; Michael v1.0 change list] |
+| FR-006 | No rendered em dash, with no exceptions. The hero H1 uses a spaced hyphen: "readable-writable - and smart." (Q47, Q62). | [MICHAEL 2026-10-02]; [DANNY 2026-10-03, revised: "Fix the em dashes"] |
 | FR-007 | No research target or unmeasured performance figures, and no claims of pilots, customers, endorsement, or adoption, appear on any page. | [MICHAEL 2026-10-02] [PRODUCT] |
 | FR-008 | Standalone AI-render panels carry "Concept illustration". Each grouped gallery carries one label above its panels. Captions name the workflow. | [MICHAEL 2026-10-02] |
 | FR-009 | Founder and advisor cards show a supplied headshot where one exists (Michael, Patrick, Arshi, Ridham) and initials otherwise (Q46). No LinkedIn scraping. | [MICHAEL 2026-10-02] [WIRE] |
@@ -120,12 +120,12 @@ Real recognition, a real resolver, accounts, forms or email backends, analytics,
 | Q44 | Add the Hacker Dojo block? | RESOLVED: use as given [MICHAEL 2026-10-02]. New section after the founder. Location stays. |
 | Q45 | Hacker Dojo logo permission | RESOLVED: use as given [MICHAEL 2026-10-02]. Logo is on About. Michael will ask Hacker Dojo for permission once the beta is live. |
 | Q46 | Are the supplied headshots approved originals with consent? | RESOLVED: use as given [MICHAEL 2026-10-02]. Four headshots ship. Michael will ask the people pictured for permission once the beta is live. |
-| Q47 | Adopt the alternate hero and featured copy Michael shared as a reference? | RESOLVED: use as given [MICHAEL 2026-10-02]. New paragraph and featured text; the H1 uses the spaced hyphen as typed. SUPERSEDED in its H1 part by Q62: the hero headline keeps the em dash in "readable-writable — and smart." [DANNY 2026-10-03; Michael v1.0 change list]. |
+| Q47 | Adopt the alternate hero and featured copy Michael shared as a reference? | RESOLVED: use as given [MICHAEL 2026-10-02]. New paragraph and featured text; the H1 uses the spaced hyphen as typed. Q62 keeps the spaced hyphen in the v1.0 H1 "readable-writable - and smart." [DANNY 2026-10-03, revised: "Fix the em dashes"]. |
 | Q48 | Are codes case- and space-insensitive? | RESOLVED (issue #33): yes; rules in `docs/SPEC.md` Section 2.2a. The display rule (no capital-letter zz in images) feeds Q53. |
 | Q49 | Allow `@` handles like `zz-@agentsmith-zz`? | RESOLVED (issue #34): yes; the Top ways example stays as written. |
 | Q53 | Three real photos show a capital-letter zz. Replace or remove? (issue #39) | RESOLVED: keep them [MICHAEL 2026-10-03 #39] (FR-019) |
 | Q54 | Keep the blockchain and ledger mentions (Top ways 01 and 05, ENS image)? (issue #40) | RESOLVED: no change [MICHAEL 2026-10-03 #40] |
-| Q62 | Keep the v1.0 hero headline em dash ("readable-writable — and smart.") in place of the Q47 spaced hyphen? | RESOLVED: yes. Keep the em dash [DANNY 2026-10-03; Michael v1.0 change list]. It is the one allowed exception (FR-006). |
+| Q62 | Use an em dash in the v1.0 hero headline in place of the Q47 spaced hyphen? | RESOLVED: no. The H1 reads "readable-writable - and smart." with a spaced hyphen [DANNY 2026-10-03, revised: "Fix the em dashes"]. There is no exception to FR-006. |
 
 ## Workflows
 

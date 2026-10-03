@@ -32,7 +32,7 @@ Observable done (a stranger can check this without reading the chat):
 
 Product-true locks (do not reopen in implement):
 
-- Copy in `docs/SPEC.md` `copy:` blocks ships verbatim. The hero H1 keeps the em dash in "readable-writable — and smart." (Q62 supersedes Q47's spaced hyphen).
+- Copy in `docs/SPEC.md` `copy:` blocks ships verbatim. The hero H1 uses a spaced hyphen, not an em dash: "readable-writable - and smart." (Q62).
 - No capital-letter zz in site copy. Uppercase heading styles must exempt the brand name.
 - Concept labels, "Demo · mock data", "Patent pending", and no unmeasured metrics, as in spec sections 1 and 3.1a.
 - Fonts are self-hosted. The site makes no runtime requests to other origins.
@@ -46,7 +46,7 @@ Non-goals:
 ## Open questions
 
 - ~~Which direction, or which mix?~~ Direction B. B v1.0 (`docs/redesign-2026-10-03/b-resolver-v1/`, Home, About, and Applications) is the reference. Accepted 2026-10-03, Danny.
-- ~~The v1.0 headline em dash?~~ Keep it. Q62 supersedes Q47's spaced hyphen for the H1.
+- ~~The v1.0 headline em dash?~~ No em dash (Danny 2026-10-03, revised). The H1 keeps Q47's spaced hyphen (Q62).
 - ~~Non-ASCII example codes on Home?~~ Keep them. The B v1.0 console shows a non-error "coming later" note for non-ASCII letters. ASCII input stays exact match only.
 - Native-reader check for the Korean, Japanese, and Aramaic codes: open, tracked in #51 (Q63).
 - Does Michael approve the new lines each sample adds (listed in the samples README, section 4)?
