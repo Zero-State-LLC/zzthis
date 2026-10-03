@@ -3,7 +3,7 @@
 Feature: [spec.md](spec.md) · Plan: [plan.md](plan.md)
 Workflows for every implementing task: anti-slop-code, production-systems, google-developer-style (stop-slop for copy). CI: `ci.yml`, `site-ci.yml`, `free-security-scan.yml`, `pages.yml` (deploy).
 
-`[x]` means done and OBSERVED on `main` (40dfa3b). `[P]` means the task can run in parallel with other `[P]` tasks in the same phase.
+`[x]` means done and OBSERVED on `main` (d721783, 2026-10-03). `[P]` means the task can run in parallel with other `[P]` tasks in the same phase.
 
 ## Phase 1: Setup
 
@@ -47,7 +47,7 @@ Workflows for every implementing task: anti-slop-code, production-systems, googl
 
 - [ ] T018 Issue #11: confirm xTechSearch eligibility and registrations; go or no-go by 2026-10-12. Owner: Danny. The site is one of the submission materials.
 
-## Phase 6: Public repo hygiene
+## Phase 6b: Public repo hygiene
 
 - [x] T019 Remove research targets and pitch-only text from the repo and site (Q24 RESOLVED [OPERATOR 2026-10-02]). The founder card now shows Michael's founder origin.
 
@@ -65,3 +65,10 @@ Workflows for every implementing task: anti-slop-code, production-systems, googl
 - [x] T026 Home Top ways block inside section 01 (1 / 2 / 3 columns).
 - [x] T027 Applications galleries and the Card frame variant (`object-fit: contain`, width cap).
 - [x] T028 New images are WebP. The applications set is about 0.6 MB.
+
+## Phase 10: v1 spec redeepen 2026-10-03
+
+- [ ] T029 Move Flow B to the v1 grammar (`docs/SPEC.md` Section 2.2a): replace or wrap `src/lib/grammar.ts` with the spec 003 library (003 T013), add the B5 bare-mark state and the per-reason B4 lines in Section 4.4, and run every G9 vector as a test (Section 8 item 30). Keep 100% coverage. Closes the divergence in Section 4.4.
+- [ ] T030 Image display rule (FR-019, Q53 issue #39): audit every site image for a capital-letter zz mark, on its own or in a code. Regenerate AI renders that show one. The known real photos are `hw-mark-on-object`, `hw-dog-collar-tag`, and `app-truck-after`: remove them until Michael sends lowercase replacements, unless he answers Q53 otherwise. Never AI-edit a real photo. Update the About 2x2 and the truck before-and-after pair so no layout is left with a gap.
+- [ ] T031 If Michael answers Q54 (issue #40) with a change, apply it to `src/content/uses.ts` and `src/content/applications.ts` verbatim.
+- [x] T032 Fix stale status in the specs: checklist Flow B and Section 7 items, `main` pins, success-criteria count, SPEC Section 3.2 Q2 note, SPEC header and Section 7 (this PR).
