@@ -55,7 +55,7 @@ Do not weaken tests, fixtures, or CI to force green. Open a `bug` issue instead 
 - Default workflows for product code: anti-slop-code, production-systems, google-developer-style.
 - Reuse the CI that exists: `.github/workflows/ci.yml` (job `build`, the required check; do not edit or duplicate), `site-ci.yml` (typecheck and test), `free-security-scan.yml` (calls `scripts/security-scan.sh`), and `pages.yml` (deploy on push to `main`). A new service adds a workflow only when none of these covers it, and the spec names it.
 - Node 24 for all JavaScript and TypeScript work, matching CI.
-- Developer prose follows the Google developer documentation style guide. New prose uses no em dashes. The one exception is the site hero line chosen by Michael [MICHAEL 2026-10-02].
+- Developer prose follows the Google developer documentation style guide. New prose uses no em dashes, with no exceptions. The site hero line uses a spaced hyphen [DANNY 2026-10-03, revised: "Fix the em dashes"].
 
 ## Governance
 

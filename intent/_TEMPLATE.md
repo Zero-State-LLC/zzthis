@@ -1,4 +1,4 @@
-# Intent — {{CHANGE_STREAM}}
+# Intent: {{CHANGE_STREAM}}
 
 Author: {{AUTHOR}}
 Date: {{DATE}}

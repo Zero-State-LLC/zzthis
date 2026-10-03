@@ -1,4 +1,4 @@
-# intent/ — SDLC intent records
+# intent/: SDLC intent records
 
 **Kind:** process. Not a specification. Not implementation authority.
 

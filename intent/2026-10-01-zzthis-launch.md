@@ -1,4 +1,4 @@
-# Intent — zzThis launch surface
+# Intent: zzThis launch surface
 
 Author: Zero State agents (draft for human accept)
 Date: 2026-10-01
@@ -10,7 +10,7 @@ Next stage is `spec.md` (spec-kit specify). Do not skip to code.
 
 ## Problem / why now
 
-zzThis — human-writable, machine-readable codes — has a repo but no spec,
+zzThis (human-writable, machine-readable codes) has a repo but no spec,
 public site, or demo. [verified: README.md is the only file on main at
 repo creation, 2026-10-01]
 

@@ -380,7 +380,7 @@ describe("content hygiene across all content modules", () => {
   });
 
   it("contains no em dash (Q47 hero uses a spaced hyphen)", () => {
-    expect(allStrings.filter((text) => text.includes("—"))).toEqual([]);
+    expect(allStrings.filter((text) => text.includes("\u2014"))).toEqual([]);
   });
 
   it("contains no unmeasured performance figures or endorsement claims", () => {
