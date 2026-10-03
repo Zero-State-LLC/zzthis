@@ -1,7 +1,7 @@
 # Feature spec: wordlist and check word
 
 Feature ID: 003-wordlist-checkword
-Status: not built. Requested in issue #14. Deepened 2026-10-03: the v1 text grammar (US3) is accepted from Michael's Q48 and Q49 answers ([`docs/SPEC.md` Section 2.2a](../../docs/SPEC.md)).
+Status: not built. Requested in issue #14. Deepened 2026-10-03: the v1 text grammar (US3) is accepted from Michael's Q48 and Q49 answers ([`docs/SPEC.md` Section 2.2a](../../docs/SPEC.md)), and updated the same day from his answers to Q50 to Q61 (draft PR, pending Danny's merge).
 Phase: specify (what and why). The how is in [plan.md](plan.md).
 Constitution: [.specify/memory/constitution.md](../../.specify/memory/constitution.md).
 
@@ -60,10 +60,10 @@ Acceptance:
 | FR-006 | The library implements the v1 text grammar in `docs/SPEC.md` Section 2.2a (G1 to G8) and passes its G9 test vectors. This replaces the earlier placeholder that excluded the circled marker, `@`, and mixed case. | [MICHAEL 2026-10-02 #33] [MICHAEL 2026-10-02 #34] |
 | FR-007 | Parsing is case-insensitive and separator-tolerant; the canonical form is lowercase and hyphen-separated. | [MICHAEL 2026-10-02 #33] |
 | FR-008 | A code with content needs a marker at both ends; a circled `(zz)` counts. A missing closing marker fails with `no-closing-marker`. | [MICHAEL 2026-10-02 #33] |
-| FR-009 | The bare mark (`zz` or `(zz)` with no content) parses as its own kind, `bare`, with canonical form `zz`. | [MICHAEL 2026-10-02 #33] |
-| FR-010 | `@` is allowed only as the first character after the opening marker and marks a handle. Inside a handle, letters, numbers, `.` and `_` are allowed. A handle is the only part of its code. | [MICHAEL 2026-10-02 #34]; single-part rule is the Q51 default (issue #37) |
+| FR-009 | The bare mark is `zz` or `(zz)` alone, in any case or mix, and parses as its own kind, `bare`, with canonical form `zz`. `zz-` fails with `no-closing-marker`; `zz-zz` and `(zz) (zz)` fail with `no-content`. | [MICHAEL 2026-10-02 #33] [MICHAEL 2026-10-03 #48] |
+| FR-010 | `@` marks a handle. It starts the first part, or the second part when the first part is a tag. Inside a handle, letters, numbers, `.` and `_` are allowed. Plain qualifier parts may follow the handle. An `@` touching the opening marker or ending a tag part is rewritten (Section 2.2a G2 step 5). The parser returns the handle, the tag, and the qualifiers separately. | [MICHAEL 2026-10-02 #34] [MICHAEL 2026-10-03 #37]; tag rule INFERRED |
 | FR-011 | `#`, `$`, `/`, and `:` fail with `reserved-symbol`. | [MICHAEL 2026-10-02 #34] |
-| FR-012 | A code with content has 1 to 5 parts. | Q50 default (issue #36) |
+| FR-012 | A code with content has one or more parts. There is no part maximum; the 256-character input guard is the only cap and is a parameter. | [MICHAEL 2026-10-03 #36] (Q50) |
 | FR-013 | Letters outside ASCII fail with `unsupported-script` in v1. | INFERRED; any-language codes are v2 (issue #35) |
 | FR-014 | The parser returns exactly one failure reason, chosen by the fixed order in Section 2.2a G6. | INFERRED |
 | FR-015 | The parser is a pure function with no I/O, no wordlist lookup, and no network. Word-code versus field-code classification is a second step that takes the wordlist as input. | INFERRED, so the demo can use it under the no-network rule (001 FR-011) |
@@ -72,6 +72,9 @@ Acceptance:
 | FR-018 | The check word is one word from the same list, placed last. Verification returns exactly one of `ok`, `check-mismatch`, `unknown-word`, `wrong-length`. | INFERRED placement and result set; the check word itself is [PRODUCT] |
 | FR-019 | The pipeline and the yield report are deterministic: the same input list and settings give byte-identical output. | INFERRED, so the report can be reviewed in a PR |
 | FR-020 | The one-wrong-word guarantee is tested over the whole wordlist, not a fixed sample of codes. The test is one of: (a) exhaustive: for every position and every pair of distinct words at that position, the substitution changes the check word, checked on the fixture list for every code and on the real list through a proof that the check function is one-to-one in each position when the others are fixed, with that per-position property tested directly; or (b) property-based: a seeded generator draws codes and single-word substitutions across every position and the full list, runs in CI with a fixed seed and at least 100,000 cases, and is paired with the exhaustive test on the fixture list. A fixed sample of codes alone does not pass. | INFERRED from the US2 story and the v1 exit criterion, PR #43 review |
+| FR-022 | Each scope names the wordlist and list version its check words use, and the reader verifies a code's check word against that list. Candidate lists from Michael: a 10,000-word list for postal use, the BIP39 list (2,048 words, with official lists in nine more languages) for Bitcoin, and the EFF long wordlist (7,776 words). Any list used to issue codes goes through FR-001 to FR-004 and the yield report; a list that fails FR-003 is reported, not used silently (the English BIP39 list has 13,138 word pairs closer than edit distance 3, checked 2026-10-03). | [MICHAEL 2026-10-03 #45]; counts verified against the published lists; filter rule INFERRED |
+| FR-023 | A `name` part (`zz-vitalik.eth-zz`) is valid without `@` when it ends in a known suffix (v1: `.eth`). The suffix list is data, so suffixes can be added without a grammar change. | [MICHAEL 2026-10-03 #38] |
+| FR-024 | The library exposes the field-code matching key in `docs/SPEC.md` Section 2.2a G10 (number words to digits, digit runs joined, lookalikes folded) as a pure function, with the G10 vectors as tests. | [MICHAEL 2026-10-03 #44]; key INFERRED |
 | FR-021 | Word-code versus field-code classification runs the near-word check in `docs/SPEC.md` Section 2.2a G1: a letters-only part within edit distance 2 of a wordlist word makes the code `confirm`, not field, and returns the candidates. The classifier passes every G1a vector. | INFERRED, PR #43 review |
 
 ## Success criteria
@@ -93,7 +96,7 @@ The grammar (US3) and the check word (US2) do have pass rules: every G9 and G1a 
 
 | Where | State | Meaning |
 |---|---|---|
-| Parser | One of the 11 reasons in Section 2.2a G6 | Input is not a valid v1 code |
+| Parser | One of the 11 reasons in Section 2.2a G6 (`part-count` removed, `no-content` added on 2026-10-03) | Input is not a valid v1 code |
 | Classifier | `word` or `field` | All parts on the list, or not |
 | Check word | `check-mismatch` | Parts are on the list, but the check word does not match |
 | Check word | `unknown-word` (with position) | A part is not on the list |
@@ -104,7 +107,10 @@ The grammar (US3) and the check word (US2) do have pass rules: every G9 and G1a 
 
 - `zz-copper-lantern-sky` (no closing marker): `no-closing-marker`. The old demo parser accepted it; the v1 grammar does not.
 - `zz-zz-zz`: `marker-in-body`.
-- `zz-@agentsmith-neo-zz`: `invalid-handle` (Q51 default).
+- `zz-@agentsmith-neo-zz`: handle `@agentsmith` with qualifier `neo` (Q51).
+- `zz-vitalik.eth-zz`: `name` (Q52). `zz-example.com-zz`: `invalid-character`.
+- A code with six or more parts: valid; only the 256-character guard applies (Q50).
+- `zz-zz`: `no-content` (Q61).
 - A typed en dash between words: read as a hyphen (Section 2.2a G2 step 3).
 - A code across two lines: one code.
 - A field code such as `zz-b2-smith-1-zz` goes through the parser but not the check word; only issued word codes carry a check word.
@@ -113,7 +119,7 @@ The grammar (US3) and the check word (US2) do have pass rules: every G9 and G1a 
 
 ## Terms
 
-This spec says "check word". `docs/SPEC.md` also says "checksum word". Both mean the same extra word that detects errors. "Part" means one separator-delimited piece of a code: a word, a number, a mix like `b2`, or a handle.
+This spec says "check word". `docs/SPEC.md` also says "checksum word". Both mean the same extra word that detects errors. "zz-code", "zz-code-words", "code-words", and "zz-Code" all mean a code [MICHAEL 2026-10-03 #36]. "Part" means one separator-delimited piece of a code: a word, a number, a mix like `b2`, or a handle.
 
 ## Out of scope
 
@@ -125,13 +131,16 @@ Recognition models (spec 004), the resolver (spec 002), and human-factors studie
 |---|---|---|
 | Q27 | Which formats come first? | None chosen |
 | Q30 | Which error classes must the check word detect (one wrong word, swapped words, a dropped word, voice confusions)? | One wrong word (INFERRED minimum) |
-| Q31 | Target wordlist size. Sources differ: 5,000 words and a candidate 10,000 [PRODUCT], and "about 4,000 known words" in the recognition plan [OPERATOR 2026-10-02]. | None chosen |
+| Q31 | Target wordlist size. Sources differ: 5,000 words and a candidate 10,000 [PRODUCT], and "about 4,000 known words" in the recognition plan [OPERATOR 2026-10-02]. Michael adds that each scope can use its own list (FR-022) [MICHAEL 2026-10-03 #45]. | None chosen |
 | Q32 | Language and licensing of the candidate word source | None chosen |
 | Q35 | How are "distinct letter shapes" and "distinct sounds" measured, and what is the pass rule for each? | None chosen; blocks the shape and sound filter tasks |
-| Q50 | How many parts can a code have? (issue #36) | 1 to 5 |
-| Q51 | `zz@-` versus `zz-@`; more words after a handle? (issue #37) | Same code; handle is the only part |
-| Q52 | Dots outside handles? (issue #38) | Not allowed |
-| Q55 | `zz` inside running text (issue #41) | Typed lookup takes one whole code |
+| Q50 | How many parts can a code have? (issue #36) | RESOLVED: no design limit (FR-012) |
+| Q51 | `zz@-` versus `zz-@`; more words after a handle? (issue #37) | RESOLVED: same code; qualifiers may follow (FR-010) |
+| Q52 | Dots outside handles? (issue #38) | RESOLVED: `.eth` names valid as written (FR-023) |
+| Q55 | `zz` inside running text (issue #41) | RESOLVED: typed lookup takes one whole code; scanning boxes candidates (spec 004 FR-013) |
+| Q57 | Lookalike characters in field codes (issue #44) | RESOLVED: matching key (FR-024) |
+| Q58 | Verify the check word before matching (issue #45) | RESOLVED: yes (FR-022, spec 002 FR-021) |
+| Q61 | `zz-` and `zz-zz` as bare marks (issue #48) | RESOLVED: they fail (FR-009) |
 
 ## Workflows
 

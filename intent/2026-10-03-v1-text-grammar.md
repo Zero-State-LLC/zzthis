@@ -30,7 +30,7 @@ Observable done (a stranger can check this without reading the chat):
 Product-true locks (do not reopen in implement):
 
 - Michael's Q48 and Q49 rules, used as given.
-- The defaults for Q50 to Q56 (issues #36 to #42) stand until Michael answers those issues.
+- The defaults for Q50 to Q56 (issues #36 to #42) stand until Michael answers those issues. He answered them, and Q57 to Q61, on 2026-10-03; the update is gated by [`2026-10-03-michael-answers-q50-q61.md`](2026-10-03-michael-answers-q50-q61.md).
 - ASCII only in v1; any-language codes are v2 (issue #35).
 - Lowercase `zz` or the circled `(zz)` in our own materials; never a capital-letter zz mark.
 

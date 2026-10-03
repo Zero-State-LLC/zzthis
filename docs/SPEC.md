@@ -9,8 +9,8 @@
 > | 6 Stack and repo | [`specs/001-marketing-site/plan.md`](../specs/001-marketing-site/plan.md) |
 > | 7 Workflows | Superseded by the Workflows section in each `specs/*/spec.md`. The "OPEN Q13" and "draft PR" text below is stale. |
 > | 8 Acceptance | [`specs/001-marketing-site/checklists/requirements.md`](../specs/001-marketing-site/checklists/requirements.md) |
-> | 2.2a v1 text grammar | Accepted 2026-10-03 from Michael's Q48 and Q49 answers. Implemented by the spec 003 library (US3). |
-> | 9 Questions | Still the decision log. Q21 to Q39 were added on 2026-10-02; Q49 to Q56 on 2026-10-03. |
+> | 2.2a v1 text grammar | Accepted 2026-10-03 from Michael's Q48 and Q49 answers; updated the same day from his answers to Q50 to Q61 (draft, pending Danny's merge). Implemented by the spec 003 library (US3). |
+> | 9 Questions | Question table. Q21 to Q39 were added on 2026-10-02; Q49 to Q61 on 2026-10-03, and Q50 to Q61 were answered the same day. Section 9a is the running decisions log. |
 > | 12 Roadmap | v1 scope, exit criteria, and v2 candidates. |
 > | 10 Architecture | [`specs/002-resolver-core/plan.md`](../specs/002-resolver-core/plan.md), [`specs/004-capture/plan.md`](../specs/004-capture/plan.md) |
 >
@@ -85,7 +85,7 @@ This spec covers three deliverables and one proposal:
 
 **Words.** The site shows lowercase code words: "MARK a lowercase zz code" [BRIEF]. Codes are built from a controlled word codebook designed for handwriting, reading, speech, recall, correction, optical recognition, and error detection [PRODUCT].
 
-**Case rule.** Every zz code in site copy (text, headings, captions, titles) is lowercase and site copy never writes a standalone capital "ZZ". Photos and renders supplied by Michael may show a capital ZZ mark or uppercase letters inside a code; alt text describes them in words ("capital-letter zz mark") or quotes the code as shown [MICHAEL 2026-10-02] (Q42 RESOLVED).
+**Case rule.** Every zz code in site copy (text, headings, captions, titles) is lowercase and site copy never writes a standalone capital "ZZ". Photos and renders supplied by Michael may show a capital ZZ mark or uppercase letters inside a code; alt text describes them in words ("capital-letter zz mark") or quotes the code as shown [MICHAEL 2026-10-02] (Q42 RESOLVED). The three real photos with a capital-letter zz stay [MICHAEL 2026-10-03 #39] (Q53 RESOLVED); images we generate keep lowercase zz (Section 2.2a G7).
 
 **Mark types.** A zz mark can be words, numbers, or simple hand-drawn symbols such as a smiley or tally marks, and a person can read it even when it is written inside a sentence [MICHAEL 2026-10-02]. A code can connect to authorized macros as well as a record and next action [MICHAEL 2026-10-02]. The site names this as a concept only and does not describe how macros run or are authorized (INFERRED).
 
@@ -96,8 +96,8 @@ This spec covers three deliverables and one proposal:
 | `zz-copper-lantern-sky-zz` | Hero example; crate tape | [BRIEF] [ASSETS] | Valid, plain |
 | `zz-apple-sky-lantern` | Postage code written in the label area | [PRODUCT] | Fails `no-closing-marker` |
 | `zz-blue-bike-astoria-zz` | Physical thing | [PRODUCT] | Valid, plain |
-| `zz-vitalik.eth-zz` | Web3 resource | [PRODUCT] | Fails `invalid-character` (Q52 default, issue #38) |
-| `zz@-AgentSmith-neo-zz` | Verified agent | [PRODUCT] | Fails `invalid-handle` (Q51 default, issue #37) |
+| `zz-vitalik.eth-zz` | Web3 resource | [PRODUCT] | Valid, name (G4 domain-style name; Q52, issue #38) |
+| `zz@-AgentSmith-neo-zz` | Verified agent | [PRODUCT] | Valid, handle with qualifier `neo`; canonical `zz-@agentsmith-neo-zz` (Q51, issue #37) |
 | `zz-@agentsmith-zz` | AI agent handle (Home, Top ways 04) | [MICHAEL 2026-10-02] | Valid, handle |
 | `zz-b2-smith-1-zz`, `zz-b2-4-zz` | Duffel and crate tape (panel a) | [ASSETS] | Valid, plain (field code) |
 | `(zz) camp bravo four two (zz)` | Circled marker variant on a pallet (panel c) | [BRIEF] [ASSETS] | Valid, plain; canonical `zz-camp-bravo-four-two-zz` |
@@ -106,7 +106,9 @@ This spec covers three deliverables and one proposal:
 
 **Circled-zz variant.** Panel c shows a "circled zz marker variant" on a wrapped mixed-goods pallet [BRIEF], written as `(zz) camp bravo four two (zz)` [ASSETS].
 
-**Namespace marker.** The `@` marker appears in the verified-agent example `zz@-AgentSmith-neo-zz` [PRODUCT]. Michael's Q49 answer sets the v1 rule: `@` comes first, right after the opening marker, and marks a handle (Section 2.2a G4) [MICHAEL 2026-10-02 #34]. Verification is a resolver concern, not something the printed characters prove (INFERRED); verifying who runs a handle is a v2 candidate (Section 12).
+**Three kinds of zz-code.** A zz-code has no design limit on its size [MICHAEL 2026-10-03 #36]. It can be (1) a text code: words, numbers, handles, or domain-style names between the markers (Section 2.2a); (2) a drawn code: a hand-drawn image between `zz-` and `-zz`; or (3) an object code: a ZZ mark (capitalized, and can be circled) attached to an object such as a picture or a sign, where the image of that object, ideally with its mark, is the code [MICHAEL 2026-10-03 #36]. v1 parses text codes only; drawn and object codes need image matching and are v2 candidates (Section 12.2). "zz-code", "zz-code-words", "code-words", and "zz-Code" all name the same thing [MICHAEL 2026-10-03 #36]; this spec uses "code" or "zz-code" (INFERRED).
+
+**Namespace marker.** The `@` marker appears in the verified-agent example `zz@-AgentSmith-neo-zz` [PRODUCT]. Michael's Q49 answer sets the v1 rule: `@` comes first, right after the opening marker, and marks a handle (Section 2.2a G4) [MICHAEL 2026-10-02 #34]. His Q51 answer lets more words follow a handle, and says an `@` touching the zz is not intentional, so the reader treats it as separate [MICHAEL 2026-10-03 #37]. Verification is a resolver concern, not something the printed characters prove (INFERRED); verifying who runs a handle is a v2 candidate (Section 12).
 
 **Word counts and capacity:**
 
@@ -122,7 +124,7 @@ This spec covers three deliverables and one proposal:
 
 ### 2.2a v1 text grammar (accepted 2026-10-03)
 
-This section is the accepted v1 grammar for codes written as text. It replaces the "product options, not yet accepted grammar" placeholder in spec 003 FR-006. Sources: Michael's replies on issue #33 (Q48) and issue #34 (Q49) [MICHAEL 2026-10-02 #33] [MICHAEL 2026-10-02 #34], used as given. Where Michael's replies leave a gap, the rule carries a default with its question ID (Q50 to Q56, issues #36 to #42) or is marked INFERRED. Spec 003 owns the library that implements it; specs 002 and 004 and the demo (001 T029) call that one library. Intent: [`intent/2026-10-03-v1-text-grammar.md`](../intent/2026-10-03-v1-text-grammar.md) (accepted by Danny, 2026-10-03 2:52 AM PT).
+This section is the accepted v1 grammar for codes written as text. It replaces the "product options, not yet accepted grammar" placeholder in spec 003 FR-006. Sources: Michael's replies on issue #33 (Q48) and issue #34 (Q49) [MICHAEL 2026-10-02 #33] [MICHAEL 2026-10-02 #34], and his answers to Q50 to Q61 (issues #36 to #42 and #44 to #48) in a document sent through Danny on 2026-10-03 [MICHAEL 2026-10-03], used as given. Where Michael's answers leave a gap, the rule is marked INFERRED. Michael expects firmer rules later, by context and language [MICHAEL 2026-10-03 #44] [MICHAEL 2026-10-03 #46]; this section is the v1 starting point. Update intent: [`intent/2026-10-03-michael-answers-q50-q61.md`](../intent/2026-10-03-michael-answers-q50-q61.md). Spec 003 owns the library that implements it; specs 002 and 004 and the demo (001 T029) call that one library. Intent: [`intent/2026-10-03-v1-text-grammar.md`](../intent/2026-10-03-v1-text-grammar.md) (accepted by Danny, 2026-10-03 2:52 AM PT).
 
 v1 is ASCII only. Any-language codes are a v2 candidate (issue #35).
 
@@ -132,13 +134,14 @@ v1 is ASCII only. Any-language codes are a v2 candidate (issue #35).
 |---|---|---|---|
 | Word code | Dictionary words from the closed wordlist (spec 003) | `zz-copper-lantern-sky-zz` | [MICHAEL 2026-10-02 #34] |
 | Field code | Words or names mixed with numbers | `zz-b2-smith-1-zz` | [MICHAEL 2026-10-02 #34] |
-| Handle | A name for a person, organization, or AI agent. The first part starts with `@` | `zz-@agentsmith-zz` | [MICHAEL 2026-10-02 #34] |
-| Bare mark | `zz` or a circled `(zz)` with no content | `zz` | [MICHAEL 2026-10-02 #33] |
+| Handle | A name for a person, organization, or AI agent, starting with `@`. Qualifier parts may follow it; one tag part may come before it | `zz-@agentsmith-zz`, `zz-@agentsmith-neo-zz` | [MICHAEL 2026-10-02 #34] [MICHAEL 2026-10-03 #37] |
+| Name | A domain-style name from a known naming system, written without `@` (v1: `.eth`, as Ethereum's ENS writes it) | `zz-vitalik.eth-zz` | [MICHAEL 2026-10-03 #38] |
+| Bare mark | `zz` or a circled `(zz)` alone, in any case or mix | `zz` | [MICHAEL 2026-10-02 #33] [MICHAEL 2026-10-03 #48] |
 
-- The parser reports one of three kinds: `plain` (word code or field code), `handle`, or `bare`. Telling a word code from a field code needs the wordlist: a plain code whose parts are all wordlist words is a word code. Every other plain code is a field code, including codes such as `zz-hello-zz` whose words are not on the list. Michael's definition ("words or names mixed with numbers") is extended to cover these (INFERRED).
-- Near-word check before field classification (INFERRED, PR #43 review). A misread wordlist word (`coper` for `copper`) must not turn a word code into a field code. Before the classifier calls a code a field code, it checks every letters-only part that is not on the wordlist. A part within edit distance 2 of a wordlist word is a near-word. A code with a near-word is classified `confirm`, not field, and lists each near-word with its position and its wordlist candidates (nearest first; ties all listed). The client shows a confirm step for each near-word: the candidate words and the part as written. Snapping is off for a part only after the person picks "as written". Picking a candidate snaps it, and the code is classified again. Parts with a digit, handle parts, and parts farther than 2 from every word are never near-words. Because every pair of wordlist words is at least 3 apart (spec 003 FR-003), a part at distance 1 has exactly one candidate. The distance limit is a parameter until the real-photo test set (spec 004 Q37) measures it. Vectors are in G1a.
+- The parser reports one of four kinds: `plain` (word code or field code), `handle`, `name`, or `bare`. Telling a word code from a field code needs the wordlist: a plain code whose parts are all wordlist words is a word code. Every other plain code is a field code, including codes such as `zz-hello-zz` whose words are not on the list. Michael's definition ("words or names mixed with numbers") is extended to cover these (INFERRED).
+- Near-word check before field classification (INFERRED, PR #43 review). A misread wordlist word (`coper` for `copper`) must not turn a word code into a field code. Before the classifier calls a code a field code, it checks every letters-only part that is not on the wordlist. A part within edit distance 2 of a wordlist word is a near-word. A code with a near-word is classified `confirm`, not field, and lists each near-word with its position and its wordlist candidates (nearest first; ties all listed). The client shows a confirm step for each near-word: the candidate words and the part as written. Snapping is off for a part only after the person picks "as written". Picking a candidate snaps it, and the code is classified again. Parts with a digit, handle parts, name parts, and parts farther than 2 from every word are never near-words. In a handle code, the tag and qualifier parts are not near-word checked either (INFERRED). Because every pair of wordlist words is at least 3 apart (spec 003 FR-003), a part at distance 1 has exactly one candidate. The distance limit is a parameter until the real-photo test set (spec 004 Q37) measures it. Vectors are in G1a.
 - Macro codes such as `zz-fn-pay-agentsmith-zz` and `zz-run-reorder-water-zz` are plain codes to the grammar. Running a macro is an app concern that needs an authorized, confirmed user, and it is not part of v1 [MICHAEL 2026-10-02 #34].
-- Drawn symbols (a smiley, a star) are a separate image-recognition mode, not part of this text grammar [MICHAEL 2026-10-02 #34]. They are a v2 candidate.
+- Drawn symbols (a smiley, a star) are a separate image-recognition mode, not part of this text grammar [MICHAEL 2026-10-02 #34]. They are a v2 candidate, with object codes (Section 2.2, three kinds of zz-code).
 
 **G1a. Classifier vectors.** Fixture wordlist (test data only): `copper`, `lantern`, `sky`, `maple`, `river`, `harbor` (every pair at least 3 apart, as FR-003 requires). The classifier (spec 003 T012) runs after the parser and must return these results.
 
@@ -166,7 +169,7 @@ After the person confirms `coper` as written, `zz-coper-lantern-sky-zz` is a fie
 2. Trim leading and trailing whitespace. Treat line breaks and tabs as spaces, so a code written across two lines is one code [MICHAEL 2026-10-02 #33].
 3. Treat the dash characters U+2010 to U+2015 and U+2212 as a hyphen, because phone keyboards replace typed hyphens (INFERRED).
 4. Lowercase ASCII letters. Case never changes which code it is: `Zz-HELLO-zz`, `zz-Hello-zz`, and `zz-hello-zz` are the same code, and so is the same code written all in capitals [MICHAEL 2026-10-02 #33].
-5. Rewrite an `@` that touches the opening marker (`zz@-name-zz` or `zz@name-zz`) as `zz-@name-zz` (Q51 default, issue #37).
+5. Rewrite an `@` that touches the opening marker (`zz@-name-zz` or `zz@name-zz`) as `zz-@name-zz`. Touching is not intentional, and the reader treats the `@` as separate even when it touches or overlaps the zz [MICHAEL 2026-10-03 #37]. Rewrite a tag part that ends in `@` (`zz-ai@-name-zz`, `zz-ai@ name-zz`, `zz-ai@name-zz`) as the tag plus the handle: `zz-ai-@name-zz` (INFERRED from the About photo in issue #37).
 6. Find the markers (G3), then split the content on separators. Hyphens, spaces, or a mix count as separators, and a run of them counts as one separator [MICHAEL 2026-10-02 #33].
 7. Check each part (G4) and the part count (G5).
 8. Return the canonical form: `zz-` plus the parts joined by single hyphens plus `-zz`. The canonical form of a bare mark is `zz` [MICHAEL 2026-10-02 #33].
@@ -175,9 +178,9 @@ After the person confirms `coper` as written, `zz-coper-lantern-sky-zz` is a fie
 
 - A code with content needs a marker at the start and at the end. A circled `(zz)` counts as a marker [MICHAEL 2026-10-02 #33]. A missing closing marker fails with `no-closing-marker`. This replaces the demo parser's rule that accepted a missing closing marker (Section 4.4).
 - Markers are whole tokens. An opening `zz` must be followed by a separator, and a closing `zz` must follow one: `zzcopper-lantern-zz` and `zzz-x-zz` fail with `no-marker`, and the `zz` at the end of `buzz` is part of the word (INFERRED). A circled marker needs no separator. `(` and `)` appear only inside the exact token `(zz)`.
-- The two ends may mix forms, for example `(zz) camp bravo zz`, because handwriting varies (INFERRED).
+- The two ends may mix forms, for example `(zz) camp bravo zz`, because handwriting varies (INFERRED). Markers are found by their pattern in any case or mix: a zz, a separator, content, a separator, a closing zz [MICHAEL 2026-10-03 #39].
 - The circled form is display metadata only. `(zz) camp bravo four two (zz)` and `zz-camp-bravo-four-two-zz` are the same code (INFERRED from "one canonical form" [MICHAEL 2026-10-02 #33]).
-- A bare mark is `zz` or `(zz)` alone, or two markers with nothing but separators between them (`zz-zz`, `(zz) (zz)`), or `zz` followed only by separators [MICHAEL 2026-10-02 #33]; the last three forms are INFERRED. Capital letters are accepted from handwriting: `zz` written in capitals parses as the bare mark `zz`.
+- A bare mark is `zz` or `(zz)` alone, and nothing else, in lowercase, capitals, or a mix [MICHAEL 2026-10-03 #48]. `zz-` fails with `no-closing-marker`, and two markers with nothing but separators between them (`zz-zz`, `(zz) (zz)`) fail with `no-content`, so a cut-off scan fails instead of reading as a bare mark (Q61, issue #48).
 - A part may not be `zz`. `zz-zz-zz` fails with `marker-in-body` (INFERRED).
 
 **G4. Parts**
@@ -185,31 +188,34 @@ After the person confirms `coper` as written, `zz-coper-lantern-sky-zz` is a fie
 | Part | Allowed characters after lowercasing | Rule | Source |
 |---|---|---|---|
 | Plain part | `a` to `z`, `0` to `9` | One or more characters | [MICHAEL 2026-10-02 #34] |
-| Handle part | `@`, then `a` to `z`, `0` to `9`, `.`, `_` | `@` only as the first character of the first part. 1 to 32 characters after `@` (INFERRED cap). At least one letter or digit; no leading, trailing, or doubled `.` (INFERRED) | [MICHAEL 2026-10-02 #34] |
+| Handle part | `@`, then `a` to `z`, `0` to `9`, `.`, `_` | `@` only as the first character of the first part, or of the second part when the first part is a tag. 1 to 32 characters after `@` (INFERRED cap). At least one letter or digit; no leading, trailing, or doubled `.` (INFERRED) | [MICHAEL 2026-10-02 #34] [MICHAEL 2026-10-03 #37] |
+| Name part | Labels of `a` to `z` and `0` to `9` joined by single dots, ending in a known suffix (v1: `.eth`) | Only as the first part. At least one label before the suffix. No `_`, no leading, trailing, or doubled `.` (INFERRED) | [MICHAEL 2026-10-03 #38] |
 
-- A handle is the only part of its code: `zz-@agentsmith-neo-zz` fails with `invalid-handle` (Q51 default, issue #37).
-- `@` anywhere except the start of the first part fails with `misplaced-at`, for example `zz-ai@-agentsmith-zz`.
-- `.` and `_` outside a handle fail with `invalid-character`, so `zz-vitalik.eth-zz` fails and `zz-@vitalik.eth-zz` passes (Q52 default, issue #38).
+- Plain parts may follow a handle as qualifiers, read as "handle, then details": `zz-@agentsmith-neo-zz` is the handle `@agentsmith` with the qualifier `neo` (a sub-account, a role, or a version) [MICHAEL 2026-10-03 #37]. The handle and its qualifiers form one code; the parser returns `handle`, `tag`, and `qualifiers` separately (INFERRED).
+- One plain tag part may come before the handle, as in `zz-ai-@agentsmith-zz` (a category tag `ai`). Michael leaves open which of these forms are permitted by context [MICHAEL 2026-10-03 #37]; v1 accepts both (INFERRED).
+- `@` anywhere else fails with `misplaced-at`, for example `zz-ai-agent-@smith-zz`, `zz-a@b@c-zz`, or a second handle.
+- A name part (`zz-vitalik.eth-zz`) is valid as written, without `@` [MICHAEL 2026-10-03 #38]. Qualifier parts may follow it, as with handles (INFERRED). Other dots (`zz-1.2-zz`, `zz-example.com-zz`) and `_` outside a handle still fail with `invalid-character`; more suffixes can be added later without breaking codes (INFERRED).
 - The reserved symbols `#`, `$`, `/`, and `:` fail with `reserved-symbol`, never as ordinary characters, so they can get meanings later without breaking codes [MICHAEL 2026-10-02 #34].
 - Letters outside ASCII (for example Korean or Cyrillic) fail with `unsupported-script` in v1 (INFERRED; issue #35 tracks any-language codes). Other characters fail with `invalid-character`.
 
 **G5. Part count**
 
-A code with content has 1 to 5 parts, counting a handle as one part (Q50 default, issue #36). More or fewer fail with `part-count`. Codes issued from the wordlist keep the counts in Section 2.2: two or three data words plus a check word [PRODUCT].
+A code with content has one or more parts. There is no design limit on the number of parts [MICHAEL 2026-10-03 #36] (Q50, issue #36). The only cap is the technical input guard in G2 step 1 (256 raw characters), a safety setting for reliable scanning and abuse protection, not a rule about what people may write (INFERRED; it is a parameter). Codes issued from the wordlist keep the counts in Section 2.2: two or three data words plus a check word [PRODUCT]. Whether a one-part code may open a private record is a resolver rule (spec 002 FR-020, Q59).
 
 **G6. Failure reasons**
 
-The parser returns exactly one reason. When several apply, it returns the first in this order (INFERRED, so tests are stable): `empty`, `too-long`, `no-marker`, `no-closing-marker`, `marker-in-body`, `unsupported-script`, `reserved-symbol`, `misplaced-at`, `invalid-handle`, `invalid-character`, `part-count`.
+The parser returns exactly one reason. When several apply, it returns the first in this order (INFERRED, so tests are stable): `empty`, `too-long`, `no-marker`, `no-closing-marker`, `no-content`, `marker-in-body`, `unsupported-script`, `reserved-symbol`, `misplaced-at`, `invalid-handle`, `invalid-character`. `part-count` is removed (Q50); `no-content` is new (Q61).
 
 **G7. Storage and display**
 
-- Store and display the canonical form, lowercase and hyphen-separated, including handles [MICHAEL 2026-10-02 #33] [MICHAEL 2026-10-02 #34].
-- Site copy, images, and documents show lowercase `zz` or the circled `(zz)`, never a capital-letter zz mark on its own or in a code. On its own, a capital Z mark painted on equipment resembles adversary vehicle markings, and these materials go to the Army [MICHAEL 2026-10-02 #33]. Uppercase letters inside code words (as in `zz-1234ABCD-zz` on a sign) are not covered by this rule. Alt text may quote text inside an image as it appears (Section 3.8); prose that names a code uses the canonical form (INFERRED). Test inputs that need capitals are described in words. Images that still show a capital-letter zz are tracked in Q53 (issue #39) and 001 T030.
+- Store and display the canonical form, lowercase and hyphen-separated, including handles and names [MICHAEL 2026-10-02 #33] [MICHAEL 2026-10-02 #34]. People may write any case or mix; the system stores one canonical form [MICHAEL 2026-10-02 #33] [MICHAEL 2026-10-03 #48]. Michael's "in our system we will use ZZ as upper case" [MICHAEL 2026-10-03 #48] is reconciled in Section 9a (decision D-2026-10-03-01): case never changes matching, the stored key is case-folded, and what we generate and display stays lowercase, which his Q53 answer calls "the best case and when our system uses them" [MICHAEL 2026-10-03 #39].
+- `zz-vitalik.eth-zz` and `zz-@vitalik.eth-zz` resolve to the same record, so a person who adds the `@` out of habit still reaches it (INFERRED from [MICHAEL 2026-10-03 #38]; spec 002 FR-022).
+- Site copy, images, and documents show lowercase `zz` or the circled `(zz)`, never a capital-letter zz mark on its own or in a code. On its own, a capital Z mark painted on equipment resembles adversary vehicle markings, and these materials go to the Army [MICHAEL 2026-10-02 #33]. Uppercase letters inside code words (as in `zz-1234ABCD-zz` on a sign) are not covered by this rule. Alt text may quote text inside an image as it appears (Section 3.8); prose that names a code uses the canonical form (INFERRED). Test inputs that need capitals are described in words. Real photos keep what they show: the three real civilian photos with a capital-letter zz (`hw-mark-on-object`, `hw-dog-collar-tag`, `app-truck-after`) stay [MICHAEL 2026-10-03 #39] (Q53 RESOLVED). Images we generate, and any image in a military setting, use lowercase zz (INFERRED from [MICHAEL 2026-10-02 #33] and [MICHAEL 2026-10-03 #39]).
 
-**G8. Codes inside running text** (Q55 default, issue #41)
+**G8. Codes inside running text** (Q55, issue #41)
 
-- Typed lookup: the whole input must be one code or one bare mark. The parser does not search inside a sentence.
-- Camera and text scanning (spec 004): find every marker pair. A lone `zz` with no content is offered as a bare mark only after the person confirms it.
+- Typed lookup: the whole input must be one code or one bare mark. The parser does not search inside a sentence (Q55 proposal, kept for v1).
+- Camera and text scanning (spec 004): find every marker pair. When the view holds several codes, a partial code (an opening `zz-` without its close), or a bare `zz`, the reader puts a box around each candidate and asks the person (a user or a Soldier) to pick the one to process [MICHAEL 2026-10-03 #41]. It never guesses. A partial code is labeled "Incomplete code. Rescan." (INFERRED wording). In "Box zz-copper-lantern-sky-zz goes to bay 4, zz." the final `zz` is offered as a choice and never processed on its own (INFERRED).
 
 **G9. Test vectors.** The grammar library and the demo (after 001 T029) must return these results.
 
@@ -237,12 +243,21 @@ The parser returns exactly one reason. When several apply, it returns the first 
 | `zz@-agentsmith-zz` | handle | `zz-@agentsmith-zz` |
 | `zz@agentsmith-zz` | handle | `zz-@agentsmith-zz` |
 | `zz-@` + 32 letters + `-zz` | handle | same, lowercase |
+| `zz-@agentsmith-neo-zz` | handle | `zz-@agentsmith-neo-zz` (handle `@agentsmith`, qualifier `neo`) |
+| `zz@-AgentSmith-neo-zz` | handle | `zz-@agentsmith-neo-zz` |
+| `zz-ai@-agentsmith-zz` | handle | `zz-ai-@agentsmith-zz` (tag `ai`) |
+| `zz-ai@ agentsmith-zz` | handle | `zz-ai-@agentsmith-zz` (tag `ai`) |
+| `zz-vitalik.eth-zz` | name | `zz-vitalik.eth-zz` |
+| `zz-Vitalik.ETH-zz` | name | `zz-vitalik.eth-zz` |
+| `zz-one-two-three-four-five-six-zz` | plain | `zz-one-two-three-four-five-six-zz` |
+| `zz-bravo-smith-one-two-three-four-zz` | plain | `zz-bravo-smith-one-two-three-four-zz` |
 | `zz` | bare | `zz` |
 | `(zz)` | bare | `zz` |
 | `zz` in capitals | bare | `zz` |
-| `zz-zz` | bare | `zz` |
-| `(zz) (zz)` (INFERRED) | bare | `zz` |
-| `zz-` (INFERRED) | bare | `zz` |
+| `(zz)` in capitals | bare | `zz` |
+| `zz-zz` | fail | `no-content` |
+| `(zz) (zz)` | fail | `no-content` |
+| `zz-` | fail | `no-closing-marker` |
 | (empty or spaces only) | fail | `empty` |
 | 300 spaces | fail | `empty` |
 | `copper` | fail | `no-marker` |
@@ -257,17 +272,33 @@ The parser returns exactly one reason. When several apply, it returns the first 
 | `zz-pay-$5-zz` | fail | `reserved-symbol` |
 | `zz-a/b-zz` | fail | `reserved-symbol` |
 | `zz-x:y-zz` | fail | `reserved-symbol` |
-| `zz-ai@-agentsmith-zz` | fail | `misplaced-at` |
-| `zz@-AgentSmith-neo-zz` | fail | `invalid-handle` |
+| `zz-ai-agent-@smith-zz` | fail | `misplaced-at` |
+| `zz-@agentsmith-@neo-zz` | fail | `misplaced-at` |
 | `zz-@-zz` | fail | `invalid-handle` |
 | `zz-@.agent-zz` | fail | `invalid-handle` |
 | `zz-@agent.-zz` | fail | `invalid-handle` |
 | `zz-@agent..smith-zz` | fail | `invalid-handle` |
 | `zz-@` + 33 letters + `-zz` | fail | `invalid-handle` |
 | `zz-acme_support-zz` | fail | `invalid-character` |
-| `zz-vitalik.eth-zz` | fail | `invalid-character` |
-| `zz-one-two-three-four-five-six-zz` | fail | `part-count` |
+| `zz-example.com-zz` | fail | `invalid-character` |
+| `zz-1.2-zz` | fail | `invalid-character` |
+| `zz-.eth-zz` | fail | `invalid-character` |
 | 257 characters | fail | `too-long` |
+
+**G10. Matching key for field codes** (Q57, issue #44)
+
+Handwriting and cameras confuse 0/o, 1/l/i, 5/s, 2/z, and 8/b, and Michael agrees these lookalikes are confusing [MICHAEL 2026-10-03 #44]. He wants firm rules later; until then, v1 uses this key (INFERRED from the issue #44 proposal, which he answered "yes"):
+
+1. Start from the canonical form (G2). The key is internal; the code is still stored and shown in canonical form.
+2. Number words `zero` to `nine` become digits, so `zz-bravo-one-two-three-four-zz` and `zz-bravo-1-2-3-4-zz` match. Michael writes field numbers both ways [MICHAEL 2026-10-03 #44].
+3. A run of consecutive all-digit parts joins into one part, so `1-2-3-4` and `1234` match.
+4. Lookalikes fold to one character: `o` to `0`; `i` and `l` to `1`; `s` to `5`; `z` to `2`; `b` to `8` (like Crockford base32).
+
+Two field codes with the same key are the same code for matching. The server never issues two codes in one scope with the same key, and the reserved-handle check uses the key too (spec 002 FR-019). Word codes do not use this key; their check word catches misreads (spec 003 FR-018, spec 002 FR-021). Vectors: `zz-b2-smith-1-zz` and `zz-b2-smith-l-zz` have the same key; `zz-bravo-one-two-three-four-zz` and `zz-bravo-1234-zz` have the same key; `zz-bravo-smith-1234-zz` and `zz-bravo-john-1234-zz` do not.
+
+**G11. No-device field formats** [MICHAEL 2026-10-03 #44]
+
+A Soldier with only a marker (ideally on blue tape, so as not to mark up things), no phone, and no connection can still write codes that are reasonably unique: a unit prefix and a sequence (`zz-bravo-1-2-3-4-zz`, or with number words `zz-bravo-one-two-three-four-zz`), or a unit prefix, a personal identifier, and a sequence (`zz-bravo-smith-one-two-three-four-zz`). Within that unit, such codes are unique. The prefix should be a locally assigned phonetic word such as `bravo`, not a real unit designation (INFERRED operational-security default). These codes link to a record later (Section 2.4, no-device marks; Q25).
 
 ### 2.3 Resolver
 
@@ -789,7 +820,7 @@ Input: a text field labeled "Type a zz code", a Look up button, and example chip
 
 | Reason | B4 line |
 |---|---|
-| `empty`, `no-marker`, `marker-in-body`, `part-count`, `invalid-character`, `too-long` | "This is not a zz code. A code starts and ends with zz, like zz-copper-lantern-sky-zz." |
+| `empty`, `no-marker`, `no-content`, `marker-in-body`, `invalid-character`, `too-long` | "This is not a zz code. A code starts and ends with zz, like zz-copper-lantern-sky-zz." |
 | `no-closing-marker` | "Add the closing zz at the end of the code." |
 | `misplaced-at`, `invalid-handle` | "An @ handle comes right after the first zz, like zz-@agentsmith-zz." |
 | `reserved-symbol` | "The symbols # $ / : are reserved and are not used in codes yet." |
@@ -942,9 +973,9 @@ package-lock.json
 26. `package-lock.json` is committed, and `npm ci` succeeds from a clean checkout.
 27. `pages.yml` matches Section 6: it triggers only on `push` to `main` and `workflow_dispatch`, uses the listed permissions and concurrency group, and uploads `dist`. The PR does not trigger a deploy.
 28. After merge, `https://zero-state-llc.github.io/zzthis/` serves Home, and every nav link and image loads without a 404.
-29. Site copy (text, headings, captions, titles) writes every zz code in lowercase and never writes a standalone capital "ZZ". Photos and renders may show uppercase letters inside a code word. Since Michael's Q48 reply they may not show a capital-letter zz mark; the remaining exceptions are tracked in item 31 and Q53; alt text describes them in words or quotes the code as shown [MICHAEL 2026-10-02] (Q42). A check in `check-dist.mjs` fails on a standalone capital ZZ in rendered text or in an `alt` or `title` attribute, and does not flag uppercase letters inside a code.
+29. Site copy (text, headings, captions, titles) writes every zz code in lowercase and never writes a standalone capital "ZZ". Photos and renders may show uppercase letters inside a code word. Real photos may show a capital-letter zz mark (Q53 RESOLVED: keep [MICHAEL 2026-10-03 #39]); images we generate may not; alt text describes them in words or quotes the code as shown [MICHAEL 2026-10-02] (Q42). A check in `check-dist.mjs` fails on a standalone capital ZZ in rendered text or in an `alt` or `title` attribute, and does not flag uppercase letters inside a code.
 30. After 001 T029: Flow B returns, for every input in Section 2.2a G9, the outcome that the grammar gives (plain or handle input that is not a mock code goes to B3, bare goes to B5, each failure goes to its B4 line). A unit test runs the whole G9 table against the demo parser [MICHAEL 2026-10-02 #33] [MICHAEL 2026-10-02 #34].
-31. After 001 T030: no image on the site shows a capital-letter zz mark, on its own or in a code [MICHAEL 2026-10-02 #33]. AI renders are regenerated; real photos are replaced with photos Michael supplies, or removed (Q53, issue #39).
+31. After 001 T030: no image we generated shows a capital-letter zz mark, on its own or in a code [MICHAEL 2026-10-02 #33]. The three real photos (`hw-mark-on-object`, `hw-dog-collar-tag`, `app-truck-after`) stay as supplied [MICHAEL 2026-10-03 #39] (Q53, issue #39).
 
 ## 9. Out of scope and OPEN questions
 
@@ -1003,13 +1034,43 @@ Michael's answers arrived on 2026-10-02 through Danny (issue #10), in an updated
 | Q47 | Adopt the alternate hero paragraph, featured text, or "deeper section" copy that Michael shared as a reference on 2026-10-02? | RESOLVED: use as given [MICHAEL 2026-10-02]. The new hero paragraph and featured text ship, and the H1 uses the spaced hyphen as typed (Jev decision 2026-10-02). |
 | Q48 | Codes shown in supplied images use uppercase letters or spaces (zz-1234ABCD-zz, zz Guest WiFi connect zz). Are codes case- and space-insensitive? | RESOLVED (issue #33) [MICHAEL 2026-10-02 #33]: yes. Case-insensitive; hyphens, spaces, or a mix are separators and a run counts as one; a code across two lines is one code; one canonical lowercase hyphen form is stored and displayed; a code with content needs a marker at both ends, and `(zz)` counts; a bare `zz` or `(zz)` is its own type, found by photo and place; never show a capital-letter zz mark. Rules in Section 2.2a. |
 | Q49 | Should codes allow `@` handles like `zz-@agentsmith-zz`? | RESOLVED (issue #34) [MICHAEL 2026-10-02 #34]: widen the rules. `@` only as the first character after the opening marker; it marks a handle; letters, numbers, `.` and `_` allowed inside a handle; the closing marker is required; store and display in lowercase; reserve `#`, `$`, `/`, `:` and reject them for now; macros are ordinary words; drawn symbols are a separate camera mode. Rules in Section 2.2a. |
-| Q50 | How many parts can a code have? (issue #36) | OPEN. Default: 1 to 5 parts for any code with content; issued word codes keep Section 2.2 counts |
-| Q51 | Is `zz@-name-zz` the same as `zz-@name-zz`, and can a handle have more words after it? (issue #37) | OPEN. Default: same code, stored as `zz-@name-zz`; a handle is the only part |
-| Q52 | Can `.` appear outside a handle, as in `zz-vitalik.eth-zz` on the ENS image? (issue #38) | OPEN. Default: no; `zz-@vitalik.eth-zz` is valid; the image stays as supplied |
-| Q53 | Three real photos show a capital-letter zz (`hw-mark-on-object`, `hw-dog-collar-tag`, `app-truck-after`). Replace or remove? (issue #39) | OPEN. Default: remove them from the site until Michael sends lowercase replacements, following his Q48 instruction; never AI-edit a real photo. AI renders with a capital-letter zz are regenerated without asking |
-| Q54 | Keep the blockchain and ledger mentions on the site (Top ways 01 and 05, ENS image), given the #34 note about Army-facing pages? (issue #40) | OPEN. Default: keep as given |
-| Q55 | How is a `zz` inside running text treated? (issue #41) | OPEN. Default: typed lookup takes one whole code; scanning finds marker pairs and offers a lone `zz` as a bare mark only after a confirm |
-| Q56 | Who can create a handle, and how is it protected? (issue #42) | OPEN. Default: unique in lowercase; issued only by the server to a signed-in owner; writing a handle does not claim it; verification is v2 |
+| Q50 | How many parts can a code have? (issue #36) | RESOLVED [MICHAEL 2026-10-03 #36]: no design limit; three kinds of zz-code (text, drawn, object). One or more parts; the 256-character input guard is the only cap; issued word codes keep Section 2.2 counts. Section 2.2a G5 |
+| Q51 | Is `zz@-name-zz` the same as `zz-@name-zz`, and can a handle have more words after it? (issue #37) | RESOLVED [MICHAEL 2026-10-03 #37]: more words may follow a handle; a touching `@` is accidental and read as separate. v1 also accepts one tag before the handle (INFERRED). Section 2.2a G2, G4 |
+| Q52 | Can `.` appear outside a handle, as in `zz-vitalik.eth-zz` on the ENS image? (issue #38) | RESOLVED [MICHAEL 2026-10-03 #38]: yes as written (for now), as ENS does it. New `name` kind for `.eth`; same record as the `@` form. Section 2.2a G4, G7 |
+| Q53 | Three real photos show a capital-letter zz (`hw-mark-on-object`, `hw-dog-collar-tag`, `app-truck-after`). Replace or remove? (issue #39) | RESOLVED [MICHAEL 2026-10-03 #39]: keep them. Lowercase is the best case when our system uses them; handwriting mixes case. Images we generate stay lowercase. Section 2.2a G7 |
+| Q54 | Keep the blockchain and ledger mentions on the site (Top ways 01 and 05, ENS image), given the #34 note about Army-facing pages? (issue #40) | RESOLVED [MICHAEL 2026-10-03 #40]: no change; all three stay |
+| Q55 | How is a `zz` inside running text treated? (issue #41) | RESOLVED [MICHAEL 2026-10-03 #41]: the reader boxes every candidate (codes, partial codes, a bare `zz`) and the person picks; it never guesses. Typed lookup takes one whole code. Section 2.2a G8 |
+| Q56 | Who can create a handle, and how is it protected? (issue #42) | RESOLVED for v1 [MICHAEL 2026-10-03 #42]: firm rules later, by context. Uniqueness is per scope (logistics, postal, free public, enterprise); free public use may repeat a code, resolved by local priority (GPS or region); enterprise handles are server-issued to a signed-in owner; postal account codes are reusable by their owner with a spending cap; verification is later. Spec 002 FR-016, FR-019 |
+| Q57 | Treat lookalike characters (0/o, 1/l/i, 5/s, 2/z, 8/b) as the same in field codes? (issue #44) | RESOLVED [MICHAEL 2026-10-03 #44]: yes; firm rules later. Matching key and no-device formats in Section 2.2a G10, G11 |
+| Q58 | Verify the check word before matching a word code? (issue #45) | RESOLVED [MICHAEL 2026-10-03 #45]: yes. Plus a creation photo after writing, and per-scope dictionaries. Spec 002 FR-021, 003 FR-022, 004 FR-016, FR-017 |
+| Q59 | Should single-part codes open private records? (issue #46) | RESOLVED [MICHAEL 2026-10-03 #46]: early examples; rules grow by context and language. v1: one-part codes for public use; a private record needs two or more parts or a signed-in user (INFERRED). Spec 002 FR-020 |
+| Q60 | Reserved handles list (issue #47) | RESOLVED [MICHAEL 2026-10-03 #47]: yes, reserves; free users cannot use corporate names or names like admin; premium tier for short names, as ENS (3 or more characters, shorter names cost more). Spec 002 FR-019 |
+| Q61 | Should `zz-` and `zz-zz` count as a bare mark? (issue #48) | RESOLVED [MICHAEL 2026-10-03 #48]: only `zz` and `(zz)` alone, in any case or mix. `zz-` and `zz-zz` fail. Section 2.2a G3; case note in Section 9a |
+
+## 9a. Decisions log
+
+One running list of decisions, so every agent and advisor works from the same rules. Michael passed this suggestion on with his 2026-10-03 answers [MICHAEL 2026-10-03]. Newest first. Each row names the issue, the decision, and its source. Michael's answers are used as given; INFERRED rows are build choices made where his answer leaves a gap, and any of them changes if he says so.
+
+| ID | Date | Issue | Decision | Source |
+|---|---|---|---|---|
+| D-2026-10-03-01 | 2026-10-03 | #48, #33, #39 | Letter case: people may write zz, ZZ, Zz, or zZ; all mean the same marker. The system stores one case-folded canonical form, so case never changes which code it is. What we generate and display (site, documents, generated images, anything Army-facing) uses lowercase zz. Michael's "in our system we will use ZZ as upper case" (#48) is read together with "the lower case is the best case and when our system uses them" (#39, same document): uppercase is how people often write the standalone or object mark, and it stays welcome in real photos. An uppercase brand style in civilian material would be a separate, explicit decision | INFERRED reconciliation of [MICHAEL 2026-10-03 #48] [MICHAEL 2026-10-03 #39] [MICHAEL 2026-10-02 #33] |
+| D-2026-10-03-02 | 2026-10-03 | #48 | Bare mark: only `zz` or `(zz)` alone. `zz-` fails `no-closing-marker`; `zz-zz` fails `no-content` | [MICHAEL 2026-10-03 #48] |
+| D-2026-10-03-03 | 2026-10-03 | #36 | No design limit on parts. The 256-character input guard is a safety setting. `part-count` is removed | [MICHAEL 2026-10-03 #36] |
+| D-2026-10-03-04 | 2026-10-03 | #36 | Three kinds of zz-code: text (v1), drawn and object (v2) | [MICHAEL 2026-10-03 #36] |
+| D-2026-10-03-05 | 2026-10-03 | #37 | Qualifier parts may follow a handle; a touching `@` is read as separate; one tag part may come before the handle (`zz-ai-@agentsmith-zz`) | [MICHAEL 2026-10-03 #37]; tag rule INFERRED |
+| D-2026-10-03-06 | 2026-10-03 | #38 | `zz-vitalik.eth-zz` is valid as written (`name` kind, `.eth` only in v1) and reaches the same record as `zz-@vitalik.eth-zz` | [MICHAEL 2026-10-03 #38]; alias INFERRED |
+| D-2026-10-03-07 | 2026-10-03 | #39 | The three real photos with a capital-letter zz stay. Generated images stay lowercase | [MICHAEL 2026-10-03 #39] |
+| D-2026-10-03-08 | 2026-10-03 | #40 | Blockchain and ledger mentions stay as given | [MICHAEL 2026-10-03 #40] |
+| D-2026-10-03-09 | 2026-10-03 | #41 | Several candidates in view: box each, the person picks, never guess. Typed lookup takes one whole code | [MICHAEL 2026-10-03 #41] |
+| D-2026-10-03-10 | 2026-10-03 | #42 | Handles are unique per scope, not globally. Enterprise handles: server-issued to a signed-in owner. Free public duplicates and local priority, and reusable postal account codes, are v2 | [MICHAEL 2026-10-03 #42]; v1 and v2 split INFERRED |
+| D-2026-10-03-11 | 2026-10-03 | #42 | Spec examples of reusable account codes use words (`zz-post-maple-river-zz`) linked privately to the account's contact details, never a phone number or other personal data in the code. Michael's intent (owner reuse, spending cap, owner credited, scan trail) is kept | INFERRED privacy default for [MICHAEL 2026-10-03 #42] |
+| D-2026-10-03-12 | 2026-10-03 | #44 | Field-code matching key: number words to digits, digit runs joined, lookalikes folded. No two issued codes share a key in a scope | [MICHAEL 2026-10-03 #44]; key details INFERRED |
+| D-2026-10-03-13 | 2026-10-03 | #45 | Verify the check word before any match; a mismatch goes to a confirm step. Each scope names the wordlist and version its check word uses | [MICHAEL 2026-10-03 #45]; scope rule INFERRED |
+| D-2026-10-03-14 | 2026-10-03 | #45 | Creation check: after writing a code, the creator can photograph it so the app confirms it can read the handwriting (on device, or online when uniqueness must be checked) | [MICHAEL 2026-10-03 #45] |
+| D-2026-10-03-15 | 2026-10-03 | #46 | One-part codes are for public use. A private record needs two or more parts, or a signed-in user with permission | INFERRED from [MICHAEL 2026-10-03 #46] and the issue proposal |
+| D-2026-10-03-16 | 2026-10-03 | #47 | Reserved handles (system, brand, government and agency, offensive), checked on the matching key; issued handles have 3 or more characters; premium short handles are v2 | [MICHAEL 2026-10-03 #47]; seed list INFERRED |
+| D-2026-10-03-17 | 2026-10-03 | #33, #34 | Repeated in the 2026-10-03 document with no change. Rules stay as in Q48 and Q49 | [MICHAEL 2026-10-03] |
+| D-2026-10-03-00 | 2026-10-03 | #33, #34 | v1 text grammar accepted (Section 2.2a), PR #43 | Q48, Q49; Danny accepted 2026-10-03 2:52 AM PT |
 
 ## 10. Architecture (proposal, not built)
 
@@ -1160,6 +1221,7 @@ The table rows are a comparison drawn up in this spec from the operator's factor
 | Answers to Q41-Q47 | [MICHAEL 2026-10-02] | Michael's answers document via Danny, 2026-10-02 22:09 PT (not in this repo) |
 | Q48 case, spacing, bare mark, display rule | [MICHAEL 2026-10-02 #33] | Michael's reply on issue #33, 2026-10-02 22:59 PT |
 | Q49 handles, reserved symbols, macros, drawn symbols | [MICHAEL 2026-10-02 #34] | Michael's reply on issue #34, 2026-10-02 22:59 PT |
+| Answers to Q50 to Q61 (issues #36 to #42, #44 to #48); a tag such as [MICHAEL 2026-10-03 #37] names the issue | [MICHAEL 2026-10-03] | Michael's answers document with Claude notes (`Daniel_10.03.2026_with_Claude_notes.docx`), received through Danny 2026-10-03 PT (not in this repo). Claude's notes are not a source; only Michael's text is |
 
 ## 12. Roadmap: v1 scope and v2 candidates
 
@@ -1178,7 +1240,7 @@ v1 is the public site and demo plus an English-only prototype of the three produ
 | Capture prototype, Option A | 004 | Not started | Typed, spoken, and photographed codes go through one grammar, snap, and verify path with accept, clarify, retry, and abstain |
 | Option B benchmark | 004 T008 (Q18) | Not started | Result recorded; it opens or defers v2 track A |
 
-Every OPEN question that blocks a v1 task has a GitHub issue and a default (Q50 to Q56 filed as issues #36 to #42 on 2026-10-03).
+Every OPEN question that blocks a v1 task has a GitHub issue and a default. Q50 to Q61 (issues #36 to #42, #44 to #48) were filed and answered on 2026-10-03; the answers are in Sections 2.2a and 9a.
 
 ### 12.2 v2 candidates (not committed)
 
@@ -1186,7 +1248,12 @@ Every OPEN question that blocks a v1 task has a GitHub issue and a default (Q50 
 |---|---|
 | Any-language codes and a trained reader | Issue #35 (label `v2-roadmap`) |
 | Own fine-tuned reader beyond the benchmark | Section 10.8, Q18 |
-| Drawn-symbol camera mode | Q49 reply (issue #34) |
+| Drawn-symbol camera mode, and object codes (a ZZ mark on an object; the object's image is the code) | Q49 reply (issue #34); Q50 answer (issue #36) |
+| Firm per-context and per-language code rules (lookalikes, part counts, non-Latin scripts) | Q57, Q59 answers (issues #44, #46) |
+| Handle scopes beyond enterprise: free public duplicates with local priority (GPS or region); reusable postal account codes with a spending cap and owner credit | Q56 answer (issue #42); Section 9a D-2026-10-03-10 |
+| Premium short handles (pricing tiers, as ENS) | Q60 answer (issue #47) |
+| Per-scope dictionaries: a 10,000-word postal list, BIP39 for Bitcoin, the EFF long list, and lists per language | Q58 answer (issue #45); spec 003 FR-022 |
+| More name suffixes beyond `.eth` | Q52 answer (issue #38) |
 | Bare mark matched by photo, place, and time | Q48 reply (issue #33); v1 only parses it |
 | AI photo to action, inventory assistant, touch first | Section 2.1 ("Concept"), Section 2.6 |
 | Macro execution | Section 2.2 mark types, Q49 reply |

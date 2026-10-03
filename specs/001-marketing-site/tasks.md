@@ -69,6 +69,6 @@ Workflows for every implementing task: anti-slop-code, production-systems, googl
 ## Phase 10: v1 spec redeepen 2026-10-03
 
 - [ ] T029 Move Flow B to the v1 grammar (`docs/SPEC.md` Section 2.2a): replace or wrap `src/lib/grammar.ts` with the spec 003 library (003 T013), add the B5 bare-mark state and the per-reason B4 lines in Section 4.4, and run every G9 vector as a test (Section 8 item 30). Keep 100% coverage. Closes the divergence in Section 4.4.
-- [ ] T030 Image display rule (FR-019, Q53 issue #39): audit every site image for a capital-letter zz mark, on its own or in a code. Regenerate AI renders that show one. The known real photos are `hw-mark-on-object`, `hw-dog-collar-tag`, and `app-truck-after`: remove them until Michael sends lowercase replacements, unless he answers Q53 otherwise. Never AI-edit a real photo. Update the About 2x2 and the truck before-and-after pair so no layout is left with a gap.
-- [ ] T031 If Michael answers Q54 (issue #40) with a change, apply it to `src/content/uses.ts` and `src/content/applications.ts` verbatim.
+- [ ] T030 Image display rule (FR-019, Q53 issue #39): audit every AI-generated site image for a capital-letter zz mark, on its own or in a code, and regenerate any that show one. The real photos `hw-mark-on-object`, `hw-dog-collar-tag`, and `app-truck-after` stay as they are (Michael, 2026-10-03: "keep them"). Never AI-edit a real photo.
+- [x] T031 Q54 (issue #40): Michael answered "No" on 2026-10-03, so `src/content/uses.ts` and `src/content/applications.ts` keep the blockchain and ledger items as given. No change.
 - [x] T032 Fix stale status in the specs: checklist Flow B and Section 7 items, `main` pins, success-criteria count, SPEC Section 3.2 Q2 note, SPEC header and Section 7 (this PR).

@@ -53,8 +53,10 @@ Acceptance: the photo leaves the device only on a retry or hard case [OPERATOR 2
 | FR-010 | Wordlist snapping applies only to parts expected to be wordlist words. Handle parts and field-code parts (names, numbers) are read as written, never snapped, and always shown back for confirmation. A part is treated as a field part only after the near-word check (FR-015). | INFERRED, so a name is never turned into a dictionary word |
 | FR-011 | A bare mark is reported as a bare mark. v1 does not resolve it; the client says so and offers typed entry. Linking a bare mark by photo, place, and time is a v2 candidate. | [MICHAEL 2026-10-02 #33]; v1 split INFERRED |
 | FR-012 | A reading with letters outside ASCII, or with a reserved symbol (`#`, `$`, `/`, `:`), abstains with the grammar reason. It is never snapped to the nearest valid code. | [MICHAEL 2026-10-02 #34]; abstain rule INFERRED |
-| FR-013 | Codes inside running text: the scanner finds every marker pair; a lone `zz` is offered as a bare mark only after the person confirms it. | Q55 default (issue #41) |
+| FR-013 | Codes inside running text, and several codes in one view: the scanner finds every marker pair, partial code (an opening `zz-` without its close), and bare `zz`, draws a box around each, and asks the person to pick the one to process. It never guesses. A partial code is labeled "Incomplete code. Rescan." | [MICHAEL 2026-10-03 #41] (Q55); label wording INFERRED |
 | FR-014 | When a photo holds more than one code, the client lists them all and the person chooses. | INFERRED from "never silently pick the wrong one" |
+| FR-016 | For a word code, the client verifies the check word against the scope's list (spec 003 FR-022) before it sends the code. A mismatch goes to Clarify; it is never sent as is and never auto-corrected to another valid code. | [MICHAEL 2026-10-03 #45] (Q58) |
+| FR-017 | Creation check: after a person writes a code on an object, the client can photograph it and confirm it reads the handwriting back to the same canonical form. The check runs on the device, or online when the scope needs a uniqueness check. A failed read asks the person to rewrite or confirm. | [MICHAEL 2026-10-03 #45]; flow INFERRED |
 | FR-015 | Before snapping is turned off for a part, the client runs the near-word check (`docs/SPEC.md` Section 2.2a G1, spec 003 FR-021). A letters-only part within edit distance 2 of a wordlist word goes to Clarify with the candidates and the part as written. The part is read as written only after the person picks that. A misread word such as `coper` is never silently kept as field data, and never silently snapped. | INFERRED, PR #43 review |
 
 ## Decision bands and error states
@@ -96,7 +98,7 @@ The phone and web apps as products (not yet specified; Q33), the resolver (spec 
 | Q34 | Where the test set of real photos comes from, and consent for using them | None chosen |
 | Q37 | Confidence thresholds for accept, clarify, retry, and abstain, and how read-back errors are measured | None chosen |
 | Q38 | Where voice input is processed, and whether audio leaves the device | None chosen |
-| Q55 | How is a `zz` inside running text treated? (issue #41) | Scanner finds marker pairs; a lone `zz` needs a confirm |
+| Q55 | How is a `zz` inside running text treated? (issue #41) | RESOLVED: box every candidate, the person picks (FR-013) |
 
 ## Workflows
 
