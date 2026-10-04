@@ -346,7 +346,7 @@ Codes are public identifiers, and authorization stays separate [PRODUCT]. Resear
 | `/applications` | Applications | Field logistics, postal and parcel, community use, digital aliases | [BRIEF] |
 | `/about` | About zzThis | Michael, advisors, prototypes, business context | [BRIEF] |
 | `/contact` | Contact | 1@1000x10.com and a collaboration invitation | [BRIEF] |
-| `/demo` | See zzThis in action. | Prototype links, planned zzThat app, scripted click-through with mock data | Operator request; H1 [MICHAEL 2026-10-02] |
+| `/demo` | See zzThis in action. | Prototype links, planned zzThat app, scripted click-through with demo data | Operator request; H1 [MICHAEL 2026-10-02] |
 | `/technology` | (not built) | Michael's draft wording is stored in `src/content/technology.ts`; the page is built and enters navigation only when it has that explanation plus a supporting example [MICHAEL 2026-10-02] | [BRIEF] [MICHAEL 2026-10-02] |
 
 - `/how-it-works` is a real page that reuses the Home workflow components. Home also exposes `#how-it-works` (INFERRED; the [BRIEF] allows "Anchored Home sections; stable detail route later").
@@ -405,7 +405,7 @@ The controlled swipe row uses CSS scroll snap and a visible peek of the next car
 - Concept labels [MICHAEL 2026-10-02] (Q17 RESOLVED): a standalone AI-render panel carries the tag "Concept illustration" (the Home hero image b, each Home application card, and single-panel sections on `/applications`). A grouped gallery carries one visible label above its panels: on Home, above the core workflow steps, the Field logistics row, and the From photo to action group. `/how-it-works` and `/applications` keep one page label under the H1, which covers their galleries. Captions name the actual workflow.
 - Label copy: standalone tag "Concept illustration" [MICHAEL 2026-10-02]. Group label (INFERRED): "Concept illustrations. These panels show intended use, not a deployed system." Page label (INFERRED): "Concept renderings. The panel images on this page show intended use, not a deployed system." All three live in `src/content/labels.ts`; replace the INFERRED wording if Daniel supplies exact text.
 - The second label appears on the About prototype links. Copy (INFERRED): "Both sites are concept-stage explorations."
-- `/demo` uses its own "Demo · mock data" label instead (Section 4).
+- `/demo` uses its own "Demo · demo data" label instead (Section 4).
 
 **About layout** [WIRE]
 
@@ -508,7 +508,7 @@ Aramaic: zz-נהורא-שמיא-zz (light, sky)
 
 ```copy
 H2: Look up a code
-Badge: Demo · mock data
+Badge: Demo · demo data
 Tabs: Camera; Typing; Voice
 Button: Photograph (simulated)
 Readout: Confidence: 0.94 (demo)
@@ -534,7 +534,7 @@ Coming later: Codes in other languages and scripts are coming later. This demo r
 Record foot: Demo record. No network request was made.
 ```
 
-The miss and malformed lines match Section 4.4. The coming-later line is the non-error note for letters outside A–Z. It stays, because v1 lookup reads Latin letters and numbers; it is not a caveat about the language examples (Q63). The confidence line, the check-word line, and the record foot say demo [MICHAEL 2026-10-03 #54]. The "Demo · mock data" badge stays the Section 4 badge.
+The miss and malformed lines match Section 4.4. The coming-later line is the non-error note for letters outside A–Z. It stays, because v1 lookup reads Latin letters and numbers; it is not a caveat about the language examples (Q63). The confidence line, the check-word line, the record foot, and the badge say demo [MICHAEL 2026-10-03 #54]. The badge is "Demo · demo data", the same Section 4 badge.
 
 #### H.2 Featured statement (Do)
 
@@ -864,24 +864,25 @@ Handwritten-code scenes [MICHAEL 2026-10-02] (Q11 RESOLVED): b in the hero, a an
 
 ### 4.1 Rules
 
-- The demo is scripted and has no backend, camera, microphone, network calls, or storage. All data is mock data (INFERRED, per operator).
-- Every step shows a persistent badge, "Demo · mock data", at the top of the step panel. The badge is not dismissible and is included in each step's accessible name.
-- The intro reads, verbatim: "This is a scripted demonstration. No recognition runs; every result is prewritten mock data." (INFERRED)
+- The demo is scripted and has no backend, camera, microphone, network calls, or storage. All data is scripted demo data (INFERRED, per operator).
+- Every step shows a persistent badge, "Demo · demo data", at the top of the step panel. The badge is not dismissible and is included in each step's accessible name.
+- The intro reads, verbatim: "This is a scripted demonstration. No recognition runs; every result is prewritten demo data." (INFERRED)
+- User-facing labels in this section say demo instead of mock. That wording overrides the earlier mock labels [MICHAEL 2026-10-03 #54] [DANNY 2026-10-04].
 - The UI never uses the words "detected live", "scanning", or a spinner that implies processing. Results appear on button press with the label "Show scripted result".
 - The demo uses the H1 "See zzThis in action." [MICHAEL 2026-10-02], a lead line, a "Current prototypes" block (zzthing.com, zzthat.com, and the planned free zzThat app), then two H2 tabs: "Flow A: Field item" and "Flow B: Look up a code".
 
-### 4.2 Mock data (`src/content/demo.ts`)
+### 4.2 Demo records (`src/content/demo.ts`)
 
-Code strings come from the sources. Every record field is labeled mock.
+Code strings come from the sources. Every record field is labeled demo [MICHAEL 2026-10-03 #54].
 
-| Code | Source | Mock record |
+| Code | Source | Demo record |
 |---|---|---|
-| zz-copper-lantern-sky-zz | [BRIEF] | Crate, field supply. NSN: "MOCK-0000-00-000-0001". Document number: "MOCK-DOC-0001". Hand receipt: "MOCK-HR-01". Photo: demo/01 |
-| zz-river-maple-sky-zz | [ASSETS] | Parcel. Reference: "MOCK-PARCEL-01". Status: "Ready for drop-off (mock)" |
-| zz-blue-bike-astoria-zz | [PRODUCT] | Physical thing: bicycle. Owner contact: "Withheld: public code, protected record (mock)" |
-| zz-b2-4-zz | [ASSETS] | Duffel group B2, item 4. Hand receipt: "MOCK-HR-02" |
+| zz-copper-lantern-sky-zz | [BRIEF] | Crate, field supply (demo). NSN: "DEMO-0000-00-000-0001". Document number: "DEMO-DOC-0001". Hand receipt: "DEMO-HR-01". Photo: "Attached (demo image)" |
+| zz-river-maple-sky-zz | [ASSETS] | Parcel (demo). Reference: "DEMO-PARCEL-01". Status: "Ready for drop-off (demo)" |
+| zz-blue-bike-astoria-zz | [PRODUCT] | Physical thing: bicycle (demo). Owner contact: "Withheld: public code, protected record (demo)" |
+| zz-b2-4-zz | [ASSETS] | Duffel group B2, item 4 (demo). Hand receipt: "DEMO-HR-02" |
 
-Flow A handling options: Pack, Return, Repair, Dispose [BRIEF]. The mock "suggested" option is Return, with the reason "Damaged handle (mock)". The mock confidence is "0.94 (mock)", and the checksum state is "Checksum: OK (mock state, no algorithm runs)".
+Flow A handling options: Pack, Return, Repair, Dispose [BRIEF]. The suggested option is Return, with the reason "Damaged handle (demo)". The confidence is "Confidence: 0.94 (demo)", and the checksum state is "Checksum: OK (demo state, no algorithm runs)". The handling label is "Handling options (demo)". The suggestion label is "AI suggestion (demo)". The form label is "Prepared turn-in form (demo, read-only)".
 
 ### 4.3 Flow A state machine
 
@@ -889,12 +890,12 @@ Flow A handling options: Pack, Return, Repair, Dispose [BRIEF]. The mock "sugges
 |---|---|---|---|---|
 | A0 intro | "A field crate, marked by hand." | demo/01 | Start | - |
 | A1 mark | "Write the code on tape." Code shown in mono | demo/02 | Photograph (simulated) | A0 |
-| A2 photo | "Photo taken (mock image)." | demo/05 | Show scripted result | A1 |
-| A3 read | Code, confidence 0.94 (mock), checksum OK (mock). Buttons: Confirm or Retry | demo/02 | Confirm → A4; Retry → A2 | A2 |
+| A2 photo | "Photo taken (demo image)." | demo/05 | Show scripted result | A1 |
+| A3 read | Code, confidence 0.94 (demo), checksum OK (demo). Buttons: Confirm or Retry | demo/02 | Confirm → A4; Retry → A2 | A2 |
 | A4 linked | Record card from 4.2 | demo/03 | Next | A3 |
-| A5 handle | "AI suggestion (mock): Return." Four large targets; voice chip "Say 'return' (simulated)" | panels/k | Choose an option → A6 | A4 |
+| A5 handle | "AI suggestion (demo): Return." Four large targets; voice chip "Say 'return' (simulated)" | panels/k | Choose an option → A6 | A4 |
 | A6 review | Prepared turn-in form, read-only, chosen action filled in | panels/l | Review complete | A5 |
-| A7 end | "Nothing was submitted. This was a demo with mock data." Restart and Contact links | demo/04 | Restart → A0 | A6 |
+| A7 end | "Nothing was submitted. This was a demo with demo data." Restart and Contact links | demo/04 | Restart → A0 | A6 |
 
 The voice chip is a button. Activating it selects the option and shows the text "Simulated voice input: 'return'". The demo does not use the microphone.
 
@@ -905,7 +906,7 @@ Input: a text field labeled "Type a zz code", a Look up button, and example chip
 | State | Trigger | Output |
 |---|---|---|
 | B0 idle | - | Field and chips |
-| B1 resolved | Normalized input matches a mock code | Record card (mock) |
+| B1 resolved | Normalized input matches a demo record | Record card (demo) |
 | B2 (removed) | Removed on 2026-10-02 (issue #12). A miss never lists or suggests other codes. | None |
 | B3 abstain-unknown | Valid grammar, no exact match | "No match. The demo will not guess. Check the words and try again." The public demo stays exact match only (Q20, Q40); wording is a placeholder |
 | B4 abstain-malformed | Parser rejects the input | One line per reason, in the table below |
@@ -1086,7 +1087,7 @@ package-lock.json
 5. No rendered copy contains an em dash (U+2014) [MICHAEL 2026-10-02], with no exceptions. The hero headline uses a spaced hyphen: "readable-writable - and smart." (Q62) [DANNY 2026-10-03, revised: "Fix the em dashes"].
 6. The Home section order matches Section 3.1b (direction B v1.0). Field logistics and From photo to action remain the largest image bands on Home.
 7. Panel placement matches Section 3.8. j, k, and l render as an ordered list labeled 01 to 03.
-8. Concept labels follow Section 3.1a [MICHAEL 2026-10-02]: standalone panels carry "Concept illustration", each grouped gallery has one label above it, and the About prototype block has one. `/zzthis/demo` shows the "Demo · mock data" badge on every step, A0–A7 and B0–B4.
+8. Concept labels follow Section 3.1a [MICHAEL 2026-10-02]: standalone panels carry "Concept illustration", each grouped gallery has one label above it, and the About prototype block has one. `/zzthis/demo` shows the "Demo · demo data" badge on every step, A0–A7 and B0–B4 [MICHAEL 2026-10-03 #54].
 9. The advisor list is Patrick Muggler, Arshi Chadha, Ridham Bhagat, Daniel Meyer, and Adam Fry [MICHAEL 2026-10-02]. Every page footer shows "Patent pending".
 10. Founder and advisor cards show a supplied headshot where one exists (Michael, Patrick, Arshi, Ridham) and initials otherwise [MICHAEL 2026-10-02] (Q46).
 11. Flow A reaches A7 with the keyboard alone. A7 states that nothing was submitted.
@@ -1182,7 +1183,7 @@ Michael's answers arrived on 2026-10-02 through Danny (issue #10), in an updated
 | Q61 | Should `zz-` and `zz-zz` count as a bare mark? (issue #48) | RESOLVED [MICHAEL 2026-10-03 #48]: only `zz` and `(zz)` alone, in any case or mix. `zz-` and `zz-zz` fail. Section 2.2a G3; case note in Section 9a |
 | Q62 | Use an em dash in the v1.0 hero headline in place of the Q47 spaced hyphen, as in Michael's v1.0 change list? | RESOLVED: no. The headline reads "zzThis makes things readable-writable - and smart." with a spaced hyphen [DANNY 2026-10-03, revised: "Fix the em dashes"]. Danny first kept the em dash the same day, then reversed it. There is no exception to the no-em-dash rule. |
 | Q63 | Native-reader check for the Korean, Japanese, and Aramaic examples? | RESOLVED [MICHAEL 2026-10-03 #51]: confirmed. The Korean, Japanese, and Aramaic examples stay as written, including the glosses and the right-to-left Aramaic display (Section 3.1b). |
-| Q64 | Approve the B v1.0 prototype microcopy (console labels, anatomy, decision bands, architecture diagram)? (issue #54) | RESOLVED [MICHAEL 2026-10-03 #54]: approved as written, with three changes. Decision bands are Manual, Rescan, Confirm, Resolve. The console check line is "Check word: OK (demo; no algorithm runs)", and the other console labels say demo instead of mock. Object storage reads "photos for retries and review". |
+| Q64 | Approve the B v1.0 prototype microcopy (console labels, anatomy, decision bands, architecture diagram)? (issue #54) | RESOLVED [MICHAEL 2026-10-03 #54]: approved as written, with three changes. Decision bands are Manual, Rescan, Confirm, Resolve. The console check line is "Check word: OK (demo; no algorithm runs)". Every user-facing label says demo instead of mock, including the shared badge and the scripted demo records [DANNY 2026-10-04]. Object storage reads "photos for retries and review". |
 | Q65 | Should Home show the real handwritten photos from sample A? (issue #55) | RESOLVED: no [MICHAEL 2026-10-03 #55]. Home stays as it is. Those photos stay on Applications and are not added to Home. |
 
 ## 9a. Decisions log
@@ -1192,7 +1193,7 @@ One running list of decisions, so every agent and advisor works from the same ru
 | ID | Date | Issue | Decision | Source |
 |---|---|---|---|---|
 | D-2026-10-03-20 | 2026-10-03 | #55 | Home does not gain the sample A handwritten photos. They stay on Applications | [MICHAEL 2026-10-03 #55] |
-| D-2026-10-03-19 | 2026-10-03 | #54 | Prototype microcopy is approved as written, except the bands are Manual, Rescan, Confirm, Resolve; console labels say demo instead of mock, and the check line is "Check word: OK (demo; no algorithm runs)"; object storage is "photos for retries and review" | [MICHAEL 2026-10-03 #54] |
+| D-2026-10-03-19 | 2026-10-03 | #54 | Prototype microcopy is approved as written, except the bands are Manual, Rescan, Confirm, Resolve; every user-facing label says demo instead of mock, and the check line is "Check word: OK (demo; no algorithm runs)"; object storage is "photos for retries and review" | [MICHAEL 2026-10-03 #54] [DANNY 2026-10-04] |
 | D-2026-10-03-18 | 2026-10-03 | #51 | The Korean, Japanese, and Aramaic examples are confirmed, including the glosses and the right-to-left Aramaic | [MICHAEL 2026-10-03 #51] |
 | D-2026-10-03-01 | 2026-10-03 | #48, #33, #39 | Letter case: people may write zz, ZZ, Zz, or zZ; all mean the same marker. The system stores one case-folded canonical form, so case never changes which code it is. What we generate and display (site, documents, generated images, anything Army-facing) uses lowercase zz. Michael's "in our system we will use ZZ as upper case" (#48) is read together with "The lower case is – the “best case” and when our system uses them" (#39, same document, quoted as written): uppercase is how people often write the standalone or object mark, and it stays welcome in real photos. An uppercase brand style in civilian material would be a separate, explicit decision | INFERRED reconciliation of [MICHAEL 2026-10-03 #48] [MICHAEL 2026-10-03 #39] [MICHAEL 2026-10-02 #33] |
 | D-2026-10-03-02 | 2026-10-03 | #48 | Bare mark: only `zz` or `(zz)` alone. `zz-` fails `no-closing-marker`; `zz-zz` fails `no-content` | [MICHAEL 2026-10-03 #48] |

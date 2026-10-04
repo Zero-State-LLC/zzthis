@@ -34,7 +34,7 @@ Product-true locks (do not reopen in implement):
 
 - Copy in `docs/SPEC.md` `copy:` blocks ships verbatim. The hero H1 uses a spaced hyphen, not an em dash: "readable-writable - and smart." (Q62).
 - No capital-letter zz in site copy. Uppercase heading styles must exempt the brand name.
-- Concept labels, "Demo · mock data", "Patent pending", and no unmeasured metrics, as in spec sections 1 and 3.1a.
+- Concept labels, "Demo · demo data", "Patent pending", and no unmeasured metrics, as in spec sections 1 and 3.1a.
 - Fonts are self-hosted. The site makes no runtime requests to other origins.
 - Exact-match resolving only, with no "did you mean" suggestions (issue #12).
 

@@ -189,7 +189,7 @@ function reviewForm(state: FlowAState): Node[] {
   return [
     el("p", { className: "eyebrow", text: flowACopy.formLabel }),
     fieldList([
-      { label: flowACopy.chosenAction, value: `${state.choice ?? ""} (mock)` },
+      { label: flowACopy.chosenAction, value: `${state.choice ?? ""} (demo)` },
       { label: flowACopy.code, value: flowACode.code },
       { label: flowACopy.reason, value: suggestedHandling.reason },
       ...flowACode.fields,

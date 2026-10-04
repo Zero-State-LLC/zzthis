@@ -14,7 +14,7 @@ Issues #51, #54, and #55 asked Michael to check the language examples, the proto
 ## Proposed outcome
 
 - Q63: the Korean, Japanese, and Aramaic examples stay as written, including the glosses and the right-to-left Aramaic. Caveats that exist only for the native-reader check are removed. The console coming-later note stays, because it is about v1 resolver support.
-- Q64: the prototype microcopy is approved as written, with three changes. Decision bands: Manual, Rescan, Confirm, Resolve. Console check line: "Check word: OK (demo; no algorithm runs)". Other console labels say demo instead of mock. Object storage: "photos for retries and review".
+- Q64: the prototype microcopy is approved as written, with three changes. Decision bands: Manual, Rescan, Confirm, Resolve. Console check line: "Check word: OK (demo; no algorithm runs)". Every user-facing label says demo instead of mock, including the shared badge and the scripted demo records. Object storage: "photos for retries and review".
 - Q65: no. Home stays as it is. The real handwritten photos stay on Applications.
 
 ## Affected users / systems
@@ -32,7 +32,6 @@ Product-true locks:
 Non-goals:
 
 - Moving photos onto Home, or off Applications or About.
-- Changing the `/demo` mock records or the "Demo · mock data" badge.
 - Changing the product sentence that says "another view" outside the band names.
 
 ## Open questions

@@ -13,7 +13,7 @@ export interface MockCode {
   image?: ImageId;
 }
 
-export const badgeText = "Demo · mock data";
+export const badgeText = "Demo · demo data";
 
 // Q3 and Q5 [MICHAEL 2026-10-02]
 export const demoTitle = "See zzThis in action.";
@@ -49,19 +49,19 @@ export const demoTryText =
   "Mark, read, and link a code below; then see the photo-to-action concept.";
 
 export const demoIntro =
-  "This is a scripted demonstration. No recognition runs; every result is prewritten mock data.";
+  "This is a scripted demonstration. No recognition runs; every result is prewritten demo data.";
 
 export const flowATitle = "Flow A: Field item";
 export const flowBTitle = "Flow B: Look up a code";
 
 export const flowACode: MockCode = {
   code: "zz-copper-lantern-sky-zz",
-  kind: "Crate, field supply (mock)",
+  kind: "Crate, field supply (demo)",
   fields: [
-    { label: "NSN", value: "MOCK-0000-00-000-0001" },
-    { label: "Document number", value: "MOCK-DOC-0001" },
-    { label: "Hand receipt", value: "MOCK-HR-01" },
-    { label: "Photo", value: "Attached (mock image)" },
+    { label: "NSN", value: "DEMO-0000-00-000-0001" },
+    { label: "Document number", value: "DEMO-DOC-0001" },
+    { label: "Hand receipt", value: "DEMO-HR-01" },
+    { label: "Photo", value: "Attached (demo image)" },
   ],
   image: "demo-01",
 };
@@ -70,26 +70,26 @@ export const mockCodes: readonly MockCode[] = [
   flowACode,
   {
     code: "zz-river-maple-sky-zz",
-    kind: "Parcel (mock)",
+    kind: "Parcel (demo)",
     fields: [
-      { label: "Reference", value: "MOCK-PARCEL-01" },
-      { label: "Status", value: "Ready for drop-off (mock)" },
+      { label: "Reference", value: "DEMO-PARCEL-01" },
+      { label: "Status", value: "Ready for drop-off (demo)" },
     ],
   },
   {
     code: "zz-blue-bike-astoria-zz",
-    kind: "Physical thing: bicycle (mock)",
+    kind: "Physical thing: bicycle (demo)",
     fields: [
       {
         label: "Owner contact",
-        value: "Withheld: public code, protected record (mock)",
+        value: "Withheld: public code, protected record (demo)",
       },
     ],
   },
   {
     code: "zz-b2-4-zz",
-    kind: "Duffel group B2, item 4 (mock)",
-    fields: [{ label: "Hand receipt", value: "MOCK-HR-02" }],
+    kind: "Duffel group B2, item 4 (demo)",
+    fields: [{ label: "Hand receipt", value: "DEMO-HR-02" }],
   },
 ];
 
@@ -98,7 +98,7 @@ export type HandlingOption = (typeof handlingOptions)[number];
 
 export const suggestedHandling: { option: HandlingOption; reason: string } = {
   option: "Return",
-  reason: "Damaged handle (mock)",
+  reason: "Damaged handle (demo)",
 };
 
 export const flowACopy = {
@@ -113,13 +113,13 @@ export const flowACopy = {
   restart: "Restart",
   back: "Back",
   contact: "Contact",
-  confidence: "Confidence: 0.94 (mock)",
-  checksum: "Checksum: OK (mock state, no algorithm runs)",
-  handlingLabel: "Handling options (mock)",
-  suggestionLabel: "AI suggestion (mock)",
+  confidence: "Confidence: 0.94 (demo)",
+  checksum: "Checksum: OK (demo state, no algorithm runs)",
+  handlingLabel: "Handling options (demo)",
+  suggestionLabel: "AI suggestion (demo)",
   voiceChip: "Say 'return' (simulated)",
   voiceResult: "Simulated voice input: 'return'",
-  formLabel: "Prepared turn-in form (mock, read-only)",
+  formLabel: "Prepared turn-in form (demo, read-only)",
   chosenAction: "Chosen action",
   code: "Code",
   reason: "Reason",
@@ -159,28 +159,28 @@ export const flowASteps = {
   },
   A2: {
     name: "Photo",
-    text: "Photo taken (mock image).",
-    summary: "Photo taken (mock image).",
+    text: "Photo taken (demo image).",
+    summary: "Photo taken (demo image).",
     image: "demo-05",
   },
   A3: {
     name: "Read result",
     text: "",
     summary:
-      "Code, confidence 0.94 (mock), checksum OK (mock). Confirm or Retry.",
+      "Code, confidence 0.94 (demo), checksum OK (demo). Confirm or Retry.",
     image: "demo-02",
   },
   A4: {
     name: "Linked record",
     text: "",
-    summary: "Record card (mock).",
+    summary: "Record card (demo).",
     image: "demo-03",
   },
   A5: {
     name: "Handling",
-    text: "AI suggestion (mock): Return.",
+    text: "AI suggestion (demo): Return.",
     summary:
-      "AI suggestion (mock): Return. Choose Pack, Return, Repair, or Dispose.",
+      "AI suggestion (demo): Return. Choose Pack, Return, Repair, or Dispose.",
     image: "k",
   },
   A6: {
@@ -192,8 +192,8 @@ export const flowASteps = {
   },
   A7: {
     name: "End",
-    text: "Nothing was submitted. This was a demo with mock data.",
-    summary: "Nothing was submitted. This was a demo with mock data.",
+    text: "Nothing was submitted. This was a demo with demo data.",
+    summary: "Nothing was submitted. This was a demo with demo data.",
     image: "demo-04",
   },
 } satisfies Record<FlowAStepId, FlowAStepContent>;
@@ -235,7 +235,7 @@ export function b4Line(reason: ParseFailure): string {
 
 export const flowBOutcomes: readonly { name: string; text: string }[] = [
   { name: "Type a zz code", text: "Field, Look up button, and example codes." },
-  { name: "Record found", text: "Record card (mock)." },
+  { name: "Record found", text: "Record card (demo)." },
   { name: "No match", text: flowBCopy.unknown },
   { name: "Not a zz code", text: flowBCopy.malformed },
   { name: "Bare mark", text: flowBCopy.bare },

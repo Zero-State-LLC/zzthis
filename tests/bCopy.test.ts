@@ -1,5 +1,11 @@
 import { describe, expect, it } from "vitest";
 import { languageExamples } from "../src/content/anatomy";
+import {
+  badgeText,
+  demoIntro,
+  flowACopy,
+  mockCodes,
+} from "../src/content/demo";
 import { applications } from "../src/content/applications";
 import { architecture } from "../src/content/architecture";
 import { consoleCopy } from "../src/content/console";
@@ -50,6 +56,21 @@ describe("B v1.0 copy locks", () => {
       .flatMap((column) => column.nodes)
       .find((node) => node.title === "Object storage");
     expect(storage?.detail).toBe("photos for retries and review");
+    expect(badgeText).toBe("Demo · demo data");
+    expect(demoIntro).toBe(
+      "This is a scripted demonstration. No recognition runs; every result is prewritten demo data.",
+    );
+    expect(flowACopy.checksum).toBe(
+      "Checksum: OK (demo state, no algorithm runs)",
+    );
+    expect(flowACopy.formLabel).toBe("Prepared turn-in form (demo, read-only)");
+    const shown = mockCodes.flatMap((entry) => [
+      entry.kind,
+      ...entry.fields.map((field) => field.value),
+    ]);
+    expect(shown.filter((text) => /\bmock\b/i.test(text))).toEqual([]);
+    expect(shown).toContain("DEMO-0000-00-000-0001");
+    expect(shown).toContain("Attached (demo image)");
   });
 
   it("keeps the confirmed Korean, Japanese, and Aramaic examples", () => {
