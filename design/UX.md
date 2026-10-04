@@ -2,6 +2,8 @@
 
 Patterns for the zzThat apps and for the later zzThis web client. The marketing site already implements the demo strings quoted here. Product clients call `/v1` ([spec 005](../specs/005-v1-api/spec.md)). They do not invent a second grammar or a second error vocabulary.
 
+Every sentence a person reads is in [copy.json](copy.json), by key. Clients build their string catalogs from that file and do not write their own sentences. The keys named below are copy.json keys.
+
 Copy rules for anything a person reads:
 
 - Say "demo", never "mock".
@@ -102,4 +104,61 @@ The client shows one sentence. It does not show the JSON `error` code except whe
 
 ## Account
 
-Sign in with Apple or Sign in with Google. The account screen offers deletion before a store release. Deletion calls `DELETE /v1/me`.
+The account screen shows which provider the person signed in with (`account.signed_in_with`), Sign out, Delete account, the support contact (`account.support`), and the privacy policy link (`account.privacy`). The support address and the policy URL are build settings, not copy. Deletion calls `DELETE /v1/me` after the Delete confirm pattern.
+
+## Patterns added 2026-10-04
+
+Added so every screen in zzThat `runtime.md` and the spec 005 web client table has a pattern. Each is INFERRED and waits for Michael's review, like the strings it uses.
+
+### Navigation
+
+Three tabs: Scan, Create, My codes (`nav.*`). Account opens from a toolbar button on every tab. The web client shows the same four as a top bar. Back returns to the screen that opened the current one.
+
+### Loading and offline
+
+Loading keeps the previous content on screen and shows a small progress mark, never a blank page. Offline shows `common.offline_banner` above a cached record. Writes are refused offline, and the button says why (`error.no_connection`).
+
+### Scan with the camera
+
+1. The person taps `scan.take_photo`. The app takes one still photo. There is no live video reading in v1.
+2. The photo stays on screen. Each candidate from the spec 004 scanner gets a box on it and a row in a list below, in reading order.
+3. One candidate in Accept opens at once. Otherwise the list asks `scan.pick_one`, and nothing opens until the person taps a row.
+4. Clarify shows the one uncertain word, its list candidates, and `scan.clarify_as_written`. A check-word mismatch shows `scan.check_mismatch` with the words as read, and offers typing.
+5. Retry shows `scan.retry` with the reason. Abstain shows the parser reason in plain words, or `scan.bare`, and offers typing.
+6. `scan.type_instead` is always one tap away. If the camera is off, the screen shows `scan.camera_off`.
+
+### Minted code
+
+The code is the largest text on the screen, in the mono font, in lowercase, never truncated. The check word sits in place inside the code and has its own label below (`minted.check_word_label`, `minted.check_word_help`) and its own accessibility label. `minted.reroll` shows while `rerolls_remaining` is above 0. At `reroll-cap` the button goes away and `minted.reroll_cap` shows. `minted.write_check` opens Write check.
+
+### Write check
+
+The person photographs what they wrote. The spec 004 pipeline runs on the phone and compares the picked candidate with the minted code: `writecheck.match` or `writecheck.mismatch`. The note `writecheck.on_device` is always visible. Nothing is uploaded.
+
+### My codes
+
+A list of rows: the code in mono, the record title, and a status word (`codes.status_*`) when the code is not active. Codes retired by a re-roll do not appear. Empty: `codes.empty`. Signed out: `codes.signed_out` with a sign-in button.
+
+### Code detail
+
+The code, the title, the body as plain text, and three actions: Share, Edit (`detail.edit`), and Revoke (`detail.revoke`). A revoked code shows `detail.revoked_note` and no Edit.
+
+### Edit record
+
+Title and body fields filled from `GET /v1/records/{id}`. The title is required (`create.title_required`). Save is one button. Success returns to Code detail with `edit.saved`. Failure keeps the text in the fields and shows `error.nothing_saved`.
+
+### Revoke confirm and Delete confirm
+
+A system dialog with the title, the body, a destructive action, and Cancel (`revoke.*`, `delete.*`). Cancel is the default.
+
+### Report
+
+A sheet from the Resolve screen: `report.title`, four reasons (`report.reason_*`), an optional note of up to 500 characters, and `report.send`. The answer is always `report.sent`, whether or not the code exists.
+
+### Sign in
+
+`signin.why`, then the provider buttons the platform draws itself: Sign in with Apple and Google on iOS, Google on Android, both on the web. Local builds add `signin.dev`. A failure shows `signin.failed` and leaves no half session.
+
+### App icon
+
+There is no square mark yet. `brand/mark-zz-code.webp` is 480 by 160. Until Michael supplies a square icon, builds use a placeholder: that mark centered on the paper color. A store submission waits for the real icon.

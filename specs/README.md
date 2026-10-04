@@ -12,7 +12,7 @@ zzThis uses [Spec Kit](https://github.com/github/spec-kit) order: constitution, 
 | [002](002-resolver-core/spec.md) | Resolver core | No | Done, deepened 2026-10-03 | Open: Q19, Q25 to Q28, Q36, Q40. Q29 location is this repo (spec 005). | Proposal | [Done](002-resolver-core/checklists/requirements.md) | [Draft](002-resolver-core/tasks.md) | Done |
 | [003](003-wordlist-checkword/spec.md) | Wordlist, check word, and v1 text grammar | No | Done, deepened 2026-10-03 (US3 grammar accepted) | Open: Q27, Q30 to Q32, Q35 | Proposal | [Done](003-wordlist-checkword/checklists/requirements.md) | [Draft](003-wordlist-checkword/tasks.md) | Done |
 | [004](004-capture/spec.md) | Capture by camera, typing, or voice | No | Done, deepened 2026-10-03 | Open: Q18, Q33, Q34, Q37, Q38 | Proposal | [Done](004-capture/checklists/requirements.md) | [Draft](004-capture/tasks.md) | Done |
-| [005](005-v1-api/spec.md) | `/v1` API and later web client | No | Done 2026-10-04 | Q18, Q19, Q25 to Q28, Q36 stay open, with prototype defaults | [Done](005-v1-api/plan.md) | [Done](005-v1-api/checklists/requirements.md) | [Draft](005-v1-api/tasks.md) | Not run |
+| [005](005-v1-api/spec.md) | `/v1` API and web client | No | Done, deepened 2026-10-04 for a one-shot build | Q18, Q19, Q25 to Q28, Q36, Q66 to Q69 stay open, with prototype defaults | [Done](005-v1-api/plan.md) | [Done](005-v1-api/checklists/requirements.md) | [Build order](005-v1-api/tasks.md) | [Done 2026-10-04](analysis-2026-10-04.md) |
 
 v1 scope, exit criteria, and v2 candidates: [`docs/SPEC.md` Section 12](../docs/SPEC.md). The v1 text grammar: [`docs/SPEC.md` Section 2.2a](../docs/SPEC.md).
 
@@ -27,7 +27,9 @@ The `/v1` API and the later web client are [spec 005](005-v1-api/spec.md). The z
 | Plan (how and stack) | `specs/NNN-name/plan.md` |
 | Requirement checklist | `specs/NNN-name/checklists/requirements.md` |
 | Tasks | `specs/NNN-name/tasks.md` |
-| Cross-artifact analysis | [`specs/analysis-2026-10-02.md`](analysis-2026-10-02.md), [`specs/analysis-2026-10-03.md`](analysis-2026-10-03.md) |
+| Cross-artifact analysis | [`specs/analysis-2026-10-02.md`](analysis-2026-10-02.md), [`specs/analysis-2026-10-03.md`](analysis-2026-10-03.md), [`specs/analysis-2026-10-04.md`](analysis-2026-10-04.md) |
+| Shared test vectors | [`specs/003-wordlist-checkword/vectors.json`](003-wordlist-checkword/vectors.json) |
+| One-shot build brief | [`docs/ONE-SHOT-BRIEF.md`](../docs/ONE-SHOT-BRIEF.md) |
 | Decision log | `docs/SPEC.md` Section 9 (questions) and Section 9a (running decisions log) |
 
 ## Issues to tasks

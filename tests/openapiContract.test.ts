@@ -8,6 +8,7 @@ describe("v1 OpenAPI", () => {
     for (const path of [
       "/v1:",
       "/v1/openapi.json:",
+      "/v1/auth/nonce:",
       "/v1/auth/token:",
       "/v1/auth/refresh:",
       "/v1/auth/revoke:",
@@ -17,6 +18,7 @@ describe("v1 OpenAPI", () => {
       "/v1/me/codes:",
       "/v1/codes/{id}/revoke:",
       "/v1/resolve/{code}:",
+      "/v1/records/{id}:",
       "/v1/records/{id}/versions:",
       "/v1/reads:",
       "/v1/reports:",

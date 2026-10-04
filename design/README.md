@@ -10,6 +10,8 @@ This folder is the shared design source for zzThis and for the zzThat apps. The 
 | [`generated/Tokens.kt`](generated/Tokens.kt) | Compose `Color` and text styles for Android. |
 | [`brand/`](brand/) | Logo and mark files already in this repo. |
 | [`UX.md`](UX.md) | Patterns for scan, resolve, create, share, errors, empty states, the demo badge, and copy. |
+| [`copy.json`](copy.json) | Every sentence the apps and the web client show, by key. Clients build their catalogs from it. Added 2026-10-04. |
+| `fonts/` | Not here yet. The build adds the IBM Plex TTF files the token files name, with `OFL.txt` (spec 005 T030). iOS and Android cannot load the site's woff2 files. |
 
 The site still loads `src/styles/tokens.css`. `npm run design:build` reads that file and rewrites this folder. `npm run design:check` fails if the folder drifts. The site build runs the check.
 
@@ -50,19 +52,12 @@ curl -fsSL "https://raw.githubusercontent.com/Zero-State-LLC/zzthis/${PIN}/scrip
 sh /tmp/pin-design.sh /tmp/zzthis-design "$PIN"
 ```
 
-Commit only these files in zzThat. Do not commit a second hand-written palette.
+Commit only the pinned files in zzThat. Do not commit a second hand-written palette. Where each file lands in zzThat, and the one pin file (`contracts/ZZTHIS-API-PIN`), are in zzThat `specs/001-zzthat-apps/design.md`. That table replaces the older one here, which named `apps/DESIGN-PIN`.
 
-| Copy from the pin | Commit in zzThat |
-|---|---|
-| `generated/Tokens.swift` | `apps/ios/zzThat/Core/Design/Tokens.swift` |
-| `generated/Tokens.kt` | `apps/android/core-design/src/main/kotlin/llc/zerostate/zzthis/design/Tokens.kt` |
-| `brand/logo-on-light.svg` and `brand/zzthis-logo-on-light.png` | iOS and Android logo resources |
-| `brand/logo-on-dark.svg` and `brand/zzthis-logo-on-dark.webp` | dark logo resources |
-| `brand/mark.svg` and `brand/mark-zz-code.webp` | the app icon source |
-| the sha | `apps/DESIGN-PIN`, one line, the same full sha |
-
-`UX.md` is the pattern list. Read it. Do not generate a local substitute for a pattern it does not name. Leave that screen's TODO in place.
+`UX.md` is the pattern list. Read it. Every screen in the zzThat runtime and the spec 005 web client now has a pattern. Do not generate a local substitute for a pattern it does not name. Open an issue here instead.
 
 `tokens.json` stays in zzThis. The apps compile the Swift and Kotlin files, not the JSON.
 
 To move the pin later, run the script with the new sha and replace those same files in one pull request. Do not track `main`.
+
+The one-shot build adds `scripts/pin-zzthis.sh` (spec 005 T033). It copies this folder plus `copy.json`, the fonts, the OpenAPI file, the shared test vectors, and the wordlist at one sha, so zzThat keeps one pin for all of them. The list of paths is in [spec 005 plan.md](../specs/005-v1-api/plan.md), What zzThat pins.
