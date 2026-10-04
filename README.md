@@ -200,8 +200,8 @@ Track work on the [zzThis + zzThat board](https://github.com/orgs/Zero-State-LLC
 - [ ] Wordlist pipeline and check-word library ([#14](https://github.com/Zero-State-LLC/zzthis/issues/14))
 - [ ] Minimal exact-match resolver ([#13](https://github.com/Zero-State-LLC/zzthis/issues/13))
 - [ ] Capture by camera, typing, or voice; recognition approach still open
-- [ ] `/v1` API: contract shell, data model, sign-in, mint and re-roll, resolve, retry photo, rate limits ([spec 005](specs/005-v1-api/spec.md))
-- [ ] Later web client in this repo, thin client of `/v1` (spec 005 US6)
+- [ ] `/v1` API ([spec 005](specs/005-v1-api/spec.md)): contract shell ([#60](https://github.com/Zero-State-LLC/zzthis/issues/60)), data model ([#61](https://github.com/Zero-State-LLC/zzthis/issues/61)), sign-in ([#62](https://github.com/Zero-State-LLC/zzthis/issues/62)), mint and re-roll ([#63](https://github.com/Zero-State-LLC/zzthis/issues/63)), resolve and owner records ([#64](https://github.com/Zero-State-LLC/zzthis/issues/64)), retry photo ([#65](https://github.com/Zero-State-LLC/zzthis/issues/65)), rate limits ([#66](https://github.com/Zero-State-LLC/zzthis/issues/66))
+- [ ] Later web client in this repo, thin client of `/v1` ([#67](https://github.com/Zero-State-LLC/zzthis/issues/67), spec 005 US6)
 - [ ] zzThat phone apps, specified in that repo, consume this API and [`design/`](design/README.md)
 
 v1 ends with the prototype above. Candidates for v2, such as any-language codes and a trained reader ([#35](https://github.com/Zero-State-LLC/zzthis/issues/35)), are listed in [SPEC Section 12](docs/SPEC.md).

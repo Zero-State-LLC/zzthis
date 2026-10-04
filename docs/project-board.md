@@ -50,7 +50,7 @@ When a token can edit the board:
 
 Add every open issue in both repos. Set Repo. Leave Status as Backlog unless the issue is already in review.
 
-zzThis open issues at the time of this note: #6, #7, #8, #10, #11, #13, #14, #33, #34, #35, #57, #58, plus the spec 005 task-group issues filed with the design-system pull request.
+zzThis open issues at the time of this note: #6, #7, #8, #10, #11, #13, #14, #33, #34, #35, #57, #58, and the spec 005 task-group issues #60 (contract shell), #61 (data model), #62 (sign-in), #63 (mint and re-roll), #64 (resolve and owner records), #65 (retry photo), #66 (rate limits), #67 (web client).
 
 zzThat open issues at the same time: #22 through #30.
 

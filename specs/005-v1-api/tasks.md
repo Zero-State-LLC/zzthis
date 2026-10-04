@@ -5,30 +5,30 @@ Workflows for every implementing task: anti-slop-code, production-systems, googl
 
 Each group below is one buildable issue. Do not start a group by editing tests to match a missing route.
 
-## Group A. Contract shell
+## Group A. Contract shell ([#60](https://github.com/Zero-State-LLC/zzthis/issues/60))
 
 - [ ] T001 Worker skeleton in `workers/api` with lint, typecheck, and tests wired into the existing CI scripts. No new workflow file.
 - [ ] T002 `GET /v1` and `GET /v1/openapi.json`. Every route rejects a bad `X-ZZ-Contract` with `contract-version`.
 - [ ] T003 Env bindings from the spec table. The process refuses to boot when a required secret name is missing. No secret value in the tree.
 
-## Group B. Data model
+## Group B. Data model ([#61](https://github.com/Zero-State-LLC/zzthis/issues/61))
 
 - [ ] T004 SQL migration for every table in the spec. Unique (scope, canonical) includes revoked rows. Audit writer used by every state change. A failed audit write rolls back.
 
-## Group C. Sign-in
+## Group C. Sign-in ([#62](https://github.com/Zero-State-LLC/zzthis/issues/62))
 
 - [ ] T005 `POST /v1/auth/token` for Apple and Google. PKCE verifier is sent to the provider. `redirect_uri` must be on `ZZ_REDIRECT_ALLOWLIST`.
 - [ ] T006 Refresh rotation and revoke. The previous refresh token stops working.
 - [ ] T007 `GET /v1/me` and `DELETE /v1/me`. Delete revokes refresh tokens and active codes, keeps audit rows, and does not reissue the words.
 
-## Group D. Mint and re-roll
+## Group D. Mint and re-roll ([#63](https://github.com/Zero-State-LLC/zzthis/issues/63))
 
 - [ ] T008 `POST /v1/codes` for `kind: plain`. The spec 003 issuer chooses the words. The response includes `canonical`, `check_word`, and `rerolls_remaining: 3`. No client word list is read.
 - [ ] T009 `POST /v1/codes/{id}/reroll`. Decrements the budget, retires the old id, returns the new code. `reroll-cap` when the budget is 0 or `resolve_count` is not 0. Old words stay unique.
 - [ ] T010 `free_public` off returns `scope-unavailable` and stores nothing. `ZZ_MINT_ENABLED` false returns `not-ready` for plain codes.
 - [ ] T011 Handle issuance: authenticated owner, canonical form, 409 `taken` without an owner, 422 `reserved-handle`.
 
-## Group E. Resolve and owner records
+## Group E. Resolve and owner records ([#64](https://github.com/Zero-State-LLC/zzthis/issues/64))
 
 - [ ] T012 `GET /v1/resolve/{code}`: re-parse, exact canonical match, one not-found body, check-word failure before lookup, bare mark 422.
 - [ ] T013 `GET /v1/me/codes` with cursor. Owner may see `revoked`. Public resolve of that code stays not-found.
@@ -36,15 +36,15 @@ Each group below is one buildable issue. Do not start a group by editing tests t
 - [ ] T015 `GET /v1/audit` for the auditor role only.
 - [ ] T016 `POST /v1/reports` returns 202 for a parsed body even when the code is unknown.
 
-## Group F. Retry photo
+## Group F. Retry photo ([#65](https://github.com/Zero-State-LLC/zzthis/issues/65))
 
 - [ ] T017 `POST /v1/reads` stores jpeg at most 8 MiB in R2 and calls a read port. The test port returns `abstain`. A missing port returns `not-ready`. The photo is not added to a training set.
 
-## Group G. Rate limits
+## Group G. Rate limits ([#66](https://github.com/Zero-State-LLC/zzthis/issues/66))
 
 - [ ] T018 One limiter per row of the spec table. 429 body is `rate-limited` and `Retry-After` is set. Tests show the body does not change between an unknown code and a live code.
 
-## Group H. Web client
+## Group H. Web client ([#67](https://github.com/Zero-State-LLC/zzthis/issues/67))
 
 Depends on Groups A to E for live calls. Screens can be built against fixtures first.
 
