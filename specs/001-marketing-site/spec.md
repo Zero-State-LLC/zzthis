@@ -28,12 +28,12 @@ As a first-time visitor, I can read what zzThis is, see a handwritten code on an
 
 Acceptance:
 
-1. Home renders the B v1.0 sections in the order in `docs/SPEC.md` Section 3.1b: hero console, featured statement with anatomy and languages, comparison spec sheet, How it works, Top ways, Field logistics, From photo to action, proposed architecture, More applications, About teaser, and Contact [DANNY 2026-10-03].
+1. Home renders the B v1.0 sections in the order in `docs/SPEC.md` Section 3.1b: hero console, featured statement with anatomy and languages, comparison spec sheet, How it works, Top ways, Field logistics, From photo to action, proposed architecture, More applications, About teaser, and Contact [JEV 2026-10-03].
 2. Hero, featured statement, comparison cells, workflow lines, category stories, the founder bio, the Hacker Dojo paragraph, and the anonymous-delivery lines match `docs/SPEC.md` Sections 3.2 to 3.5 character for character [BRIEF] [MICHAEL 2026-10-03 v1.0 change list].
-3. The hero H1 line 2 reads "zzThis makes things readable-writable — and smart." (Q62) [DANNY 2026-10-03; Michael v1.0 change list].
+3. The hero H1 reads "Barcodes made things scannable. zzThis makes things readable-writable - and smart." per Michael's v1.0 change list, with a spaced hyphen and no em dash (Q62, FR-006) [DANNY 2026-10-03, revised: "Fix the em dashes"].
 4. The core workflow shows the lowercase code as text [MICHAEL 2026-10-02].
-5. The Home comparison is the visible spec-sheet table with the H.3 cells. It does not use the four cut-corner cards [DANNY 2026-10-03].
-6. Top ways keeps the H.2a copy and sits after How it works on Home [MICHAEL 2026-10-02] [DANNY 2026-10-03].
+5. The Home comparison is the visible spec-sheet table with the H.3 cells. It does not use the four cut-corner cards [JEV 2026-10-03].
+6. Top ways keeps the H.2a copy and sits after How it works on Home [MICHAEL 2026-10-02] [JEV 2026-10-03].
 
 ### US2. See where it applies (P1)
 
@@ -68,7 +68,7 @@ Acceptance: `/contact`, the Home contact action, the About contact card, and the
 | FR-003 | The footer shows How it works, Applications, Demo, About, Contact, the contact email, and the words "Patent pending". | [MICHAEL 2026-10-02] |
 | FR-004 | Each page has exactly one H1; headings follow content hierarchy without skipping levels. | [BRIEF] |
 | FR-005 | Copy in `copy` blocks of `docs/SPEC.md` ships verbatim. Copy lives in typed content objects so that it can change without layout edits. | [BRIEF] |
-| FR-006 | No rendered em dash, except the hero headline em dash in "readable-writable — and smart." (Q62 supersedes the Q47 spaced hyphen for the H1). | [MICHAEL 2026-10-02]; [DANNY 2026-10-03; Michael v1.0 change list] |
+| FR-006 | No rendered em dash, with no exceptions. The hero H1 uses a spaced hyphen: "readable-writable - and smart." (Q47, Q62). | [MICHAEL 2026-10-02]; [DANNY 2026-10-03, revised: "Fix the em dashes"] |
 | FR-007 | No research target or unmeasured performance figures, and no claims of pilots, customers, endorsement, or adoption, appear on any page. | [MICHAEL 2026-10-02] [PRODUCT] |
 | FR-008 | Standalone AI-render panels carry "Concept illustration". Each grouped gallery carries one label above its panels. Captions name the workflow. | [MICHAEL 2026-10-02] |
 | FR-009 | Founder and advisor cards show a supplied headshot where one exists (Michael, Patrick, Arshi, Ridham) and initials otherwise (Q46). No LinkedIn scraping. | [MICHAEL 2026-10-02] [WIRE] |
@@ -76,9 +76,9 @@ Acceptance: `/contact`, the Home contact action, the About contact card, and the
 | FR-011 | The demo is scripted: no recognition, no backend, no camera, microphone, network calls, or storage. Every step shows "Demo · mock data". | [OPERATOR 2026-10-01] |
 | FR-012 | The demo is fully usable by keyboard. Drag is never required. Reduced motion removes transitions. Without JavaScript, a static list of steps appears. | INFERRED (`docs/SPEC.md` Section 4.5) |
 | FR-013 | Flow B (look up a code) never reveals other codes on a miss. | Required by constitution principle III and issue #12. The public demo stays exact match only even though deployments may later enable a suggestion policy (Q20 partly resolved, Q40), because the demo exposes real codes. The wording is a placeholder. Suggestions removed by T010. |
-| FR-014 | The site makes no runtime requests to other origins, has no analytics, and has no service worker. Fonts are self-hosted `@fontsource` files, including Plex Sans Condensed and the KR, JP, and Hebrew subsets used by the language examples. | [OPERATOR 2026-10-01] [DANNY 2026-10-03] |
+| FR-014 | The site makes no runtime requests to other origins, has no analytics, and has no service worker. Fonts are self-hosted `@fontsource` files, including Plex Sans Condensed and the KR, JP, and Hebrew subsets used by the language examples. | [OPERATOR 2026-10-01] [JEV 2026-10-03] |
 | FR-020 | The Home console uses `src/lib/grammar.ts` and `src/lib/resolver.ts` unchanged, against the existing mock records. A miss never suggests another code (FR-013). A letter outside A–Z shows the H.1c coming-later note, not an error. Camera and voice on Home are simulated and do not call `getUserMedia`, the network, or storage. | [DANNY 2026-10-03]; issue #12 |
-| FR-021 | Header, footer, theme toggle, and color and type tokens use the direction B system on every page. How it works, `/demo`, `/contact`, and the 404 keep their current content. | [DANNY 2026-10-03] |
+| FR-021 | Header, footer, theme toggle, and color and type tokens use the direction B system on every page. How it works, `/demo`, `/contact`, and the 404 keep their current content. | [JEV 2026-10-03] |
 | FR-015 | Light and dark themes both meet text contrast of at least 4.5:1. | `docs/SPEC.md` Section 8, item 16 |
 | FR-016 | When the free zzThat app launches, the main navigation gains a prominent "Try zzThat" action that links to zzthat.com. | [MICHAEL 2026-10-02]; launch trigger OPEN (Q39) |
 | FR-017 | Site copy (text, headings, captions, titles) writes every zz code in lowercase and never writes a standalone capital "ZZ". Photos and renders may show a capital ZZ mark or uppercase letters inside a code; alt text describes them in words or quotes the code as shown. | [MICHAEL 2026-10-02] |
@@ -124,12 +124,12 @@ Real recognition, a real resolver, accounts, forms or email backends, analytics,
 | Q44 | Add the Hacker Dojo block? | RESOLVED: use as given [MICHAEL 2026-10-02]. New section after the founder. Location stays. |
 | Q45 | Hacker Dojo logo permission | RESOLVED: use as given [MICHAEL 2026-10-02]. Logo is on About. Michael will ask Hacker Dojo for permission once the beta is live. |
 | Q46 | Are the supplied headshots approved originals with consent? | RESOLVED: use as given [MICHAEL 2026-10-02]. Four headshots ship. Michael will ask the people pictured for permission once the beta is live. |
-| Q47 | Adopt the alternate hero and featured copy Michael shared as a reference? | RESOLVED: use as given [MICHAEL 2026-10-02]. New paragraph and featured text; the H1 uses the spaced hyphen as typed. SUPERSEDED in its H1 part by Q62: the hero headline keeps the em dash in "readable-writable — and smart." [DANNY 2026-10-03; Michael v1.0 change list]. |
+| Q47 | Adopt the alternate hero and featured copy Michael shared as a reference? | RESOLVED: use as given [MICHAEL 2026-10-02]. New paragraph and featured text; the H1 uses the spaced hyphen as typed. Q62 keeps the spaced hyphen in the v1.0 H1 "readable-writable - and smart." [DANNY 2026-10-03, revised: "Fix the em dashes"]. |
 | Q48 | Are codes case- and space-insensitive? | RESOLVED (issue #33): yes; rules in `docs/SPEC.md` Section 2.2a. The display rule (no capital-letter zz in images) feeds Q53. |
 | Q49 | Allow `@` handles like `zz-@agentsmith-zz`? | RESOLVED (issue #34): yes; the Top ways example stays as written. |
 | Q53 | Three real photos show a capital-letter zz. Replace or remove? (issue #39) | RESOLVED: keep them [MICHAEL 2026-10-03 #39] (FR-019) |
 | Q54 | Keep the blockchain and ledger mentions (Top ways 01 and 05, ENS image)? (issue #40) | RESOLVED: no change [MICHAEL 2026-10-03 #40] |
-| Q62 | Keep the v1.0 hero headline em dash ("readable-writable — and smart.") in place of the Q47 spaced hyphen? | RESOLVED: yes. Keep the em dash [DANNY 2026-10-03; Michael v1.0 change list]. It is the one allowed exception (FR-006). |
+| Q62 | Use an em dash in the v1.0 hero headline in place of the Q47 spaced hyphen? | RESOLVED: no. The H1 reads "readable-writable - and smart." with a spaced hyphen [DANNY 2026-10-03, revised: "Fix the em dashes"]. There is no exception to FR-006. |
 | Q63 | Native-reader check for the Korean, Japanese, and Aramaic examples? | OPEN (issue #51). The examples stay on Home. |
 
 ## Workflows
