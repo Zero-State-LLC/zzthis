@@ -98,8 +98,16 @@ function checkText(file, html) {
     if (/\bmock\b/i.test(match[1])) {
       report(file, `user-facing word mock in attribute: ${match[0]}`);
     }
+    if (/\bchecksums?\b/i.test(match[1])) {
+      report(
+        file,
+        `say "check word", not "checksum", in attribute: ${match[0]}`,
+      );
+    }
   }
   if (/\bmock\b/i.test(text)) report(file, "user-facing word mock");
+  if (/\bchecksums?\b/i.test(text))
+    report(file, 'say "check word", not "checksum" (src/content/)');
   if (!text.includes(FOOTER_NOTICE)) report(file, "missing footer notice");
   for (const phrase of BANNED_PHRASES) {
     if (lower.includes(phrase)) report(file, `banned phrase: ${phrase}`);

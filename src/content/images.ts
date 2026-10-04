@@ -79,7 +79,7 @@ export const images = {
     height: 900,
     title: "Read",
     shortCopy: "Camera or manual entry.",
-    alt: "Phone camera framing a handwritten crate code with offline and checksum indicators.",
+    alt: "Phone camera framing a handwritten crate code with offline and check word indicators.",
     caption: "Camera or manual entry.",
     focal: { x: 0.5, y: 0.5 },
     destination: ["home", "how", "applications"],

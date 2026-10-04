@@ -396,6 +396,12 @@ describe("content hygiene across all content modules", () => {
     expect(hits).toEqual([]);
   });
 
+  it('says "check word", not "checksum", in user-facing copy', () => {
+    expect(allStrings.filter((text) => /\bchecksums?\b/i.test(text))).toEqual(
+      [],
+    );
+  });
+
   it("contains no unmeasured performance figures or endorsement claims", () => {
     const banned = [
       "95%",
