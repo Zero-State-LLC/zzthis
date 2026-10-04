@@ -99,6 +99,6 @@ export const howItWorksPage = {
 
 export const decisionBands = {
   ariaLabel: "Decision bands, from low to high confidence",
-  names: ["Manual", "Another view", "Confirm", "Resolve"] as const,
+  names: ["Manual", "Rescan", "Confirm", "Resolve"] as const,
   note: "Design intent. No threshold has been measured yet.",
 };

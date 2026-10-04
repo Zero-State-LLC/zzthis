@@ -130,7 +130,9 @@ Real recognition, a real resolver, accounts, forms or email backends, analytics,
 | Q53 | Three real photos show a capital-letter zz. Replace or remove? (issue #39) | RESOLVED: keep them [MICHAEL 2026-10-03 #39] (FR-019) |
 | Q54 | Keep the blockchain and ledger mentions (Top ways 01 and 05, ENS image)? (issue #40) | RESOLVED: no change [MICHAEL 2026-10-03 #40] |
 | Q62 | Use an em dash in the v1.0 hero headline in place of the Q47 spaced hyphen? | RESOLVED: no. The H1 reads "readable-writable - and smart." with a spaced hyphen [DANNY 2026-10-03, revised: "Fix the em dashes"]. There is no exception to FR-006. |
-| Q63 | Native-reader check for the Korean, Japanese, and Aramaic examples? | OPEN (issue #51). The examples stay on Home. |
+| Q63 | Native-reader check for the Korean, Japanese, and Aramaic examples? | RESOLVED [MICHAEL 2026-10-03 #51]: confirmed. The examples stay on Home as written, including the glosses and the right-to-left Aramaic. |
+| Q64 | Approve the B v1.0 prototype microcopy? (issue #54) | RESOLVED [MICHAEL 2026-10-03 #54]: approved as written, with Rescan in the decision bands, demo in the console labels, and "photos for retries and review" on object storage. |
+| Q65 | Should Home show the real handwritten photos from sample A? (issue #55) | RESOLVED: no [MICHAEL 2026-10-03 #55]. Home stays as it is. Those photos stay on Applications. |
 
 ## Workflows
 

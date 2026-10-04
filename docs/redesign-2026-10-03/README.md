@@ -210,11 +210,11 @@ Michael chose sample B. He sent a v1.0 change list (`zzThis_website_v1.0_changes
 | 6 | Hacker Dojo moved below Advisors; logo removed; new single paragraph; subtitle kept | About | |
 | 7 | "Coupang" removed; heading now "End-to-end anonymous concept use cases"; new privacy line; concept line kept; collage removed; Step 3 reads "drop-off address" | Applications | "Coupang" appears nowhere on the page. |
 
-**Michael needs to confirm or fix these before v1.0 ships.** Danny decided items 1, 2, and the headline em dash (item 4) on 2026-10-03. Item 3 is still open.
+**Michael needs to confirm or fix these before v1.0 ships.** Danny decided items 1, 2, and the headline em dash (item 4) on 2026-10-03. Item 3 is confirmed (Michael 2026-10-03, issue #51).
 
 1. **Bio version. Decided (Danny 2026-10-03).** The doc contains two versions of the bio. Section 5 reads `I “invent” business models … and solve to the emerging …`. The combined block at the end reads `“I invent" …` and `solve-to`. B v1.0 keeps the section 5 bio. No change to the bio text. The doc's other suggested bio edits, such as naming the citing companies, are not applied.
 2. **Multilingual codes and the v1 grammar. Decided (Danny 2026-10-03).** Keep the "In any language" examples on the page, including Korean, Japanese, and Aramaic. The Home console does not report a code that contains non-ASCII letters as malformed. It shows a non-error note that codes in other languages and scripts are coming later, and that this demo reads v1 codes written with Latin letters and numbers for now. ASCII input stays exact match only, with no suggestions. Any-language codes remain a v2 candidate (issue #35).
-3. **Native-reader check.** Still pending a human check for the Korean, Japanese, and Aramaic codes, as the doc itself advises. Tracked in #51 (Q63).
+3. **Native-reader check. Confirmed (Michael 2026-10-03, issue #51, Q63).** The Korean, Japanese, and Aramaic examples are correct and stay as written, including the glosses and the right-to-left Aramaic. The Home console still shows the non-error note that codes in other languages and scripts are coming later, because this demo reads v1 codes written with Latin letters and numbers. That note is about resolver support, not about whether the examples are correct.
 4. **Headline em dash. Decided (Danny 2026-10-03, revised).** No em dash. The headline reads "zzThis makes things readable-writable - and smart." with a spaced hyphen, as in Q47. Recorded as Q62 in `docs/SPEC.md`. There is no em-dash exception.
 5. **For the production build:**
    - Self-host the new script fonts: `@fontsource/ibm-plex-sans-kr`, `-jp`, and `-hebrew`.

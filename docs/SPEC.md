@@ -10,7 +10,7 @@
 > | 7 Workflows | Superseded by the Workflows section in each `specs/*/spec.md`. The "OPEN Q13" and "draft PR" text below is stale. |
 > | 8 Acceptance | [`specs/001-marketing-site/checklists/requirements.md`](../specs/001-marketing-site/checklists/requirements.md) |
 > | 2.2a v1 text grammar | Accepted 2026-10-03 from Michael's Q48 and Q49 answers; updated the same day from his answers to Q50 to Q61 (draft, pending Danny's merge). Implemented by the spec 003 library (US3). |
-> | 9 Questions | Question table. Q21 to Q39 were added on 2026-10-02; Q49 to Q61 on 2026-10-03, and Q50 to Q61 were answered the same day. Q62 (2026-10-03) sets the v1.0 hero headline with a spaced hyphen and no em dash. Section 3.1b records direction B v1.0 (accepted 2026-10-03). Section 9a is the running decisions log. |
+> | 9 Questions | Question table. Q21 to Q39 were added on 2026-10-02; Q49 to Q61 on 2026-10-03, and Q50 to Q61 were answered the same day. Q62 (2026-10-03) sets the v1.0 hero headline with a spaced hyphen and no em dash. Q63 to Q65 were answered the same day (issues #51, #54, and #55). Section 3.1b records direction B v1.0 (accepted 2026-10-03). Section 9a is the running decisions log. |
 > | 12 Roadmap | v1 scope, exit criteria, and v2 candidates. |
 > | 10 Architecture | [`specs/002-resolver-core/plan.md`](../specs/002-resolver-core/plan.md), [`specs/004-capture/plan.md`](../specs/004-capture/plan.md) |
 >
@@ -500,7 +500,7 @@ French: zz-cuivre-lanterne-ciel-zz
 Aramaic: zz-נהורא-שמיא-zz (light, sky)
 ```
 
-[MICHAEL 2026-10-03 v1.0 change list] The "Why the zz markers matter" paragraph and the five language lines ship as given. Aramaic is wrapped in `<bdi lang="arc" dir="rtl">` around `נהורא-שמיא`. A native-reader check is still open (Q63, issue #51).
+[MICHAEL 2026-10-03 v1.0 change list] The "Why the zz markers matter" paragraph and the five language lines ship as given. Aramaic is wrapped in `<bdi lang="arc" dir="rtl">` around `נהורא-שמיא`. Michael confirmed the Korean, Japanese, and Aramaic examples, including the glosses and the right-to-left Aramaic (Q63, issue #51) [MICHAEL 2026-10-03 #51].
 
 #### H.1c Home console (prototype microcopy)
 
@@ -511,8 +511,8 @@ H2: Look up a code
 Badge: Demo · mock data
 Tabs: Camera; Typing; Voice
 Button: Photograph (simulated)
-Readout: Confidence: 0.94 (mock)
-Readout: Checksum: OK (mock state, no algorithm runs)
+Readout: Confidence: 0.94 (demo)
+Readout: Check word: OK (demo; no algorithm runs)
 Label: Type a zz code
 Examples label: Example codes
 Examples: zz-copper-lantern-sky-zz; zz-river-maple-sky-zz; zz-blue-bike-astoria-zz; zz-b2-4-zz; (zz) camp bravo four two (zz); copper lantern sky
@@ -531,10 +531,10 @@ Reserved: The symbols # $ / : are reserved and are not used in codes yet.
 Script: This demo reads English letters and numbers only.
 Bare: A bare zz mark is found by photo and place, not by typing. Try a code with words.
 Coming later: Codes in other languages and scripts are coming later. This demo reads v1 codes, written with Latin letters and numbers, for now.
-Record foot: Mock record. No network request was made.
+Record foot: Demo record. No network request was made.
 ```
 
-The miss and malformed lines match Section 4.4. The coming-later line is the non-error note for letters outside A–Z.
+The miss and malformed lines match Section 4.4. The coming-later line is the non-error note for letters outside A–Z. It stays, because v1 lookup reads Latin letters and numbers; it is not a caveat about the language examples (Q63). The confidence line, the check-word line, and the record foot say demo [MICHAEL 2026-10-03 #54]. The "Demo · mock data" badge stays the Section 4 badge.
 
 #### H.2 Featured statement (Do)
 
@@ -633,7 +633,7 @@ P:  AI-assisted work: PHOTOGRAPH one or more items → CONFIRM the proposed iden
 
 The first paragraph and the card labels are [WIRE]. The workflow paragraph is [BRIEF]. Keep this section distinct and after the marking example, never under the digital-alias card [BRIEF].
 
-On Home, the uncertain-reading note and the public-record note from Section 3.3 sit under How it works. The decision bands are [prototype 2026-10-03 b-resolver-v1]: Manual, Another view, Confirm, Resolve. The line under them is "Design intent. No threshold has been measured yet."
+On Home, the uncertain-reading note and the public-record note from Section 3.3 sit under How it works. The decision bands are Manual, Rescan, Confirm, Resolve [MICHAEL 2026-10-03 #54]. The line under them is "Design intent. No threshold has been measured yet."
 
 #### H.6b Proposed architecture
 
@@ -645,7 +645,7 @@ P:  One central server owns codes, records, grants, and the audit log; every app
 Label: Proposal, not built.
 API clients: Phone app (on-device recognition); Web app; Partner systems
 Edge layer: Fast reads (resolve, cached signed records)
-Central server: Write and signing API (issue, revoke, version, grants); Portable SQL (codes, records, record_versions, grants, audit_events); Object storage (retry photos); Cloud vision model (hard cases only)
+Central server: Write and signing API (issue, revoke, version, grants); Portable SQL (codes, records, record_versions, grants, audit_events); Object storage (photos for retries and review); Cloud vision model (hard cases only)
 ```
 
 [OPERATOR 2026-10-02] for the rules. The one-paragraph form and the on-page diagram are the B v1.0 rendering of that section. Nothing in the diagram is built.
@@ -1181,7 +1181,9 @@ Michael's answers arrived on 2026-10-02 through Danny (issue #10), in an updated
 | Q60 | Reserved handles list (issue #47) | RESOLVED [MICHAEL 2026-10-03 #47]: yes, reserves; free users cannot use corporate names or names like admin; premium tier for short names, as ENS (3 or more characters, shorter names cost more). Spec 002 FR-019 |
 | Q61 | Should `zz-` and `zz-zz` count as a bare mark? (issue #48) | RESOLVED [MICHAEL 2026-10-03 #48]: only `zz` and `(zz)` alone, in any case or mix. `zz-` and `zz-zz` fail. Section 2.2a G3; case note in Section 9a |
 | Q62 | Use an em dash in the v1.0 hero headline in place of the Q47 spaced hyphen, as in Michael's v1.0 change list? | RESOLVED: no. The headline reads "zzThis makes things readable-writable - and smart." with a spaced hyphen [DANNY 2026-10-03, revised: "Fix the em dashes"]. Danny first kept the em dash the same day, then reversed it. There is no exception to the no-em-dash rule. |
-| Q63 | Native-reader check for the Korean, Japanese, and Aramaic examples? | OPEN. Tracked in issue #51. The examples stay on Home (Section 3.1b). |
+| Q63 | Native-reader check for the Korean, Japanese, and Aramaic examples? | RESOLVED [MICHAEL 2026-10-03 #51]: confirmed. The Korean, Japanese, and Aramaic examples stay as written, including the glosses and the right-to-left Aramaic display (Section 3.1b). |
+| Q64 | Approve the B v1.0 prototype microcopy (console labels, anatomy, decision bands, architecture diagram)? (issue #54) | RESOLVED [MICHAEL 2026-10-03 #54]: approved as written, with three changes. Decision bands are Manual, Rescan, Confirm, Resolve. The console check line is "Check word: OK (demo; no algorithm runs)", and the other console labels say demo instead of mock. Object storage reads "photos for retries and review". |
+| Q65 | Should Home show the real handwritten photos from sample A? (issue #55) | RESOLVED: no [MICHAEL 2026-10-03 #55]. Home stays as it is. Those photos stay on Applications and are not added to Home. |
 
 ## 9a. Decisions log
 
@@ -1189,6 +1191,9 @@ One running list of decisions, so every agent and advisor works from the same ru
 
 | ID | Date | Issue | Decision | Source |
 |---|---|---|---|---|
+| D-2026-10-03-20 | 2026-10-03 | #55 | Home does not gain the sample A handwritten photos. They stay on Applications | [MICHAEL 2026-10-03 #55] |
+| D-2026-10-03-19 | 2026-10-03 | #54 | Prototype microcopy is approved as written, except the bands are Manual, Rescan, Confirm, Resolve; console labels say demo instead of mock, and the check line is "Check word: OK (demo; no algorithm runs)"; object storage is "photos for retries and review" | [MICHAEL 2026-10-03 #54] |
+| D-2026-10-03-18 | 2026-10-03 | #51 | The Korean, Japanese, and Aramaic examples are confirmed, including the glosses and the right-to-left Aramaic | [MICHAEL 2026-10-03 #51] |
 | D-2026-10-03-01 | 2026-10-03 | #48, #33, #39 | Letter case: people may write zz, ZZ, Zz, or zZ; all mean the same marker. The system stores one case-folded canonical form, so case never changes which code it is. What we generate and display (site, documents, generated images, anything Army-facing) uses lowercase zz. Michael's "in our system we will use ZZ as upper case" (#48) is read together with "The lower case is – the “best case” and when our system uses them" (#39, same document, quoted as written): uppercase is how people often write the standalone or object mark, and it stays welcome in real photos. An uppercase brand style in civilian material would be a separate, explicit decision | INFERRED reconciliation of [MICHAEL 2026-10-03 #48] [MICHAEL 2026-10-03 #39] [MICHAEL 2026-10-02 #33] |
 | D-2026-10-03-02 | 2026-10-03 | #48 | Bare mark: only `zz` or `(zz)` alone. `zz-` fails `no-closing-marker`; `zz-zz` fails `no-content` | [MICHAEL 2026-10-03 #48] |
 | D-2026-10-03-03 | 2026-10-03 | #36 | No design limit on parts. The 256-character input guard is a safety setting. `part-count` is removed | [MICHAEL 2026-10-03 #36] |
@@ -1231,7 +1236,7 @@ flowchart LR
   subgraph Core["Central server (source of truth)"]
     API["Write and signing API<br/>issue, revoke, version, grants"]
     DB[("Portable SQL<br/>codes, records, record_versions,<br/>grants, audit_events")]
-    Blob[("Object storage<br/>retry photos")]
+    Blob[("Object storage<br/>photos for retries and review")]
     Vision["Cloud vision model<br/>hard cases only"]
   end
   Phone -->|"decoded code"| Read

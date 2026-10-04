@@ -34,7 +34,7 @@ export const architecture = {
           title: "Portable SQL",
           detail: "codes, records, record_versions, grants, audit_events",
         },
-        { title: "Object storage", detail: "retry photos" },
+        { title: "Object storage", detail: "photos for retries and review" },
         { title: "Cloud vision model", detail: "hard cases only" },
       ],
     },

@@ -150,7 +150,7 @@ flowchart LR
   subgraph Core["Central server (source of truth)"]
     API["Write and signing API<br/>issue, revoke, version, grants"]
     DB[("Portable SQL<br/>codes, records, record_versions,<br/>grants, audit_events")]
-    Blob[("Object storage<br/>retry photos")]
+    Blob[("Object storage<br/>photos for retries and review")]
     Vision["Cloud vision model<br/>hard cases only"]
   end
   Phone -->|"decoded code"| Read
