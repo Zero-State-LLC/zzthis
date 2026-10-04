@@ -170,7 +170,7 @@ flowchart LR
 
 ## Roadmap
 
-Track work on the [zzThis + zzThat board](https://github.com/orgs/Zero-State-LLC/projects/25). The board spec, including the rename from "zzThat board" and the Repo field, is [`docs/project-board.md`](docs/project-board.md).
+Track work on the live [zzThis + zzThat board](https://github.com/orgs/Zero-State-LLC/projects/25). How the workflow uses it is in [`docs/project-board.md`](docs/project-board.md).
 
 ### Phase 0: Spec, site, and demo
 
