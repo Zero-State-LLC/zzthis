@@ -86,6 +86,7 @@ A browser client in this repo, not the marketing site, performs US1 to US5 with 
 | FR-015 | `share.url` is null. Share text is the canonical code. | zzThat ZQ9 |
 | FR-016 | `GET /v1/audit` is limited to an auditor role. The apps do not call it. | spec 002 US4 |
 | FR-017 | Reports return 202 when the body parses, including when the code is unknown. | zzThat FR-035 |
+| FR-018 | Edge-cache only an active, reusable, public, unauthenticated resolve. Header `Cache-Control: public, max-age=60, stale-while-revalidate=300`, stored with the Workers Cache API. The cache key is that code's resolve request. A record update, revoke, or expiry purges that key. If the purge fails, 60 seconds is the worst case. Single-use codes, short-expiry codes, private records, authenticated responses, 404 misses, and 429s are not stored and send `Cache-Control: no-store`. | [DANNY 2026-10-04] (Q26) |
 
 ## Data model
 
@@ -167,7 +168,7 @@ Names only. Values are not committed. Worker secrets hold the secrets.
 | D1 binding `ZZ_DB` | binding | SQL |
 | R2 binding `ZZ_PHOTOS` | binding | Retry photos |
 
-Edge cache of reusable public records stays off until Q26 sets a purge window. Single-use and short-expiry codes are never cached (spec 002). Creating the Worker, D1, R2, and the Apple or Google clients needs Danny's yes. This spec does not create them.
+Edge cache follows FR-018 [DANNY 2026-10-04]. Creating the Worker, D1, R2, and the Apple or Google clients needs Danny's yes. This spec does not create them.
 
 ## Web client
 
@@ -192,7 +193,7 @@ Redirect URI is an https URL on `ZZ_REDIRECT_ALLOWLIST`, not `zzthat://auth`.
 
 - Implementing the Worker, the web client, or a vision vendor in this change.
 - Person-chosen plain-code words (zzThat ZQ11).
-- Partner auth (Q19), suggestion policy details (Q40), no-device linking (Q25), signing-key rotation (Q28), and the purge-window number (Q26).
+- Partner auth (Q19), suggestion policy details (Q40), no-device linking (Q25), and signing-key rotation (Q28).
 - Payments, store submission, and production deploy.
 
 ## Open questions
@@ -201,13 +202,14 @@ Redirect URI is an https URL on `ZZ_REDIRECT_ALLOWLIST`, not `zzthat://auth`.
 |---|---|---|
 | Q19 | Partner auth | No partner route |
 | Q25 | No-device linking | Not a route |
-| Q26 | Purge window and the original unset limits | Cache off. Limits are the table above. |
 | Q27 | Which formats the issuer emits | Whatever spec 003 emits. This contract stores that canonical string. |
 | Q28 | Key rotation | One Ed25519 key |
 | Q18 | Which vision model | `POST /v1/reads` calls a port. Tests use a fixture that returns `abstain`. |
 | Q36 | Reissue of retired words | Never |
 
 Q29 (where the code lives) is answered for this API: the server and the later web client live in this repo [DANNY 2026-10-04].
+
+Q26 (edge cache) is answered [DANNY 2026-10-04]. Only an active, reusable, public, unauthenticated resolve is stored, with `Cache-Control: public, max-age=60, stale-while-revalidate=300` and the Workers Cache API. A record update, revoke, or expiry purges that code's cache key. The 60 second max-age is the worst case if a purge fails. Single-use codes, short-expiry codes, private records, authenticated responses, 404 misses, and 429s send `Cache-Control: no-store`. Rate-limit numbers stay the table above.
 
 ## Workflows
 

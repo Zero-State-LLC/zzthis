@@ -19,6 +19,7 @@ anti-slop-code, production-systems, google-developer-style. CI: `ci.yml`, `site-
 | Web client, when built | `apps/web/`, Astro, calls `PUBLIC_API_ORIGIN` | INFERRED from the site stack. Not created in this change. |
 | Grammar and check word | Call spec 003. Do not copy a second grammar into the Worker. | FR-003, FR-004 |
 | Design | `design/` for the web client. The marketing site keeps `src/styles/tokens.css`. | design/README.md |
+| Edge cache | Workers Cache API. Only an active, reusable, public, unauthenticated resolve, `Cache-Control: public, max-age=60, stale-while-revalidate=300`. Purge that code's key on record update, revoke, or expiry. Excluded classes send `no-store`. Policy helper: `src/lib/edgeCache.ts`. | [DANNY 2026-10-04] (Q26). FR-018 |
 
 ## Constitution check
 
@@ -32,6 +33,6 @@ anti-slop-code, production-systems, google-developer-style. CI: `ci.yml`, `site-
 
 ## Risks
 
-- A revoked reusable code could be served from cache. Cache stays off until Q26.
+- A purge can fail. A cached public resolve then lives at most 60 seconds (FR-018) [DANNY 2026-10-04].
 - Enumeration by timing. The not-found path is one code path (spec 002).
 - zzThat still has a proposal OpenAPI. They replace it with this file in their own pull request. This repo does not edit zzThat.

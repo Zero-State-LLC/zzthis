@@ -30,7 +30,9 @@ Each group below is one buildable issue. Do not start a group by editing tests t
 
 ## Group E. Resolve and owner records ([#64](https://github.com/Zero-State-LLC/zzthis/issues/64))
 
-- [ ] T012 `GET /v1/resolve/{code}`: re-parse, exact canonical match, one not-found body, check-word failure before lookup, bare mark 422.
+- [ ] T012 `GET /v1/resolve/{code}`: re-parse, exact canonical match, one not-found body, check-word failure before lookup, bare mark 422. Edge cache per FR-018: Workers Cache API; store only an active, reusable, public, unauthenticated 200 with `Cache-Control: public, max-age=60, stale-while-revalidate=300`; the cache key is that code's resolve request.
+- [ ] T024 Purge that code's cache key on record update, revoke, or expiry. If the purge fails, 60 seconds is the worst case.
+- [x] T025 Policy tests in `tests/edgeCache.test.ts`: a cache hit for a public code, purge on revoke, `Cache-Control: no-store` for single-use, short-expiry, private, authenticated, 404, and 429, and identical 404 and 429 bodies. The Worker keeps these tests true.
 - [ ] T013 `GET /v1/me/codes` with cursor. Owner may see `revoked`. Public resolve of that code stays not-found.
 - [ ] T014 Record versions and revoke. Failed signature or audit stores nothing. `share.url` is null.
 - [ ] T015 `GET /v1/audit` for the auditor role only.

@@ -37,7 +37,7 @@ Depends on spec 003 T010 (grammar library).
 
 ## Phase 6: Security polish
 
-- [ ] T011 Rate limits per client, role, and code (values from Q26).
+- [ ] T011 Rate limits per client, role, and code (numbers from spec 005).
 - [ ] T012 One automated test per abuse case: copied mark, replay, enumeration, unauthorized update, malformed input. Each test states its pass condition before it runs; for example, an enumeration attempt only ever gets the FR-011 response and hits the rate limit. ADVERSARY reviews.
 - [ ] T013 Human-gated deploy to a Cloudflare prototype environment. Needs Danny's yes and a named workflow file.
 

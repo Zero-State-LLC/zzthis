@@ -7,6 +7,13 @@ info:
     Wire contract for the zzThis central server. Behavior rules are in spec.md.
     Every /v1 request sends X-ZZ-Contract: 1. JSON names are snake_case.
     A code in a path is the canonical form, percent-encoded.
+    GET /v1/resolve/{code} is the only edge-cached response. Store it with the
+    Workers Cache API only when the code is active, reusable, and public and
+    the caller is unauthenticated. That response sends
+    Cache-Control: public, max-age=60, stale-while-revalidate=300.
+    The cache key is that request. A record update, revoke, or expiry purges
+    the key. Single-use, short-expiry, private, authenticated, 404, and 429
+    responses send Cache-Control: no-store.
 servers:
   - url: https://api.example.invalid
     description: Placeholder. The real origin is an environment value, not this file.
@@ -242,6 +249,13 @@ paths:
       tags: [codes]
       operationId: resolveCode
       summary: Resolve a canonical code.
+      description: |
+        Edge-cache only an active, reusable, public, unauthenticated 200.
+        Cache-Control is then public, max-age=60, stale-while-revalidate=300,
+        stored with the Workers Cache API under this request as the cache key.
+        A record update, revoke, or expiry purges that key. If a purge fails,
+        60 seconds is the worst case. Single-use, short-expiry, private,
+        authenticated, 404, and 429 responses send Cache-Control: no-store.
       parameters:
         - { $ref: "#/components/parameters/Contract" }
         - name: code
@@ -251,8 +265,10 @@ paths:
           description: Canonical form, percent-encoded.
       responses:
         "200":
-          description: The view the caller is allowed to see.
-          headers: { X-ZZ-Contract: { $ref: "#/components/headers/Contract" } }
+          description: The view the caller is allowed to see. Public unauthenticated reusable codes use the public Cache-Control value. Every other 200 uses no-store.
+          headers:
+            X-ZZ-Contract: { $ref: "#/components/headers/Contract" }
+            Cache-Control: { $ref: "#/components/headers/ResolveCache" }
           content:
             application/json:
               schema: { $ref: "#/components/schemas/Resolve" }
@@ -409,6 +425,18 @@ components:
     Contract:
       schema: { const: "1" }
       required: true
+    ResolveCache:
+      description: Public value only for an active, reusable, public, unauthenticated resolve. no-store for every other resolve 200.
+      required: true
+      schema:
+        type: string
+        enum:
+          - "public, max-age=60, stale-while-revalidate=300"
+          - "no-store"
+    NoStore:
+      description: This response is not stored in the edge cache.
+      required: true
+      schema: { const: "no-store" }
   securitySchemes:
     bearer:
       type: http
@@ -422,16 +450,19 @@ components:
           schema: { $ref: "#/components/schemas/Error" }
           example: { error: contract-version }
     NotFound:
-      description: One body for unknown, expired, used, revoked, and a private record read while signed out.
-      headers: { X-ZZ-Contract: { $ref: "#/components/headers/Contract" } }
+      description: One body for unknown, expired, used, revoked, and a private record read while signed out. Not stored.
+      headers:
+        X-ZZ-Contract: { $ref: "#/components/headers/Contract" }
+        Cache-Control: { $ref: "#/components/headers/NoStore" }
       content:
         application/json:
           schema: { $ref: "#/components/schemas/Error" }
           example: { error: not-found }
     RateLimited:
-      description: The body does not depend on whether a code exists.
+      description: The body does not depend on whether a code exists. Not stored.
       headers:
         X-ZZ-Contract: { $ref: "#/components/headers/Contract" }
+        Cache-Control: { $ref: "#/components/headers/NoStore" }
         Retry-After:
           description: Whole seconds to wait.
           schema: { type: integer, minimum: 1 }

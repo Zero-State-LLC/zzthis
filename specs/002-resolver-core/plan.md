@@ -16,7 +16,7 @@ anti-slop-code, production-systems, google-developer-style. ADVERSARY reviews th
 | Edge | Cloudflare Workers for fast reads of signed records; writes and signing are central | [OPERATOR 2026-10-02] |
 | Database | D1 for the prototype; portable SQL so it can move later (AWS GovCloud if a sponsor needs IL4 or IL5) | [OPERATOR 2026-10-02] |
 | Object storage | R2 for retry photos (spec 004) | [OPERATOR 2026-10-02] |
-| Cache rule | Only signed records of reusable codes are cached; single-use and short-expiry codes always go to the central server | INFERRED (Section 10.2) |
+| Cache rule | Only an active, reusable, public, unauthenticated resolve is cached. Header `Cache-Control: public, max-age=60, stale-while-revalidate=300`. Purge that code's key on write. Excluded classes are `no-store` | [DANNY 2026-10-04] (Q26). Spec 005 FR-018 |
 | API shape | `POST /codes`, `GET /resolve/{code}`, `POST /codes/{id}/revoke`, `POST /records/{id}/versions`, `GET /audit` | INFERRED sketch (Section 10.6), not a contract |
 | Data model | `codes`, `records`, `record_versions`, `grants`, `audit_events` | INFERRED sketch (Section 10.7) |
 | Signing keys | Not decided: algorithm, storage, and rotation | OPEN (Q28) |
@@ -34,5 +34,5 @@ anti-slop-code, production-systems, google-developer-style. ADVERSARY reviews th
 
 ## Risks
 
-- Edge caching versus revocation: a revoked reusable code may resolve until the purge window ends (Q26).
+- Edge caching versus revocation: if a purge fails, a cached public resolve may last 60 seconds [DANNY 2026-10-04].
 - Enumeration through timing or error differences; the single not-found shape must also hold for timing (INFERRED).

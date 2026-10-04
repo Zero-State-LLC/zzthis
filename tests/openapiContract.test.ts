@@ -28,5 +28,7 @@ describe("v1 OpenAPI", () => {
     expect(openapi).toContain("rerolls_remaining");
     expect(openapi).toContain("reroll-cap");
     expect(openapi).toContain("Retry-After");
+    expect(openapi).toContain("public, max-age=60, stale-while-revalidate=300");
+    expect(openapi).toContain("no-store");
   });
 });
