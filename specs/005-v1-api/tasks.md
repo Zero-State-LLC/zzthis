@@ -33,7 +33,7 @@ Done when: a test forces the audit insert to fail and shows that nothing else wa
 
 - [ ] T005 `POST /v1/auth/nonce` and `POST /v1/auth/token` for Apple, Google, and dev (FR-020, FR-022). Test keys stand in for Apple and Google.
 - [ ] T006 Refresh rotation, family revoke on reuse, revoke, and the web cookie (FR-021).
-- [ ] T007 `GET /v1/me` and `DELETE /v1/me` with every FR-023 step, including the Apple revoke call (mocked).
+- [ ] T007 `GET /v1/me` and `DELETE /v1/me` with every FR-023 step, including the Apple revoke call (mocked), and a failed revoke that lands in `pending_revocations`.
 
 Done when: tests cover a wrong issuer, a wrong audience, an expired token, a reused nonce, a reused refresh token, and deletion followed by not-found for the account's codes.
 
@@ -61,9 +61,9 @@ Done when: a test shows the same 404 body, status, and headers for unknown, revo
 ## Group F. Retry photo ([#65](https://github.com/Zero-State-LLC/zzthis/issues/65))
 
 - [ ] T017 `POST /v1/reads`: 503 `not-ready` while `photo_reads` is false. With a test port, store the jpeg in R2 with a 30-day expiry and return the port's band. The photo is not added to a training set.
-- [ ] T031 The daily cron from FR-026.
+- [ ] T031 The daily cron from FR-026, including the pending Apple revocation retries.
 
-Done when: a test runs the cron and shows an expired photo and its row are gone.
+Done when: a test runs the cron and shows an expired photo and its row are gone, and a pending revocation is retried and then removed.
 
 ## Group G. Rate limits ([#66](https://github.com/Zero-State-LLC/zzthis/issues/66))
 
