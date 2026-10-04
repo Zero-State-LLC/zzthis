@@ -284,10 +284,10 @@ The first web release has no camera and no microphone. Voice on the marketing de
 | Q37 | Capture thresholds | spec 004, Client read pipeline (0.80 and 0.50) |
 | Q18 | Which vision model | `photo_reads` false. `POST /v1/reads` returns `not-ready`. Tests use a port that returns `abstain`. |
 | Q36 | Reissue of retired words | Never |
-| Q66 | Replace the code and PKCE exchange with ID token and nonce sign-in (amends zzThat ZQ18) | Yes, FR-020 |
-| Q67 | Sign in with Apple on Android | Not in v1. Android offers Google. |
-| Q68 | May the body hold a phone number the owner typed? | Yes. The code never does. |
-| Q69 | Hosting: one Worker serves the API and the web client on one origin. Which domain? | One Worker. Staging on its workers.dev name. The domain is Danny's. |
+| Q66 ([#68](https://github.com/Zero-State-LLC/zzthis/issues/68)) | Replace the code and PKCE exchange with ID token and nonce sign-in (amends zzThat ZQ18) | Yes, FR-020 |
+| Q67 ([#69](https://github.com/Zero-State-LLC/zzthis/issues/69)) | Sign in with Apple on Android | Not in v1. Android offers Google. |
+| Q68 ([#70](https://github.com/Zero-State-LLC/zzthis/issues/70)) | May the body hold a phone number the owner typed? | Yes. The code never does. |
+| Q69 ([#71](https://github.com/Zero-State-LLC/zzthis/issues/71)) | Hosting: one Worker serves the API and the web client on one origin. Which domain? | One Worker. Staging on its workers.dev name. The domain is Danny's. |
 
 Q29 (where the code lives) is answered for this API: the server and the later web client live in this repo [DANNY 2026-10-04].
 

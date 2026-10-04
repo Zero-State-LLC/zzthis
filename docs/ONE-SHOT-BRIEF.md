@@ -7,7 +7,7 @@ Build the zzThis central server (a Cloudflare Worker), the web client, and the z
 ## Before the build (people, not the builder)
 
 1. Merge zzThis PR #59. Re-pin zzThat PR #31 to the merge commit (`contracts/ZZTHIS-API-PIN` and the files that name it), run `python3 scripts/lint-specs.py`, then merge #31.
-2. Danny answers Q66 and Q69, says yes or no to the spec 003 prototype defaults (including the EFF list license), and picks the bundle ids (zzThat ZQ24). Michael answers Q67 and Q68 and reviews the new strings in `design/copy.json`. The icon and the support contact (ZQ25) can come after the build, because builds use placeholders.
+2. Danny answers Q66 ([#68](https://github.com/Zero-State-LLC/zzthis/issues/68)) and Q69 ([#71](https://github.com/Zero-State-LLC/zzthis/issues/71)), says yes or no to the spec 003 prototype defaults (including the EFF list license), and picks the bundle ids (zzThat ZQ24, [zzThat #34](https://github.com/Zero-State-LLC/zzthat/issues/34)). Michael answers Q67 ([#69](https://github.com/Zero-State-LLC/zzthis/issues/69)) and Q68 ([#70](https://github.com/Zero-State-LLC/zzthis/issues/70)) and reviews the new strings in `design/copy.json`. The icon and the support contact (ZQ25, [zzThat #35](https://github.com/Zero-State-LLC/zzthat/issues/35)) can come after the build, because builds use placeholders.
 3. Danny accepts [intent/2026-10-04-one-shot-build.md](../intent/2026-10-04-one-shot-build.md).
 
 ## Start here

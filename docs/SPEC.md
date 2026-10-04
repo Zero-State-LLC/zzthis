@@ -1185,10 +1185,10 @@ Michael's answers arrived on 2026-10-02 through Danny (issue #10), in an updated
 | Q63 | Native-reader check for the Korean, Japanese, and Aramaic examples? | RESOLVED [MICHAEL 2026-10-03 #51]: confirmed. The Korean, Japanese, and Aramaic examples stay as written, including the glosses and the right-to-left Aramaic display (Section 3.1b). |
 | Q64 | Approve the B v1.0 prototype microcopy (console labels, anatomy, decision bands, architecture diagram)? (issue #54) | RESOLVED [MICHAEL 2026-10-03 #54]: approved as written, with three changes. Decision bands are Manual, Rescan, Confirm, Resolve. The console check line is "Check word: OK (demo; no algorithm runs)". Every user-facing label says demo instead of mock, including the shared badge and the scripted demo records [DANNY 2026-10-04]. Object storage reads "photos for retries and review". |
 | Q65 | Should Home show the real handwritten photos from sample A? (issue #55) | RESOLVED: no [MICHAEL 2026-10-03 #55]. Home stays as it is. Those photos stay on Applications and are not added to Home. |
-| Q66 | Sign-in: replace the authorization-code exchange with PKCE and a redirect URI (zzThat ZQ18) by an ID token and a server nonce, so one contract fits iOS, Android, and the web? | OPEN for Danny. Default proposed 2026-10-04: yes (spec 005 FR-020) |
-| Q67 | Offer Sign in with Apple on Android? Android has no Apple sign-in library. | OPEN for Michael. Default: not in v1; Android offers Google (spec 005) |
-| Q68 | May a record body hold a phone number the owner typed? | OPEN for Michael. Default: yes; a code string never holds one (spec 005 FR-007) |
-| Q69 | Hosting: one Worker serves the API and the web client on one origin. Which domain? | OPEN for Danny. Default: one Worker; staging on its workers.dev name (spec 005 FR-029) |
+| Q66 | Sign-in: replace the authorization-code exchange with PKCE and a redirect URI (zzThat ZQ18) by an ID token and a server nonce, so one contract fits iOS, Android, and the web? (issue #68) | OPEN for Danny. Default proposed 2026-10-04: yes (spec 005 FR-020) |
+| Q67 | Offer Sign in with Apple on Android? Android has no Apple sign-in library. (issue #69) | OPEN for Michael. Default: not in v1; Android offers Google (spec 005) |
+| Q68 | May a record body hold a phone number the owner typed? (issue #70) | OPEN for Michael. Default: yes; a code string never holds one (spec 005 FR-007) |
+| Q69 | Hosting: one Worker serves the API and the web client on one origin. Which domain? (issue #71) | OPEN for Danny. Default: one Worker; staging on its workers.dev name (spec 005 FR-029) |
 
 ## 9a. Decisions log
 

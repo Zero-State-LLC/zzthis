@@ -47,8 +47,8 @@ Non-goals:
 
 ## Open questions
 
-- Q66 to Q69 (spec 005), the spec 003 prototype defaults (Q27, Q30, Q31, Q32, Q35), and the spec 004 band values (Q37), for Danny and Michael.
-- zzThat ZQ22 to ZQ26.
+- Q66 to Q69 (spec 005, issues #68 to #71), the spec 003 prototype defaults (Q27, Q30, Q31, Q32, Q35), and the spec 004 band values (Q37), for Danny and Michael.
+- zzThat ZQ22 to ZQ26 (zzThat issues #32 to #36).
 
 ## Claims
 

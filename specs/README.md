@@ -49,6 +49,8 @@ The `/v1` API and the later web client are [spec 005](005-v1-api/spec.md). The z
 | [#41](https://github.com/Zero-State-LLC/zzthis/issues/41) Q55 `zz` in running text (answered) | SPEC 2.2a G8; 004 FR-013 |
 | [#42](https://github.com/Zero-State-LLC/zzthis/issues/42) Q56 handle issuance (answered) | 002 FR-016, T018 |
 | [#44](https://github.com/Zero-State-LLC/zzthis/issues/44) to [#48](https://github.com/Zero-State-LLC/zzthis/issues/48) Q57 to Q61 (answered 2026-10-03) | SPEC 2.2a G3, G10, G11; 002 FR-019 to FR-021; 003 FR-009, FR-022, FR-024; 004 FR-016, FR-017 |
+| [#60](https://github.com/Zero-State-LLC/zzthis/issues/60) to [#67](https://github.com/Zero-State-LLC/zzthis/issues/67) spec 005 task groups | 005 tasks Group A to Group H |
+| [#68](https://github.com/Zero-State-LLC/zzthis/issues/68) to [#71](https://github.com/Zero-State-LLC/zzthis/issues/71) Q66 to Q69, one-shot build questions (open) | 005 Open questions; [analysis 2026-10-04](analysis-2026-10-04.md) |
 
 ## Labels
 

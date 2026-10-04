@@ -13,13 +13,13 @@ Checked 2026-10-04 against this folder, after the deepening in [analysis 2026-10
 - [x] The issued format, the list, and the check word have prototype defaults (spec 003), with shared test vectors.
 - [x] Out of scope is stated.
 - [x] OPEN items that remain name a prototype default.
+- [x] Q66 to Q69 have GitHub issues ([#68](https://github.com/Zero-State-LLC/zzthis/issues/68) to [#71](https://github.com/Zero-State-LLC/zzthis/issues/71)), on the family board.
 
 ## Not done
 
 - [ ] The build itself (tasks Group 0 to Group I).
 - [ ] Danny's yes on Q66 to Q69, the spec 003 prototype defaults, and the spec 004 pipeline.
 - [ ] Danny's yes for Cloudflare and OAuth clients (T023).
-- [ ] GitHub issues for Q66 to Q69.
 
 ## Consistency
 
