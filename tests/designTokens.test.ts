@@ -19,5 +19,10 @@ describe("design tokens", () => {
     expect(tokens.spacing["--space-3xs"]).toBe("4px");
     expect(tokens.spacing["--space-2xl"]).toBe("110px");
     expect(tokens.type.font["--font-body"]).toContain("IBM Plex Sans");
+    const css = readFileSync("design/generated/tokens.css", "utf8");
+    const swift = readFileSync("design/generated/Tokens.swift", "utf8");
+    expect(css).toContain("--radius-pill: 999px");
+    expect(swift).toContain("textDisplaySCss");
+    expect(swift).not.toContain("textDisplaySCSS");
   });
 });

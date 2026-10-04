@@ -79,9 +79,9 @@ public enum ZZTextSize {
     public static let textBase: CGFloat = 17
     public static let textMd: CGFloat = 20
     public static let textLg: CGFloat = 25
-    public static let textXlCSS = "clamp(1.75rem, 1.6vw + 1.1rem, 2.4rem)"
-    public static let textDisplaySCSS = "clamp(2rem, 2.4vw + 1.1rem, 3.4rem)"
-    public static let textCodeCSS = "clamp(1rem, 2.75vw, 2.3rem)"
+    public static let textXlCss = "clamp(1.75rem, 1.6vw + 1.1rem, 2.4rem)"
+    public static let textDisplaySCss = "clamp(2rem, 2.4vw + 1.1rem, 3.4rem)"
+    public static let textCodeCss = "clamp(1rem, 2.75vw, 2.3rem)"
 }
 
 public enum ZZSpace {

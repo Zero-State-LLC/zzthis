@@ -40,6 +40,7 @@
   --space-2xl: 110px;
   --radius-none: 0;
   --radius-chip: 3px;
+  --radius-pill: 999px;
   --shadow-color: light-dark(rgb(28 27 25 / 0.12), rgb(0 0 0 / 0.35));
   --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
   --ease-in: cubic-bezier(0.7, 0, 0.84, 0);

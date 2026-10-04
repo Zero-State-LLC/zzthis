@@ -105,7 +105,7 @@ function sizeFns(sizes) {
         `    public static let ${id}: CGFloat = ${Number(rem[1]) * 16}`,
       );
     } else {
-      lines.push(`    public static let ${id}CSS = ${JSON.stringify(value)}`);
+      lines.push(`    public static let ${id}Css = ${JSON.stringify(value)}`);
     }
   }
   return lines;

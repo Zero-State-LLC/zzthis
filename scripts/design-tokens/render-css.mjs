@@ -8,6 +8,9 @@ export function renderCss(model) {
   pushValues(lines, model.type.size);
   pushValues(lines, model.spacing);
   pushValues(lines, model.radius, (name) => name.startsWith("--"));
+  if (typeof model.radius.pill === "string") {
+    lines.push(`  --radius-pill: ${model.radius.pill};`);
+  }
   pushPairs(lines, { "--shadow-color": model.shadow.color });
   pushValues(lines, model.motion);
   pushValues(lines, model.layout, (name) => name.startsWith("--"));

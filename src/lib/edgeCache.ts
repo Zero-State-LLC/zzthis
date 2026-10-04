@@ -1,5 +1,7 @@
 // Edge-cache rule for GET /v1/resolve. [DANNY 2026-10-04]
 // The Worker applies this with the Workers Cache API.
+// Spec 005 FR-018 and FR-019. The key is the canonical form, not the
+// caller's URL, so every spelling of a code shares one entry.
 
 export const PUBLIC_CACHE_CONTROL =
   "public, max-age=60, stale-while-revalidate=300";
@@ -31,8 +33,14 @@ export interface ResolveCacheStore {
   delete(key: string): void;
 }
 
+export interface LoadedResolve {
+  body: string;
+  kind: ResolveCacheClass;
+}
+
+/** Percent-encode the canonical form once. Not the request URL. */
 export function cacheKey(canonical: string): string {
-  return `/v1/resolve/${encodeURIComponent(canonical)}`;
+  return `https://cache.zzthis.internal/v1/resolve/${encodeURIComponent(canonical)}`;
 }
 
 export function cacheControl(kind: ResolveCacheClass): string {
@@ -54,37 +62,48 @@ export function notFoundResponse(cause: NotFoundCause): {
   return { status: 404, body: body[cause], cacheControl: NO_STORE };
 }
 
-export function rateLimitedResponse(codeExists: boolean): {
+export function rateLimitedResponse(
+  codeExists: boolean,
+  retryAfter: number,
+): {
   status: 429;
   body: string;
   cacheControl: typeof NO_STORE;
+  retryAfter: number;
 } {
-  // Same body whether or not the code exists.
+  // Same body and the same Retry-After whether or not the code exists.
+  const body = codeExists ? RATE_LIMITED_BODY : RATE_LIMITED_BODY;
   return {
     status: 429,
-    body: codeExists ? RATE_LIMITED_BODY : RATE_LIMITED_BODY,
+    body,
     cacheControl: NO_STORE,
+    retryAfter,
   };
 }
 
+/**
+ * Look up the cache before D1 when the caller is signed out.
+ * A hit does not call load. Classification happens only on a miss,
+ * and only a public unauthenticated miss is stored.
+ */
 export function readCachedResolve(
   store: ResolveCacheStore,
   canonical: string,
-  kind: ResolveCacheClass,
-  load: () => string,
+  authenticated: boolean,
+  load: () => LoadedResolve,
 ): { body: string; cacheControl: string; hit: boolean } {
-  const header = cacheControl(kind);
-  if (kind !== "public") {
-    return { body: load(), cacheControl: header, hit: false };
+  if (!authenticated) {
+    const cached = store.match(cacheKey(canonical));
+    if (cached !== undefined) {
+      return { body: cached, cacheControl: PUBLIC_CACHE_CONTROL, hit: true };
+    }
   }
-  const key = cacheKey(canonical);
-  const cached = store.match(key);
-  if (cached !== undefined) {
-    return { body: cached, cacheControl: header, hit: true };
+  const loaded = load();
+  const header = authenticated ? NO_STORE : cacheControl(loaded.kind);
+  if (!authenticated && loaded.kind === "public") {
+    store.put(cacheKey(canonical), loaded.body);
   }
-  const body = load();
-  store.put(key, body);
-  return { body, cacheControl: header, hit: false };
+  return { body: loaded.body, cacheControl: header, hit: false };
 }
 
 /** Record update, revoke, and expiry each purge that code's cache key. */

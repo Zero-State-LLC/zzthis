@@ -32,5 +32,15 @@ describe("v1 OpenAPI", () => {
     expect(openapi).toContain("Retry-After");
     expect(openapi).toContain("public, max-age=60, stale-while-revalidate=300");
     expect(openapi).toContain("no-store");
+    expect(openapi).toContain(
+      "https://cache.zzthis.internal/v1/resolve/{canonical}",
+    );
+    expect(openapi).toContain("enum: [900]");
+    expect(openapi).toContain("__Host-zz_refresh");
+    expect(openapi).toContain("NotFoundError");
+    expect(openapi).toContain("RateLimitedError");
+    expect(openapi).toContain("additionalProperties: false");
+    expect(openapi).toContain("maxLength: 8388608");
+    expect(openapi).not.toContain("this request as the cache key");
   });
 });
