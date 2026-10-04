@@ -47,7 +47,7 @@ Non-goals:
 
 ## Open questions
 
-- Q66 to Q69 (spec 005, issues #68 to #71), the spec 003 prototype defaults (Q27, Q30, Q31, Q32, Q35), and the spec 004 band values (Q37), for Danny and Michael.
+- Q67 to Q69 (spec 005, issues #69 to #71), the spec 003 prototype defaults (Q27, Q30, Q31, Q32, Q35), and the spec 004 band values (Q37), for Danny and Michael. Q66 (issue #68) is answered [DANNY 2026-10-04]: native Apple and Google sign-in, provider ID token with a server nonce (FR-020, FR-021).
 - zzThat ZQ22 to ZQ26 (zzThat issues #32 to #36).
 
 ## Claims
