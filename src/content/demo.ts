@@ -114,7 +114,7 @@ export const flowACopy = {
   back: "Back",
   contact: "Contact",
   confidence: "Confidence: 0.94 (demo)",
-  checksum: "Checksum: OK (demo state, no algorithm runs)",
+  checksum: "Check word: OK (demo state, no algorithm runs)",
   handlingLabel: "Handling options (demo)",
   suggestionLabel: "AI suggestion (demo)",
   voiceChip: "Say 'return' (simulated)",
@@ -167,7 +167,7 @@ export const flowASteps = {
     name: "Read result",
     text: "",
     summary:
-      "Code, confidence 0.94 (demo), checksum OK (demo). Confirm or Retry.",
+      "Code, confidence 0.94 (demo), check word OK (demo). Confirm or Retry.",
     image: "demo-02",
   },
   A4: {

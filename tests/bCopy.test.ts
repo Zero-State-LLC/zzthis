@@ -61,7 +61,7 @@ describe("B v1.0 copy locks", () => {
       "This is a scripted demonstration. No recognition runs; every result is prewritten demo data.",
     );
     expect(flowACopy.checksum).toBe(
-      "Checksum: OK (demo state, no algorithm runs)",
+      "Check word: OK (demo state, no algorithm runs)",
     );
     expect(flowACopy.formLabel).toBe("Prepared turn-in form (demo, read-only)");
     const shown = mockCodes.flatMap((entry) => [
