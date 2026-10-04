@@ -258,12 +258,22 @@ function bindTyping(root: ParentNode, view: View): void {
   }
 }
 
+interface CameraScan {
+  photograph: () => void;
+  cancelScan: () => void;
+}
+
+const idleScan: CameraScan = {
+  photograph: () => undefined,
+  cancelScan: () => undefined,
+};
+
 function bindCamera(
   root: ParentNode,
   view: View,
   image: HTMLImageElement,
   canvas: HTMLCanvasElement,
-): () => void {
+): CameraScan {
   const cam = root.querySelector("[data-cam]");
   const readout = root.querySelector("[data-readout]");
   const read = queryButton(root, "[data-read]");
@@ -272,9 +282,15 @@ function bindCamera(
     !(readout instanceof HTMLElement) ||
     !read
   ) {
-    return () => undefined;
+    return idleScan;
   }
+  let scanToken = 0;
+  const cancelScan = (): void => {
+    scanToken += 1;
+    cam.classList.remove("is-scanning");
+  };
   const photograph = (): void => {
+    const token = ++scanToken;
     cam.classList.remove("is-read");
     readout.hidden = true;
     const roi = cam.querySelector(".cam__roi");
@@ -284,6 +300,7 @@ function bindCamera(
     cam.classList.add("is-scanning");
     window.setTimeout(
       () => {
+        if (token !== scanToken) return;
         cam.classList.remove("is-scanning");
         drawDither(image, canvas);
         cam.classList.add("is-read");
@@ -298,7 +315,7 @@ function bindCamera(
   document.addEventListener("themechange", () => {
     if (cam.classList.contains("is-read")) drawDither(image, canvas);
   });
-  return photograph;
+  return { photograph, cancelScan };
 }
 
 function bindVoice(root: ParentNode, view: View): void {
@@ -316,11 +333,15 @@ function applyTab(
   tab: HTMLButtonElement,
   view: View,
   heard: HTMLElement | null,
-  photograph: () => void,
+  scan: CameraScan,
 ): void {
   const name = tab.dataset.tab;
+  if (name === "camera") {
+    scan.photograph();
+    return;
+  }
+  scan.cancelScan();
   if (name === "typing") showCandidate(view, view.input.value);
-  if (name === "camera") photograph();
   if (name === "voice") {
     if (heard) heard.hidden = true;
     view.tokensEl.replaceChildren();
@@ -335,7 +356,7 @@ function selectTab(
   focus: boolean,
   view: View,
   heard: HTMLElement | null,
-  photograph: () => void,
+  scan: CameraScan,
 ): void {
   for (const item of tabs) {
     const on = item === tab;
@@ -347,13 +368,13 @@ function selectTab(
   }
   if (focus) tab.focus();
   view.resultEl.replaceChildren();
-  applyTab(tab, view, heard, photograph);
+  applyTab(tab, view, heard, scan);
 }
 
 function bindTabs(
   root: ParentNode,
   view: View,
-  photograph: () => void,
+  scan: CameraScan,
 ): HTMLButtonElement[] {
   const tabs = [...root.querySelectorAll('[role="tab"]')].filter(
     (node): node is HTMLButtonElement => node instanceof HTMLButtonElement,
@@ -362,14 +383,14 @@ function bindTabs(
   const heard = heardNode instanceof HTMLElement ? heardNode : null;
   tabs.forEach((tab, index) => {
     tab.addEventListener("click", () => {
-      selectTab(tabs, tab, false, view, heard, photograph);
+      selectTab(tabs, tab, false, view, heard, scan);
     });
     tab.addEventListener("keydown", (event) => {
       const step =
         event.key === "ArrowRight" ? 1 : event.key === "ArrowLeft" ? -1 : 0;
       if (step === 0) return;
       const next = tabs[(index + step + tabs.length) % tabs.length];
-      if (next) selectTab(tabs, next, true, view, heard, photograph);
+      if (next) selectTab(tabs, next, true, view, heard, scan);
     });
   });
   return tabs;
@@ -379,13 +400,13 @@ function focusTyping(
   consoleEl: HTMLElement,
   tabs: readonly HTMLButtonElement[],
   view: View,
-  photograph: () => void,
+  scan: CameraScan,
 ): void {
   const typing = tabs.find((tab) => tab.dataset.tab === "typing");
   const heardNode = consoleEl.querySelector("[data-heard]");
   const heard = heardNode instanceof HTMLElement ? heardNode : null;
   if (!typing) return;
-  selectTab(tabs, typing, false, view, heard, photograph);
+  selectTab(tabs, typing, false, view, heard, scan);
   consoleEl.scrollIntoView({
     behavior: prefersReducedMotion() ? "auto" : "smooth",
     block: "center",
@@ -398,9 +419,9 @@ function bindShortcut(
   consoleEl: HTMLElement,
   tabs: readonly HTMLButtonElement[],
   view: View,
-  photograph: () => void,
+  scan: CameraScan,
 ): void {
-  const open = (): void => focusTyping(consoleEl, tabs, view, photograph);
+  const open = (): void => focusTyping(consoleEl, tabs, view, scan);
   const pill = document.querySelector("[data-pill]");
   if (pill) pill.addEventListener("click", open);
   document.addEventListener("keydown", (event) => {
@@ -422,10 +443,10 @@ function bindShortcut(
   });
 }
 
-function startCamera(image: HTMLImageElement, photograph: () => void): void {
+function startCamera(image: HTMLImageElement, scan: CameraScan): void {
   if (location.hash === "#lookup") return;
-  if (image.complete) photograph();
-  else image.addEventListener("load", photograph, { once: true });
+  if (image.complete) scan.photograph();
+  else image.addEventListener("load", () => scan.photograph(), { once: true });
 }
 
 export function mountConsole(root: ParentNode = document): void {
@@ -460,13 +481,13 @@ export function mountConsole(root: ParentNode = document): void {
   };
   bindTyping(consoleEl, view);
   lookup.addEventListener("click", () => lookUp(view));
-  const photograph = bindCamera(consoleEl, view, image, canvas);
+  const scan = bindCamera(consoleEl, view, image, canvas);
   bindVoice(consoleEl, view);
-  const tabs = bindTabs(consoleEl, view, photograph);
-  bindShortcut(consoleEl, tabs, view, photograph);
+  const tabs = bindTabs(consoleEl, view, scan);
+  bindShortcut(consoleEl, tabs, view, scan);
   if (location.hash === "#lookup") {
-    focusTyping(consoleEl, tabs, view, photograph);
+    focusTyping(consoleEl, tabs, view, scan);
     return;
   }
-  startCamera(image, photograph);
+  startCamera(image, scan);
 }

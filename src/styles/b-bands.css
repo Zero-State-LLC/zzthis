@@ -54,10 +54,21 @@
 
 .app {
   display: grid;
-  grid-template-columns: minmax(0, 7rem) minmax(0, 1fr);
+  grid-template-columns: minmax(0, calc(7rem * var(--shots, 1))) minmax(0, 1fr);
   gap: var(--space-sm);
   padding-block: var(--space-sm);
   border-bottom: var(--rule-hair) solid var(--color-rule);
+}
+
+.app--wide-only {
+  display: none;
+}
+
+.app .app__media {
+  display: grid;
+  grid-template-columns: repeat(var(--shots, 1), minmax(0, 1fr));
+  gap: 2px;
+  min-width: 0;
 }
 
 .app img {
@@ -77,9 +88,24 @@
   color: var(--color-ink-2);
 }
 
+@media (max-width: 599px) {
+  .app--pair {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (min-width: 600px) {
+  .app--wide-only {
+    display: grid;
+  }
+}
+
 @media (min-width: 48rem) {
   .app {
-    grid-template-columns: minmax(0, 12rem) minmax(0, 1fr);
+    grid-template-columns: minmax(0, calc(12rem * var(--shots, 1))) minmax(
+        0,
+        1fr
+      );
     gap: var(--space-md);
   }
   .app img {
