@@ -1,6 +1,6 @@
 import {
-  formatCode,
   parseCode,
+  type CodeKind,
   type CodeVariant,
   type ParseFailure,
 } from "./grammar";
@@ -19,12 +19,13 @@ export type CandidateRead =
   | { kind: "malformed"; reason: ParseFailure }
   | {
       kind: "parsed";
-      words: string[];
+      codeKind: CodeKind;
+      words: readonly string[];
       variant: CodeVariant;
       normalized: string;
     };
 
-// Non-ASCII letters are a non-error note. grammar.ts and resolver.ts stay unchanged.
+// Non-ASCII letters stay a non-error note, ahead of unsupported-script.
 export function readCandidate(input: string): CandidateRead {
   if (hasNonAsciiLetter(input)) {
     return { kind: "coming-later" };
@@ -38,9 +39,10 @@ export function readCandidate(input: string): CandidateRead {
   }
   return {
     kind: "parsed",
+    codeKind: parsed.kind,
     words: parsed.words,
     variant: parsed.variant,
-    normalized: formatCode(parsed.words),
+    normalized: parsed.canonical,
   };
 }
 

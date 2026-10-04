@@ -68,7 +68,7 @@ Workflows for every implementing task: anti-slop-code, production-systems, googl
 
 ## Phase 10: v1 spec redeepen 2026-10-03
 
-- [ ] T029 Move Flow B to the v1 grammar (`docs/SPEC.md` Section 2.2a): replace or wrap `src/lib/grammar.ts` with the spec 003 library (003 T013), add the B5 bare-mark state and the per-reason B4 lines in Section 4.4, and run every G9 vector as a test (Section 8 item 30). Keep 100% coverage. Closes the divergence in Section 4.4.
+- [x] T029 Move Flow B to the v1 grammar (`docs/SPEC.md` Section 2.2a): replace or wrap `src/lib/grammar.ts` with the spec 003 library (003 T013), add the B5 bare-mark state and the per-reason B4 lines in Section 4.4, and run every G9 vector as a test (Section 8 item 30). Keep 100% coverage. Closes the divergence in Section 4.4.
 - [ ] T030 Image display rule (FR-019, Q53 issue #39): audit every AI-generated site image for a capital-letter zz mark, on its own or in a code, and regenerate any that show one. The real photos `hw-mark-on-object`, `hw-dog-collar-tag`, and `app-truck-after` stay as they are (Michael, 2026-10-03: "keep them"). Never AI-edit a real photo.
 - [x] T031 Q54 (issue #40): Michael answered "No" on 2026-10-03, so `src/content/uses.ts` and `src/content/applications.ts` keep the blockchain and ledger items as given. No change.
 - [x] T032 Fix stale status in the specs: checklist Flow B and Section 7 items, `main` pins, success-criteria count, SPEC Section 3.2 Q2 note, SPEC header and Section 7 (this PR).
@@ -79,6 +79,6 @@ Workflows for every implementing task: anti-slop-code, production-systems, googl
 Reference: `docs/redesign-2026-10-03/b-resolver-v1/`. Copy and layout: `docs/SPEC.md` Section 3.1b. Workflows: anti-slop-code, production-systems, google-developer-style.
 
 - [x] T034 Record direction B in spec 001 and the Section 3.1b copy blocks, including the v1.0 change-list lines and the prototype microcopy, before editing `src/`.
-- [x] T035 Self-host IBM Plex Sans Condensed and the KR, JP, and Hebrew subsets through `@fontsource`. No other origin at runtime.
+- [x] T035 Self-host IBM Plex Sans Condensed and Hebrew through `@fontsource`. Ship Korean and Japanese as committed woff2 subsets of the glyphs the language examples use, not the full `@fontsource` faces. No other origin at runtime.
 - [x] T036 Rebuild Home, About, and Applications in the B layout. Move header, footer, theme toggle, and tokens to that system on every page. Leave How it works, demo, contact, and 404 content as they are.
 - [x] T037 Home console: `src/lib/grammar.ts` and `src/lib/resolver.ts` unchanged, exact match only, coming-later note for letters outside A–Z, simulated camera and voice, reduced motion.

@@ -33,15 +33,34 @@ describe("readCandidate", () => {
   it("parses a dash code and a circled code without matching them", () => {
     expect(readCandidate("zz-copper-lantern-sky-zz")).toEqual({
       kind: "parsed",
+      codeKind: "plain",
       words: ["copper", "lantern", "sky"],
       variant: "dash",
       normalized: "zz-copper-lantern-sky-zz",
     });
     expect(readCandidate("(zz) camp bravo four two (zz)")).toEqual({
       kind: "parsed",
+      codeKind: "plain",
       words: ["camp", "bravo", "four", "two"],
       variant: "circled",
       normalized: "zz-camp-bravo-four-two-zz",
+    });
+  });
+
+  it("accepts a handle and a one-word code as parsed codes", () => {
+    expect(readCandidate("zz-@agentsmith-zz")).toEqual({
+      kind: "parsed",
+      codeKind: "handle",
+      words: ["@agentsmith"],
+      variant: "dash",
+      normalized: "zz-@agentsmith-zz",
+    });
+    expect(readCandidate("zz-hello-zz")).toEqual({
+      kind: "parsed",
+      codeKind: "plain",
+      words: ["hello"],
+      variant: "dash",
+      normalized: "zz-hello-zz",
     });
   });
 });
@@ -63,6 +82,13 @@ describe("lookupCode", () => {
       kind: "abstain-malformed",
       reason: "no-marker",
     });
+    expect(lookupCode("zz-@agentsmith-zz", mockCodes)).toEqual({
+      kind: "abstain-unknown",
+    });
+    expect(lookupCode("zz-hello-zz", mockCodes)).toEqual({
+      kind: "abstain-unknown",
+    });
+    expect(lookupCode("zz", mockCodes)).toEqual({ kind: "abstain-bare" });
   });
 });
 

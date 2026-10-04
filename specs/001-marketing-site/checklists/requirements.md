@@ -32,11 +32,11 @@ Checked 2026-10-02 against `main` at 40dfa3b and the live site; status rows refr
 | 26, 27 | Lockfile, `pages.yml` shape | Review |
 | 28 | Live after merge | OBSERVED 2026-10-02 after PR #16 |
 | 29 | Copy-only case rule: lowercase codes in site copy, no standalone capital ZZ; photos may show capitals | Automated: `check-dist.mjs` and content tests (T024) |
-| 30 | Flow B follows the v1 grammar test vectors | Not yet: T029 |
+| 30 | Flow B follows the v1 grammar test vectors | Automated: `tests/grammar.test.ts` (T029) |
 | 31 | No image shows a capital-letter zz mark | Not yet: T030, Q53 |
 
 ## Clarity and consistency
 
 - [x] Flow B behavior (Section 4.4 B2) conflicted with constitution III. Resolved by T010 (PR #19, issue #12).
 - [x] Section 7 of `docs/SPEC.md` said CI is "OPEN Q13" and that the implementer opens a draft PR. Fixed 2026-10-03 (T032).
-- [ ] Flow B's parser diverges from the v1 grammar (`docs/SPEC.md` Section 4.4). Resolve through T029.
+- [x] Flow B's parser diverges from the v1 grammar (`docs/SPEC.md` Section 4.4). Resolved by T029.

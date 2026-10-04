@@ -34,105 +34,16 @@
   }
 }
 
-/* ---------- F3 · Spec sheet ---------- */
-.sheet {
+/* ---------- Comparison cards ---------- */
+.compare {
   display: grid;
   gap: var(--space-md);
-  padding-block: var(--space-xl);
+  padding-block: var(--space-2xl) var(--space-xl);
+  border-top: var(--rule-hair) solid var(--color-rule);
 }
 
-.sheet__scroll {
-  overflow-x: auto;
-}
-
-.spec {
-  width: 100%;
-  min-width: 44rem;
-  border-collapse: collapse;
-  table-layout: fixed;
-}
-
-.spec th,
-.spec td {
-  text-align: left;
-  vertical-align: top;
-  padding: var(--space-sm) var(--space-sm) var(--space-sm) 0;
-  border-bottom: var(--rule-hair) solid var(--color-rule);
-  font-size: var(--text-sm);
-}
-
-.spec thead th {
-  font-family: var(--font-display);
-  font-size: var(--text-md);
-  font-weight: 600;
-  border-bottom-color: var(--color-rule-strong);
-}
-
-.spec tbody th {
-  font-family: var(--font-mono);
-  font-size: var(--text-xs);
-  font-weight: 500;
-  color: var(--color-ink-3);
-}
-
-.spec .is-zz {
-  padding-inline-start: var(--space-sm);
-  background: var(--color-accent-wash);
-  font-weight: 500;
-}
-
-.spec thead .is-zz {
-  border-top: 3px solid var(--color-accent);
-}
-
-.note {
-  font-size: var(--text-sm);
-  color: var(--color-ink-2);
-}
-
-@media (max-width: 47.99rem) {
-  .sheet__scroll {
-    overflow: visible;
-  }
-  .spec,
-  .spec tbody,
-  .spec tr,
-  .spec th,
-  .spec td {
-    display: block;
-    min-width: 0;
-  }
-  .spec thead {
-    position: absolute;
-    width: 1px;
-    height: 1px;
-    overflow: hidden;
-    clip-path: inset(50%);
-  }
-  .spec tr {
-    padding-block: var(--space-sm);
-    border-bottom: var(--rule-hair) solid var(--color-rule-strong);
-  }
-  .spec tbody th {
-    padding-block: 0 var(--space-2xs);
-    border: 0;
-  }
-  .spec td {
-    display: grid;
-    grid-template-columns: minmax(0, 8.5rem) minmax(0, 1fr);
-    gap: var(--space-sm);
-    padding: var(--space-2xs) 0;
-    border: 0;
-  }
-  .spec td::before {
-    content: attr(data-col);
-    font-family: var(--font-mono);
-    font-size: var(--text-2xs);
-    color: var(--color-ink-3);
-  }
-  .spec .is-zz {
-    padding-inline: var(--space-xs);
-  }
+.compare h2 {
+  font-size: var(--text-section);
 }
 
 /* ---------- Tour frames ---------- */

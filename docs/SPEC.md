@@ -434,7 +434,7 @@ The 2026-10-02 brief and wireframes add Adam Fry and drop the Future space card.
 
 ### 3.1b Direction B v1.0 layout (accepted 2026-10-03)
 
-Danny accepted direction B, with `docs/redesign-2026-10-03/b-resolver-v1/` as the reference [DANNY 2026-10-03]. This section supersedes the Section 3.1a wireframe order and the four-card comparison chrome on Home, the About block order, and the Applications gallery chrome. Copy in the `copy:` blocks below still ships verbatim. Lines the prototype added on its own (console labels, the non-ASCII note, anatomy labels other than "word or check word", decision-band names, and the architecture diagram labels) are marked [prototype 2026-10-03 b-resolver-v1].
+Danny accepted direction B, with `docs/redesign-2026-10-03/b-resolver-v1/` as the reference [DANNY 2026-10-03]. The Home section order, the About block order, and the Applications gallery follow that reference [JEV 2026-10-03]. The four-card comparison stays: Michael's v1.0 change list does not remove the Section 3.1a rule [MICHAEL 2026-10-02], and the prototype table is not an explicit removal [JEV 2026-10-03]. Copy in the `copy:` blocks below still ships verbatim. Lines the prototype added on its own (console labels, the non-ASCII note, anatomy labels other than "word or check word", decision-band names, and the architecture diagram labels) are marked [prototype 2026-10-03 b-resolver-v1].
 
 **Visual system.** Dark field-instrument. IBM Plex Sans Condensed for display, IBM Plex Sans for body, IBM Plex Mono for codes. Korean, Japanese, and Hebrew-script examples also load IBM Plex Sans KR, JP, and Hebrew. Tokens and type sizes are Section 5. Shared header, footer, theme toggle, and tokens use this system on every page. How it works, the demo, contact, and the 404 keep their existing content.
 
@@ -444,7 +444,7 @@ Danny accepted direction B, with `docs/redesign-2026-10-03/b-resolver-v1/` as th
 |---|---|---|
 | 1 | Hero: two-line H1, subline, actions, paragraph, and the lookup console | H.1; console [prototype 2026-10-03 b-resolver-v1] |
 | 2 | Featured statement, code anatomy, four code forms, why the markers matter, in any language | H.2, H.2b |
-| 3 | Comparison spec-sheet table (H.3 cells) | H.3 |
+| 3 | Comparison: four cards (H.3 cells and note) | H.3 [MICHAEL 2026-10-02] |
 | 4 | How it works frames, then the uncertain-reading note and the public-record note | H.4; notes from Section 3.3 |
 | 5 | Top ways | H.2a |
 | 6 | Field logistics | H.5 |
@@ -453,7 +453,7 @@ Danny accepted direction B, with `docs/redesign-2026-10-03/b-resolver-v1/` as th
 | 9 | More applications | H.7 |
 | 10 | About teaser and contact action | H.8, H.9 |
 
-The Home console calls `src/lib/grammar.ts` and `src/lib/resolver.ts` against the existing mock records. Exact match only (issue #12). It does not change v1 grammar or resolver behaviour. Input that contains a letter outside A–Z (for example `zz-구리-등불-하늘-zz`) shows the non-error note in H.1c. It is not `aria-invalid` and it is not error-styled. Camera and voice on Home are simulated: no `getUserMedia`, no network, no storage. Reduced motion removes the scan and the view transition.
+The Home console calls the v1 grammar in `src/lib/grammar.ts` (Section 2.2a, 001 T029) and `src/lib/resolver.ts` against the existing mock records. Exact match only (issue #12). Input that contains a letter outside A–Z (for example `zz-구리-등불-하늘-zz`) shows the non-error note in H.1c, ahead of the grammar's `unsupported-script` result [DANNY 2026-10-03]. It is not `aria-invalid` and it is not error-styled. Camera and voice on Home are simulated: no `getUserMedia`, no network, no storage. Reduced motion removes the scan and the view transition.
 
 **About order:** H1 and intro beside the contact card; current explorations; founder card (same headshot size as the advisors); advisors; Hacker Dojo (below advisors, no logo, one paragraph); codes written by hand; location and next action.
 
@@ -524,7 +524,12 @@ Button: Look up
 Empty: Type a zz code.
 Miss: No match. The demo will not guess. Check the words and try again.
 Miss note: Exact match only. A miss never suggests other codes.
-Malformed: This is not a zz code. Use the form zz-word-word-zz.
+Malformed: This is not a zz code. A code starts and ends with zz, like zz-copper-lantern-sky-zz.
+Closing: Add the closing zz at the end of the code.
+Handle: An @ handle comes right after the first zz, like zz-@agentsmith-zz.
+Reserved: The symbols # $ / : are reserved and are not used in codes yet.
+Script: This demo reads English letters and numbers only.
+Bare: A bare zz mark is found by photo and place, not by typing. Try a code with words.
 Coming later: Codes in other languages and scripts are coming later. This demo reads v1 codes, written with Latin letters and numbers, for now.
 Record foot: Mock record. No network request was made.
 ```
@@ -588,7 +593,7 @@ H2: "How zzThis compares" (INFERRED). Cells are verbatim [MICHAEL 2026-10-02] an
 
 Note under the cards (small, muted, full width), both sentences verbatim [MICHAEL 2026-10-02] (Q41 RESOLVED): "Alphanumeric example: an 8-character handwritten postage code (Deutsche Post) or a 14–22-character parcel tracking number. zz-codes can be words, numbers, or simple hand-drawn symbols such as a smiley or tally marks, and can be read even when written inside a sentence."
 
-On Home, render this table as the visible B v1.0 spec sheet (Section 3.1b), not as four cards. Below 768 px the rows stack and each cell names its column, so the page does not scroll sideways. The cells stay verbatim.
+On Home, render these cells as the four cards in Section 3.1a override 7 [MICHAEL 2026-10-02]. Michael's v1.0 change list does not remove that rule [JEV 2026-10-03]. The cells and the note stay verbatim. Four equal columns at 900 px and up, a 2×2 grid from 600 to 899 px, and stacked cards below 600 px, with no horizontal scrolling.
 
 #### H.4 How it works (Mi), `id="how-it-works"`
 
@@ -903,15 +908,10 @@ Input: a text field labeled "Type a zz code", a Look up button, and example chip
 | B1 resolved | Normalized input matches a mock code | Record card (mock) |
 | B2 (removed) | Removed on 2026-10-02 (issue #12). A miss never lists or suggests other codes. | None |
 | B3 abstain-unknown | Valid grammar, no exact match | "No match. The demo will not guess. Check the words and try again." The public demo stays exact match only (Q20, Q40); wording is a placeholder |
-| B4 abstain-malformed | Parser rejects the input | "This is not a zz code. Use the form zz-word-word-zz." |
+| B4 abstain-malformed | Parser rejects the input | One line per reason, in the table below |
+| B5 bare mark | Input is a bare `zz` or `(zz)` | "A bare zz mark is found by photo and place, not by typing. Try a code with words." |
 
-**Parser (`src/lib/grammar.ts`, INFERRED, demo only).** This is the parser as built (OBSERVED at d721783). It predates the v1 grammar in Section 2.2a and diverges from it in four ways: it accepts a missing closing marker, it needs 2 to 5 words, it rejects `@` handles and the bare mark, and it reports reserved symbols as ordinary invalid words. 001 T029 moves the demo to the Section 2.2a rules and test vectors.
-
-1. Trim the input and lowercase it.
-2. Accept the markers `zz-…-zz` and `(zz) … (zz)`. Accept a missing closing marker as well.
-3. Treat hyphens and spaces as separators.
-4. Require 2–5 words, each matching `[a-z0-9]+`.
-5. Return `{ ok, words, variant: "dash" | "circled" }` or `{ ok: false, reason }`.
+**Parser (`src/lib/grammar.ts`).** After 001 T029 the demo and the Home console use Section 2.2a, including every G9 vector. The parser observed at d721783 diverged in four ways: it accepted a missing closing marker, it needed 2 to 5 words, it rejected `@` handles and the bare mark, and it reported reserved symbols as ordinary invalid words. Those four divergences are closed.
 
 **Flow B after 001 T029 (INFERRED wording, placeholders until Michael edits them).** Valid input that is not a mock code stays B3. A bare mark gets its own state, B5: "A bare zz mark is found by photo and place, not by typing. Try a code with words." Each parser failure (Section 2.2a G6) maps to one B4 line:
 
@@ -925,7 +925,7 @@ Input: a text field labeled "Type a zz code", a Look up button, and example chip
 
 No B4 or B5 line names or suggests a mock code other than the fixed example (Section 10.4).
 
-The resolver mock (`src/lib/resolver.ts`) is pure. It returns `resolved | abstain-unknown | abstain-malformed`. It matches the normalized code exactly and never ranks or suggests other codes (Section 10.4, issue #12). Test inputs: `zz-coper-lantern-sky-zz` → abstain-unknown, with no other code shown. `ZZ COPPER LANTERN SKY ZZ` → resolved. `zz-apple-sky-zz` → abstain-unknown. `copper` → abstain-malformed.
+The resolver mock (`src/lib/resolver.ts`) is pure. It returns `resolved | abstain-unknown | abstain-bare | abstain-malformed`. It matches the canonical form exactly and never ranks or suggests other codes (Section 10.4, issue #12). A bare mark is `abstain-bare` (B5), not a miss and not a malformed code. Test inputs: `zz-coper-lantern-sky-zz` → abstain-unknown, with no other code shown. `ZZ COPPER LANTERN SKY ZZ` → resolved. `zz-apple-sky-zz` → abstain-unknown. `zz-@agentsmith-zz` and `zz-hello-zz` → abstain-unknown. `copper` → abstain-malformed. `zz` → abstain-bare.
 
 ### 4.5 Accessibility and motion (INFERRED)
 

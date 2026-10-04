@@ -17,7 +17,7 @@ anti-slop-code, production-systems, google-developer-style; stop-slop for copy e
 | Runtime for tooling | Node 24 | OBSERVED (CI) |
 | Content | Typed objects in `src/content/*.ts` | OBSERVED |
 | Styling | Direction B tokens in `src/styles/tokens.css` (OKLCH field instrument). Legacy token names alias them. Home, About, and Applications use the B layout CSS. Other pages keep their components. | Direction B, Section 3.1b |
-| Fonts | IBM Plex Sans, Plex Sans Condensed, and Plex Mono, plus Sans KR, JP, and Hebrew subsets, through `@fontsource`, self-hosted | Direction B |
+| Fonts | IBM Plex Sans, Plex Sans Condensed, Plex Mono, and Hebrew through `@fontsource`. Korean and Japanese are committed woff2 glyph subsets. All self-hosted | Direction B |
 | Client JavaScript | `/demo` island, plus the Home console island. Neither uses the network, camera, microphone, or storage. | FR-011, FR-020 |
 | Tests | Vitest, 100% line and branch coverage on `src/lib/**` and `src/demo/demoMachine.ts` | OBSERVED (`vitest.config.ts`) |
 | Build checks | `scripts/check-dist.mjs`: required pages, one H1, heading order, base-path links, banned phrases and unmeasured performance figures, em dash rule, footer notice, banned browser APIs, size budgets | OBSERVED |

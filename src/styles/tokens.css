@@ -9,7 +9,7 @@
   --color-ink-2: light-dark(oklch(39.6% 0.013 82), oklch(78% 0.018 85));
   --color-ink-3: light-dark(oklch(46% 0.012 82), oklch(70% 0.014 85));
   --color-rule: light-dark(oklch(82.9% 0.027 85), oklch(32% 0.009 80));
-  --color-rule-strong: light-dark(oklch(60% 0.02 85), oklch(48% 0.012 80));
+  --color-rule-strong: light-dark(oklch(60% 0.02 85), oklch(53% 0.012 80));
   --color-grid: light-dark(oklch(90% 0.02 86), oklch(21% 0.007 75));
 
   --color-accent: oklch(65.9% 0.215 38);

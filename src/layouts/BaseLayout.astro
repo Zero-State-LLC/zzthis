@@ -8,9 +8,8 @@ import "@fontsource/ibm-plex-sans-condensed/latin-700.css";
 import "@fontsource/ibm-plex-mono/latin-400.css";
 import "@fontsource/ibm-plex-mono/latin-500.css";
 import "@fontsource/ibm-plex-mono/latin-600.css";
-import "@fontsource/ibm-plex-sans-kr/korean-500.css";
-import "@fontsource/ibm-plex-sans-jp/japanese-500.css";
 import "@fontsource/ibm-plex-sans-hebrew/hebrew-500.css";
+import "../styles/fonts-cjk.css";
 import "../styles/tokens.css";
 import "../styles/base.css";
 import "../styles/b-base.css";
@@ -68,14 +67,17 @@ const lookupHref = url("#lookup");
         if (document.querySelector("[data-console]")) return;
         if (
           event.key !== "/" ||
-          event.altKey ||
+          !event.altKey ||
           event.ctrlKey ||
           event.metaKey
         ) {
           return;
         }
         const target = event.target;
-        if (!(target instanceof Element) || target.closest("input, textarea")) {
+        if (
+          target instanceof Element &&
+          target.closest("input, textarea, select, [contenteditable]")
+        ) {
           return;
         }
         event.preventDefault();

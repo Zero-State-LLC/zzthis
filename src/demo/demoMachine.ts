@@ -113,7 +113,8 @@ export type FlowBView<T> =
   | { state: "B0" }
   | { state: "B1"; code: T }
   | { state: "B3" }
-  | { state: "B4"; reason: ParseFailure };
+  | { state: "B4"; reason: ParseFailure }
+  | { state: "B5" };
 
 export const initialFlowB: { state: "B0" } = { state: "B0" };
 
@@ -127,6 +128,8 @@ export function lookup<T extends { code: string }>(
       return { state: "B1", code: result.code };
     case "abstain-unknown":
       return { state: "B3" };
+    case "abstain-bare":
+      return { state: "B5" };
     case "abstain-malformed":
       return { state: "B4", reason: result.reason };
   }

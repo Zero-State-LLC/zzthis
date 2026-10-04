@@ -1,4 +1,4 @@
-import { flowBCopy, mockCodes, type MockCode } from "../content/demo";
+import { b4Line, flowBCopy, mockCodes, type MockCode } from "../content/demo";
 import { initialFlowB, lookup, type FlowBView } from "./demoMachine";
 import { badge, button, el, mount, recordCard } from "./dom";
 
@@ -13,7 +13,9 @@ function viewBody(view: FlowBView<MockCode>): Node[] {
     case "B3":
       return [el("p", { text: flowBCopy.unknown })];
     case "B4":
-      return [el("p", { text: flowBCopy.malformed })];
+      return [el("p", { text: b4Line(view.reason) })];
+    case "B5":
+      return [el("p", { text: flowBCopy.bare })];
   }
 }
 

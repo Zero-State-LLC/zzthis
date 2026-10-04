@@ -99,7 +99,7 @@
 }
 
 .input[aria-invalid="true"] {
-  border-color: var(--color-accent);
+  border-color: var(--color-accent-ink);
   border-style: dashed;
 }
 

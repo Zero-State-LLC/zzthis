@@ -28,11 +28,11 @@ As a first-time visitor, I can read what zzThis is, see a handwritten code on an
 
 Acceptance:
 
-1. Home renders the B v1.0 sections in the order in `docs/SPEC.md` Section 3.1b: hero console, featured statement with anatomy and languages, comparison spec sheet, How it works, Top ways, Field logistics, From photo to action, proposed architecture, More applications, About teaser, and Contact [JEV 2026-10-03].
+1. Home renders the B v1.0 sections in the order in `docs/SPEC.md` Section 3.1b: hero console, featured statement with anatomy and languages, four-card comparison, How it works, Top ways, Field logistics, From photo to action, proposed architecture, More applications, About teaser, and Contact [JEV 2026-10-03].
 2. Hero, featured statement, comparison cells, workflow lines, category stories, the founder bio, the Hacker Dojo paragraph, and the anonymous-delivery lines match `docs/SPEC.md` Sections 3.2 to 3.5 character for character [BRIEF] [MICHAEL 2026-10-03 v1.0 change list].
 3. The hero H1 reads "Barcodes made things scannable. zzThis makes things readable-writable - and smart." per Michael's v1.0 change list, with a spaced hyphen and no em dash (Q62, FR-006) [DANNY 2026-10-03, revised: "Fix the em dashes"].
 4. The core workflow shows the lowercase code as text [MICHAEL 2026-10-02].
-5. The Home comparison is the visible spec-sheet table with the H.3 cells. It does not use the four cut-corner cards [JEV 2026-10-03].
+5. The Home comparison keeps Michael's four cards (Barcode, QR code, Alphanumeric code, zzThis), the H.3 cells, and the H.3 note [MICHAEL 2026-10-02]. His v1.0 change list does not remove that rule [JEV 2026-10-03].
 6. Top ways keeps the H.2a copy and sits after How it works on Home [MICHAEL 2026-10-02] [JEV 2026-10-03].
 
 ### US2. See where it applies (P1)
@@ -76,8 +76,8 @@ Acceptance: `/contact`, the Home contact action, the About contact card, and the
 | FR-011 | The demo is scripted: no recognition, no backend, no camera, microphone, network calls, or storage. Every step shows "Demo · mock data". | [OPERATOR 2026-10-01] |
 | FR-012 | The demo is fully usable by keyboard. Drag is never required. Reduced motion removes transitions. Without JavaScript, a static list of steps appears. | INFERRED (`docs/SPEC.md` Section 4.5) |
 | FR-013 | Flow B (look up a code) never reveals other codes on a miss. | Required by constitution principle III and issue #12. The public demo stays exact match only even though deployments may later enable a suggestion policy (Q20 partly resolved, Q40), because the demo exposes real codes. The wording is a placeholder. Suggestions removed by T010. |
-| FR-014 | The site makes no runtime requests to other origins, has no analytics, and has no service worker. Fonts are self-hosted `@fontsource` files, including Plex Sans Condensed and the KR, JP, and Hebrew subsets used by the language examples. | [OPERATOR 2026-10-01] [JEV 2026-10-03] |
-| FR-020 | The Home console uses `src/lib/grammar.ts` and `src/lib/resolver.ts` unchanged, against the existing mock records. A miss never suggests another code (FR-013). A letter outside A–Z shows the H.1c coming-later note, not an error. Camera and voice on Home are simulated and do not call `getUserMedia`, the network, or storage. | [DANNY 2026-10-03]; issue #12 |
+| FR-014 | The site makes no runtime requests to other origins, has no analytics, and has no service worker. Fonts are self-hosted. Plex Sans, Plex Sans Condensed, Plex Mono, and Hebrew come from `@fontsource`. The Korean and Japanese faces are committed woff2 subsets of the glyphs the language examples use. | [OPERATOR 2026-10-01] [JEV 2026-10-03] |
+| FR-020 | The Home console uses the v1 grammar in `src/lib/grammar.ts` (T029) and `src/lib/resolver.ts`, against the existing mock records. A miss never suggests another code (FR-013). A letter outside A–Z shows the H.1c coming-later note, not an error, even when the grammar would report `unsupported-script`. Camera and voice on Home are simulated and do not call `getUserMedia`, the network, or storage. | [DANNY 2026-10-03]; issue #12 |
 | FR-021 | Header, footer, theme toggle, and color and type tokens use the direction B system on every page. How it works, `/demo`, `/contact`, and the 404 keep their current content. | [JEV 2026-10-03] |
 | FR-015 | Light and dark themes both meet text contrast of at least 4.5:1. | `docs/SPEC.md` Section 8, item 16 |
 | FR-016 | When the free zzThat app launches, the main navigation gains a prominent "Try zzThat" action that links to zzthat.com. | [MICHAEL 2026-10-02]; launch trigger OPEN (Q39) |

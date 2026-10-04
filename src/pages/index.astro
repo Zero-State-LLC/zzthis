@@ -6,7 +6,8 @@ import Console from "../components/Console.astro";
 import FieldFrames from "../components/FieldFrames.astro";
 import Manifest from "../components/Manifest.astro";
 import Pipeline from "../components/Pipeline.astro";
-import SpecSheet from "../components/SpecSheet.astro";
+import ComparisonCards from "../components/ComparisonCards.astro";
+import { comparisonHeading } from "../content/comparison";
 import Tour from "../components/Tour.astro";
 import { aboutTeaser, contactAction, hero } from "../content/hero";
 import { contactEmail } from "../content/navigation";
@@ -53,7 +54,10 @@ const claimAfter = claim.slice(phraseAt + phrase.length);
     <Console />
   </section>
   <Anatomy />
-  <SpecSheet />
+  <section class="compare" aria-labelledby="compare-title">
+    <h2 id="compare-title">{comparisonHeading}</h2>
+    <ComparisonCards />
+  </section>
   <Tour />
   <Manifest />
   <FieldFrames />

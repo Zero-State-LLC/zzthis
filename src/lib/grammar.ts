@@ -1,48 +1,245 @@
+export type CodeKind = "plain" | "handle" | "name" | "bare";
 export type CodeVariant = "dash" | "circled";
 
 export type ParseFailure =
-  "empty" | "no-marker" | "word-count" | "invalid-word";
+  | "empty"
+  | "too-long"
+  | "no-marker"
+  | "no-closing-marker"
+  | "no-content"
+  | "marker-in-body"
+  | "unsupported-script"
+  | "reserved-symbol"
+  | "misplaced-at"
+  | "invalid-handle"
+  | "invalid-character";
 
-export type ParseResult =
-  | { ok: true; words: string[]; variant: CodeVariant }
-  | { ok: false; reason: ParseFailure };
-
-interface Marked {
+export type ParseSuccess = {
+  ok: true;
+  kind: CodeKind;
+  words: readonly string[];
   variant: CodeVariant;
-  body: string;
+  canonical: string;
+  tag?: string | undefined;
+  handle?: string | undefined;
+  qualifiers: readonly string[];
+};
+
+export type ParseResult = ParseSuccess | { ok: false; reason: ParseFailure };
+
+const MAX_INPUT = 256;
+const PLAIN = /^[a-z0-9]+$/;
+const NAME = /^[a-z0-9]+(?:\.[a-z0-9]+)*\.eth$/;
+const HANDLE_BODY = /^[a-z0-9._]{1,32}$/;
+const NON_ASCII_LETTER = /(?![a-z])\p{L}/u;
+const RESERVED = /[#$/:]/;
+
+interface Opened {
+  variant: CodeVariant;
+  rest: string;
 }
 
-const MIN_WORDS = 2;
-const MAX_WORDS = 5;
-const WORD = /^[a-z0-9]+$/;
+interface LocatedAt {
+  index: number;
+  part: string;
+}
 
-function splitMarkers(text: string): Marked | null {
+function fail(reason: ParseFailure): ParseResult {
+  return { ok: false, reason };
+}
+
+function normalize(input: string): string {
+  const spaced = input.replace(/[\t\r\n]/g, " ").trim();
+  const hyphens = spaced.replace(/[\u2010-\u2015\u2212]/g, "-");
+  const lower = hyphens.toLowerCase();
+  const opened = lower.replace(/^zz@-?/, "zz-@");
+  return opened.replace(/^zz-([a-z0-9]+)@[\s-]*/, "zz-$1-@");
+}
+
+function opening(text: string): Opened | null {
   if (text.startsWith("(zz)")) {
-    return { variant: "circled", body: text.slice(4).replace(/\(zz\)$/, "") };
+    return { variant: "circled", rest: text.slice(4) };
   }
   if (/^zz[-\s]/.test(text)) {
-    return { variant: "dash", body: text.slice(3).replace(/[-\s]zz$/, "") };
+    return {
+      variant: "dash",
+      rest: text.slice(2).replace(/^[-\s]+/, ""),
+    };
   }
   return null;
 }
 
+function closing(rest: string): string | "no-closing-marker" | "no-content" {
+  if (rest === "zz" || rest === "(zz)") return "no-content";
+  if (rest.endsWith("(zz)")) return rest.slice(0, -4);
+  if (/[-\s]zz$/.test(rest)) return rest.replace(/[-\s]+zz$/, "");
+  return "no-closing-marker";
+}
+
+function soleAt(parts: readonly string[]): LocatedAt | "misplaced" | "none" {
+  let found: LocatedAt | "none" = "none";
+  for (const [index, part] of parts.entries()) {
+    if (!part.includes("@")) continue;
+    if (found !== "none") return "misplaced";
+    found = { index, part };
+  }
+  return found;
+}
+
+function oneLeadingAt(part: string): boolean {
+  return part.startsWith("@") && part.indexOf("@", 1) === -1;
+}
+
+function tagPosition(parts: readonly string[], index: number): boolean {
+  if (index === 0) return true;
+  if (index !== 1) return false;
+  let tag = "";
+  for (const part of parts) {
+    tag = part;
+    break;
+  }
+  return PLAIN.test(tag);
+}
+
+function validHandle(part: string): boolean {
+  const body = part.slice(1);
+  if (!HANDLE_BODY.test(body)) return false;
+  if (!/[a-z0-9]/.test(body)) return false;
+  if (body.startsWith(".") || body.endsWith(".") || body.includes("..")) {
+    return false;
+  }
+  return true;
+}
+
+function atProblem(parts: readonly string[]): ParseFailure | null {
+  const found = soleAt(parts);
+  if (found === "none") return null;
+  if (found === "misplaced") return "misplaced-at";
+  if (!oneLeadingAt(found.part)) return "misplaced-at";
+  if (!tagPosition(parts, found.index)) return "misplaced-at";
+  if (!validHandle(found.part)) return "invalid-handle";
+  return null;
+}
+
+function qualifiersPlain(parts: readonly string[], skip: number): boolean {
+  return parts.every((part, index) => index === skip || PLAIN.test(part));
+}
+
+function canonicalOf(parts: readonly string[]): string {
+  return `zz-${parts.join("-")}-zz`;
+}
+
+function succeedHandle(
+  parts: readonly string[],
+  variant: CodeVariant,
+  found: LocatedAt,
+): ParseSuccess {
+  const tag = found.index === 1 ? parts[0] : undefined;
+  return {
+    ok: true,
+    kind: "handle",
+    words: parts,
+    variant,
+    canonical: canonicalOf(parts),
+    tag,
+    handle: found.part,
+    qualifiers: parts.slice(found.index + 1),
+  };
+}
+
+function succeedName(
+  parts: readonly string[],
+  variant: CodeVariant,
+): ParseSuccess {
+  return {
+    ok: true,
+    kind: "name",
+    words: parts,
+    variant,
+    canonical: canonicalOf(parts),
+    qualifiers: parts.slice(1),
+  };
+}
+
+function succeedPlain(
+  parts: readonly string[],
+  variant: CodeVariant,
+): ParseSuccess {
+  return {
+    ok: true,
+    kind: "plain",
+    words: parts,
+    variant,
+    canonical: canonicalOf(parts),
+    qualifiers: [],
+  };
+}
+
+function classifyPlain(
+  parts: readonly string[],
+  variant: CodeVariant,
+): ParseResult {
+  for (const first of parts) {
+    if (NAME.test(first)) {
+      if (!qualifiersPlain(parts, 0)) return fail("invalid-character");
+      return succeedName(parts, variant);
+    }
+    if (!parts.every((part) => PLAIN.test(part))) {
+      return fail("invalid-character");
+    }
+    return succeedPlain(parts, variant);
+  }
+  return fail("no-content");
+}
+
+function classify(parts: readonly string[], variant: CodeVariant): ParseResult {
+  const found = soleAt(parts);
+  if (typeof found !== "object") return classifyPlain(parts, variant);
+  if (!qualifiersPlain(parts, found.index)) return fail("invalid-character");
+  return succeedHandle(parts, variant, found);
+}
+
+function earlyFault(parts: readonly string[]): ParseFailure | null {
+  if (parts.some((part) => part === "zz")) return "marker-in-body";
+  if (parts.some((part) => NON_ASCII_LETTER.test(part))) {
+    return "unsupported-script";
+  }
+  if (parts.some((part) => RESERVED.test(part))) return "reserved-symbol";
+  return atProblem(parts);
+}
+
 export function parseCode(input: string): ParseResult {
-  const text = input.trim().toLowerCase();
-  if (text === "") {
-    return { ok: false, reason: "empty" };
+  if (input.trim() === "") return fail("empty");
+  if (input.length > MAX_INPUT) return fail("too-long");
+  const text = normalize(input);
+  if (text === "zz") {
+    return {
+      ok: true,
+      kind: "bare",
+      words: [],
+      variant: "dash",
+      canonical: "zz",
+      qualifiers: [],
+    };
   }
-  const marked = splitMarkers(text);
-  if (marked === null) {
-    return { ok: false, reason: "no-marker" };
+  if (text === "(zz)") {
+    return {
+      ok: true,
+      kind: "bare",
+      words: [],
+      variant: "circled",
+      canonical: "zz",
+      qualifiers: [],
+    };
   }
-  const words = marked.body.split(/[-\s]+/).filter((word) => word !== "");
-  if (words.length < MIN_WORDS || words.length > MAX_WORDS) {
-    return { ok: false, reason: "word-count" };
-  }
-  if (!words.every((word) => WORD.test(word))) {
-    return { ok: false, reason: "invalid-word" };
-  }
-  return { ok: true, words, variant: marked.variant };
+  const opened = opening(text);
+  if (opened === null) return fail("no-marker");
+  const body = closing(opened.rest);
+  if (body === "no-closing-marker" || body === "no-content") return fail(body);
+  const parts = body.split(/[-\s]+/).filter((part) => part !== "");
+  const fault = earlyFault(parts);
+  if (fault !== null) return fail(fault);
+  return classify(parts, opened.variant);
 }
 
 export function formatCode(words: readonly string[]): string {

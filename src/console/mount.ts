@@ -1,4 +1,5 @@
-import { consoleCopy, parsedStatus, reasonNote } from "../content/console";
+import { consoleCopy, parsedStatus } from "../content/console";
+import { b4Line, flowBCopy } from "../content/demo";
 import { mockCodes, type MockCode } from "../content/demo";
 import { formatCode } from "../lib/grammar";
 import {
@@ -141,7 +142,7 @@ function statusFor(read: CandidateRead): string {
   }
   if (read.kind === "coming-later") return consoleCopy.comingLater;
   if (read.kind === "empty") return consoleCopy.empty;
-  return `${consoleCopy.malformed} (${reasonNote(read.reason)})`;
+  return b4Line(read.reason);
 }
 
 function showCandidate(view: View, text: string): void {
@@ -193,11 +194,10 @@ function renderResult(view: View): HTMLElement | null {
       el("p", "", consoleCopy.miss),
       el("p", "miss__why", consoleCopy.missNote),
     );
+  } else if (result.kind === "abstain-bare") {
+    miss.append(el("p", "", flowBCopy.bare));
   } else {
-    miss.append(
-      el("p", "", consoleCopy.malformed),
-      el("p", "miss__why", reasonNote(result.reason)),
-    );
+    miss.append(el("p", "", b4Line(result.reason)));
   }
   view.resultEl.append(miss);
   return null;
@@ -404,10 +404,16 @@ function bindShortcut(
   const pill = document.querySelector("[data-pill]");
   if (pill) pill.addEventListener("click", open);
   document.addEventListener("keydown", (event) => {
-    if (event.key !== "/" || event.altKey || event.ctrlKey || event.metaKey)
+    if (event.key !== "/" || !event.altKey || event.ctrlKey || event.metaKey) {
       return;
+    }
     const target = event.target;
-    if (target instanceof Element && target.closest("input, textarea")) return;
+    if (
+      target instanceof Element &&
+      target.closest("input, textarea, select, [contenteditable]")
+    ) {
+      return;
+    }
     event.preventDefault();
     open();
   });

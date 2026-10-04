@@ -27,12 +27,13 @@ export const consoleCopy = {
   empty: "Type a zz code.",
   miss: "No match. The demo will not guess. Check the words and try again.",
   missNote: "Exact match only. A miss never suggests other codes.",
-  malformed: "This is not a zz code. Use the form zz-word-word-zz.",
+  malformed:
+    "This is not a zz code. A code starts and ends with zz, like zz-copper-lantern-sky-zz.",
   comingLater:
     "Codes in other languages and scripts are coming later. This demo reads v1 codes, written with Latin letters and numbers, for now.",
   recordFoot: "Mock record. No network request was made.",
-  pillLabel: "Look up a code (press slash)",
-  pillAwayLabel: "Look up a code on the home page (press slash)",
+  pillLabel: "Look up a code (press Alt and slash)",
+  pillAwayLabel: "Look up a code on the home page (press Alt and slash)",
   pillCode: "zz-···-zz",
   pillText: "Look up a code",
   tokenMarker: "marker",
