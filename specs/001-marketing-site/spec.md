@@ -51,7 +51,7 @@ Acceptance: `/about` follows `docs/SPEC.md` Sections 3.5 and 3.1b. The founder c
 
 As a curious visitor, I can click through a scripted demo of marking, reading, linking, and handling an item, and look up a code, so that I can feel the flow. Nothing I do is sent anywhere [OPERATOR 2026-10-01].
 
-Acceptance: `/demo` follows `docs/SPEC.md` Section 4. Every step shows the "Demo · mock data" badge. The demo uses no camera, microphone, network, or storage.
+Acceptance: `/demo` follows `docs/SPEC.md` Section 4. Every step shows the "Demo · demo data" badge. The demo uses no camera, microphone, network, or storage.
 
 ### US5. Get in touch (P1)
 
@@ -73,7 +73,7 @@ Acceptance: `/contact`, the Home contact action, the About contact card, and the
 | FR-008 | Standalone AI-render panels carry "Concept illustration". Each grouped gallery carries one label above its panels. Captions name the workflow. | [MICHAEL 2026-10-02] |
 | FR-009 | Founder and advisor cards show a supplied headshot where one exists (Michael, Patrick, Arshi, Ridham) and initials otherwise (Q46). No LinkedIn scraping. | [MICHAEL 2026-10-02] [WIRE] |
 | FR-010 | `/technology` is not built and nothing links to it until it has Michael's draft explanation plus a supporting example. | [MICHAEL 2026-10-02] |
-| FR-011 | The demo is scripted: no recognition, no backend, no camera, microphone, network calls, or storage. Every step shows "Demo · mock data". | [OPERATOR 2026-10-01] |
+| FR-011 | The demo is scripted: no recognition, no backend, no camera, microphone, network calls, or storage. Every step shows "Demo · demo data". User-facing labels say demo instead of mock. | [OPERATOR 2026-10-01]; override [MICHAEL 2026-10-03 #54] [DANNY 2026-10-04] |
 | FR-012 | The demo is fully usable by keyboard. Drag is never required. Reduced motion removes transitions. Without JavaScript, a static list of steps appears. | INFERRED (`docs/SPEC.md` Section 4.5) |
 | FR-013 | Flow B (look up a code) never reveals other codes on a miss. | Required by constitution principle III and issue #12. The public demo stays exact match only even though deployments may later enable a suggestion policy (Q20 partly resolved, Q40), because the demo exposes real codes. The wording is a placeholder. Suggestions removed by T010. |
 | FR-014 | The site makes no runtime requests to other origins, has no analytics, and has no service worker. Fonts are self-hosted. Plex Sans, Plex Sans Condensed, Plex Mono, and Hebrew come from `@fontsource`. The Korean and Japanese faces are committed woff2 subsets of the glyphs the language examples use. | [OPERATOR 2026-10-01] [JEV 2026-10-03] |
@@ -130,7 +130,9 @@ Real recognition, a real resolver, accounts, forms or email backends, analytics,
 | Q53 | Three real photos show a capital-letter zz. Replace or remove? (issue #39) | RESOLVED: keep them [MICHAEL 2026-10-03 #39] (FR-019) |
 | Q54 | Keep the blockchain and ledger mentions (Top ways 01 and 05, ENS image)? (issue #40) | RESOLVED: no change [MICHAEL 2026-10-03 #40] |
 | Q62 | Use an em dash in the v1.0 hero headline in place of the Q47 spaced hyphen? | RESOLVED: no. The H1 reads "readable-writable - and smart." with a spaced hyphen [DANNY 2026-10-03, revised: "Fix the em dashes"]. There is no exception to FR-006. |
-| Q63 | Native-reader check for the Korean, Japanese, and Aramaic examples? | OPEN (issue #51). The examples stay on Home. |
+| Q63 | Native-reader check for the Korean, Japanese, and Aramaic examples? | RESOLVED [MICHAEL 2026-10-03 #51]: confirmed. The examples stay on Home as written, including the glosses and the right-to-left Aramaic. |
+| Q64 | Approve the B v1.0 prototype microcopy? (issue #54) | RESOLVED [MICHAEL 2026-10-03 #54]: approved as written, with Rescan in the decision bands, demo instead of mock in every user-facing label, and "photos for retries and review" on object storage. |
+| Q65 | Should Home show the real handwritten photos from sample A? (issue #55) | RESOLVED: no [MICHAEL 2026-10-03 #55]. Home stays as it is. Those photos stay on Applications. |
 
 ## Workflows
 

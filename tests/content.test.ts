@@ -389,6 +389,13 @@ describe("content hygiene across all content modules", () => {
     expect(allStrings.filter((text) => text.includes("\u2014"))).toEqual([]);
   });
 
+  it("does not say mock in user-facing copy", () => {
+    const hits = allStrings.filter(
+      (text) => text !== "demo-mock" && /\bmock\b/i.test(text),
+    );
+    expect(hits).toEqual([]);
+  });
+
   it("contains no unmeasured performance figures or endorsement claims", () => {
     const banned = [
       "95%",

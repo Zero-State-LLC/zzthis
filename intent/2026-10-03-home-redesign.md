@@ -34,7 +34,7 @@ Product-true locks (do not reopen in implement):
 
 - Copy in `docs/SPEC.md` `copy:` blocks ships verbatim. The hero H1 uses a spaced hyphen, not an em dash: "readable-writable - and smart." (Q62).
 - No capital-letter zz in site copy. Uppercase heading styles must exempt the brand name.
-- Concept labels, "Demo · mock data", "Patent pending", and no unmeasured metrics, as in spec sections 1 and 3.1a.
+- Concept labels, "Demo · demo data", "Patent pending", and no unmeasured metrics, as in spec sections 1 and 3.1a.
 - Fonts are self-hosted. The site makes no runtime requests to other origins.
 - Exact-match resolving only, with no "did you mean" suggestions (issue #12).
 
@@ -48,9 +48,9 @@ Non-goals:
 - ~~Which direction, or which mix?~~ Direction B. B v1.0 (`docs/redesign-2026-10-03/b-resolver-v1/`, Home, About, and Applications) is the reference. Accepted 2026-10-03, Danny.
 - ~~The v1.0 headline em dash?~~ No em dash (Danny 2026-10-03, revised). The H1 keeps Q47's spaced hyphen (Q62).
 - ~~Non-ASCII example codes on Home?~~ Keep them. The B v1.0 console shows a non-error "coming later" note for non-ASCII letters. ASCII input stays exact match only.
-- Native-reader check for the Korean, Japanese, and Aramaic codes: open, tracked in #51 (Q63).
-- Does Michael approve the new lines each sample adds (listed in the samples README, section 4)? Pending Michael's answer on issue #54. Not closed.
-- Should the real handwritten photos move onto Home (sample A)? Should the proposed architecture be shown on Home, labelled "Proposal, not built" (sample B)?
+- ~~Native-reader check for the Korean, Japanese, and Aramaic codes?~~ Confirmed (Michael 2026-10-03, issue #51, Q63). The examples stay as written, including the glosses and the right-to-left Aramaic. The console coming-later note stays for resolver support.
+- ~~Does Michael approve the prototype microcopy?~~ Approved (Michael 2026-10-03, issue #54, Q64), with Rescan, demo console labels, and "photos for retries and review".
+- ~~Should the real handwritten photos move onto Home?~~ No (Michael 2026-10-03, issue #55, Q65). Home stays as it is. The proposed architecture is on Home, labelled "Proposal, not built".
 
 ## Claims
 

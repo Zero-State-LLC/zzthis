@@ -5,8 +5,8 @@ export const consoleCopy = {
   tabsLabel: "Read the code by",
   tabs: ["Camera", "Typing", "Voice"] as const,
   photograph: "Photograph (simulated)",
-  confidence: "Confidence: 0.94 (mock)",
-  checksum: "Checksum: OK (mock state, no algorithm runs)",
+  confidence: "Confidence: 0.94 (demo)",
+  checksum: "Check word: OK (demo; no algorithm runs)",
   typeLabel: "Type a zz code",
   examplesLabel: "Example codes",
   examples: [
@@ -31,7 +31,7 @@ export const consoleCopy = {
     "This is not a zz code. A code starts and ends with zz, like zz-copper-lantern-sky-zz.",
   comingLater:
     "Codes in other languages and scripts are coming later. This demo reads v1 codes, written with Latin letters and numbers, for now.",
-  recordFoot: "Mock record. No network request was made.",
+  recordFoot: "Demo record. No network request was made.",
   pillLabel: "Look up a code (press Alt and slash)",
   pillAwayLabel: "Look up a code on the home page (press Alt and slash)",
   pillCode: "zz-···-zz",

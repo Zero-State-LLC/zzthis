@@ -95,7 +95,11 @@ function checkText(file, html) {
     if (/\bZZ\b/.test(match[1])) {
       report(file, `standalone capital ZZ in attribute: ${match[0]}`);
     }
+    if (/\bmock\b/i.test(match[1])) {
+      report(file, `user-facing word mock in attribute: ${match[0]}`);
+    }
   }
+  if (/\bmock\b/i.test(text)) report(file, "user-facing word mock");
   if (!text.includes(FOOTER_NOTICE)) report(file, "missing footer notice");
   for (const phrase of BANNED_PHRASES) {
     if (lower.includes(phrase)) report(file, `banned phrase: ${phrase}`);
@@ -134,6 +138,9 @@ function checkFile(full) {
   const content = readFileSync(full, "utf8");
   checkRootPaths(file, content);
   if (isHtml || isJs) checkApis(file, content);
+  if (isJs && /\bmock\b/i.test(content.replaceAll("demo-mock", ""))) {
+    report(file, "user-facing word mock");
+  }
   if (isHtml) {
     if (content.includes("/technology")) report(file, "links to /technology");
     checkExternalOrigins(file, content);
