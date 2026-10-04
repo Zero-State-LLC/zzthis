@@ -96,3 +96,9 @@ export const howItWorksPage = {
     text: "The visible words are a public identifier, not a password or private key. Payment and authorization remain in signed backend records.",
   },
 };
+
+export const decisionBands = {
+  ariaLabel: "Decision bands, from low to high confidence",
+  names: ["Manual", "Another view", "Confirm", "Resolve"] as const,
+  note: "Design intent. No threshold has been measured yet.",
+};

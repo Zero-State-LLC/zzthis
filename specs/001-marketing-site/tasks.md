@@ -72,13 +72,13 @@ Workflows for every implementing task: anti-slop-code, production-systems, googl
 - [ ] T030 Image display rule (FR-019, Q53 issue #39): audit every AI-generated site image for a capital-letter zz mark, on its own or in a code, and regenerate any that show one. The real photos `hw-mark-on-object`, `hw-dog-collar-tag`, and `app-truck-after` stay as they are (Michael, 2026-10-03: "keep them"). Never AI-edit a real photo.
 - [x] T031 Q54 (issue #40): Michael answered "No" on 2026-10-03, so `src/content/uses.ts` and `src/content/applications.ts` keep the blockchain and ledger items as given. No change.
 - [x] T032 Fix stale status in the specs: checklist Flow B and Section 7 items, `main` pins, success-criteria count, SPEC Section 3.2 Q2 note, SPEC header and Section 7 (this PR).
-- [ ] T033 Ship the v1.0 hero H1 (Q62) with the B v1.0 `src/` implementation PR, not PR #50: set `src/content/hero.ts` title to "Barcodes made things scannable. zzThis makes things readable-writable - and smart." (spaced hyphen, no em dash) and update the H1 wording in `tests/content.test.ts` and any H1 string check in `scripts/check-dist.mjs` to match. Wording only: do not relax the validator. `scripts/check-dist.mjs` keeps failing on any em dash in rendered text, and the no-em-dash test stays as is (FR-006, Q62 [DANNY 2026-10-03, revised: "Fix the em dashes"]). Until then, the live site and CI keep the Q47 "writable - and smart." wording.
+- [x] T033 Ship the v1.0 hero H1 (Q62) with the B v1.0 `src/` implementation PR, not PR #50: set `src/content/hero.ts` title to "Barcodes made things scannable. zzThis makes things readable-writable - and smart." (spaced hyphen, no em dash) and update the H1 wording in `tests/content.test.ts` and any H1 string check in `scripts/check-dist.mjs` to match. Wording only: do not relax the validator. `scripts/check-dist.mjs` keeps failing on any em dash in rendered text, and the no-em-dash test stays as is (FR-006, Q62 [DANNY 2026-10-03, revised: "Fix the em dashes"]). Until then, the live site and CI keep the Q47 "writable - and smart." wording.
 
 ## Phase 11: Direction B v1.0 (accepted 2026-10-03)
 
 Reference: `docs/redesign-2026-10-03/b-resolver-v1/`. Copy and layout: `docs/SPEC.md` Section 3.1b. Workflows: anti-slop-code, production-systems, google-developer-style.
 
 - [x] T034 Record direction B in spec 001 and the Section 3.1b copy blocks, including the v1.0 change-list lines and the prototype microcopy, before editing `src/`.
-- [ ] T035 Self-host IBM Plex Sans Condensed and the KR, JP, and Hebrew subsets through `@fontsource`. No other origin at runtime.
-- [ ] T036 Rebuild Home, About, and Applications in the B layout. Move header, footer, theme toggle, and tokens to that system on every page. Leave How it works, demo, contact, and 404 content as they are.
-- [ ] T037 Home console: `src/lib/grammar.ts` and `src/lib/resolver.ts` unchanged, exact match only, coming-later note for letters outside A–Z, simulated camera and voice, reduced motion.
+- [x] T035 Self-host IBM Plex Sans Condensed and the KR, JP, and Hebrew subsets through `@fontsource`. No other origin at runtime.
+- [x] T036 Rebuild Home, About, and Applications in the B layout. Move header, footer, theme toggle, and tokens to that system on every page. Leave How it works, demo, contact, and 404 content as they are.
+- [x] T037 Home console: `src/lib/grammar.ts` and `src/lib/resolver.ts` unchanged, exact match only, coming-later note for letters outside A–Z, simulated camera and voice, reduced motion.

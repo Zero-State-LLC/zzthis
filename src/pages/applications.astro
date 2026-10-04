@@ -1,14 +1,8 @@
 ---
-import BaseLayout from "../layouts/BaseLayout.astro";
-import Card from "../components/Card.astro";
-import ConceptLabel from "../components/ConceptLabel.astro";
-import Eyebrow from "../components/Eyebrow.astro";
-import Series from "../components/Series.astro";
+import AppSection from "../components/AppSection.astro";
 import { applications, applicationsPage } from "../content/applications";
-import { images } from "../content/images";
 import { conceptLabels } from "../content/labels";
-
-const columnsFor = (count: number): "2" | "3" => (count > 2 ? "3" : "2");
+import BaseLayout from "../layouts/BaseLayout.astro";
 ---
 
 <BaseLayout
@@ -16,101 +10,23 @@ const columnsFor = (count: number): "2" | "3" => (count > 2 ? "3" : "2");
   description={applicationsPage.intro}
   current="applications"
 >
-  <div class="container">
-    <header class="page-head">
-      <h1>{applicationsPage.title}</h1>
-      <p>{applicationsPage.intro}</p>
-      <ConceptLabel />
-    </header>
-
-    {applications.map((app, index) => (
-      <section class="section" id={app.id}>
-        <Eyebrow index={String(index + 1).padStart(2, "0")} />
-        <h2>{app.title}</h2>
-        <p>{app.story}</p>
-        {app.pageExtra && <p>{app.pageExtra}</p>}
-        <Series columns={columnsFor(app.pageImages.length)}>
-          {app.pageImages.map((id) => (
-            <li>
-              <Card
-                image={id}
-                title={images[id].title}
-                caption={images[id].caption}
-                conceptTag={app.pageImages.length === 1}
-              />
-            </li>
-          ))}
-        </Series>
-        {app.pageGalleries?.map((gallery) => {
-          const metas = gallery.items.map((item) => images[item.image]);
-          const allReal = metas.every((meta) => meta.status === "real-photo");
-          const anyConcept = metas.some((meta) => meta.status === "concept");
-          return (
-            <div class="gallery">
-              {gallery.heading && <h3>{gallery.heading}</h3>}
-              {gallery.intro?.map((paragraph) => (
-                <p>{paragraph}</p>
-              ))}
-              {gallery.label === "group" && anyConcept && (
-                <ConceptLabel text={conceptLabels.group} />
-              )}
-              {allReal && <p class="caption">Real photos.</p>}
-              {gallery.lead && (
-                <Series columns="2">
-                  <li>
-                    <Card
-                      image={gallery.lead}
-                      title={images[gallery.lead].title}
-                      caption={images[gallery.lead].caption}
-                      headingLevel={gallery.heading ? 4 : 3}
-                      frame={`${images[gallery.lead].width} / ${images[gallery.lead].height}`}
-                    />
-                  </li>
-                </Series>
-              )}
-              <Series columns={gallery.columns} ordered={gallery.ordered}>
-                {gallery.items.map((item) => (
-                  <li>
-                    <Card
-                      image={item.image}
-                      title={item.title ?? images[item.image].title}
-                      caption={images[item.image].caption}
-                      headingLevel={gallery.heading ? 4 : 3}
-                      frame={gallery.frame}
-                      numeral={item.numeral}
-                      conceptTag={gallery.label === "standalone"}
-                    />
-                  </li>
-                ))}
-              </Series>
-              {gallery.closing?.map((paragraph) => (
-                <p>{paragraph}</p>
-              ))}
-            </div>
-          );
-        })}
-      </section>
-    ))}
-  </div>
+  <section class="page-head" aria-labelledby="apps-page-title">
+    <div class="page-head__copy">
+      <h1 id="apps-page-title">{applicationsPage.title}</h1>
+      <p class="page-head__lede">{applicationsPage.intro}</p>
+      <p class="label">{conceptLabels.page}</p>
+    </div>
+    <nav aria-label="Applications on this page">
+      <ul class="jump">
+        {applications.map((app) => (
+          <li>
+            <a href={`#${app.id}`}>{app.title}</a>
+          </li>
+        ))}
+      </ul>
+    </nav>
+  </section>
+  {applications.map((app) => (
+    <AppSection app={app} />
+  ))}
 </BaseLayout>
-
-<style>
-  .page-head {
-    display: flex;
-    flex-direction: column;
-    gap: var(--s-4);
-    padding-block-start: var(--s-6);
-  }
-
-  .gallery {
-    display: flex;
-    flex-direction: column;
-    gap: var(--s-4);
-  }
-
-  @media (min-width: 900px) {
-    .page-head {
-      padding-block-start: var(--s-7);
-    }
-  }
-</style>

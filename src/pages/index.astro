@@ -1,54 +1,39 @@
 ---
-import BaseLayout from "../layouts/BaseLayout.astro";
-import Card from "../components/Card.astro";
-import ComparisonCards from "../components/ComparisonCards.astro";
-import Eyebrow from "../components/Eyebrow.astro";
-import Steps from "../components/Steps.astro";
-import SwipeRow from "../components/SwipeRow.astro";
-import PhotoToAction from "../components/PhotoToAction.astro";
-import AppCards from "../components/AppCards.astro";
-import TopWays from "../components/TopWays.astro";
-import { aboutTeaser, contactAction, featured, hero } from "../content/hero";
-import { comparisonHeading } from "../content/comparison";
-import {
-  coreIdentity,
-  fieldLogistics,
-  photoToAction,
-} from "../content/workflows";
-import { applicationsHome } from "../content/applications";
-import { images } from "../content/images";
+import Anatomy from "../components/Anatomy.astro";
+import AppIndex from "../components/AppIndex.astro";
+import Architecture from "../components/Architecture.astro";
+import Console from "../components/Console.astro";
+import FieldFrames from "../components/FieldFrames.astro";
+import Manifest from "../components/Manifest.astro";
+import Pipeline from "../components/Pipeline.astro";
+import SpecSheet from "../components/SpecSheet.astro";
+import Tour from "../components/Tour.astro";
+import { aboutTeaser, contactAction, hero } from "../content/hero";
 import { contactEmail } from "../content/navigation";
-import { objectPosition } from "../lib/image";
 import { url } from "../lib/url";
-import ConceptLabel from "../components/ConceptLabel.astro";
-import { conceptLabels } from "../content/labels";
+import BaseLayout from "../layouts/BaseLayout.astro";
 
-const heroImage = images.b;
+const splitAt = hero.title.indexOf(". ");
+const setup = hero.title.slice(0, splitAt + 1);
+const claim = hero.title.slice(splitAt + 2);
+const phrase = "readable-writable";
+const phraseAt = claim.indexOf(phrase);
+const claimBefore = claim.slice(0, phraseAt);
+const claimAfter = claim.slice(phraseAt + phrase.length);
 ---
 
-<BaseLayout title="zzThis" description={hero.subline}>
-  <div class="container">
-    <section class="hero" aria-labelledby="hero-title">
-      <div class="hero__head">
-        <h1 id="hero-title">{hero.title}</h1>
-        <p class="hero__subline">{hero.subline}</p>
-      </div>
-      <figure class="hero__media">
-        <img
-          src={url(heroImage.src)}
-          width={heroImage.width}
-          height={heroImage.height}
-          alt={heroImage.alt}
-          loading="eager"
-          fetchpriority="high"
-          decoding="async"
-          style={`object-position: ${objectPosition(heroImage.focal)}`}
-        />
-        <figcaption class="caption">
-          <span class="concept-tag">{conceptLabels.standalone}</span>
-          {hero.imageCaption}
-        </figcaption>
-      </figure>
+<BaseLayout title="zzThis" description={hero.subline} home>
+  <section class="hero" id="top" aria-labelledby="hero-title">
+    <div class="hero__copy">
+      <h1 class="hero__title" id="hero-title">
+        <span class="hero__setup">{setup}</span>{" "}
+        <span class="hero__claim">
+          {claimBefore}
+          <span class="nowrap">{phrase}</span>
+          {claimAfter}
+        </span>
+      </h1>
+      <p class="hero__sub">{hero.subline}</p>
       <div class="hero__actions">
         {hero.actions.map((action) => (
           <a
@@ -61,193 +46,36 @@ const heroImage = images.b;
       </div>
       <p class="hero__body">
         {hero.paragraph.before}
-        <span class="code">{hero.paragraph.code}</span>
+        <code>{hero.paragraph.code}</code>
         {hero.paragraph.after}
       </p>
-    </section>
-
-    <section class="section featured">
-      <Eyebrow index="01" />
-      <h2>{featured.heading}</h2>
-      <p>{featured.text}</p>
-      <TopWays />
-    </section>
-
-    <section class="section">
-      <Eyebrow index="02" />
-      <h2>{comparisonHeading}</h2>
-      <ComparisonCards />
-    </section>
-
-    <section class="section" id="how-it-works">
-      <Eyebrow index="03" />
-      <h2>{coreIdentity.heading}</h2>
-      <p>{coreIdentity.intro}</p>
-      <Steps showConceptLabel />
-    </section>
-
-    <section class="section" id="field-logistics">
-      <Eyebrow index="04" />
-      <h2>{fieldLogistics.heading}</h2>
-      <p>{fieldLogistics.intro}</p>
-      <ConceptLabel text={conceptLabels.group} />
-      <SwipeRow label={fieldLogistics.regionLabel}>
-        {fieldLogistics.images.map((id) => (
-          <li>
-            <Card
-              image={id}
-              title={images[id].title}
-              caption={images[id].caption}
-            />
-          </li>
-        ))}
-      </SwipeRow>
-    </section>
-
-    <section class="section" id="photo-to-action">
-      <Eyebrow index="05" />
-      <h2>{photoToAction.heading}</h2>
-      <PhotoToAction />
-    </section>
-
-    <section class="section" id="applications">
-      <Eyebrow index="06" />
-      <h2>{applicationsHome.heading}</h2>
-      <p>{applicationsHome.intro}</p>
-      <AppCards />
-    </section>
-
-    <div class="closing section">
-      <section class="mount">
-        <div class="mount__shadow" aria-hidden="true"></div>
-        <div class="mount__edge">
-          <div class="mount__body closing__panel">
-            <Eyebrow index="07" />
-            <h2>{aboutTeaser.heading}</h2>
-            <p>{aboutTeaser.text}</p>
-            <p>
-              <a class="closing__link" href={url("about")}>
-                {aboutTeaser.linkText}
-              </a>
-            </p>
-          </div>
-        </div>
-      </section>
-      <section class="mount mount--accent" id="contact">
-        <div class="mount__shadow" aria-hidden="true"></div>
-        <div class="mount__edge">
-          <div class="mount__body closing__panel">
-            <Eyebrow index="08" />
-            <h2>{contactAction.heading}</h2>
-            <p>{contactAction.text}</p>
-            <p>
-              <a class="code closing__link" href={`mailto:${contactEmail}`}>
-                {contactEmail}
-              </a>
-            </p>
-          </div>
-        </div>
-      </section>
     </div>
-  </div>
+    <Console />
+  </section>
+  <Anatomy />
+  <SpecSheet />
+  <Tour />
+  <Manifest />
+  <FieldFrames />
+  <Pipeline />
+  <Architecture />
+  <AppIndex />
+  <section class="end" aria-label="About and contact">
+    <div id="about">
+      <h2>{aboutTeaser.heading}</h2>
+      <p>{aboutTeaser.text}</p>
+      <p>
+        <a class="arrow" href={url("about")}>
+          {aboutTeaser.linkText}
+        </a>
+      </p>
+    </div>
+    <div id="contact" class="end__contact">
+      <h2>{contactAction.heading}</h2>
+      <p>{contactAction.text}</p>
+      <a class="mail" href={`mailto:${contactEmail}`}>
+        {contactEmail}
+      </a>
+    </div>
+  </section>
 </BaseLayout>
-
-<style>
-  .hero {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr);
-    grid-template-areas: "head" "media" "actions" "body";
-    gap: var(--s-5);
-    padding-block-start: var(--s-6);
-  }
-
-  .hero__head {
-    grid-area: head;
-    display: flex;
-    flex-direction: column;
-    gap: var(--s-4);
-  }
-
-  .hero__head h1 {
-    max-width: 18ch;
-  }
-
-  .hero__subline {
-    font-size: var(--fs-h3);
-    line-height: 1.4;
-    color: var(--text-muted);
-  }
-
-  .hero__media {
-    grid-area: media;
-    display: flex;
-    flex-direction: column;
-    gap: var(--s-3);
-    min-width: 0;
-  }
-
-  .hero__media img {
-    width: 100%;
-    aspect-ratio: 1.618 / 1;
-    object-fit: cover;
-    border: 1px solid var(--edge);
-  }
-
-  .hero__actions {
-    grid-area: actions;
-    display: flex;
-    flex-wrap: wrap;
-    gap: var(--s-3);
-  }
-
-  .hero__media figcaption {
-    display: flex;
-    flex-wrap: wrap;
-    gap: var(--s-1) var(--s-3);
-    align-items: baseline;
-  }
-
-  .hero__body {
-    grid-area: body;
-  }
-
-  .featured h2 {
-    max-width: 30ch;
-  }
-
-  .closing {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr);
-    grid-auto-rows: 1fr;
-    gap: var(--s-5);
-  }
-
-  .closing.section > * + * {
-    margin-block-start: 0;
-  }
-
-  .closing__panel {
-    gap: var(--s-4);
-    padding: var(--s-5) var(--s-5) var(--s-6);
-  }
-
-  .closing__link {
-    display: inline-flex;
-    align-items: center;
-    min-height: 44px;
-  }
-
-  @media (min-width: 900px) {
-    .hero {
-      grid-template-columns: minmax(0, 1fr) minmax(0, 1.618fr);
-      grid-template-areas: "head media" "actions media" "body media";
-      grid-template-rows: auto auto 1fr;
-      column-gap: var(--s-6);
-      padding-block-start: var(--s-7);
-    }
-
-    .closing {
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-    }
-  }
-</style>

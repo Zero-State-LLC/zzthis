@@ -1,0 +1,42 @@
+---
+import {
+  comparisonColumns,
+  comparisonHeading,
+  comparisonNote,
+  comparisonRows,
+} from "../content/comparison";
+---
+
+<section class="sheet" aria-labelledby="compare-title">
+  <h2 id="compare-title">{comparisonHeading}</h2>
+  <div class="sheet__scroll">
+    <table class="spec">
+      <thead>
+        <tr>
+          <td></td>
+          {comparisonColumns.map((column) => (
+            <th scope="col" class:list={{ "is-zz": column.accent }}>
+              {column.name}
+            </th>
+          ))}
+        </tr>
+      </thead>
+      <tbody>
+        {comparisonRows.map((row) => (
+          <tr>
+            <th scope="row">{row.label}</th>
+            {comparisonColumns.map((column) => (
+              <td
+                data-col={column.name}
+                class:list={{ "is-zz": column.accent }}
+              >
+                {column.cells[row.key]}
+              </td>
+            ))}
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  </div>
+  <p class="note">{comparisonNote}</p>
+</section>

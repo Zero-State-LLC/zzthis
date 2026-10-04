@@ -1,0 +1,303 @@
+/* Hallmark · Sample B v1.0 · inner pages (About, Applications) · design-system: resolver.css + tokens.css
+ * Same tokens, type, and components as Home. Section heads use --text-section (v1.0 §0, 25% smaller).
+ */
+
+/* ---------- Page head (shared) ---------- */
+.page-head {
+  display: grid;
+  gap: var(--space-md);
+  padding-block: var(--space-xl) var(--space-lg);
+  position: relative;
+}
+
+.page-head::before {
+  content: "";
+  position: absolute;
+  inset: 0 calc(var(--gutter) * -1);
+  z-index: -1;
+  background-image:
+    linear-gradient(var(--color-grid) 1px, transparent 1px),
+    linear-gradient(90deg, var(--color-grid) 1px, transparent 1px);
+  background-size: var(--grid-cell) var(--grid-cell);
+  mask-image: linear-gradient(180deg, var(--mask-solid) 40%, transparent);
+}
+
+.page-head h1 {
+  font-size: var(--text-display-s);
+  font-weight: 700;
+  line-height: 1.02;
+}
+
+.page-head__copy {
+  display: grid;
+  gap: var(--space-sm);
+  align-content: start;
+}
+
+.page-head__lede {
+  font-size: var(--text-md);
+  line-height: 1.45;
+  color: var(--color-ink-2);
+}
+
+.nav__links a[aria-current="page"] {
+  text-decoration: underline;
+  text-decoration-color: var(--color-accent);
+  text-decoration-thickness: 2px;
+}
+
+a.pill {
+  text-decoration: none;
+}
+
+.block {
+  display: grid;
+  gap: var(--space-md);
+  padding-block: var(--space-xl);
+  border-top: var(--rule-hair) solid var(--color-rule);
+}
+
+.block > h2 {
+  font-size: var(--text-section);
+}
+
+.block__lede {
+  color: var(--color-ink-2);
+}
+
+/* ---------- About ---------- */
+.contact-card {
+  display: grid;
+  gap: var(--space-2xs);
+  align-content: start;
+  justify-self: start;
+  padding: var(--space-md);
+  background: var(--color-panel);
+  border: var(--rule-hair) solid var(--color-rule);
+  border-top: 2px solid var(--color-accent);
+}
+
+.contact-card .mail {
+  font-size: var(--text-lg);
+}
+
+.contact-card p:last-child {
+  font-size: var(--text-sm);
+  color: var(--color-ink-2);
+}
+
+@media (min-width: 64rem) {
+  .page-head--about {
+    grid-template-columns: minmax(0, 1.618fr) minmax(0, 1fr);
+    column-gap: var(--space-xl);
+    align-items: end;
+  }
+  .page-head--about .contact-card {
+    justify-self: stretch;
+  }
+}
+
+.explore {
+  list-style: none;
+  padding: 0;
+  display: grid;
+  border-top: var(--rule-hair) solid var(--color-rule-strong);
+}
+
+.explore li {
+  display: grid;
+  gap: var(--space-3xs);
+  padding-block: var(--space-sm);
+  border-bottom: var(--rule-hair) solid var(--color-rule);
+}
+
+.explore a {
+  font-family: var(--font-mono);
+  font-size: var(--text-md);
+  font-weight: 500;
+  justify-self: start;
+}
+
+.explore p {
+  font-size: var(--text-sm);
+  color: var(--color-ink-2);
+}
+
+@media (min-width: 48rem) {
+  .explore {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-gap: var(--space-lg);
+  }
+}
+
+/* Person card: one layout for the founder and every advisor (v1.0 §5). */
+.people {
+  list-style: none;
+  padding: 0;
+  display: grid;
+  gap: var(--space-md);
+}
+
+.person {
+  display: grid;
+  gap: var(--space-sm);
+  align-content: start;
+  height: 100%;
+  padding: var(--space-md);
+  background: var(--color-panel);
+  border: var(--rule-hair) solid var(--color-rule);
+}
+
+.person__head {
+  display: grid;
+  grid-template-columns: 88px minmax(0, 1fr);
+  gap: var(--space-sm);
+  align-items: center;
+}
+
+.person__photo,
+.person__initials {
+  width: 88px;
+  height: 88px;
+  object-fit: cover;
+  border: var(--rule-hair) solid var(--color-rule);
+}
+
+.person__initials {
+  display: grid;
+  place-items: center;
+  font-family: var(--font-mono);
+  font-size: var(--text-md);
+  font-weight: 500;
+  color: var(--color-accent-ink);
+  background: var(--color-panel-2);
+}
+
+.person__name {
+  font-size: var(--text-sub);
+}
+
+.person__role {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  line-height: 1.4;
+  color: var(--color-ink-3);
+}
+
+.person__bio {
+  font-size: var(--text-sm);
+  color: var(--color-ink-2);
+}
+
+.person__link {
+  justify-self: start;
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  font-size: var(--text-sm);
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.person__link::after {
+  content: " ↗";
+}
+
+@media (min-width: 48rem) {
+  .people {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 64rem) {
+  .people {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+  /* The founder's card is the same card; it spans two columns so the longer bio keeps a readable measure. */
+  .person--wide {
+    grid-column: span 2;
+  }
+  .person--wide .person__bio {
+    max-width: 68ch;
+  }
+}
+
+.dojo__sub {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  color: var(--color-ink-3);
+}
+
+.dojo p:not(.dojo__sub) {
+  font-size: var(--text-md);
+  line-height: 1.55;
+  max-width: 64ch;
+}
+
+.dojo__head {
+  display: grid;
+  gap: var(--space-2xs);
+}
+
+.hw {
+  list-style: none;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-sm);
+}
+
+.hw figure {
+  display: grid;
+  gap: var(--space-2xs);
+}
+
+.hw img {
+  width: 100%;
+  aspect-ratio: 3 / 4;
+  object-fit: cover;
+  border: var(--rule-hair) solid var(--color-rule);
+}
+
+.hw figcaption {
+  display: grid;
+  gap: 2px;
+  font-size: var(--text-xs);
+  color: var(--color-ink-3);
+}
+
+.hw figcaption code {
+  color: var(--color-ink);
+  font-size: var(--text-xs);
+}
+
+@media (min-width: 64rem) {
+  .hw {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: var(--space-md);
+  }
+}
+
+.where {
+  display: grid;
+  gap: var(--space-lg);
+  padding-block: var(--space-xl) var(--space-2xl);
+  border-top: var(--rule-hair) solid var(--color-rule);
+}
+
+.where > div {
+  display: grid;
+  gap: var(--space-xs);
+  align-content: start;
+}
+
+.where h2 {
+  font-size: var(--text-section);
+}
+
+@media (min-width: 48rem) {
+  .where {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-gap: var(--space-xl);
+  }
+}

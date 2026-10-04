@@ -1,0 +1,42 @@
+---
+import { applications, applicationsHome } from "../content/applications";
+import { images } from "../content/images";
+import { conceptLabels } from "../content/labels";
+import { url } from "../lib/url";
+---
+
+<section class="apps" id="applications" aria-labelledby="apps-title">
+  <h2 id="apps-title">{applicationsHome.heading}</h2>
+  <p>{applicationsHome.intro}</p>
+  <ul class="apps__list">
+    {applications.map((app) => {
+      const id = app.homeImages[0];
+      if (!id) return null;
+      const image = images[id];
+      return (
+        <li class="app">
+          <img
+            src={url(image.src)}
+            width={image.width}
+            height={image.height}
+            loading="lazy"
+            decoding="async"
+            alt={image.alt}
+          />
+          <div>
+            <span class="tag">{conceptLabels.standalone}</span>
+            <h3>
+              <a href={url(`applications#${app.id}`)}>{app.title}</a>
+            </h3>
+            <p>{app.story}</p>
+          </div>
+        </li>
+      );
+    })}
+  </ul>
+  <p>
+    <a class="arrow" href={url("applications")}>
+      {applicationsHome.linkText}
+    </a>
+  </p>
+</section>

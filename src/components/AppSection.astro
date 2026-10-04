@@ -1,0 +1,108 @@
+---
+import type { Application, ApplicationGallery } from "../content/applications";
+import { images, type ImageId } from "../content/images";
+import { conceptLabels, realPhotos } from "../content/labels";
+import Figure from "./Figure.astro";
+
+interface Props {
+  app: Application;
+}
+
+const { app } = Astro.props;
+
+function pageClass(count: number): string {
+  const size = count === 1 ? " gal--single" : count === 2 ? " gal--2" : "";
+  return `gal${size} gal--panels`;
+}
+
+function galleryClass(
+  count: number,
+  columns: ApplicationGallery["columns"],
+): string {
+  if (count === 1) return "gal gal--single";
+  if (count === 2 || columns === "2") return "gal gal--2";
+  if (count === 3 || columns === "3") return "gal gal--3";
+  if (columns === "4") return "gal gal--4";
+  return "gal";
+}
+
+function isReal(id: ImageId): boolean {
+  return images[id].status === "real-photo";
+}
+
+function isConcept(id: ImageId): boolean {
+  return images[id].status === "concept";
+}
+---
+
+<section class="app-sec" id={app.id} aria-labelledby={`${app.id}-title`}>
+  <h2 id={`${app.id}-title`}>{app.title}</h2>
+  <p class="app-sec__story">{app.story}</p>
+  {app.pageExtra && <p class="app-sec__extra">{app.pageExtra}</p>}
+  <ul class={pageClass(app.pageImages.length)}>
+    {app.pageImages.map((id) => (
+      <li>
+        <Figure
+          id={id}
+          concept={app.pageImages.length === 1 && isConcept(id)}
+        />
+      </li>
+    ))}
+  </ul>
+  {app.pageGalleries?.map((gallery) => {
+    const allReal = gallery.items.every((item) => isReal(item.image));
+    const anyConcept = gallery.items.some((item) => isConcept(item.image));
+    const pair = allReal && gallery.columns === "2";
+    const ordered = Boolean(gallery.ordered) && gallery.columns === "4";
+    const standalone = gallery.label === "standalone" && !allReal;
+    return (
+      <div class="sub">
+        {gallery.heading && <h3>{gallery.heading}</h3>}
+        {gallery.intro?.map((paragraph) => (
+          <p>{paragraph}</p>
+        ))}
+        {gallery.label === "group" && anyConcept && !allReal && (
+          <p class="label">{conceptLabels.group}</p>
+        )}
+        {allReal && <p class="real">{realPhotos}</p>}
+        {ordered ? (
+          <ol class="gal gal--4 delivery-steps">
+            {gallery.items.map((item) => (
+              <li>
+                <Figure
+                  id={item.image}
+                  title={item.title}
+                  numeral={item.numeral}
+                  mode="step"
+                />
+              </li>
+            ))}
+          </ol>
+        ) : pair ? (
+          <ul class="pair">
+            {gallery.items.map((item) => (
+              <li>
+                <Figure id={item.image} mode="caption" />
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <ul class={galleryClass(gallery.items.length, gallery.columns)}>
+            {gallery.items.map((item) => (
+              <li>
+                <Figure
+                  id={item.image}
+                  title={item.title}
+                  concept={standalone}
+                />
+              </li>
+            ))}
+          </ul>
+        )}
+        {gallery.closing?.map((paragraph) => (
+          <p class="closing">{paragraph}</p>
+        ))}
+      </div>
+    );
+  })}
+</section>

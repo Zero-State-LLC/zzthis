@@ -1,0 +1,41 @@
+---
+import { images, type ImageId } from "../content/images";
+import { conceptLabels } from "../content/labels";
+import { url } from "../lib/url";
+
+interface Props {
+  id: ImageId;
+  title?: string;
+  numeral?: string;
+  concept?: boolean;
+  mode?: "card" | "step" | "caption";
+}
+
+const { id, numeral, concept = false, mode = "card" } = Astro.props;
+const image = images[id];
+const title = Astro.props.title ?? image.title;
+const caption = image.caption;
+const showCaption =
+  caption !== "" && caption !== title && caption !== `${title}.`;
+---
+
+<figure>
+  <img
+    src={url(image.src)}
+    width={image.width}
+    height={image.height}
+    alt={image.alt}
+    loading="lazy"
+    decoding="async"
+  />
+  <figcaption>
+    {mode === "step" && numeral && <span class="step-n">{numeral}</span>}
+    {concept && <span class="tag">{conceptLabels.standalone}</span>}
+    {mode === "step" ? (
+      <span class="step-t">{title}</span>
+    ) : (
+      mode === "card" && <b>{title}</b>
+    )}
+    {(mode === "caption" || showCaption) && caption}
+  </figcaption>
+</figure>
