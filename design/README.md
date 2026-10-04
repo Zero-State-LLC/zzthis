@@ -49,8 +49,10 @@ From a zzThat checkout, after this folder is on the zzThis commit you are pinnin
 ```sh
 PIN=<full 40-character zzThis commit sha>
 curl -fsSL "https://raw.githubusercontent.com/Zero-State-LLC/zzthis/${PIN}/scripts/pin-design.sh" -o /tmp/pin-design.sh
-sh /tmp/pin-design.sh /tmp/zzthis-design "$PIN"
+sh /tmp/pin-design.sh vendor/zzthis-design "$PIN"
 ```
+
+The destination must be a relative path inside the consumer checkout. The script refuses an absolute path, a `..` segment, and anything but a full 40-character sha.
 
 Commit only the pinned files in zzThat. Do not commit a second hand-written palette. Where each file lands in zzThat, and the one pin file (`contracts/ZZTHIS-API-PIN`), are in zzThat `specs/001-zzthat-apps/design.md`. That table replaces the older one here, which named `apps/DESIGN-PIN`.
 
