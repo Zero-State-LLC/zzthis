@@ -125,15 +125,39 @@ This spec says "check word". `docs/SPEC.md` also says "checksum word". Both mean
 
 Recognition models (spec 004), the resolver (spec 002), and human-factors studies.
 
+## Prototype defaults for the v1 build (proposed 2026-10-04)
+
+Status: proposal, pending Danny's yes. Source: [analysis 2026-10-04](../analysis-2026-10-04.md), finding 1. Without a list and a check word the server cannot mint, so every client's Create stays on "not available". These defaults fill Q27, Q30, Q31, Q32, and Q35 for the prototype only. Michael's later answers replace them through a new list version (FR-017).
+
+| Item | Prototype default | Why |
+|---|---|---|
+| Issued format (Q27) | Two data words and one check word: `zz-word1-word2-check-zz`, kind `plain`. | Every example in spec 005, `design/UX.md`, and zzThat has this shape (`zz-copper-lantern-sky-zz`). Section 2.2 allows two or three data words. |
+| Source list (Q32) | The EFF long wordlist (7,776 English words), one of Michael's candidates in FR-022. License CC BY 3.0 US, so the repo credits EFF in `NOTICE`. | Already named by Michael. Licensed for a public repo. |
+| Filters (Q35) | In this order: (1) lowercase `a` to `z` only; (2) 3 to 8 letters; (3) drop `zz`, `fn`, `run`, the number words `zero` to `nine`, and any term on the private blocklist (spec 005 FR-024) when it is present; (4) letter-shape filter: not run, reported as skipped (Q35); (5) sound filter: not run, reported as skipped (Q35); (6) edit distance at least 3 (FR-003): sort by length, then alphabetically, and keep a word only when it is at least 3 from every word already kept; (7) keep the first N words, where N is the largest prime that is not above the count. | Deterministic (FR-019). Shorter words first suits handwriting. A prime N makes the check word provable. |
+| List size (Q31) | Whatever the filters yield, as N. The yield report states N and the code space, N squared. The pipeline fails if N is under 1,000. | No size is invented. The report shows it. |
+| Check word (Q30) | With word indexes d1 and d2 (0-based, in list order), the check word is the word at index (d1 + 2 * d2) mod N. | With N prime, one wrong word in any position changes the result. With the issuer rule below, so does a swap of any two words. |
+| Issuer rule | Draw d1 and d2 uniformly from a cryptographic random source, by rejection sampling (no modulo bias). Draw again when d1 = d2, d2 = 0, (d1 + d2) mod N = 0, or the check index equals d1 or d2. | These are the only cases where a swap goes undetected or a word repeats. |
+| Verify | Only for a plain code whose parts are all on the list. Three parts: `ok` or `check-mismatch`. Any other part count: `wrong-length`. `unknown-word` is returned only when a caller verifies a code with a part that is not on the list. | FR-018 result set. |
+| Version id | `proto-v0`. Files: `packages/zz-core/wordlists/proto-v0.txt` (one word per line; line order is the index), `proto-v0.report.md`, and `proto-v0.report.json` (FR-004 fields plus the source URL and its SHA-256). | FR-017: a published version never changes. |
+| Test list | `fixture-7`: the G1a words plus `falcon` (7 words, a prime). Tests and local runs only. The server refuses to start in production with it. | Every platform can test mint and verify before proto-v0 exists. |
+
+Gate: do not commit `proto-v0.txt` until Danny says yes to the source and license (plan, constitution VI). Until then, plain mint returns `not-ready` everywhere except local runs on `fixture-7`.
+
+Point of no return: after the first production mint, proto-v0 can never change, because issued codes must keep verifying (FR-017) and retired words are never issued again (Q36 default).
+
+### Shared test vectors
+
+[`vectors.json`](vectors.json) is the machine copy of the G9, G1a, and G10 rows in `docs/SPEC.md` Section 2.2a, plus the proposed scanner rows (spec 004, Client read pipeline) and check-word rows (fixture-7, with all 30 issuable codes). The G9 rows were checked against `src/lib/grammar.ts` on 2026-10-04. The check-word rows were checked exhaustively: every single wrong word and every swap of two words is detected on fixture-7. The TypeScript, Swift, and Kotlin libraries each run every row. Do not edit a row to match a bug.
+
 ## Open questions
 
 | ID | Question | Default |
 |---|---|---|
-| Q27 | Which formats come first? | None chosen |
-| Q30 | Which error classes must the check word detect (one wrong word, swapped words, a dropped word, voice confusions)? | One wrong word (INFERRED minimum) |
-| Q31 | Target wordlist size. Sources differ: 5,000 words and a candidate 10,000 [PRODUCT], and "about 4,000 known words" in the recognition plan [OPERATOR 2026-10-02]. Michael adds that each scope can use its own list (FR-022) [MICHAEL 2026-10-03 #45]. | None chosen |
-| Q32 | Language and licensing of the candidate word source | None chosen |
-| Q35 | How are "distinct letter shapes" and "distinct sounds" measured, and what is the pass rule for each? | None chosen; blocks the shape and sound filter tasks |
+| Q27 | Which formats come first? | None chosen. Prototype default proposed 2026-10-04: two data words and a check word |
+| Q30 | Which error classes must the check word detect (one wrong word, swapped words, a dropped word, voice confusions)? | One wrong word (INFERRED minimum). Prototype default proposed 2026-10-04: (d1 + 2 * d2) mod a prime N, which also catches a swap of any two words |
+| Q31 | Target wordlist size. Sources differ: 5,000 words and a candidate 10,000 [PRODUCT], and "about 4,000 known words" in the recognition plan [OPERATOR 2026-10-02]. Michael adds that each scope can use its own list (FR-022) [MICHAEL 2026-10-03 #45]. | None chosen. Prototype: the proto-v0 filter yield |
+| Q32 | Language and licensing of the candidate word source | None chosen. Prototype default proposed 2026-10-04: EFF long wordlist, English, CC BY 3.0 US |
+| Q35 | How are "distinct letter shapes" and "distinct sounds" measured, and what is the pass rule for each? | None chosen; blocks the shape and sound filter tasks. Prototype: both filters skipped and reported |
 | Q50 | How many parts can a code have? (issue #36) | RESOLVED: no design limit (FR-012) |
 | Q51 | `zz@-` versus `zz-@`; more words after a handle? (issue #37) | RESOLVED: same code; qualifiers may follow (FR-010) |
 | Q52 | Dots outside handles? (issue #38) | RESOLVED: `.eth` names valid as written (FR-023) |

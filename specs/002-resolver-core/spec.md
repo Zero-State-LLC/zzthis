@@ -5,6 +5,8 @@ Status: not built. Prototype requested in issue #13. Deepened 2026-10-03: canoni
 Phase: specify (what and why). The how is in [plan.md](plan.md), which carries the architecture proposal from `docs/SPEC.md` Section 10.
 Constitution: [.specify/memory/constitution.md](../../.specify/memory/constitution.md).
 
+The `/v1` wire contract is [spec 005](../005-v1-api/spec.md). This file stays the resolver behavior. Where a path in Section 10.6 has no `/v1` prefix, spec 005 is the route.
+
 ## Why
 
 A zz code on paper is public. Anyone can copy it, photograph it, or guess at it. The value of zzThis depends on a resolver that turns a code into the right record for the right person, and nothing else [PRODUCT] [OPERATOR 2026-10-02]. No resolver exists yet; its security is untested [PRODUCT].
@@ -49,7 +51,7 @@ As an issuer, I add a new record version or revoke a code, and the change takes 
 
 Acceptance: every record change is a new signed version; older versions are kept; a revoked code stops resolving.
 
-1. Given a revoked reusable code, when a caller resolves it at the central server, then the response is not-found at once; at the edge, within the purge window (Q26).
+1. Given a revoked reusable code, when a caller resolves it at the central server, then the response is not-found at once. At the edge, the cache key is purged; if the purge fails, the cached copy lasts at most 60 seconds [DANNY 2026-10-04].
 2. Given a code with `expires_at` T, a resolve at T or later gets not-found (INFERRED: the boundary is exclusive).
 3. Given a failed signature step, no version is stored (FR-018).
 
@@ -69,8 +71,8 @@ As a field user who wrote a code by hand with no device, I can link it to a reco
 | FR-002 | Every record change creates a new immutable version signed by the server. | [OPERATOR 2026-10-02] |
 | FR-003 | Append-only audit log for every call that changes state, and for resolves. | [OPERATOR 2026-10-02]; "every call" is INFERRED (`docs/SPEC.md` Section 10.6) |
 | FR-004 | Single-use and expiry where the code format calls for them; a single-use code is marked used in the same write that resolves it. | [OPERATOR 2026-10-02]; same-write rule INFERRED |
-| FR-005 | Revocation is enforced centrally at once; cached copies stop resolving within a stated purge window. | [OPERATOR 2026-10-02]; window length OPEN (Q26) |
-| FR-006 | Rate limits per client, per role, and per code. | [OPERATOR 2026-10-02]; limit values OPEN (Q26) |
+| FR-005 | Revocation is enforced centrally at once. The edge purges that code's cache key. If the purge fails, a cached public resolve lasts at most 60 seconds. | [OPERATOR 2026-10-02]; window [DANNY 2026-10-04] (Q26) |
+| FR-006 | Rate limits per client, per role, and per code. | [OPERATOR 2026-10-02]; numbers are spec 005 |
 | FR-007 | Role-scoped views of a record. | [OPERATOR 2026-10-02] |
 | FR-008 | Issuing, revoking, and marking used always go through the central server, never an offline client. | [OPERATOR 2026-10-02] |
 | FR-009 | Handwritten codes resolve the same way as printed ones; no printed-only feature is required. | [OPERATOR 2026-10-02] |
@@ -114,7 +116,7 @@ Status codes are a prototype choice and may change with Q19. The not-found respo
 - `zz-@AgentSmith-zz` and `zz-@agentsmith-zz`: the same handle (FR-013, FR-016).
 - `zz-@agentsmith-neo-zz`: the qualifier `neo` is part of the code, so it can open a different record from `zz-@agentsmith-zz` under the same owner (INFERRED).
 - A reusable account code in a spec example is a word code such as `zz-post-maple-river-zz`, linked privately to the account. A code never carries a phone number or other personal data (Section 9a D-2026-10-03-11).
-- A revoked code still in an edge cache: resolves only until the purge window ends (Q26).
+- A revoked code still in an edge cache: resolves only until the purge lands, and at most 60 seconds if the purge fails [DANNY 2026-10-04].
 - A record version whose signature fails verification on read: the resolver returns not-found and writes an audit event with result `integrity-error` (INFERRED).
 - A malformed flood from one client: rate limited like any other call (FR-014).
 
@@ -132,7 +134,7 @@ Recognition (spec 004), the wordlist and check word (spec 003), payments, partne
 |---|---|---|
 | Q19 | How do partner apps authenticate? | None chosen |
 | Q25 | How does a person pick a valid code with no device: pre-issued code cards, or claiming a handwritten code that the server checks? | None chosen |
-| Q26 | Purge window for revoked codes at the edge, and rate-limit values | None chosen; prototype uses short cache lifetimes (INFERRED) |
+| Q26 | Purge window for revoked codes at the edge, and rate-limit values | RESOLVED for the edge cache [DANNY 2026-10-04]. Spec 005 FR-018 is the rule: public resolve `Cache-Control: public, max-age=60, stale-while-revalidate=300`, Workers Cache API, purge on record update, revoke, or expiry. Excluded classes send `no-store`. Rate-limit numbers are the spec 005 table. |
 | Q27 | Which code formats does the prototype support first (two-word, three-word, check word, prefix, enterprise, one-time, reusable-account [PRODUCT])? | None chosen |
 | Q28 | Where the server's record-signing keys live and how they rotate | None chosen; blocks T001 |
 | Q29 | Where the resolver code lives (this repo or a separate repo) | None chosen; blocks T001 |

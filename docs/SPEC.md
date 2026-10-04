@@ -1146,18 +1146,18 @@ Michael's answers arrived on 2026-10-02 through Danny (issue #10), in an updated
 | Q23 | Should a real handwritten photo replace the hero render? | OPEN; default: keep panel b with its label (spec 001) |
 | Q24 | Remove the pitch-sourced founder bio, the company-stage line, the research targets, and the related figures from the repo? | RESOLVED: removed; the About page keeps Michael's founder origin [OPERATOR 2026-10-02] |
 | Q25 | How does a person pick a valid code with no device? | OPEN; none chosen (spec 002) |
-| Q26 | Purge window for revoked codes and rate-limit values | OPEN; none chosen (spec 002) |
-| Q27 | Which code formats come first? | OPEN; none chosen (specs 002, 003) |
+| Q26 | Purge window for revoked codes and rate-limit values | RESOLVED for the edge cache [DANNY 2026-10-04]: cache only an active, reusable, public, unauthenticated resolve, with `Cache-Control: public, max-age=60, stale-while-revalidate=300` and the Workers Cache API. Purge that code's cache key on record update, revoke, or expiry. 60 seconds is the worst case if a purge fails. Single-use, short-expiry, private, authenticated, 404, and 429 responses send `Cache-Control: no-store`. Rate-limit numbers are the spec 005 table. |
+| Q27 | Which code formats come first? | OPEN; none chosen (specs 002, 003). Prototype default proposed 2026-10-04: two data words and a check word (spec 003, Prototype defaults) |
 | Q28 | Where record-signing keys live and how they rotate | OPEN; none chosen (spec 002) |
 | Q29 | Where the resolver code lives | OPEN; none chosen (spec 002) |
-| Q30 | Error classes the check word must detect | OPEN; minimum: one wrong word (spec 003) |
-| Q31 | Target wordlist size: 5,000 or 10,000 [PRODUCT] versus about 4,000 (Section 10.8) | OPEN; none chosen (spec 003) |
-| Q32 | Language and licensing of the word source | OPEN; none chosen (spec 003) |
+| Q30 | Error classes the check word must detect | OPEN; minimum: one wrong word (spec 003). Prototype default proposed 2026-10-04: (d1 + 2 * d2) mod a prime N, which also catches a swap of any two words |
+| Q31 | Target wordlist size: 5,000 or 10,000 [PRODUCT] versus about 4,000 (Section 10.8) | OPEN; none chosen (spec 003). Prototype: whatever the proto-v0 filters yield |
+| Q32 | Language and licensing of the word source | OPEN; none chosen (spec 003). Prototype default proposed 2026-10-04: EFF long wordlist, English, CC BY 3.0 US, pending Danny's yes |
 | Q33 | zzThat app scope (web, Android, iOS) | OPEN; not specified (spec 004) |
 | Q34 | Source and consent for the real-photo test set | OPEN; none chosen (spec 004) |
-| Q35 | How to measure distinct letter shapes and distinct sounds | OPEN; none chosen (spec 003) |
+| Q35 | How to measure distinct letter shapes and distinct sounds | OPEN; none chosen (spec 003). Prototype: both filters skipped and reported |
 | Q36 | Can retired codes be reissued? | OPEN; "never reissue" proposed (spec 002) |
-| Q37 | Capture confidence thresholds and read-back error method | OPEN; none chosen (spec 004) |
+| Q37 | Capture confidence thresholds and read-back error method | OPEN; none chosen (spec 004). Prototype parameters proposed 2026-10-04: accept at 0.80, retry below 0.50 |
 | Q38 | Where voice input is processed | OPEN; none chosen (spec 004) |
 | Q39 | What counts as the zzThat launch for the "Try zzThat" nav action? | OPEN; none chosen (spec 001) |
 | Q41 | Source for the comparison note's alphanumeric example (an 8-character handwritten Deutsche Post postage code; 14 to 22 character parcel tracking numbers) and for the "8 to 22 random characters" cell | RESOLVED: use as given [MICHAEL 2026-10-02]. Both note sentences ship. |
@@ -1185,6 +1185,10 @@ Michael's answers arrived on 2026-10-02 through Danny (issue #10), in an updated
 | Q63 | Native-reader check for the Korean, Japanese, and Aramaic examples? | RESOLVED [MICHAEL 2026-10-03 #51]: confirmed. The Korean, Japanese, and Aramaic examples stay as written, including the glosses and the right-to-left Aramaic display (Section 3.1b). |
 | Q64 | Approve the B v1.0 prototype microcopy (console labels, anatomy, decision bands, architecture diagram)? (issue #54) | RESOLVED [MICHAEL 2026-10-03 #54]: approved as written, with three changes. Decision bands are Manual, Rescan, Confirm, Resolve. The console check line is "Check word: OK (demo; no algorithm runs)". Every user-facing label says demo instead of mock, including the shared badge and the scripted demo records [DANNY 2026-10-04]. Object storage reads "photos for retries and review". |
 | Q65 | Should Home show the real handwritten photos from sample A? (issue #55) | RESOLVED: no [MICHAEL 2026-10-03 #55]. Home stays as it is. Those photos stay on Applications and are not added to Home. |
+| Q66 | Sign-in: replace the authorization-code exchange with PKCE and a redirect URI (zzThat ZQ18) by an ID token and a server nonce, so one contract fits iOS, Android, and the web? (issue #68) | RESOLVED [DANNY 2026-10-04]: yes. Native Apple and Google sign-in send the provider ID token with a server nonce (spec 005 FR-020, FR-021). Answered 2026-10-03 23:33 PT. |
+| Q67 | Offer Sign in with Apple on Android? Android has no Apple sign-in library. (issue #69) | OPEN for Michael. Default: not in v1; Android offers Google (spec 005) |
+| Q68 | May a record body hold a phone number the owner typed? (issue #70) | OPEN for Michael. Default: yes; a code string never holds one (spec 005 FR-007) |
+| Q69 | Hosting: one Worker serves the API and the web client on one origin. Which domain? (issue #71) | OPEN for Danny. Default: one Worker; staging on its workers.dev name (spec 005 FR-029) |
 
 ## 9a. Decisions log
 
@@ -1192,6 +1196,8 @@ One running list of decisions, so every agent and advisor works from the same ru
 
 | ID | Date | Issue | Decision | Source |
 |---|---|---|---|---|
+| D-2026-10-04-02 | 2026-10-04 | #68 | Native Apple and Google sign-in. The client sends the provider ID token with a server nonce (spec 005 FR-020, FR-021). This replaces the authorization-code exchange with PKCE and a redirect URI (zzThat ZQ18). | [DANNY 2026-10-04] |
+| D-2026-10-04-01 | 2026-10-04 | Q26 | Edge-cache only an active, reusable, public, unauthenticated resolve. `Cache-Control: public, max-age=60, stale-while-revalidate=300` via the Workers Cache API. Purge that code's cache key on record update, revoke, or expiry. 60 seconds is the worst case if a purge fails. Single-use, short-expiry, private, authenticated, 404, and 429 responses are `Cache-Control: no-store` | [DANNY 2026-10-04] |
 | D-2026-10-03-20 | 2026-10-03 | #55 | Home does not gain the sample A handwritten photos. They stay on Applications | [MICHAEL 2026-10-03 #55] |
 | D-2026-10-03-19 | 2026-10-03 | #54 | Prototype microcopy is approved as written, except the bands are Manual, Rescan, Confirm, Resolve; every user-facing label says demo instead of mock, and the check line is "Check word: OK (demo; no algorithm runs)"; object storage is "photos for retries and review" | [MICHAEL 2026-10-03 #54] [DANNY 2026-10-04] |
 | D-2026-10-03-18 | 2026-10-03 | #51 | The Korean, Japanese, and Aramaic examples are confirmed, including the glosses and the right-to-left Aramaic | [MICHAEL 2026-10-03 #51] |
@@ -1255,7 +1261,7 @@ flowchart LR
 - The API sits behind an edge layer. Cloudflare Workers is the recommended host for the prototype and the pilot, with D1 for the database and R2 for stored photos [OPERATOR 2026-10-02].
 - Reads are fast at the edge. Writes and signing are centralized: one place issues codes, signs record versions, and writes the audit log [OPERATOR 2026-10-02].
 - The schema is portable SQL, so it can move off D1 without a redesign. If a sponsor needs IL4 or IL5, the later path is AWS GovCloud [OPERATOR 2026-10-02].
-- Edge caches hold only signed records for reusable codes. Single-use and short-expiry codes are never served from cache: every resolve of these goes to the central server, which marks a single-use code used in the same write (INFERRED). Revoked codes stop resolving at the edge within a stated purge window (INFERRED: short cache lifetimes plus purge on revoke).
+- Edge caches hold only an active, reusable, public, unauthenticated resolve, using `Cache-Control: public, max-age=60, stale-while-revalidate=300` and the Workers Cache API [DANNY 2026-10-04]. A record update, revoke, or expiry purges that code's cache key. If a purge fails, 60 seconds is the worst case. Single-use codes, short-expiry codes, private records, authenticated responses, 404 misses, and 429s send `Cache-Control: no-store` and are not stored. A single-use code is still marked used in the same central write.
 
 ### 10.3 Capture
 
@@ -1297,7 +1303,7 @@ A minimal shape for discussion, not a contract. Every call is authenticated and 
 |---|---|---|
 | `POST /codes` | Issue a code | Server picks the words and checksum. Body sets format, expiry, single use, and the linked record. |
 | `GET /resolve/{code}` | Resolve a code | Exact match only. Response is scoped to the caller's role. Unknown, expired, used, and revoked codes all return the same not-found shape, so callers cannot probe for live codes. Single-use codes always resolve on the central server, which marks them used. |
-| `POST /codes/{id}/revoke` | Revoke a code | Takes effect centrally at once. Edge caches are purged within the stated purge window (Section 10.2). |
+| `POST /codes/{id}/revoke` | Revoke a code | Takes effect centrally at once. Purge that code's cache key. 60 seconds is the worst case if the purge fails (Section 10.2) [DANNY 2026-10-04]. |
 | `POST /records/{id}/versions` | Add a record version | Server validates, signs, and stores a new version. Older versions are kept. |
 | `GET /audit` | Read audit events | Filtered by code, record, or time. Restricted to roles with audit access. |
 

@@ -1,0 +1,389 @@
+{
+  "about": "Every sentence a person reads in the zzThat apps and the zzThis web client. Clients build their string catalogs from this file at the pinned commit and do not write their own. Keys are stable; iOS uses the key as written and Android replaces dots with underscores. {provider} and {email} are filled in at run time. Rows whose source is INFERRED are new on 2026-10-04 and wait for Michael's review. Rules: say demo, say check word, no em dashes, codes in lowercase.",
+  "strings": {
+    "common.demo_badge": {
+      "text": "Demo · demo data",
+      "source": "design/UX.md"
+    },
+    "common.loading": {
+      "text": "Loading",
+      "source": "INFERRED 2026-10-04, for Michael's review"
+    },
+    "common.offline_banner": {
+      "text": "Offline. This is the last copy on this device.",
+      "source": "INFERRED 2026-10-04, for Michael's review"
+    },
+    "common.try_again": {
+      "text": "Try again",
+      "source": "INFERRED 2026-10-04, for Michael's review"
+    },
+    "common.cancel": {
+      "text": "Cancel",
+      "source": "INFERRED 2026-10-04, for Michael's review"
+    },
+    "common.done": {
+      "text": "Done",
+      "source": "INFERRED 2026-10-04, for Michael's review"
+    },
+    "common.sign_in_needed": {
+      "text": "Sign in to do this.",
+      "source": "INFERRED 2026-10-04, for Michael's review"
+    },
+    "nav.scan": {
+      "text": "Scan",
+      "source": "zzThat runtime.md"
+    },
+    "nav.create": {
+      "text": "Create",
+      "source": "zzThat runtime.md"
+    },
+    "nav.my_codes": {
+      "text": "My codes",
+      "source": "zzThat runtime.md"
+    },
+    "nav.account": {
+      "text": "Account",
+      "source": "zzThat runtime.md"
+    },
+    "scan.take_photo": {
+      "text": "Take a photo of the code",
+      "source": "INFERRED 2026-10-04, for Michael's review"
+    },
+    "scan.type_instead": {
+      "text": "Type it instead",
+      "source": "INFERRED 2026-10-04, for Michael's review"
+    },
+    "scan.camera_off": {
+      "text": "The camera is off for this app. You can type the code instead.",
+      "source": "INFERRED 2026-10-04, for Michael's review"
+    },
+    "scan.pick_one": {
+      "text": "Which code do you want to open?",
+      "source": "INFERRED 2026-10-04, for Michael's review"
+    },
+    "scan.partial": {
+      "text": "Incomplete code. Rescan.",
+      "source": "docs/SPEC.md Section 2.2a G8"
+    },
+    "scan.bare": {
+      "text": "This is a zz mark with no words. Type the code to open it.",
+      "source": "INFERRED 2026-10-04, for Michael's review"
+    },
+    "scan.no_code": {
+      "text": "No code found. Take another photo, or type it.",
+      "source": "INFERRED 2026-10-04, for Michael's review"
+    },
+    "scan.retry": {
+      "text": "Take another photo",
+      "source": "specs/004-capture Decision bands"
+    },
+    "scan.clarify_title": {
+      "text": "Is this word right?",
+      "source": "INFERRED 2026-10-04, for Michael's review"
+    },
+    "scan.clarify_as_written": {
+      "text": "Keep it as written",
+      "source": "INFERRED 2026-10-04, for Michael's review"
+    },
+    "scan.check_mismatch": {
+      "text": "The check word does not match. Check the words and try again.",
+      "source": "INFERRED 2026-10-04, for Michael's review"
+    },
+    "scan.wrong_length": {
+      "text": "This code has the wrong number of words.",
+      "source": "INFERRED 2026-10-04, for Michael's review"
+    },
+    "scan.photo_consent": {
+      "text": "Send this photo so we can read the code? It leaves your phone only for this retry, and it may be kept for review of this read. It is not used to train a model.",
+      "source": "design/UX.md (zzThat ZQ14)"
+    },
+    "scan.photo_send": {
+      "text": "Send photo",
+      "source": "INFERRED 2026-10-04, for Michael's review"
+    },
+    "scan.photo_keep": {
+      "text": "Keep it on my phone",
+      "source": "INFERRED 2026-10-04, for Michael's review"
+    },
+    "type.field_label": {
+      "text": "zz code",
+      "source": "INFERRED 2026-10-04, for Michael's review"
+    },
+    "type.empty": {
+      "text": "Type a zz code.",
+      "source": "design/UX.md"
+    },
+    "type.open": {
+      "text": "Open",
+      "source": "INFERRED 2026-10-04, for Michael's review"
+    },
+    "type.malformed": {
+      "text": "This is not a zz code. A code starts and ends with zz, like zz-copper-lantern-sky-zz.",
+      "source": "design/UX.md"
+    },
+    "resolve.not_found": {
+      "text": "No match. Check the words and try again.",
+      "source": "design/UX.md"
+    },
+    "resolve.not_on_device": {
+      "text": "This code is not on this device. Connect and try again.",
+      "source": "design/UX.md"
+    },
+    "resolve.share": {
+      "text": "Share",
+      "source": "INFERRED 2026-10-04, for Michael's review"
+    },
+    "resolve.report": {
+      "text": "Report",
+      "source": "INFERRED 2026-10-04, for Michael's review"
+    },
+    "resolve.rate_limited": {
+      "text": "Wait a moment, then try again.",
+      "source": "design/UX.md"
+    },
+    "create.unavailable": {
+      "text": "Create is not available yet.",
+      "source": "design/UX.md"
+    },
+    "create.signed_out": {
+      "text": "Sign in to create a code.",
+      "source": "INFERRED 2026-10-04, for Michael's review"
+    },
+    "create.title_label": {
+      "text": "Title",
+      "source": "INFERRED 2026-10-04, for Michael's review"
+    },
+    "create.body_label": {
+      "text": "Message",
+      "source": "INFERRED 2026-10-04, for Michael's review"
+    },
+    "create.title_required": {
+      "text": "Add a title.",
+      "source": "INFERRED 2026-10-04, for Michael's review"
+    },
+    "create.submit": {
+      "text": "Get a code",
+      "source": "INFERRED 2026-10-04, for Michael's review"
+    },
+    "create.draft_label": {
+      "text": "Not a code yet.",
+      "source": "design/UX.md (zzThat ZQ16)"
+    },
+    "create.offline": {
+      "text": "You are offline. Your title and message are saved here as a draft.",
+      "source": "INFERRED 2026-10-04, for Michael's review"
+    },
+    "create.content_refused": {
+      "text": "Some words in the title or message are not allowed. Change them and try again.",
+      "source": "INFERRED 2026-10-04, for Michael's review"
+    },
+    "minted.heading": {
+      "text": "Write this code on your item",
+      "source": "INFERRED 2026-10-04, for Michael's review"
+    },
+    "minted.check_word_label": {
+      "text": "Check word",
+      "source": "INFERRED 2026-10-04, for Michael's review"
+    },
+    "minted.check_word_help": {
+      "text": "The last word is the check word. It helps a phone catch a misread.",
+      "source": "INFERRED 2026-10-04, for Michael's review"
+    },
+    "minted.reroll": {
+      "text": "Get different words",
+      "source": "zzThat FR-017"
+    },
+    "minted.reroll_cap": {
+      "text": "These words stay.",
+      "source": "design/UX.md"
+    },
+    "minted.write_check": {
+      "text": "Check my handwriting",
+      "source": "INFERRED 2026-10-04, for Michael's review"
+    },
+    "writecheck.match": {
+      "text": "Your handwriting reads as this code.",
+      "source": "INFERRED 2026-10-04, for Michael's review"
+    },
+    "writecheck.mismatch": {
+      "text": "Your handwriting reads differently. Rewrite the code, or keep it if you are sure.",
+      "source": "INFERRED 2026-10-04, for Michael's review"
+    },
+    "writecheck.on_device": {
+      "text": "This check stays on your phone.",
+      "source": "INFERRED 2026-10-04, for Michael's review"
+    },
+    "codes.empty": {
+      "text": "You have no codes yet.",
+      "source": "design/UX.md"
+    },
+    "codes.signed_out": {
+      "text": "Sign in to see your codes.",
+      "source": "INFERRED 2026-10-04, for Michael's review"
+    },
+    "codes.status_active": {
+      "text": "Active",
+      "source": "INFERRED 2026-10-04, for Michael's review"
+    },
+    "codes.status_used": {
+      "text": "Used",
+      "source": "INFERRED 2026-10-04, for Michael's review"
+    },
+    "codes.status_expired": {
+      "text": "Expired",
+      "source": "INFERRED 2026-10-04, for Michael's review"
+    },
+    "codes.status_revoked": {
+      "text": "Revoked",
+      "source": "INFERRED 2026-10-04, for Michael's review"
+    },
+    "detail.edit": {
+      "text": "Edit",
+      "source": "INFERRED 2026-10-04, for Michael's review"
+    },
+    "detail.revoke": {
+      "text": "Revoke code",
+      "source": "INFERRED 2026-10-04, for Michael's review"
+    },
+    "detail.revoked_note": {
+      "text": "This code no longer opens anything.",
+      "source": "INFERRED 2026-10-04, for Michael's review"
+    },
+    "edit.save": {
+      "text": "Save",
+      "source": "INFERRED 2026-10-04, for Michael's review"
+    },
+    "edit.saved": {
+      "text": "Saved.",
+      "source": "INFERRED 2026-10-04, for Michael's review"
+    },
+    "revoke.title": {
+      "text": "Revoke this code?",
+      "source": "INFERRED 2026-10-04, for Michael's review"
+    },
+    "revoke.body": {
+      "text": "Anyone who scans it will see no match. You cannot undo this, and these words will not be used again.",
+      "source": "INFERRED 2026-10-04, for Michael's review"
+    },
+    "revoke.action": {
+      "text": "Revoke",
+      "source": "INFERRED 2026-10-04, for Michael's review"
+    },
+    "report.title": {
+      "text": "Report this code",
+      "source": "INFERRED 2026-10-04, for Michael's review"
+    },
+    "report.reason_spam": {
+      "text": "Spam",
+      "source": "INFERRED 2026-10-04, for Michael's review"
+    },
+    "report.reason_harassment": {
+      "text": "Harassment",
+      "source": "INFERRED 2026-10-04, for Michael's review"
+    },
+    "report.reason_personal_data": {
+      "text": "Personal information",
+      "source": "INFERRED 2026-10-04, for Michael's review"
+    },
+    "report.reason_other": {
+      "text": "Something else",
+      "source": "INFERRED 2026-10-04, for Michael's review"
+    },
+    "report.note_label": {
+      "text": "Anything else we should know (optional)",
+      "source": "INFERRED 2026-10-04, for Michael's review"
+    },
+    "report.send": {
+      "text": "Send report",
+      "source": "INFERRED 2026-10-04, for Michael's review"
+    },
+    "report.sent": {
+      "text": "Thanks. Your report was sent.",
+      "source": "INFERRED 2026-10-04, for Michael's review"
+    },
+    "signin.title": {
+      "text": "Sign in",
+      "source": "INFERRED 2026-10-04, for Michael's review"
+    },
+    "signin.why": {
+      "text": "Sign in to create and manage codes. Anyone can scan without an account.",
+      "source": "INFERRED 2026-10-04, for Michael's review"
+    },
+    "signin.dev": {
+      "text": "Developer sign-in",
+      "source": "INFERRED 2026-10-04, for Michael's review"
+    },
+    "signin.failed": {
+      "text": "Sign-in did not finish. Try again.",
+      "source": "INFERRED 2026-10-04, for Michael's review"
+    },
+    "account.title": {
+      "text": "Account",
+      "source": "INFERRED 2026-10-04, for Michael's review"
+    },
+    "account.signed_in_with": {
+      "text": "Signed in with {provider}",
+      "source": "INFERRED 2026-10-04, for Michael's review"
+    },
+    "account.sign_out": {
+      "text": "Sign out",
+      "source": "INFERRED 2026-10-04, for Michael's review"
+    },
+    "account.delete": {
+      "text": "Delete account",
+      "source": "INFERRED 2026-10-04, for Michael's review"
+    },
+    "account.support": {
+      "text": "Questions: {email}",
+      "source": "INFERRED 2026-10-04, for Michael's review"
+    },
+    "account.privacy": {
+      "text": "Privacy policy",
+      "source": "INFERRED 2026-10-04, for Michael's review"
+    },
+    "delete.title": {
+      "text": "Delete your account?",
+      "source": "INFERRED 2026-10-04, for Michael's review"
+    },
+    "delete.body": {
+      "text": "Your codes stop working, your titles and messages are erased, and you are signed out. You cannot undo this.",
+      "source": "INFERRED 2026-10-04, for Michael's review"
+    },
+    "delete.action": {
+      "text": "Delete account",
+      "source": "INFERRED 2026-10-04, for Michael's review"
+    },
+    "delete.failed": {
+      "text": "Your account was not deleted. Try again.",
+      "source": "INFERRED 2026-10-04, for Michael's review"
+    },
+    "error.forbidden": {
+      "text": "You cannot do that.",
+      "source": "design/UX.md"
+    },
+    "error.taken": {
+      "text": "That code is already taken.",
+      "source": "design/UX.md"
+    },
+    "error.reserved_handle": {
+      "text": "That name cannot be claimed.",
+      "source": "design/UX.md"
+    },
+    "error.nothing_saved": {
+      "text": "Nothing was saved.",
+      "source": "design/UX.md"
+    },
+    "error.update_app": {
+      "text": "Update the app to keep using it.",
+      "source": "zzThat spec.md error table"
+    },
+    "error.no_connection": {
+      "text": "No connection. Connect and try again.",
+      "source": "INFERRED 2026-10-04, for Michael's review"
+    },
+    "error.unavailable": {
+      "text": "Something went wrong on our side. Try again later.",
+      "source": "INFERRED 2026-10-04, for Michael's review"
+    }
+  }
+}

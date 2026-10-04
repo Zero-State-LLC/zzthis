@@ -89,6 +89,45 @@ Not set for this feature. Research accuracy targets are not acceptance criteria 
 
 The phone and web apps as products (not yet specified; Q33), the resolver (spec 002), and the wordlist (spec 003).
 
+## Client read pipeline for the v1 build (proposed 2026-10-04)
+
+Status: proposal, pending Danny's yes. Source: [analysis 2026-10-04](../analysis-2026-10-04.md). The iOS and Android apps both scan, so they need one rule for finding codes in text, or the two apps will disagree. The rows in [spec 003 `vectors.json`](../003-wordlist-checkword/vectors.json) (`scanner`) are the test. The web client in v1 is typing only (spec 005 US6), so it uses steps 3 to 6 on the typed text.
+
+1. Recognize text on the device. Join the recognized lines in reading order (top to bottom, then left to right) with spaces. Each line keeps the recognizer's confidence, from 0 to 1.
+2. Find candidates with the scanner rules below.
+3. Classify each plain code against the bundled list (Section 2.2a G1): word, field, or confirm.
+4. For a word code, verify the check word (spec 003) when the bundled list version equals `wordlist_version` from `GET /v1`. Otherwise skip the local check. The server still verifies.
+5. Set the band (table below).
+6. One candidate in Accept: resolve it. More than one candidate: list them all and wait for a tap. Never resolve a candidate the person did not pick (FR-013, FR-014).
+
+### Scanner rules
+
+1. Replace line breaks and tabs with spaces.
+2. Split the text into tokens at spaces and at hyphen characters (U+002D, U+2010 to U+2015, U+2212). Split a circled marker `(zz)` out of any token as its own token.
+3. For each token, set aside leading quote marks and trailing `.` `,` `;` `!` `?` and quote marks. A token that had trailing marks ends a clause.
+4. A marker is a token equal to `zz` or `(zz)`, in any case. A token that starts with `zz@` opens a code (Section 2.2a G2 step 5) but never closes one.
+5. Two markers in a row form a pair, unless: the first one ends a clause; nothing lies between them; a token between them ends a clause; or the first marker is joined by a hyphen to the word before it and the second is joined by a hyphen to the word after it (the gap between two hyphenated codes).
+6. Each pair is a candidate: the text from the first marker to the second, run through the grammar. It is a code (canonical form and kind) or invalid (the parser's reason).
+7. A marker in no pair is partial when it does not end a clause and a word follows it. The partial text runs to the clause end, the next marker, or the end of the text. Any other unpaired marker is bare.
+8. List candidates in reading order. List each canonical code once.
+
+A stray `zz` in running text can still pair with a real marker. The person then sees both candidates and picks. That is the cost of never guessing.
+
+### Prototype band values
+
+Thresholds stay parameters (Q37). These values let the apps ship. They are not measured results.
+
+| Band | Camera trigger | Typed trigger |
+|---|---|---|
+| Accept | A word code whose check word verifies, with every word at 0.80 confidence or more | A word code whose check word verifies, or a field code, handle, or name as typed |
+| Clarify | Any word between 0.50 and 0.80; a near-word (confirm); a check-word mismatch; any field code, handle, or name (FR-010) | A near-word, or a check-word mismatch |
+| Retry | A partial candidate, or no candidate at all | Not used |
+| Abstain | An invalid candidate, or a bare mark (FR-011) | A parser failure (with its reason), or a bare mark |
+
+After two retries in one scan, a client may offer the server read (US3) only when `GET /v1` reports `photo_reads: true`. It is false until Q18 picks a reader, so the v1 apps do not show the offer.
+
+The creation check (FR-017) runs the same steps on the person's photo and passes when the picked candidate's canonical form equals the minted code.
+
 ## Open questions
 
 | ID | Question | Default |
@@ -96,7 +135,7 @@ The phone and web apps as products (not yet specified; Q33), the resolver (spec 
 | Q18 | Fine-tune our own small model (Option B)? Also: must Option A include an on-device model, or may US1 fall back to cloud vision? | Deferred; ship Option A, run a 2-week Option B benchmark [OPERATOR 2026-10-02]. On-device part of Option A: none chosen |
 | Q33 | Scope of the zzThat app (web, Android, iOS) as a product: which features ship first? | Not specified |
 | Q34 | Where the test set of real photos comes from, and consent for using them | None chosen |
-| Q37 | Confidence thresholds for accept, clarify, retry, and abstain, and how read-back errors are measured | None chosen |
+| Q37 | Confidence thresholds for accept, clarify, retry, and abstain, and how read-back errors are measured | None chosen. Prototype parameters proposed 2026-10-04: accept at 0.80, retry below 0.50 (Client read pipeline). Not a measured result |
 | Q38 | Where voice input is processed, and whether audio leaves the device | None chosen |
 | Q55 | How is a `zz` inside running text treated? (issue #41) | RESOLVED: box every candidate, the person picks (FR-013) |
 

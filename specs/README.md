@@ -9,13 +9,14 @@ zzThis uses [Spec Kit](https://github.com/github/spec-kit) order: constitution, 
 | ID | Feature | Built? | specify | clarify | plan | checklist | tasks | analyze |
 |---|---|---|---|---|---|---|---|---|
 | [001](001-marketing-site/spec.md) | Marketing site and scripted demo | Yes, live on GitHub Pages | Done | Open: Q10 (part), Q12 (part), Q20 (part), Q21 to Q23, Q39, Q40 | Done | [Done](001-marketing-site/checklists/requirements.md) | [Open: T029, T030](001-marketing-site/tasks.md) | Done |
-| [002](002-resolver-core/spec.md) | Resolver core | No | Done, deepened 2026-10-03 | Open: Q19, Q25 to Q29, Q36, Q40 | Proposal | Not started | [Draft](002-resolver-core/tasks.md) | Done |
-| [003](003-wordlist-checkword/spec.md) | Wordlist, check word, and v1 text grammar | No | Done, deepened 2026-10-03 (US3 grammar accepted) | Open: Q27, Q30 to Q32, Q35 | Proposal | Not started | [Draft](003-wordlist-checkword/tasks.md) | Done |
-| [004](004-capture/spec.md) | Capture by camera, typing, or voice | No | Done, deepened 2026-10-03 | Open: Q18, Q33, Q34, Q37, Q38 | Proposal | Not started | [Draft](004-capture/tasks.md) | Done |
+| [002](002-resolver-core/spec.md) | Resolver core | No | Done, deepened 2026-10-03 | Open: Q19, Q25 to Q28, Q36, Q40. Q29 location is this repo (spec 005). | Proposal | [Done](002-resolver-core/checklists/requirements.md) | [Draft](002-resolver-core/tasks.md) | Done |
+| [003](003-wordlist-checkword/spec.md) | Wordlist, check word, and v1 text grammar | No | Done, deepened 2026-10-03 (US3 grammar accepted) | Open: Q27, Q30 to Q32, Q35 | Proposal | [Done](003-wordlist-checkword/checklists/requirements.md) | [Draft](003-wordlist-checkword/tasks.md) | Done |
+| [004](004-capture/spec.md) | Capture by camera, typing, or voice | No | Done, deepened 2026-10-03 | Open: Q18, Q33, Q34, Q37, Q38 | Proposal | [Done](004-capture/checklists/requirements.md) | [Draft](004-capture/tasks.md) | Done |
+| [005](005-v1-api/spec.md) | `/v1` API and web client | No | Done, deepened 2026-10-04 for a one-shot build | Q18, Q19, Q25 to Q28, Q36, Q67 to Q69 stay open, with prototype defaults. Q66 is answered [DANNY 2026-10-04]. | [Done](005-v1-api/plan.md) | [Done](005-v1-api/checklists/requirements.md) | [Build order](005-v1-api/tasks.md) | [Done 2026-10-04](analysis-2026-10-04.md) |
 
 v1 scope, exit criteria, and v2 candidates: [`docs/SPEC.md` Section 12](../docs/SPEC.md). The v1 text grammar: [`docs/SPEC.md` Section 2.2a](../docs/SPEC.md).
 
-The phone and web apps (zzThat, zzThing) are not specified yet. Q33 tracks their scope.
+The `/v1` API and the later web client are [spec 005](005-v1-api/spec.md). The zzThat phone apps are specified in that repo. zzThing is still unspecified. Q33 tracks app scope.
 
 ## Artifact map
 
@@ -26,7 +27,9 @@ The phone and web apps (zzThat, zzThing) are not specified yet. Q33 tracks their
 | Plan (how and stack) | `specs/NNN-name/plan.md` |
 | Requirement checklist | `specs/NNN-name/checklists/requirements.md` |
 | Tasks | `specs/NNN-name/tasks.md` |
-| Cross-artifact analysis | [`specs/analysis-2026-10-02.md`](analysis-2026-10-02.md), [`specs/analysis-2026-10-03.md`](analysis-2026-10-03.md) |
+| Cross-artifact analysis | [`specs/analysis-2026-10-02.md`](analysis-2026-10-02.md), [`specs/analysis-2026-10-03.md`](analysis-2026-10-03.md), [`specs/analysis-2026-10-04.md`](analysis-2026-10-04.md) |
+| Shared test vectors | [`specs/003-wordlist-checkword/vectors.json`](003-wordlist-checkword/vectors.json) |
+| One-shot build brief | [`docs/ONE-SHOT-BRIEF.md`](../docs/ONE-SHOT-BRIEF.md) |
 | Decision log | `docs/SPEC.md` Section 9 (questions) and Section 9a (running decisions log) |
 
 ## Issues to tasks
@@ -46,6 +49,9 @@ The phone and web apps (zzThat, zzThing) are not specified yet. Q33 tracks their
 | [#41](https://github.com/Zero-State-LLC/zzthis/issues/41) Q55 `zz` in running text (answered) | SPEC 2.2a G8; 004 FR-013 |
 | [#42](https://github.com/Zero-State-LLC/zzthis/issues/42) Q56 handle issuance (answered) | 002 FR-016, T018 |
 | [#44](https://github.com/Zero-State-LLC/zzthis/issues/44) to [#48](https://github.com/Zero-State-LLC/zzthis/issues/48) Q57 to Q61 (answered 2026-10-03) | SPEC 2.2a G3, G10, G11; 002 FR-019 to FR-021; 003 FR-009, FR-022, FR-024; 004 FR-016, FR-017 |
+| [#60](https://github.com/Zero-State-LLC/zzthis/issues/60) to [#67](https://github.com/Zero-State-LLC/zzthis/issues/67) spec 005 task groups | 005 tasks Group A to Group H |
+| [#68](https://github.com/Zero-State-LLC/zzthis/issues/68) Q66 (answered [DANNY 2026-10-04]) | 005 FR-020, FR-021 |
+| [#69](https://github.com/Zero-State-LLC/zzthis/issues/69) to [#71](https://github.com/Zero-State-LLC/zzthis/issues/71) Q67 to Q69, one-shot build questions (open) | 005 Open questions; [analysis 2026-10-04](analysis-2026-10-04.md) |
 
 ## Labels
 

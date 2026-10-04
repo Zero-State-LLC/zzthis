@@ -23,6 +23,7 @@ See [`intent/README.md`](intent/README.md).
 | Security scan | `./scripts/security-scan.sh` |
 | Install | `npm ci` (Node 24) |
 | Lint / typecheck / test / build | `npm run lint`, `npm run typecheck`, `npm run test`, `npm run build` |
+| Design tokens | `npm run design:check` (also runs inside `npm run build`) |
 
 Fill the table from this repo's README or package scripts. Do not invent commands.
 
