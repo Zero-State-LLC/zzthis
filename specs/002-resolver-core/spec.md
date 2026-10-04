@@ -5,6 +5,8 @@ Status: not built. Prototype requested in issue #13. Deepened 2026-10-03: canoni
 Phase: specify (what and why). The how is in [plan.md](plan.md), which carries the architecture proposal from `docs/SPEC.md` Section 10.
 Constitution: [.specify/memory/constitution.md](../../.specify/memory/constitution.md).
 
+The `/v1` wire contract is [spec 005](../005-v1-api/spec.md). This file stays the resolver behavior. Where a path in Section 10.6 has no `/v1` prefix, spec 005 is the route.
+
 ## Why
 
 A zz code on paper is public. Anyone can copy it, photograph it, or guess at it. The value of zzThis depends on a resolver that turns a code into the right record for the right person, and nothing else [PRODUCT] [OPERATOR 2026-10-02]. No resolver exists yet; its security is untested [PRODUCT].

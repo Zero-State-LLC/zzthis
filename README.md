@@ -11,7 +11,7 @@
 
 **Write a code on a thing; find its record by camera, typing, or voice.**
 
-[Live site](https://zero-state-llc.github.io/zzthis/) · [Demo](https://zero-state-llc.github.io/zzthis/demo/) · [Project board](https://github.com/orgs/Zero-State-LLC/projects/24) · [Specs](specs/README.md) · [Spec source](docs/SPEC.md)
+[Live site](https://zero-state-llc.github.io/zzthis/) · [Demo](https://zero-state-llc.github.io/zzthis/demo/) · [Project board](https://github.com/orgs/Zero-State-LLC/projects/25) · [Specs](specs/README.md) · [Spec source](docs/SPEC.md)
 
 [![build](https://img.shields.io/github/actions/workflow/status/Zero-State-LLC/zzthis/ci.yml?branch=main&label=build)](https://github.com/Zero-State-LLC/zzthis/actions/workflows/ci.yml)
 [![Pages deploy](https://img.shields.io/github/actions/workflow/status/Zero-State-LLC/zzthis/pages.yml?branch=main&label=pages)](https://github.com/Zero-State-LLC/zzthis/actions/workflows/pages.yml)
@@ -42,7 +42,7 @@ This repository holds the marketing site and a scripted click-through demo. It i
 zzThis is a **prototype**.
 
 - The site and demo are live. The product behind them is not built.
-- The demo uses mock data only. It runs no recognition, makes no network requests, uses no camera or microphone, and stores nothing.
+- The demo uses scripted demo data only. It runs no recognition, makes no network requests, uses no camera or microphone, and stores nothing.
 - Images labeled "Concept illustration" are AI renderings, not photos of a working system.
 - Handwriting recognition, the resolver, and the wordlist are untested. No accuracy or performance result is claimed.
 
@@ -66,44 +66,48 @@ The site is served under `/zzthis/`. `astro.config.mjs` sets `base: '/zzthis/'`,
 
 ## Design tokens
 
-All values come from [`src/styles/tokens.css`](src/styles/tokens.css). Colors use CSS `light-dark()`, so each token has a light and a dark value. The palette is charcoal and cream with one accent.
+Canonical values are extracted from [`src/styles/tokens.css`](src/styles/tokens.css) into [`design/tokens.json`](design/tokens.json). Colors use CSS `light-dark()`. The shared Swift, Kotlin, and CSS files are generated from that JSON. See [`design/README.md`](design/README.md).
 
 ### Color
 
-| Token | Light | Dark | Use |
-|---|---|---|---|
-| `--surface` | `#f4efe4` | `#1c1b19` | Page background |
-| `--mount` | `#eae3d4` | `#262421` | Raised panels and image mounts |
-| `--text` | `#1c1b19` | `#f4efe4` | Body text |
-| `--text-muted` | `#4a463f` | `#c9c2b4` | Secondary text |
-| `--edge` | `#cfc6b4` | `#3a3732` | Borders and rules |
-| `--accent` | `#f85000` | `#f85000` | The single accent |
-| `--on-accent` | `#1c1b19` | `#1c1b19` | Text on the accent |
-| `--shadow-color` | `rgb(28 27 25 / 0.12)` | `rgb(0 0 0 / 0.35)` | Shadows |
+| Token | Light | Dark |
+|---|---|---|
+| `--color-paper` | `oklch(95.3% 0.016 86)` | `oklch(17.5% 0.006 75)` |
+| `--color-panel` | `oklch(97.6% 0.009 86)` | `oklch(21.5% 0.007 75)` |
+| `--color-ink` | `oklch(22.2% 0.004 85)` | `oklch(94% 0.014 86)` |
+| `--color-ink-2` | `oklch(39.6% 0.013 82)` | `oklch(78% 0.018 85)` |
+| `--color-rule` | `oklch(82.9% 0.027 85)` | `oklch(32% 0.009 80)` |
+| `--color-accent` | `oklch(65.9% 0.215 38)` | `oklch(65.9% 0.215 38)` |
+| `--color-on-accent` | `oklch(22.2% 0.004 85)` | `oklch(22.2% 0.004 85)` |
+| `--shadow-color` | `rgb(28 27 25 / 0.12)` | `rgb(0 0 0 / 0.35)` |
+
+Older names such as `--surface` and `--text` point at these tokens. The full set, including focus, wash, and grid, is in `design/tokens.json`.
 
 ### Type
 
-Fonts: `--font-sans` is IBM Plex Sans; `--font-mono` is IBM Plex Mono.
-
-| Token | Below 900px | 900px and wider |
-|---|---|---|
-| `--fs-h1` | 32px | 52px |
-| `--fs-h2` | 26px | 34px |
-| `--fs-h3` | 20px | 21px |
-| `--fs-body` | 17px | 17px |
-| `--fs-mono` | 15px | 16px |
-| `--fs-caption` | 14px | 14px |
-| `--fs-label` | 13px | 13px |
-
-### Spacing and layout
+`--font-display` is IBM Plex Sans Condensed. `--font-body` is IBM Plex Sans. `--font-mono` is IBM Plex Mono, with the Korean, Japanese, and Hebrew faces after it.
 
 | Token | Value |
 |---|---|
-| `--s-1` to `--s-8` | 4, 6, 10, 16, 26, 42, 68, 110 px |
-| `--cut` | 16px |
-| `--gutter` | 16px; 26px from 600px wide |
-| `--section-gap` | `--s-7` (68px); `--s-8` (110px) from 900px wide |
-| `--measure` | 68ch |
+| `--text-2xs` | 0.75rem |
+| `--text-xs` | 0.8125rem |
+| `--text-sm` | 0.9375rem |
+| `--text-base` | 1.0625rem |
+| `--text-md` | 1.25rem |
+| `--text-lg` | 1.5625rem |
+
+`--text-xl`, `--text-display-s`, and `--text-code` are `clamp()` expressions in the stylesheet.
+
+### Spacing, radius, shadow, motion
+
+| Token | Value |
+|---|---|
+| `--space-3xs` to `--space-2xl` | 4, 6, 10, 16, 26, 42, 68, 110 px |
+| `--gutter` | 16px; 26px from 40rem; 42px from 60rem |
+| `--measure` | 62ch |
+| `--radius-none`, `--radius-chip` | 0, 3px. Pills use 999px. |
+| Mount shadow | 8px below, 4% inset, 10px blur, `--shadow-color` |
+| Motion | 120ms, 220ms, 420ms. Easings are in `design/tokens.json`. |
 
 ## Repository atlas
 
@@ -112,10 +116,11 @@ Fonts: `--font-sans` is IBM Plex Sans; `--font-mono` is IBM Plex Mono.
 | [`src/pages/`](src/pages/) | One file per route (home, how it works, applications, demo, about, contact) plus `404.astro` |
 | [`src/components/`](src/components/) | Shared Astro components such as cards, header, footer, and the theme toggle |
 | [`src/content/`](src/content/) | All copy and image metadata as TypeScript; edit copy here, not in pages |
-| [`src/lib/`](src/lib/) | Code grammar, resolver mock, image and URL helpers |
+| [`src/lib/`](src/lib/) | Code grammar, scripted demo resolver, image and URL helpers |
 | [`src/demo/`](src/demo/) | Demo state machine and its browser island |
 | [`src/layouts/`](src/layouts/) | The base page layout |
-| [`src/styles/`](src/styles/) | Design tokens and base styles |
+| [`src/styles/`](src/styles/) | Site styles. Tokens are extracted into [`design/`](design/README.md). |
+| [`design/`](design/README.md) | Shared tokens, generated Swift and Kotlin, logo files, UX patterns. zzThat pins a copy. |
 | [`tests/`](tests/) | Vitest suites |
 | [`public/images/`](public/images/) | Optimized WebP images |
 | [`scripts/`](scripts/) | `check-dist.mjs` build checks, `check-agents-md.sh`, `security-scan.sh` |
@@ -123,7 +128,7 @@ Fonts: `--font-sans` is IBM Plex Sans; `--font-mono` is IBM Plex Mono.
 | [`docs/BUILD-BRIEF.md`](docs/BUILD-BRIEF.md) | Build constraints and the definition of done |
 | [`docs/ASSETS.md`](docs/ASSETS.md) | Image paths and the panels they map to |
 | [`docs/screenshots/`](docs/screenshots/), [`docs/wireframes/`](docs/wireframes/) | Review screenshots and wireframes |
-| [`specs/`](specs/) | Spec Kit feature specs 001 to 004, with an [index](specs/README.md) and the [2026-10-02 analysis](specs/analysis-2026-10-02.md) |
+| [`specs/`](specs/) | Spec Kit specs 001 to 005, with an [index](specs/README.md). Spec 005 is the `/v1` contract. |
 | [`.specify/`](.specify/) | Spec Kit [constitution](.specify/memory/constitution.md) |
 | [`intent/`](intent/) | Intent files that come before specs |
 | [`AGENTS.md`](AGENTS.md) | Contract for coding agents working in this repo |
@@ -135,7 +140,7 @@ Fonts: `--font-sans` is IBM Plex Sans; `--font-mono` is IBM Plex Mono.
 
 ## Architecture
 
-The site and demo are static and call no API. The product architecture below is a **proposal, not built**. It is copied from [`docs/SPEC.md` Section 10.1](docs/SPEC.md#101-topology): one central server owns codes, records, grants, and the audit log; every app is an API client; revocation, single use, expiry, and rate limits are enforced on the server.
+The site and demo are static and call no API. The product architecture below is a **proposal, not built**. It is copied from [`docs/SPEC.md` Section 10.1](docs/SPEC.md#101-topology): one central server owns codes, records, grants, and the audit log; every app is an API client; revocation, single use, expiry, and rate limits are enforced on the server. The HTTP contract for that server is [`specs/005-v1-api`](specs/005-v1-api/spec.md). The server chooses the words, including for free public codes.
 
 ```mermaid
 flowchart LR
@@ -165,7 +170,7 @@ flowchart LR
 
 ## Roadmap
 
-Track work on the [project board](https://github.com/orgs/Zero-State-LLC/projects/24).
+Track work on the [zzThis + zzThat board](https://github.com/orgs/Zero-State-LLC/projects/25). The board spec, including the rename from "zzThat board" and the Repo field, is [`docs/project-board.md`](docs/project-board.md).
 
 ### Phase 0: Spec, site, and demo
 
@@ -195,11 +200,15 @@ Track work on the [project board](https://github.com/orgs/Zero-State-LLC/project
 - [ ] Wordlist pipeline and check-word library ([#14](https://github.com/Zero-State-LLC/zzthis/issues/14))
 - [ ] Minimal exact-match resolver ([#13](https://github.com/Zero-State-LLC/zzthis/issues/13))
 - [ ] Capture by camera, typing, or voice; recognition approach still open
-- [ ] Phone and web apps; not yet specified
+- [ ] `/v1` API: contract shell, data model, sign-in, mint and re-roll, resolve, retry photo, rate limits ([spec 005](specs/005-v1-api/spec.md))
+- [ ] Later web client in this repo, thin client of `/v1` (spec 005 US6)
+- [ ] zzThat phone apps, specified in that repo, consume this API and [`design/`](design/README.md)
 
 v1 ends with the prototype above. Candidates for v2, such as any-language codes and a trained reader ([#35](https://github.com/Zero-State-LLC/zzthis/issues/35)), are listed in [SPEC Section 12](docs/SPEC.md).
 
 ## Contributing
+
+The steps, branch protection, and review rule are in [`CONTRIBUTING.md`](CONTRIBUTING.md).
 
 1. Read [`AGENTS.md`](AGENTS.md) and the active file in [`intent/`](intent/).
 2. For non-trivial work, start from the relevant spec in [`specs/`](specs/README.md). Branch from `main` and open a pull request. `main` is protected: direct pushes are blocked, the `build` check must pass, and one approving review is required. [`CODEOWNERS`](.github/CODEOWNERS) requests reviewers.

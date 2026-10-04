@@ -7,6 +7,8 @@ package-lock.json
 docs
 intent
 *.md
+design/generated
+design/tokens.json
 .github/workflows/ci.yml
 .github/workflows/project-collaboration.yml
 .github/workflows/free-security-scan.yml
