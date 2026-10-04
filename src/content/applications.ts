@@ -60,15 +60,14 @@ export const applications: readonly Application[] = [
         ],
       },
       {
-        heading: "Coupang concept use cases",
+        heading: "End-to-end anonymous concept use cases",
         intro: [
-          "One human-readable public reference. Sensitive data is revealed only to authorized systems and people.",
+          "The merchant never receives the customer's personal data or payment details, only a zz-code and a security code. Nothing personal appears on the outside of the package. The customer picks it up at a drop-off store by giving a secret code or signing with a private key.",
         ],
         label: "group",
         columns: "4",
         ordered: true,
         frame: "4 / 5",
-        lead: "app-delivery-overview",
         items: [
           {
             image: "app-delivery-1",
@@ -83,7 +82,7 @@ export const applications: readonly Application[] = [
           {
             image: "app-delivery-3",
             numeral: "Step 3",
-            title: "Delivery man only knows pickup address",
+            title: "Delivery man only knows drop-off address",
           },
           {
             image: "app-delivery-4",

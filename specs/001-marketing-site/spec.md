@@ -28,24 +28,24 @@ As a first-time visitor, I can read what zzThis is, see a handwritten code on an
 
 Acceptance:
 
-1. Home renders the hero, featured statement, comparison, How it works, Field logistics, From photo to action, More applications, About teaser, and Contact action in the order in `docs/SPEC.md` Section 3.1a [WIRE].
-2. Hero, featured statement, comparison cells, workflow lines, and category stories match `docs/SPEC.md` Sections 3.2 to 3.4 character for character [BRIEF].
-3. The hero H1 reads "Barcodes made things scannable. zzThis makes things readable-writable - and smart." per Michael's v1.0 change list, with a spaced hyphen and no em dash (Q62, FR-006) [DANNY 2026-10-03, revised: "Fix the em dashes"]. The live build still renders the Q47 H1 until T033 ships.
+1. Home renders the B v1.0 sections in the order in `docs/SPEC.md` Section 3.1b: hero console, featured statement with anatomy and languages, four-card comparison, How it works, Top ways, Field logistics, From photo to action, proposed architecture, More applications, About teaser, and Contact [JEV 2026-10-03].
+2. Hero, featured statement, comparison cells, workflow lines, category stories, the founder bio, the Hacker Dojo paragraph, and the anonymous-delivery lines match `docs/SPEC.md` Sections 3.2 to 3.5 character for character [BRIEF] [MICHAEL 2026-10-03 v1.0 change list].
+3. The hero H1 reads "Barcodes made things scannable. zzThis makes things readable-writable - and smart." per Michael's v1.0 change list, with a spaced hyphen and no em dash (Q62, FR-006) [DANNY 2026-10-03, revised: "Fix the em dashes"].
 4. The core workflow shows the lowercase code as text [MICHAEL 2026-10-02].
-5. The comparison shows four cards with four rows each, per `docs/SPEC.md` Section 3.2 H.3 [MICHAEL 2026-10-02].
-6. Home section 01 includes the Top ways block, 3 across on desktop, per `docs/SPEC.md` H.2a [MICHAEL 2026-10-02].
+5. The Home comparison keeps Michael's four cards (Barcode, QR code, Alphanumeric code, zzThis), the H.3 cells, and the H.3 note [MICHAEL 2026-10-02]. His v1.0 change list does not remove that rule [JEV 2026-10-03].
+6. Top ways keeps the H.2a copy and sits after How it works on Home [MICHAEL 2026-10-02] [JEV 2026-10-03].
 
 ### US2. See where it applies (P1)
 
 As a reviewer, I can see field logistics first and largest, then postal and parcel, everyday and community, and digital aliases, so that I see the reach of one code grammar [BRIEF].
 
-Acceptance: `/applications` and the Home applications band show the panels in `docs/SPEC.md` Section 3.8, with field logistics largest [BRIEF]. `/applications` also shows the galleries added for postal and parcel, everyday and community, and digital aliases [MICHAEL 2026-10-02].
+Acceptance: `/applications` and the Home applications band show the panels in `docs/SPEC.md` Section 3.8, with field logistics largest [BRIEF]. `/applications` also shows the galleries added for postal and parcel, everyday and community, and digital aliases [MICHAEL 2026-10-02]. The delivery block uses the B v1.0 heading, privacy line, and Step 3 title, and it does not show the collage or the word "Coupang" [MICHAEL 2026-10-03 v1.0 change list].
 
 ### US3. Know who is behind it (P2)
 
 As an investor or collaborator, I can read the founder origin, see the founder and advisors with roles and short bios, and see the current prototype explorations, so that I know who to talk to [BRIEF] [MICHAEL 2026-10-02].
 
-Acceptance: `/about` follows `docs/SPEC.md` Section 3.5. Founder and advisor cards show a headshot where one was supplied, and initials otherwise. The page includes the Hacker Dojo block. Profile links appear only where a URL was supplied [MICHAEL 2026-10-02].
+Acceptance: `/about` follows `docs/SPEC.md` Sections 3.5 and 3.1b. The founder card matches the advisor card and headshot size. The founder title and bio, and the single Hacker Dojo paragraph, are the v1.0 lines. The Hacker Dojo logo is not shown. Profile links appear only where a URL was supplied [MICHAEL 2026-10-02] [MICHAEL 2026-10-03 v1.0 change list].
 
 ### US4. Try it safely (P2)
 
@@ -76,7 +76,9 @@ Acceptance: `/contact`, the Home contact action, the About contact card, and the
 | FR-011 | The demo is scripted: no recognition, no backend, no camera, microphone, network calls, or storage. Every step shows "Demo · mock data". | [OPERATOR 2026-10-01] |
 | FR-012 | The demo is fully usable by keyboard. Drag is never required. Reduced motion removes transitions. Without JavaScript, a static list of steps appears. | INFERRED (`docs/SPEC.md` Section 4.5) |
 | FR-013 | Flow B (look up a code) never reveals other codes on a miss. | Required by constitution principle III and issue #12. The public demo stays exact match only even though deployments may later enable a suggestion policy (Q20 partly resolved, Q40), because the demo exposes real codes. The wording is a placeholder. Suggestions removed by T010. |
-| FR-014 | The site makes no runtime requests to other origins, has no analytics, and has no service worker. | [OPERATOR 2026-10-01] |
+| FR-014 | The site makes no runtime requests to other origins, has no analytics, and has no service worker. Fonts are self-hosted. Plex Sans, Plex Sans Condensed, Plex Mono, and Hebrew come from `@fontsource`. The Korean and Japanese faces are committed woff2 subsets of the glyphs the language examples use. | [OPERATOR 2026-10-01] [JEV 2026-10-03] |
+| FR-020 | The Home console uses the v1 grammar in `src/lib/grammar.ts` (T029) and `src/lib/resolver.ts`, against the existing mock records. A miss never suggests another code (FR-013). A letter outside A–Z shows the H.1c coming-later note, not an error, even when the grammar would report `unsupported-script`. Camera and voice on Home are simulated and do not call `getUserMedia`, the network, or storage. | [DANNY 2026-10-03]; issue #12 |
+| FR-021 | Header, footer, theme toggle, and color and type tokens use the direction B system on every page. How it works, `/demo`, `/contact`, and the 404 keep their current content. | [JEV 2026-10-03] |
 | FR-015 | Light and dark themes both meet text contrast of at least 4.5:1. | `docs/SPEC.md` Section 8, item 16 |
 | FR-016 | When the free zzThat app launches, the main navigation gains a prominent "Try zzThat" action that links to zzthat.com. | [MICHAEL 2026-10-02]; launch trigger OPEN (Q39) |
 | FR-017 | Site copy (text, headings, captions, titles) writes every zz code in lowercase and never writes a standalone capital "ZZ". Photos and renders may show a capital ZZ mark or uppercase letters inside a code; alt text describes them in words or quotes the code as shown. | [MICHAEL 2026-10-02] |
@@ -96,6 +98,8 @@ The accepted acceptance criteria are `docs/SPEC.md` Section 8, items 1 to 31 (it
 - After T029, a visitor types `zz-#tag-zz`. Expected result: the reserved-symbol B4 line.
 - A visitor types `zz copper lantern sky zz` in capitals. Expected result: B1, the mock record (unchanged).
 - A visitor on a phone without JavaScript opens `/demo`. Expected result: the static step list (FR-012).
+- A visitor types `zz-구리-등불-하늘-zz` in the Home console. Expected result: the coming-later note, not "This is not a zz code", and the field is not marked invalid (FR-020).
+- A visitor types `zz-river-maple-sky-zz` with one letter changed. Expected result: "No match" and no other code (FR-013, FR-020).
 - An unknown path under `/zzthis/`. Expected result: `404.html` with working links.
 
 ## Out of scope
@@ -126,6 +130,7 @@ Real recognition, a real resolver, accounts, forms or email backends, analytics,
 | Q53 | Three real photos show a capital-letter zz. Replace or remove? (issue #39) | RESOLVED: keep them [MICHAEL 2026-10-03 #39] (FR-019) |
 | Q54 | Keep the blockchain and ledger mentions (Top ways 01 and 05, ENS image)? (issue #40) | RESOLVED: no change [MICHAEL 2026-10-03 #40] |
 | Q62 | Use an em dash in the v1.0 hero headline in place of the Q47 spaced hyphen? | RESOLVED: no. The H1 reads "readable-writable - and smart." with a spaced hyphen [DANNY 2026-10-03, revised: "Fix the em dashes"]. There is no exception to FR-006. |
+| Q63 | Native-reader check for the Korean, Japanese, and Aramaic examples? | OPEN (issue #51). The examples stay on Home. |
 
 ## Workflows
 
@@ -135,4 +140,4 @@ Real recognition, a real resolver, accounts, forms or email backends, analytics,
 | Owners | Spec: Opus 5.5 through Grok Bot. Decomposition: FORGE. Implementation: cloud coding agent or Grok Bot executor. Filing: SCRIBE. |
 | CI to reuse | `.github/workflows/ci.yml` (job `build`, required; do not edit), `.github/workflows/site-ci.yml` (typecheck and test), `.github/workflows/free-security-scan.yml`, `.github/workflows/pages.yml` (deploy on push to `main`). No new CI. |
 
-The earlier list in `docs/SPEC.md` Section 7 also named frontend-inspiration-lock. That workflow applied to the first visual build and is not needed for content changes. Re-add it here only for a visual redesign.
+Direction B is the visual redesign named in `intent/2026-10-03-home-redesign.md`. The reference is `docs/redesign-2026-10-03/b-resolver-v1/`. Copy and layout for that pass are `docs/SPEC.md` Section 3.1b.

@@ -231,4 +231,14 @@ describe("Flow B", () => {
     });
     expect(lookup("", mockCodes)).toEqual({ state: "B4", reason: "empty" });
   });
+
+  it("maps a handle and a one-word code to B3", () => {
+    expect(lookup("zz-@agentsmith-zz", mockCodes)).toEqual({ state: "B3" });
+    expect(lookup("zz-hello-zz", mockCodes)).toEqual({ state: "B3" });
+  });
+
+  it("maps a bare mark to B5", () => {
+    expect(lookup("zz", mockCodes)).toEqual({ state: "B5" });
+    expect(lookup("(zz)", mockCodes)).toEqual({ state: "B5" });
+  });
 });

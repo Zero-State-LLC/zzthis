@@ -1,0 +1,167 @@
+---
+import { consoleCopy } from "../content/console";
+import { badgeText } from "../content/demo";
+import { hero } from "../content/hero";
+import { images } from "../content/images";
+import { conceptLabels } from "../content/labels";
+import { url } from "../lib/url";
+
+const photo = images.b;
+---
+
+<section
+  class="console"
+  id="lookup"
+  aria-labelledby="console-title"
+  data-console
+>
+  <header class="console__bar">
+    <h2 class="console__title" id="console-title">
+      {consoleCopy.heading}
+    </h2>
+    <span class="badge">{badgeText}</span>
+  </header>
+  <div class="tabs" role="tablist" aria-label={consoleCopy.tabsLabel}>
+    <button
+      role="tab"
+      id="tab-camera"
+      aria-controls="panel-camera"
+      aria-selected="true"
+      data-tab="camera"
+      type="button"
+    >
+      {consoleCopy.tabs[0]}
+    </button>
+    <button
+      role="tab"
+      id="tab-typing"
+      aria-controls="panel-typing"
+      aria-selected="false"
+      tabindex="-1"
+      data-tab="typing"
+      type="button"
+    >
+      {consoleCopy.tabs[1]}
+    </button>
+    <button
+      role="tab"
+      id="tab-voice"
+      aria-controls="panel-voice"
+      aria-selected="false"
+      tabindex="-1"
+      data-tab="voice"
+      type="button"
+    >
+      {consoleCopy.tabs[2]}
+    </button>
+  </div>
+
+  <div
+    class="panel"
+    role="tabpanel"
+    id="panel-camera"
+    aria-labelledby="tab-camera"
+  >
+    <figure class="cam" data-cam>
+      <div class="cam__frame">
+        <img
+          src={url(photo.src)}
+          width={photo.width}
+          height={photo.height}
+          alt={photo.alt}
+          fetchpriority="high"
+          decoding="async"
+          data-cam-img
+        />
+        <div class="cam__roi" aria-hidden="true">
+          <canvas
+            class="cam__dither"
+            width="256"
+            height="112"
+            data-dither
+          ></canvas>
+          <span class="cam__scan"></span>
+        </div>
+      </div>
+      <figcaption>
+        <span class="tag">{conceptLabels.standalone}</span>
+        {hero.imageCaption}
+      </figcaption>
+    </figure>
+    <div class="cam__row">
+      <button class="btn btn--ghost btn--sm" type="button" data-read>
+        {consoleCopy.photograph}
+      </button>
+      <div class="readout" data-readout hidden>
+        <span>{consoleCopy.confidence}</span>
+        <span>{consoleCopy.checksum}</span>
+      </div>
+    </div>
+  </div>
+
+  <div
+    class="panel"
+    role="tabpanel"
+    id="panel-typing"
+    aria-labelledby="tab-typing"
+    hidden
+  >
+    <label class="field" for="code-input">
+      {consoleCopy.typeLabel}
+    </label>
+    <input
+      class="input"
+      id="code-input"
+      type="text"
+      inputmode="text"
+      autocomplete="off"
+      autocapitalize="off"
+      spellcheck="false"
+      value="zz-copper-lantern-sky-zz"
+      aria-describedby="parse-status"
+      data-input
+    />
+    <p class="examples">
+      <span class="examples__label">{consoleCopy.examplesLabel}</span>
+      {consoleCopy.examples.map((example) => (
+        <button type="button" class="chip" data-example>
+          {example}
+        </button>
+      ))}
+    </p>
+  </div>
+
+  <div
+    class="panel"
+    role="tabpanel"
+    id="panel-voice"
+    aria-labelledby="tab-voice"
+    hidden
+  >
+    <p class="voice__cue">{consoleCopy.voiceCue}</p>
+    <p class="voice__note">{consoleCopy.voiceNote}</p>
+    <button class="btn btn--ghost btn--sm" type="button" data-voice>
+      {consoleCopy.voiceButton}
+    </button>
+    <p class="voice__heard" data-heard hidden>
+      {consoleCopy.voiceHeard}
+    </p>
+  </div>
+
+  <div class="reading">
+    <div class="reading__row">
+      <ol class="tokens" data-tokens aria-label={consoleCopy.parsedTokens}></ol>
+      <button class="btn btn--primary btn--sm" type="button" data-lookup>
+        {consoleCopy.lookup}
+      </button>
+    </div>
+    <p class="status" id="parse-status" data-status></p>
+  </div>
+  <div class="result" aria-live="polite" data-result></div>
+</section>
+
+<script>
+  import { mountConsole } from "../console/mount";
+
+  mountConsole();
+</script>

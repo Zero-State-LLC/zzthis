@@ -1,39 +1,103 @@
+/* Direction B v1.0 tokens. Light values, then dark, via light-dark(). */
 :root {
-  color-scheme: light dark;
+  color-scheme: dark light;
 
-  --surface: light-dark(#f4efe4, #1c1b19);
-  --mount: light-dark(#eae3d4, #262421);
-  --text: light-dark(#1c1b19, #f4efe4);
-  --text-muted: light-dark(#4a463f, #c9c2b4);
-  --edge: light-dark(#cfc6b4, #3a3732);
-  --accent: #f85000;
-  --on-accent: #1c1b19;
-  --shadow-color: light-dark(rgb(28 27 25 / 0.12), rgb(0 0 0 / 0.35));
+  --color-paper: light-dark(oklch(95.3% 0.016 86), oklch(17.5% 0.006 75));
+  --color-panel: light-dark(oklch(97.6% 0.009 86), oklch(21.5% 0.007 75));
+  --color-panel-2: light-dark(oklch(91.7% 0.021 86), oklch(25.5% 0.008 75));
+  --color-ink: light-dark(oklch(22.2% 0.004 85), oklch(94% 0.014 86));
+  --color-ink-2: light-dark(oklch(39.6% 0.013 82), oklch(78% 0.018 85));
+  --color-ink-3: light-dark(oklch(46% 0.012 82), oklch(70% 0.014 85));
+  --color-rule: light-dark(oklch(82.9% 0.027 85), oklch(32% 0.009 80));
+  --color-rule-strong: light-dark(oklch(60% 0.02 85), oklch(53% 0.012 80));
+  --color-grid: light-dark(oklch(90% 0.02 86), oklch(21% 0.007 75));
 
-  --s-1: 4px;
-  --s-2: 6px;
-  --s-3: 10px;
-  --s-4: 16px;
-  --s-5: 26px;
-  --s-6: 42px;
-  --s-7: 68px;
-  --s-8: 110px;
+  --color-accent: oklch(65.9% 0.215 38);
+  --color-on-accent: oklch(22.2% 0.004 85);
+  --color-accent-ink: light-dark(oklch(45% 0.165 38), oklch(73% 0.17 42));
+  --color-accent-wash: light-dark(oklch(92% 0.05 50), oklch(27% 0.05 40));
+  --color-focus: light-dark(oklch(52% 0.19 38), oklch(76% 0.16 44));
+  --mask-solid: oklch(0% 0 0);
+  --color-dither-dark: oklch(17.5% 0.006 75);
+  --color-dither-light: oklch(80% 0.12 55);
 
-  --cut: 16px;
+  --font-display: "IBM Plex Sans Condensed", "Arial Narrow", sans-serif;
+  --font-body: "IBM Plex Sans", system-ui, sans-serif;
+  --font-mono:
+    "IBM Plex Mono", "IBM Plex Sans KR", "IBM Plex Sans JP",
+    "IBM Plex Sans Hebrew", ui-monospace, monospace;
+
+  --text-2xs: 0.75rem;
+  --text-xs: 0.8125rem;
+  --text-sm: 0.9375rem;
+  --text-base: 1.0625rem;
+  --text-md: 1.25rem;
+  --text-lg: 1.5625rem;
+  --text-xl: clamp(1.75rem, 1.6vw + 1.1rem, 2.4rem);
+  --text-display-s: clamp(2rem, 2.4vw + 1.1rem, 3.4rem);
+  --text-code: clamp(1rem, 2.75vw, 2.3rem);
+
+  --text-section: calc(var(--text-display-s) * 0.75);
+  --text-h2: calc(var(--text-xl) * 0.75);
+  --text-sub: max(var(--text-base), calc(var(--text-md) * 0.75));
+
+  --space-3xs: 4px;
+  --space-2xs: 6px;
+  --space-xs: 10px;
+  --space-sm: 16px;
+  --space-md: 26px;
+  --space-lg: 42px;
+  --space-xl: 68px;
+  --space-2xl: 110px;
+
   --gutter: 16px;
-  --section-gap: var(--s-7);
-  --measure: 68ch;
+  --max: 1280px;
+  --measure: 62ch;
+  --rule-hair: 1px;
+  --radius-none: 0;
+  --radius-chip: 3px;
+  --grid-cell: 24px;
+  --nav-h: 64px;
 
-  --font-sans: "IBM Plex Sans", system-ui, sans-serif;
-  --font-mono: "IBM Plex Mono", ui-monospace, monospace;
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in: cubic-bezier(0.7, 0, 0.84, 0);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+  --dur-micro: 120ms;
+  --dur-short: 220ms;
+  --dur-long: 420ms;
 
-  --fs-h1: 32px;
-  --fs-h2: 26px;
-  --fs-h3: 20px;
-  --fs-body: 17px;
-  --fs-caption: 14px;
-  --fs-mono: 15px;
-  --fs-label: 13px;
+  --z-base: 1;
+  --z-overlay: 2;
+  --z-sticky: 10;
+  --z-menu: 20;
+
+  /* Names the earlier pages still use. They point at the B tokens. */
+  --surface: var(--color-paper);
+  --mount: var(--color-panel);
+  --text: var(--color-ink);
+  --text-muted: var(--color-ink-2);
+  --edge: var(--color-rule);
+  --accent: var(--color-accent);
+  --on-accent: var(--color-on-accent);
+  --shadow-color: light-dark(rgb(28 27 25 / 0.12), rgb(0 0 0 / 0.35));
+  --s-1: var(--space-3xs);
+  --s-2: var(--space-2xs);
+  --s-3: var(--space-xs);
+  --s-4: var(--space-sm);
+  --s-5: var(--space-md);
+  --s-6: var(--space-lg);
+  --s-7: var(--space-xl);
+  --s-8: var(--space-2xl);
+  --cut: 16px;
+  --section-gap: var(--space-xl);
+  --font-sans: var(--font-body);
+  --fs-h1: var(--text-section);
+  --fs-h2: var(--text-h2);
+  --fs-h3: var(--text-sub);
+  --fs-body: var(--text-base);
+  --fs-caption: var(--text-xs);
+  --fs-mono: 1rem;
+  --fs-label: var(--text-2xs);
 }
 
 :root[data-theme="light"] {
@@ -44,18 +108,14 @@
   color-scheme: dark;
 }
 
-@media (min-width: 600px) {
+@media (min-width: 40rem) {
   :root {
     --gutter: 26px;
   }
 }
 
-@media (min-width: 900px) {
+@media (min-width: 60rem) {
   :root {
-    --fs-h1: 52px;
-    --fs-h2: 34px;
-    --fs-h3: 21px;
-    --fs-mono: 16px;
-    --section-gap: var(--s-8);
+    --gutter: 42px;
   }
 }

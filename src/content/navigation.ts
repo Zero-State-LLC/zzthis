@@ -32,3 +32,8 @@ export const footerItems: readonly FooterItem[] = [
 
 // Q9 [MICHAEL 2026-10-02]: the footer shows the full words.
 export const footerNotice = "Patent pending";
+
+// Site-wide note. The home-only prototype sentence about the console is omitted
+// because that sentence is false on every other page.
+export const footerNote =
+  "Panel images are concept renderings that show intended use, not a deployed system, except where marked as real photos.";

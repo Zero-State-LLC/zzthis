@@ -1,0 +1,29 @@
+---
+import { architecture } from "../content/architecture";
+---
+
+<section class="arch" aria-labelledby="arch-title">
+  <div class="arch__head">
+    <h2 id="arch-title">{architecture.heading}</h2>
+    <p>{architecture.text}</p>
+    <p class="label">{architecture.label}</p>
+  </div>
+  <div class="flow">
+    {architecture.columns.map((column) => (
+      <div class="flow__col">
+        <p class="flow__k">{column.name}</p>
+        {column.nodes.map((node) => (
+          <p
+            class:list={[
+              "node",
+              { "node--accent": "accent" in node && node.accent },
+            ]}
+          >
+            {node.title}
+            {node.detail && <span>{node.detail}</span>}
+          </p>
+        ))}
+      </div>
+    ))}
+  </div>
+</section>

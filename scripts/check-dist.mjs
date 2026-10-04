@@ -14,8 +14,8 @@ const REQUIRED = [
   "contact/index.html",
   "demo/index.html",
 ];
-// Q47 [MICHAEL 2026-10-02]: the hero H1 now uses Michael's alternate copy
-// ("writable - and smart."), so no em dash is allowed in rendered copy.
+// Q62 [DANNY 2026-10-03, revised]: no em dash anywhere in rendered copy.
+// The hero uses a spaced hyphen. There is no exception.
 const FOOTER_NOTICE = "Patent pending";
 // "did you mean": a lookup miss must not suggest other codes (issue #12).
 const BANNED_PHRASES = [

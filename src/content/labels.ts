@@ -7,3 +7,5 @@ export const conceptLabels = {
   group:
     "Concept illustrations. These panels show intended use, not a deployed system.",
 };
+
+export const realPhotos = "Real photos.";

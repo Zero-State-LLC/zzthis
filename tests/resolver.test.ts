@@ -1,6 +1,7 @@
 import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 import {
+  b4Line,
   flowACode,
   flowBCopy,
   flowBOutcomes,
@@ -32,10 +33,44 @@ describe("resolve with the spec 4.4 test inputs", () => {
   });
 
   it("passes the parse failure reason through", () => {
-    expect(resolve("zz-a-zz", mockCodes)).toEqual({
+    expect(resolve("zz-copper-lantern-sky", mockCodes)).toEqual({
       kind: "abstain-malformed",
-      reason: "word-count",
+      reason: "no-closing-marker",
     });
+  });
+
+  it("treats a one-word code and a handle as valid misses", () => {
+    expect(resolve("zz-a-zz", mockCodes)).toEqual({ kind: "abstain-unknown" });
+    expect(resolve("zz-@agentsmith-zz", mockCodes)).toEqual({
+      kind: "abstain-unknown",
+    });
+  });
+
+  it("abstains on a bare mark without calling it a miss", () => {
+    expect(resolve("zz", mockCodes)).toEqual({ kind: "abstain-bare" });
+    expect(resolve("(ZZ)", mockCodes)).toEqual({ kind: "abstain-bare" });
+  });
+});
+
+describe("B4 lines", () => {
+  it("maps each parser reason to the Section 4.4 line", () => {
+    expect(b4Line("no-closing-marker")).toBe(flowBCopy.closing);
+    expect(b4Line("misplaced-at")).toBe(flowBCopy.handle);
+    expect(b4Line("invalid-handle")).toBe(flowBCopy.handle);
+    expect(b4Line("reserved-symbol")).toBe(flowBCopy.reserved);
+    expect(b4Line("unsupported-script")).toBe(flowBCopy.script);
+    for (const reason of [
+      "empty",
+      "no-marker",
+      "no-content",
+      "marker-in-body",
+      "invalid-character",
+      "too-long",
+    ] as const) {
+      expect(b4Line(reason)).toBe(flowBCopy.malformed);
+    }
+    expect(flowBCopy.bare).toContain("bare zz mark");
+    expect(flowBCopy.malformed).not.toContain("did you mean");
   });
 });
 

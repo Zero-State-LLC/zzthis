@@ -1,8 +1,11 @@
 import { existsSync, statSync } from "node:fs";
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
+import * as anatomyModule from "../src/content/anatomy";
 import * as applicationsModule from "../src/content/applications";
+import * as architectureModule from "../src/content/architecture";
 import * as comparisonModule from "../src/content/comparison";
+import * as consoleModule from "../src/content/console";
 import * as contactModule from "../src/content/contact";
 import * as demoModule from "../src/content/demo";
 import * as heroModule from "../src/content/hero";
@@ -27,8 +30,11 @@ const { conceptLabels } = labelsModule;
 const { coreIdentity, fieldLogistics, photoToAction } = workflowsModule;
 
 const modules: readonly unknown[] = [
+  anatomyModule,
   applicationsModule,
+  architectureModule,
   comparisonModule,
+  consoleModule,
   contactModule,
   demoModule,
   heroModule,
@@ -59,16 +65,16 @@ const story = (id: string): string | undefined =>
 describe("hero and featured statement (spec 3.2)", () => {
   it("matches the hero copy", () => {
     expect(hero.title).toBe(
-      "Barcodes made things scannable. zzThis makes them writable - and smart.",
+      "Barcodes made things scannable. zzThis makes things readable-writable - and smart.",
     );
     expect(hero.subline).toBe(
       "Write a code on a thing; find its record by camera, typing, or voice.",
     );
     const { before, code, after } = hero.paragraph;
     expect(before + code + after).toBe(
-      "zzThis is a human-readable, human-writable code for the physical world. Write zz-copper-lantern-sky-zz on tape, a crate, a parcel, or a sign. Link it to a digital record, then find it by camera, typing, or voice.",
+      "zzThis is a human-readable, human-writable code for the physical world. Write a zz-code on tape, a crate, a parcel, an envelope, or a sign, or embed it in text or program code. Link it to a digital record or its information hub, then find it by camera, typing, or voice.",
     );
-    expect(code).toBe("zz-copper-lantern-sky-zz");
+    expect(code).toBe("zz-code");
     expect(hero.actions.map((action) => action.label)).toEqual([
       "See field logistics",
       "How it works",
@@ -80,7 +86,7 @@ describe("hero and featured statement (spec 3.2)", () => {
       "The shortest, smartest distance between a physical thing, its digital record, and the work that comes next.",
     );
     expect(featured.text).toBe(
-      "A zz code gives people a way to create the mark themselves, wherever the work happens. AI can help identify what a camera sees, count what remains, suggest how an item should be handled, and prepare the next task. The same visible code connects the item, its history, and the people responsible for it.",
+      "A zz code gives people a way to create the mark themselves, wherever the work happens. AI can help identify what a camera sees, count what remains, suggest how an item should be handled, and prepare the next task. The same visible code connects the item, its history, and the people responsible for it. It bridges physical things and their digital control: the easiest, smartest way to identify, manage, and act on them. zzThis is designed AI-first, on the principle that AI is the new UI, and the great connector and leveler across big tech stacks.",
     );
   });
 });
@@ -264,7 +270,7 @@ describe("navigation and people", () => {
       expect(byName(name)?.bio).toBeTruthy();
     }
     expect(founder.role).toBe(
-      "Founder, system architecting, and project lead.",
+      "Founder, business-model architect, and project lead",
     );
     expect(founder.bio.startsWith("I “invent” business models.")).toBe(true);
     expect(founderOrigin.text).toBe(founder.bio);

@@ -1,0 +1,20 @@
+/* Glyph subsets of IBM Plex Sans JP and KR, weight 500.
+   Japanese: さくらねこそら. Korean: 구리등불하늘. */
+
+@font-face {
+  font-family: "IBM Plex Sans JP";
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url("../assets/fonts/ibm-plex-sans-jp-500-subset.woff2") format("woff2");
+  unicode-range: U+304F, U+3053, U+3055, U+305D, U+306D, U+3089;
+}
+
+@font-face {
+  font-family: "IBM Plex Sans KR";
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url("../assets/fonts/ibm-plex-sans-kr-500-subset.woff2") format("woff2");
+  unicode-range: U+AD6C, U+B298, U+B4F1, U+B9AC, U+BD88, U+D558;
+}

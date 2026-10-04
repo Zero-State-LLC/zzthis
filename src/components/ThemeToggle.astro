@@ -1,51 +1,30 @@
-<button class="theme-toggle" type="button" data-theme-toggle hidden>
-  <span class="theme-toggle__mark" aria-hidden="true"></span>
+<button class="theme" type="button" data-theme-toggle aria-label="Switch theme">
+  <svg viewBox="0 0 20 20" aria-hidden="true">
+    <circle cx="10" cy="10" r="7.5"></circle>
+    <path d="M10 2.5a7.5 7.5 0 0 1 0 15z"></path>
+  </svg>
 </button>
 
 <script is:inline>
   (() => {
     const button = document.querySelector("[data-theme-toggle]");
-    if (!button) return;
+    if (!(button instanceof HTMLButtonElement)) return;
     const root = document.documentElement;
     const media = matchMedia("(prefers-color-scheme: dark)");
-    const current = () =>
-      root.dataset.theme || (media.matches ? "dark" : "light");
-    const sync = () => {
+    const isDark = () =>
+      root.dataset.theme ? root.dataset.theme === "dark" : media.matches;
+    const label = () => {
       button.setAttribute(
         "aria-label",
-        current() === "dark" ? "Switch to light theme" : "Switch to dark theme",
+        isDark() ? "Switch to light theme" : "Switch to dark theme",
       );
     };
-    button.hidden = false;
-    sync();
+    label();
     button.addEventListener("click", () => {
-      root.dataset.theme = current() === "dark" ? "light" : "dark";
-      sync();
+      root.dataset.theme = isDark() ? "light" : "dark";
+      label();
+      document.dispatchEvent(new Event("themechange"));
     });
-    media.addEventListener("change", sync);
+    media.addEventListener("change", label);
   })();
 </script>
-
-<style>
-  .theme-toggle {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 44px;
-    height: 44px;
-    background: transparent;
-    border: 1px solid var(--edge);
-    cursor: pointer;
-  }
-
-  .theme-toggle:hover {
-    border-color: var(--text-muted);
-  }
-
-  .theme-toggle__mark {
-    width: 16px;
-    height: 16px;
-    border: 1px solid var(--text);
-    background: linear-gradient(90deg, var(--text) 50%, transparent 50%);
-  }
-</style>

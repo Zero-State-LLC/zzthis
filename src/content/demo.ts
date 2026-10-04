@@ -1,3 +1,4 @@
+import type { ParseFailure } from "../lib/grammar";
 import type { ImageId } from "./images";
 
 export interface MockField {
@@ -202,12 +203,40 @@ export const flowBCopy = {
   lookUp: "Look up",
   examplesLabel: "Example codes",
   unknown: "No match. The demo will not guess. Check the words and try again.",
-  malformed: "This is not a zz code. Use the form zz-word-word-zz.",
+  malformed:
+    "This is not a zz code. A code starts and ends with zz, like zz-copper-lantern-sky-zz.",
+  closing: "Add the closing zz at the end of the code.",
+  handle: "An @ handle comes right after the first zz, like zz-@agentsmith-zz.",
+  reserved: "The symbols # $ / : are reserved and are not used in codes yet.",
+  script: "This demo reads English letters and numbers only.",
+  bare: "A bare zz mark is found by photo and place, not by typing. Try a code with words.",
 };
+
+export function b4Line(reason: ParseFailure): string {
+  switch (reason) {
+    case "no-closing-marker":
+      return flowBCopy.closing;
+    case "misplaced-at":
+    case "invalid-handle":
+      return flowBCopy.handle;
+    case "reserved-symbol":
+      return flowBCopy.reserved;
+    case "unsupported-script":
+      return flowBCopy.script;
+    case "empty":
+    case "no-marker":
+    case "no-content":
+    case "marker-in-body":
+    case "invalid-character":
+    case "too-long":
+      return flowBCopy.malformed;
+  }
+}
 
 export const flowBOutcomes: readonly { name: string; text: string }[] = [
   { name: "Type a zz code", text: "Field, Look up button, and example codes." },
   { name: "Record found", text: "Record card (mock)." },
   { name: "No match", text: flowBCopy.unknown },
   { name: "Not a zz code", text: flowBCopy.malformed },
+  { name: "Bare mark", text: flowBCopy.bare },
 ];

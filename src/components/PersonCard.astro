@@ -1,0 +1,44 @@
+---
+import type { Person } from "../content/people";
+import { url } from "../lib/url";
+
+interface Props {
+  person: Person;
+}
+
+const { person } = Astro.props;
+---
+
+<article class="person">
+  <div class="person__head">
+    {person.photo ? (
+      <img
+        class="person__photo"
+        src={url(person.photo.src)}
+        width={person.photo.width}
+        height={person.photo.height}
+        alt={person.name}
+        loading="lazy"
+        decoding="async"
+      />
+    ) : (
+      <span class="person__initials" aria-hidden="true">
+        {person.initials}
+      </span>
+    )}
+    <div>
+      <h3 class="person__name">{person.name}</h3>
+      <p class="person__role">{person.role}</p>
+    </div>
+  </div>
+  {person.bio && <p class="person__bio">{person.bio}</p>}
+  {person.profileUrl && (
+    <a
+      class="person__link"
+      href={person.profileUrl}
+      aria-label={`LinkedIn profile for ${person.name}`}
+    >
+      LinkedIn
+    </a>
+  )}
+</article>

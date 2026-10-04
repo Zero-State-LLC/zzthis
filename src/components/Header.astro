@@ -1,165 +1,102 @@
 ---
 import ThemeToggle from "./ThemeToggle.astro";
-import { navItems, type NavKey } from "../content/navigation";
+import { consoleCopy } from "../content/console";
 import { images } from "../content/images";
+import { navItems, type NavKey } from "../content/navigation";
 import { url } from "../lib/url";
 
 interface Props {
   current?: NavKey | undefined;
+  home?: boolean | undefined;
 }
 
-const { current } = Astro.props;
+const { current, home = false } = Astro.props;
 const light = images["logo-light"];
 const dark = images["logo-dark"];
 ---
 
-<header class="site-header">
-  <div class="container header-inner">
-    <a class="logo" href={url("")}>
-      <span class="visually-hidden">zzThis</span>
-      <img
-        class="theme-light-only"
-        src={url(light.src)}
-        width={light.width}
-        height={light.height}
-        alt=""
-        aria-hidden="true"
-      />
-      <img
-        class="theme-dark-only"
-        src={url(dark.src)}
-        width={dark.width}
-        height={dark.height}
-        alt=""
-        aria-hidden="true"
-      />
+<header class="nav">
+  <a class="nav__mark" href={url("")} aria-label="zzThis home">
+    <img
+      class="only-dark"
+      src={url(dark.src)}
+      width={dark.width}
+      height={dark.height}
+      alt=""
+    />
+    <img
+      class="only-light"
+      src={url(light.src)}
+      width={light.width}
+      height={light.height}
+      alt=""
+    />
+  </a>
+  {home ? (
+    <button
+      class="pill"
+      type="button"
+      data-pill
+      aria-label={consoleCopy.pillLabel}
+    >
+      <span class="pill__code">{consoleCopy.pillCode}</span>
+      <span class="pill__text">{consoleCopy.pillText}</span>
+      <kbd>Alt</kbd>
+      <kbd>/</kbd>
+    </button>
+  ) : (
+    <a
+      class="pill"
+      href={url("#lookup")}
+      aria-label={consoleCopy.pillAwayLabel}
+    >
+      <span class="pill__code">{consoleCopy.pillCode}</span>
+      <span class="pill__text">{consoleCopy.pillText}</span>
+      <kbd>Alt</kbd>
+      <kbd>/</kbd>
     </a>
-    <div class="header-tools">
-      <ThemeToggle />
-      <button
-        class="btn btn--secondary menu-btn"
-        type="button"
-        aria-expanded="false"
-        aria-controls="site-nav"
-        data-menu-button
-        hidden
+  )}
+  <nav class="nav__links" id="nav" aria-label="Main">
+    {navItems.map((item) => (
+      <a
+        href={url(item.path)}
+        aria-current={current === item.key ? "page" : undefined}
       >
-        Menu
-      </button>
-    </div>
-    <nav id="site-nav" class="site-nav" aria-label="Main">
-      <ul class="nav-list">
-        {navItems.map((item) => (
-          <li>
-            <a
-              href={url(item.path)}
-              aria-current={current === item.key ? "page" : undefined}
-            >
-              {item.label}
-            </a>
-          </li>
-        ))}
-      </ul>
-    </nav>
-  </div>
+        {item.label}
+      </a>
+    ))}
+  </nav>
+  <button
+    class="nav__menu"
+    type="button"
+    aria-expanded="false"
+    aria-controls="nav"
+    data-menu
+  >
+    Menu
+  </button>
+  <ThemeToggle />
 </header>
 
 <script is:inline>
   (() => {
-    const button = document.querySelector("[data-menu-button]");
-    const nav = document.getElementById("site-nav");
-    if (!button || !nav) return;
-    button.hidden = false;
-    nav.dataset.collapsible = "true";
-    button.addEventListener("click", () => {
-      const open = button.getAttribute("aria-expanded") !== "true";
-      button.setAttribute("aria-expanded", String(open));
-      nav.dataset.open = String(open);
+    const menu = document.querySelector("[data-menu]");
+    const nav = document.getElementById("nav");
+    if (!(menu instanceof HTMLButtonElement) || !nav) return;
+    menu.addEventListener("click", () => {
+      const open = menu.getAttribute("aria-expanded") !== "true";
+      menu.setAttribute("aria-expanded", String(open));
+      nav.classList.toggle("is-open", open);
+    });
+    nav.addEventListener("click", (event) => {
+      const target = event.target;
+      if (!(target instanceof Element)) return;
+      if (
+        target.closest("a") &&
+        menu.getAttribute("aria-expanded") === "true"
+      ) {
+        menu.click();
+      }
     });
   })();
 </script>
-
-<style>
-  .site-header {
-    border-bottom: 1px solid var(--edge);
-  }
-
-  .header-inner {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: var(--s-3) var(--s-5);
-    padding-block: var(--s-3);
-  }
-
-  .logo {
-    display: inline-flex;
-    align-items: center;
-    min-height: 44px;
-    margin-inline-end: auto;
-  }
-
-  .logo img {
-    width: auto;
-    height: 30px;
-  }
-
-  .header-tools {
-    display: flex;
-    align-items: center;
-    gap: var(--s-3);
-  }
-
-  .site-nav {
-    flex-basis: 100%;
-  }
-
-  .nav-list {
-    list-style: none;
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0 var(--s-5);
-  }
-
-  .nav-list a {
-    display: inline-flex;
-    align-items: center;
-    min-height: 44px;
-    text-decoration-color: transparent;
-  }
-
-  .nav-list a:hover,
-  .nav-list a[aria-current="page"] {
-    text-decoration-color: var(--accent);
-  }
-
-  @media (max-width: 899.98px) {
-    .site-nav[data-collapsible="true"]:not([data-open="true"]) {
-      display: none;
-    }
-
-    .site-nav[data-collapsible="true"] .nav-list {
-      flex-direction: column;
-      padding-block: var(--s-3);
-    }
-  }
-
-  @media (min-width: 900px) {
-    .header-inner {
-      flex-wrap: nowrap;
-    }
-
-    .site-nav {
-      flex-basis: auto;
-      order: 1;
-    }
-
-    .header-tools {
-      order: 2;
-    }
-
-    .menu-btn {
-      display: none !important;
-    }
-  }
-</style>

@@ -1,0 +1,21 @@
+---
+import { topWays } from "../content/uses";
+---
+
+<section class="manifest" aria-labelledby="ways-title">
+  <h2 id="ways-title">{topWays.heading}</h2>
+  <ol class="manifest__rows">
+    {topWays.items.map((item) => (
+      <li class="row">
+        <span class="row__n">{item.numeral}</span>
+        <h3 class="row__name">{item.title}</h3>
+        <p class="row__codes">
+          {item.codes.map((code) => (
+            <code>{code}</code>
+          ))}
+        </p>
+        <p class="row__text">{item.text}</p>
+      </li>
+    ))}
+  </ol>
+</section>

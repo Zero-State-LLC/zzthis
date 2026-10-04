@@ -1,0 +1,82 @@
+---
+import {
+  codeForms,
+  languageExamples,
+  languagesHeading,
+  specimenLabel,
+  specimenParts,
+  whyMarkers,
+} from "../content/anatomy";
+import { featured } from "../content/hero";
+
+const specimen = specimenParts
+  .map((part, index) => {
+    const dash = index > 0 ? '<span class="dash">-</span>' : "";
+    const mark = part.marker ? " part--mark" : "";
+    return `${dash}<span class="part${mark}" style="anchor-name: ${part.anchor}">${part.text}</span>`;
+  })
+  .join("");
+---
+
+<section class="anatomy" aria-labelledby="anatomy-title">
+  <h2 id="anatomy-title">{featured.heading}</h2>
+  <p class="anatomy__lede">{featured.text}</p>
+  <figure class="specimen">
+    <p class="specimen__code" aria-label={specimenLabel} set:html={specimen} />
+    <figcaption class="callouts">
+      {specimenParts.map((part) => (
+        <span
+          class:list={["callout", { "callout--low": part.low }]}
+          style={`position-anchor: ${part.anchor}`}
+        >
+          {part.label}
+        </span>
+      ))}
+    </figcaption>
+  </figure>
+  <dl class="variants">
+    {codeForms.map((form) => (
+      <div>
+        <dt>{form.name}</dt>
+        <dd>
+          <code>{form.code}</code>
+        </dd>
+      </div>
+    ))}
+  </dl>
+  <div class="why">
+    <div class="why__text">
+      <h3>{whyMarkers.heading}</h3>
+      <p>{whyMarkers.text}</p>
+    </div>
+    <div class="langs">
+      <h3>{languagesHeading}</h3>
+      <ul class="langs__list">
+        {languageExamples.map((example) => (
+          <li>
+            <span class="langs__name">{example.name}</span>{" "}
+            {example.rtl ? (
+              <span>
+                <code>
+                  zz-
+                  <bdi lang={example.lang} dir="rtl">
+                    {example.rtl}
+                  </bdi>
+                  -zz
+                </code>{" "}
+                <span class="langs__gloss">{example.gloss}</span>
+              </span>
+            ) : example.gloss ? (
+              <span>
+                <code lang={example.lang}>{example.code}</code>{" "}
+                <span class="langs__gloss">{example.gloss}</span>
+              </span>
+            ) : (
+              <code lang={example.lang}>{example.code}</code>
+            )}
+          </li>
+        ))}
+      </ul>
+    </div>
+  </div>
+</section>

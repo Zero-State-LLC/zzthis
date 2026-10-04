@@ -2,30 +2,45 @@
 import "@fontsource/ibm-plex-sans/latin-400.css";
 import "@fontsource/ibm-plex-sans/latin-500.css";
 import "@fontsource/ibm-plex-sans/latin-600.css";
+import "@fontsource/ibm-plex-sans-condensed/latin-500.css";
+import "@fontsource/ibm-plex-sans-condensed/latin-600.css";
+import "@fontsource/ibm-plex-sans-condensed/latin-700.css";
 import "@fontsource/ibm-plex-mono/latin-400.css";
 import "@fontsource/ibm-plex-mono/latin-500.css";
+import "@fontsource/ibm-plex-mono/latin-600.css";
+import "@fontsource/ibm-plex-sans-hebrew/hebrew-500.css";
+import "../styles/fonts-cjk.css";
 import "../styles/tokens.css";
 import "../styles/base.css";
+import "../styles/b-base.css";
+import "../styles/b-console.css";
+import "../styles/b-sections.css";
+import "../styles/b-bands.css";
+import "../styles/b-about.css";
+import "../styles/b-applications.css";
 import Header from "../components/Header.astro";
 import Footer from "../components/Footer.astro";
 import type { NavKey } from "../content/navigation";
+import { url } from "../lib/url";
 
 interface Props {
   title: string;
   description: string;
   current?: NavKey;
+  home?: boolean;
 }
 
-const { title, description, current } = Astro.props;
+const { title, description, current, home = false } = Astro.props;
+const lookupHref = url("#lookup");
 ---
 
 <!doctype html>
-<html lang="en">
+<html lang="en" data-home={home ? "true" : undefined}>
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="description" content={description} />
-    <meta name="color-scheme" content="light dark" />
+    <meta name="color-scheme" content="dark light" />
     <meta
       name="theme-color"
       content="#F4EFE4"
@@ -39,13 +54,35 @@ const { title, description, current } = Astro.props;
     <title>{title}</title>
   </head>
   <body>
-    <a class="skip-link" href="#main">
+    <a class="skip" href="#main">
       Skip to content
     </a>
-    <Header current={current} />
+    <Header current={current} home={home} />
     <main id="main" tabindex="-1">
       <slot />
     </main>
     <Footer />
+    <script is:inline define:vars={{ lookupHref }}>
+      document.addEventListener("keydown", (event) => {
+        if (document.querySelector("[data-console]")) return;
+        if (
+          event.key !== "/" ||
+          !event.altKey ||
+          event.ctrlKey ||
+          event.metaKey
+        ) {
+          return;
+        }
+        const target = event.target;
+        if (
+          target instanceof Element &&
+          target.closest("input, textarea, select, [contenteditable]")
+        ) {
+          return;
+        }
+        event.preventDefault();
+        location.href = lookupHref;
+      });
+    </script>
   </body>
 </html>

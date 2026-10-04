@@ -1,0 +1,476 @@
+.cam__frame {
+  position: relative;
+}
+
+.cam img {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+}
+
+/* Region of interest: what the machine looks at. Coordinates match the tape in the photo. */
+.cam__roi {
+  position: absolute;
+  left: 19%;
+  top: 50%;
+  width: 53%;
+  aspect-ratio: 16 / 7;
+  overflow: hidden;
+  outline: 2px solid var(--color-accent);
+  outline-offset: 0;
+  translate: 0 -12%;
+}
+
+.cam__dither {
+  width: 100%;
+  height: 100%;
+  image-rendering: pixelated;
+  opacity: 0;
+  transition: opacity var(--dur-long) var(--ease-out);
+}
+
+.cam.is-read .cam__dither {
+  opacity: 1;
+}
+
+.cam__scan {
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 3px;
+  background: var(--color-accent);
+  opacity: 0;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .cam.is-scanning .cam__scan {
+    opacity: 1;
+    animation: sweep 900ms var(--ease-in-out) forwards;
+  }
+}
+
+@keyframes sweep {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(calc(var(--roi-w, 400px) - 3px));
+  }
+}
+
+.cam figcaption {
+  font-size: var(--text-xs);
+  color: var(--color-ink-3);
+}
+
+.cam__row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-xs) var(--space-md);
+}
+
+.readout {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2xs) var(--space-md);
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  color: var(--color-ink-2);
+}
+
+.field {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  color: var(--color-ink-2);
+}
+
+.input {
+  width: 100%;
+  min-height: 52px;
+  padding: 0 var(--space-sm);
+  font-family: var(--font-mono);
+  font-size: var(--text-md);
+  background: var(--color-paper);
+  border: var(--rule-hair) solid var(--color-rule-strong);
+  border-radius: var(--radius-none);
+}
+
+.input:hover {
+  border-color: var(--color-ink-2);
+}
+
+.input[aria-invalid="true"] {
+  border-color: var(--color-accent-ink);
+  border-style: dashed;
+}
+
+.input:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.input:focus-visible {
+  outline-offset: 0;
+}
+
+.examples {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2xs);
+  align-items: center;
+  max-width: none;
+}
+
+.examples__label {
+  width: 100%;
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  color: var(--color-ink-3);
+}
+
+.chip {
+  min-height: 36px;
+  padding: 0 var(--space-xs);
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  background: var(--color-panel-2);
+  border: var(--rule-hair) solid var(--color-rule);
+  border-radius: var(--radius-chip);
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+@media (pointer: coarse) {
+  .chip {
+    min-height: 44px;
+  }
+}
+
+.chip:hover {
+  border-color: var(--color-rule-strong);
+}
+
+.voice__cue {
+  font-family: var(--font-mono);
+  font-size: var(--text-md);
+}
+
+.voice__note,
+.voice__heard {
+  font-size: var(--text-sm);
+  color: var(--color-ink-2);
+}
+
+.voice__heard {
+  font-family: var(--font-mono);
+}
+
+/* Shared reading row: the candidate code as parsed tokens, then Look up. */
+.reading {
+  display: grid;
+  gap: var(--space-xs);
+  padding-block-start: var(--space-sm);
+  border-top: var(--rule-hair) dashed var(--color-rule);
+}
+
+.tokens {
+  list-style: none;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3xs);
+  min-height: 52px;
+}
+
+.tok {
+  display: grid;
+  gap: 2px;
+  padding: var(--space-2xs) var(--space-xs);
+  font-family: var(--font-mono);
+  font-size: var(--text-md);
+  font-weight: 500;
+  line-height: 1.1;
+  background: var(--color-panel-2);
+  border: var(--rule-hair) solid var(--color-rule);
+}
+
+.tok small {
+  font-size: var(--text-2xs);
+  font-weight: 400;
+  color: var(--color-ink-3);
+}
+
+.tok--mark {
+  border-color: var(--color-accent);
+  color: var(--color-accent-ink);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .tok {
+    animation: tok-in var(--dur-short) var(--ease-out) both;
+    animation-delay: calc(var(--i, 0) * 50ms);
+  }
+}
+
+@keyframes tok-in {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+}
+
+.status {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  color: var(--color-ink-2);
+}
+
+.status.is-bad {
+  color: var(--color-ink);
+}
+
+.reading__row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: var(--space-xs);
+}
+
+.result:empty {
+  display: none;
+}
+
+.rec {
+  display: grid;
+  gap: var(--space-xs);
+  padding-block-start: var(--space-sm);
+  border-top: 2px solid var(--color-accent);
+}
+
+.rec__code {
+  font-family: var(--font-mono);
+  font-size: var(--text-md);
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}
+
+.rec__kind {
+  font-size: var(--text-sm);
+  color: var(--color-ink-2);
+}
+
+.rec dl {
+  display: grid;
+}
+
+.rec dl div {
+  display: grid;
+  grid-template-columns: minmax(0, 9.5rem) minmax(0, 1fr);
+  gap: var(--space-sm);
+  padding-block: var(--space-2xs);
+  border-top: var(--rule-hair) solid var(--color-rule);
+}
+
+.rec dt {
+  font-size: var(--text-sm);
+  color: var(--color-ink-2);
+}
+
+.rec dd {
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+  font-variant-numeric: tabular-nums;
+  overflow-wrap: anywhere;
+}
+
+.rec__foot,
+.miss__why {
+  font-family: var(--font-mono);
+  font-size: var(--text-2xs);
+  color: var(--color-ink-3);
+}
+
+.miss {
+  display: grid;
+  gap: var(--space-2xs);
+  padding-block-start: var(--space-sm);
+  border-top: 2px dashed var(--color-rule-strong);
+}
+
+::view-transition-old(zz-code),
+::view-transition-new(zz-code) {
+  animation-duration: var(--dur-long);
+  animation-timing-function: var(--ease-out);
+}
+
+@media (min-width: 64rem) {
+  .hero {
+    grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+    column-gap: var(--space-xl);
+    padding-block: var(--space-xl) var(--space-2xl);
+  }
+  .console {
+    padding: var(--space-md);
+  }
+  .hero__copy {
+    position: sticky;
+    top: calc(var(--nav-h) + var(--space-lg));
+    align-self: start;
+  }
+}
+
+/* ---------- Anatomy ---------- */
+.anatomy {
+  display: grid;
+  gap: var(--space-md);
+  padding-block: var(--space-2xl) var(--space-xl);
+  border-top: var(--rule-hair) solid var(--color-rule);
+}
+
+.anatomy h2 {
+  font-size: var(--text-section);
+  max-width: 30ch;
+}
+
+.anatomy__lede {
+  color: var(--color-ink-2);
+}
+
+.specimen {
+  padding-block: var(--space-lg);
+}
+
+.specimen__code {
+  max-width: none;
+  font-family: var(--font-mono);
+  font-size: var(--text-code);
+  font-weight: 500;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  overflow-wrap: anywhere;
+}
+
+.part {
+  border-bottom: 2px solid var(--color-rule-strong);
+}
+
+.part--mark {
+  color: var(--color-accent-ink);
+  border-bottom-color: var(--color-accent);
+}
+
+.dash {
+  color: var(--color-ink-3);
+}
+
+.callouts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2xs) var(--space-md);
+  padding-block-start: var(--space-sm);
+}
+
+.callout {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  color: var(--color-ink-2);
+}
+
+/* With anchor positioning, each label hangs directly under the part it names. */
+/* Labels alternate between two tiers so long ones ("word or check word") never collide,
+   and a leader line runs from each part down to its label. */
+@supports (anchor-name: --a) {
+  @media (min-width: 48rem) {
+    .specimen {
+      padding-block-end: calc(var(--space-xl) + var(--space-md));
+    }
+    .callouts {
+      display: block;
+      padding: 0;
+    }
+    .callout {
+      --lead: var(--space-xs);
+      position: absolute;
+      top: calc(anchor(bottom) + var(--space-3xs));
+      left: calc(anchor(left) + 0.2em);
+      padding-block-start: var(--lead);
+      padding-inline-start: var(--space-2xs);
+      border-inline-start: var(--rule-hair) solid var(--color-rule-strong);
+      line-height: 1.2;
+      white-space: nowrap;
+    }
+    .callout--low {
+      --lead: calc(var(--space-md) + var(--space-xs));
+    }
+  }
+}
+
+.variants {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  border-top: var(--rule-hair) solid var(--color-rule);
+}
+
+.variants div {
+  display: grid;
+  gap: var(--space-3xs);
+  padding-block: var(--space-sm);
+  border-bottom: var(--rule-hair) solid var(--color-rule);
+}
+
+.variants dt {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  color: var(--color-ink-3);
+}
+
+@media (min-width: 48rem) {
+  .variants {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    column-gap: var(--space-md);
+  }
+}
+
+/* v1.0 §4 · Why the zz markers matter + In any language */
+.why {
+  display: grid;
+  gap: var(--space-lg);
+  padding-block-start: var(--space-md);
+}
+
+.why__text,
+.langs {
+  display: grid;
+  gap: var(--space-xs);
+  align-content: start;
+}
+
+.why__text p {
+  color: var(--color-ink-2);
+}
+
+.langs__list {
+  list-style: none;
+  padding: 0;
+  display: grid;
+  border-top: var(--rule-hair) solid var(--color-rule);
+}
+
+.langs__list li {
+  display: grid;
+  grid-template-columns: minmax(0, 5.25rem) minmax(0, 1fr);
+  column-gap: var(--space-sm);
+  align-items: baseline;
+  padding-block: var(--space-2xs);
+  border-bottom: var(--rule-hair) solid var(--color-rule);
+}
+
+.langs__name {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  color: var(--color-ink-3);
+}
+
+.langs code {
+  font-size: var(--text-sm);
+}

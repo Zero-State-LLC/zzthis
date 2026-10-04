@@ -18,10 +18,10 @@ export interface Origin {
   text: string;
 }
 
-// Q43 RESOLVED [MICHAEL 2026-10-02], longer bio used as written.
+// [MICHAEL 2026-10-03 v1.0 change list] The founder title and bio supersede the Q43 lines.
 export const founderOrigin: Origin = {
   heading: "Founder origin",
-  text: "I “invent” business models. If you ever used cards for DMV or Gmail tabs, thank me. ; ). In 1992-93, pitched to NYC and initiated a pilot with NYC for possibly the world first electronic payment (by cards) at municipals for motor vehicle fines and fees. In 1995, the NYC DMV began acceptance; and in 1996, the first EZ-Pass for tolls began in NY state. In 2003, my patent application was published for sorting tagged emails to their dedicated tabs (Priority. Address, Bills, etc.), predating Gmail 2013 tabs. Professional experience includes 25 years in real estate and federal GSA RFPs (was awarded two for office spaces, one was a 10-years fixed over $9 million lease-contract), and other small businesses – eateries, supermarkets, merchant credit cards, finance, direct marketing, etc. Recent 13 years in SV in tech startups space, 10+ years in and about the blockchain space, and the recent 3+ years of the AI. A driver of Michael’s business models is purposefully enabling the unity of the deterministic blockchain with the probabilistic AI to solve the current great problematic gaps and the emerging next-phase civilizational opportunities.",
+  text: "I “invent” business models. If you've ever paid at the DMV with a card or used Gmail's inbox tabs, thank me. ;) In 1992–93, I pitched New York City and initiated a pilot for possibly the world's first electronic card payments by the municipal agencies for motor-vehicle fines and fees. In 1995, the NYC DMV began accepting cards, and in 1996, the first E-ZPass tolling began in New York State. In 2002, my patent application was published for sorting tagged emails into their dedicated tabs (Priority, Ads, Bills, etc.) and was cited by 158 patent applications, majority by leading tech and Fortune companies. Gmail did their tabs in 2013. My business experience includes 25 years in real estate, including federal GSA RFPs (I was awarded two office space lease-contracts, one an over $9 million 10-year fixed), and other small businesses: eateries, supermarkets, merchant credit cards, finance, and direct marketing. For the past 13 years I've been in Silicon Valley's tech startup space, with 10+ years in and around blockchain and the last 3+ years in AI. A driver of my business models is the discovery and the purposeful enabling unity of the deterministic blockchain with the probabilistic AI to target today's great problematic gaps and solve to the emerging next-phase civilizational opportunities.",
 };
 
 // Q24 [OPERATOR 2026-10-02]: the founder card shows Michael's founder origin
@@ -29,7 +29,7 @@ export const founderOrigin: Origin = {
 export const founder: Founder = {
   name: "Michael Chung",
   initials: "MC",
-  role: "Founder, system architecting, and project lead.",
+  role: "Founder, business-model architect, and project lead",
   photo: {
     src: "images/people/michael-chung.webp",
     width: 440,

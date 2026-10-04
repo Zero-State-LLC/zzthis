@@ -1,0 +1,56 @@
+---
+import { images } from "../content/images";
+import { conceptLabels } from "../content/labels";
+import { url } from "../lib/url";
+import { photoToAction } from "../content/workflows";
+---
+
+<section class="pipeline" id="photo-to-action" aria-labelledby="action-title">
+  <div class="field__head">
+    <h2 id="action-title">{photoToAction.heading}</h2>
+    <p>{photoToAction.intro}</p>
+    <p class="label">{conceptLabels.group}</p>
+  </div>
+  <ol class="pipeline__steps" aria-label={photoToAction.sequenceLabel}>
+    {photoToAction.sequence.map((step) => {
+      const image = images[step.image];
+      return (
+        <li>
+          <img
+            src={url(image.src)}
+            width={image.width}
+            height={image.height}
+            loading="lazy"
+            decoding="async"
+            alt={image.alt}
+          />
+          <p class="step">
+            <span>{step.numeral}</span> {step.title}
+          </p>
+          <p class="cap">{image.caption}</p>
+        </li>
+      );
+    })}
+  </ol>
+  <div class="pipeline__pair">
+    {photoToAction.cards.map((card) => {
+      const image = images[card.image];
+      return (
+        <figure>
+          <img
+            src={url(image.src)}
+            width={image.width}
+            height={image.height}
+            loading="lazy"
+            decoding="async"
+            alt={image.alt}
+          />
+          <figcaption>
+            <b>{card.title}</b> {image.caption}
+          </figcaption>
+        </figure>
+      );
+    })}
+  </div>
+  <p class="pipeline__flow">{photoToAction.workflow}</p>
+</section>
