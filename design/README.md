@@ -11,7 +11,7 @@ This folder is the shared design source for zzThis and for the zzThat apps. The 
 | [`brand/`](brand/) | Logo and mark files already in this repo. |
 | [`UX.md`](UX.md) | Patterns for scan, resolve, create, share, errors, empty states, the demo badge, and copy. |
 | [`copy.json`](copy.json) | Every sentence the apps and the web client show, by key. Clients build their catalogs from it. Added 2026-10-04. |
-| `fonts/` | Not here yet. The build adds the IBM Plex TTF files the token files name, with `OFL.txt` (spec 005 T030). iOS and Android cannot load the site's woff2 files. |
+| `fonts/` | Not here yet. The build copies the static IBM Plex TTF files the token files name, with `OFL.txt`, from `@ibm/plex-sans` 1.1.0, `@ibm/plex-sans-condensed` 2.0.0, and `@ibm/plex-mono` 2.5.0, pinned as exact devDependencies (OFL-1.1, spec 005 T030). iOS and Android cannot load the site's woff2 files. |
 
 The site still loads `src/styles/tokens.css`. `npm run design:build` reads that file and rewrites this folder. `npm run design:check` fails if the folder drifts. The site build runs the check.
 

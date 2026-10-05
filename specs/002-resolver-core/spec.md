@@ -42,7 +42,7 @@ As an issuer, I ask for a new code linked to a record, with an optional expiry a
 Acceptance: the server chooses the words and the check word; the code is unique among active codes (INFERRED); the issue is written to the audit log.
 
 1. The issued code parses with the v1 grammar as kind `plain`, and its stored form is the canonical form (FR-013).
-2. Issuing fails, and writes a failed audit event, if the audit write fails (FR-018).
+2. Issuing fails and stores nothing if the audit write fails (FR-018, spec 005 FR-031).
 3. A handle is issued only to an authenticated owner and only if no handle with the same canonical form exists (FR-016).
 
 ### US3. Update and revoke (P1)
@@ -117,7 +117,7 @@ Status codes are a prototype choice and may change with Q19. The not-found respo
 - `zz-@agentsmith-neo-zz`: the qualifier `neo` is part of the code, so it can open a different record from `zz-@agentsmith-zz` under the same owner (INFERRED).
 - A reusable account code in a spec example is a word code such as `zz-post-maple-river-zz`, linked privately to the account. A code never carries a phone number or other personal data (Section 9a D-2026-10-03-11).
 - A revoked code still in an edge cache: resolves only until the purge lands, and at most 60 seconds if the purge fails [DANNY 2026-10-04].
-- A record version whose signature fails verification on read: the resolver returns not-found and writes an audit event with result `integrity-error` (INFERRED).
+- A record version whose signature fails verification on read: the resolver returns not-found and writes an audit event with result `integrity-error` (INFERRED). Superseded until Q28: in contract 1 the resolver does not check signatures on read (spec 005 Resolve step 10).
 - A malformed flood from one client: rate limited like any other call (FR-014).
 
 ## Success criteria
