@@ -6,6 +6,7 @@ import {
   type WordlistVersion,
 } from "@zzthis/zz-core";
 import type { Limiter } from "./limits/limiter.ts";
+import { deriveDataKeys, type DataKeys } from "./lib/crypto.ts";
 import { fromBase64, fromBase64url } from "./lib/encoding.ts";
 import { parseBlocklist, type Blocklist } from "./moderation/blocklist.ts";
 
@@ -40,7 +41,8 @@ export interface Settings {
   readonly photoReads: boolean;
   readonly devAuth: boolean;
   readonly tokenSecret: Uint8Array;
-  readonly dataKey: Uint8Array;
+  // Derived from ZZ_DATA_KEY with HKDF; the raw key is not kept.
+  readonly dataKeys: DataKeys;
   readonly signingKey: CryptoKey;
   readonly signingKeyId: string;
   readonly blocklist: Blocklist;
@@ -202,17 +204,25 @@ async function readSettingsNow(env: WorkerEnv): Promise<SettingsResult> {
     photoReads: reader.flag("ZZ_PHOTO_READS"),
     devAuth,
     tokenSecret: reader.secret("ZZ_TOKEN_SECRET", (length) => length >= 32),
-    dataKey: reader.secret("ZZ_DATA_KEY", (length) => length === 32),
     signingKeyId: reader.required("ZZ_RECORD_SIGNING_KEY_ID"),
     blocklist,
     googleClientIds: googleClientIds(reader),
   };
+  const dataKey = reader.secret("ZZ_DATA_KEY", (length) => length === 32);
   const key = await signingKey(reader);
   const apple = await appleSettings(reader);
   if (key === null || reader.problems.size > 0) {
     return { ok: false, problems: [...reader.problems] };
   }
-  return { ok: true, settings: { ...settings, signingKey: key, apple } };
+  return {
+    ok: true,
+    settings: {
+      ...settings,
+      dataKeys: await deriveDataKeys(dataKey),
+      signingKey: key,
+      apple,
+    },
+  };
 }
 
 // One check per env object: the bindings object is stable for an isolate,

@@ -40,7 +40,7 @@ async function appleToken(
   );
   if (token === null) return null;
   return {
-    sealed: await seal(c.get("settings").dataKey, token, clientId),
+    sealed: await seal(c.get("settings").dataKeys, token, clientId),
     clientId,
   };
 }

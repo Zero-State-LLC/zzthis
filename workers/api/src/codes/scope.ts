@@ -1,28 +1,9 @@
 import type { Caller } from "../auth/caller.ts";
-import { auditStatement } from "../audit/writer.ts";
+import { auditDenied } from "../audit/denied.ts";
 import type { AppContext } from "../http/context.ts";
 import { ApiError, forbidden } from "../http/respond.ts";
 import type { ScopeName } from "../http/schemas.ts";
 import { iso } from "../lib/time.ts";
-
-// A refusal of an authenticated caller writes an audit event with result
-// denied (spec 002 Error states). It is one statement, so it stands alone.
-export async function auditDenied(
-  c: AppContext,
-  caller: Caller,
-  action: string,
-  targetType: string,
-  targetId: string,
-): Promise<void> {
-  await auditStatement(c.env.ZZ_DB, {
-    actorId: caller.id,
-    action,
-    targetType,
-    targetId,
-    result: "denied",
-    at: iso(c.get("now")),
-  }).run();
-}
 
 const ACTIVE_GRANT =
   "SELECT 1 AS granted FROM grants WHERE subject_id = ? AND role = ? AND (expires_at IS NULL OR expires_at > ?)";
@@ -40,16 +21,19 @@ export async function hasScopeGrant(
   return row !== null;
 }
 
-// The auditor role reads the whole log, so a grant on any scope gives it
-// (INFERRED: audit events carry no scope).
-export async function isAuditor(
+// D-2026-10-05-04 (Danny, #78): the auditor role is least-privilege. An
+// account reads the events of the scopes it holds an auditor grant for,
+// and no grant reads the whole log.
+export async function auditorScopes(
   c: AppContext,
   accountId: string,
-): Promise<boolean> {
-  const row = await c.env.ZZ_DB.prepare(ACTIVE_GRANT)
-    .bind(accountId, "auditor", iso(c.get("now")))
-    .first();
-  return row !== null;
+): Promise<string[]> {
+  const rows = await c.env.ZZ_DB.prepare(
+    "SELECT DISTINCT scope FROM grants WHERE subject_id = ? AND role = 'auditor' AND (expires_at IS NULL OR expires_at > ?) ORDER BY scope",
+  )
+    .bind(accountId, iso(c.get("now")))
+    .all<{ scope: string }>();
+  return rows.results.map((row) => row.scope);
 }
 
 // FR-005 and FR-034: free_public needs ZZ_FREE_PUBLIC; enterprise and
@@ -65,7 +49,7 @@ export async function checkMintScope(
     return;
   }
   if (!(await hasScopeGrant(c, caller.id, scope, "issuer"))) {
-    await auditDenied(c, caller, "code.mint", "scope", scope);
+    await auditDenied(c, caller.id, "code.mint", { type: "scope", id: scope });
     throw forbidden();
   }
 }

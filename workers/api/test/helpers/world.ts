@@ -5,7 +5,12 @@ import type { Deps } from "../../src/deps.ts";
 import type { WorkerEnv } from "../../src/env.ts";
 import type { PhotoReader } from "../../src/reads/reader.ts";
 import { createWorker } from "../../src/worker.ts";
-import { toBase64, toBase64url } from "../../src/lib/encoding.ts";
+import { deriveDataKeys, type DataKeys } from "../../src/lib/crypto.ts";
+import {
+  fromBase64url,
+  toBase64,
+  toBase64url,
+} from "../../src/lib/encoding.ts";
 import { makeAppleSigningKey, makeIdp, type TestIdp } from "./idp.ts";
 
 export const APPLE_BUNDLE_ID = "com.example.zzthat";
@@ -47,6 +52,12 @@ let secrets: Promise<Secrets> | undefined;
 export function testSecrets(): Promise<Secrets> {
   secrets ??= generateSecrets();
   return secrets;
+}
+
+// The keys the server derives from the test ZZ_DATA_KEY.
+export async function testDataKeys(): Promise<DataKeys> {
+  const raw = fromBase64url((await testSecrets()).dataKey) as Uint8Array;
+  return deriveDataKeys(raw);
 }
 
 // A stand-in for the web client's files, so asset tests do not depend on

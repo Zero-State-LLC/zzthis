@@ -19,7 +19,7 @@ interface RevokeRow {
 // gated on write_id = ?req (spec 005 Mint, FR-031), so two racing revokes
 // write one ok event.
 export async function revokeCode(c: AppContext): Promise<Response> {
-  const caller = await requireActive(c);
+  const caller = await requireActive(c, "code.revoke");
   await limitUser(c, "owner-write", caller.id);
   const codeId = c.req.param("id") as string;
   const db = c.env.ZZ_DB;

@@ -46,7 +46,7 @@ async function revokeAppleTokens(
   const failed: string[] = [];
   for (const row of rows.results) {
     const revoked = await open(
-      settings.dataKey,
+      settings.dataKeys,
       row.apple_refresh_token_enc,
       row.apple_client_id,
     ).then(
@@ -133,8 +133,10 @@ function accountDeletion(
         at: now,
       },
       {
-        sql: "SELECT 1 FROM accounts WHERE id = ? AND deleted_at = ?",
-        params: [accountId, now],
+        // An account is deleted once; the second clause keeps a racing
+        // deletion in the same millisecond from writing a second event.
+        sql: "SELECT 1 FROM accounts WHERE id = ? AND deleted_at = ? AND NOT EXISTS (SELECT 1 FROM audit_events WHERE action = 'account.delete' AND target_type = 'account' AND target_id = ?)",
+        params: [accountId, now, accountId],
       },
     ),
   ];

@@ -1,5 +1,5 @@
 import { requireCaller } from "../auth/caller.ts";
-import { isAuditor } from "../codes/scope.ts";
+import { auditorScopes } from "../codes/scope.ts";
 import type { AppContext } from "../http/context.ts";
 import { forbidden, json, malformed } from "../http/respond.ts";
 import { parseTimestamp } from "../lib/time.ts";
@@ -47,18 +47,30 @@ function filters(c: AppContext): Filter[] {
   return out;
 }
 
-// GET /v1/audit (FR-016): the append-only log, newest last, for an account
-// with an auditor grant.
+// An event's scope is its target's: a code's scope, the scope of a
+// record's codes, or the scope a refused mint named. Events whose target has
+// no scope (accounts, nonces, reports, reads, and not-found resolves, whose
+// target is an HMAC) are listed for no auditor.
+function inScopes(scopes: readonly string[]): Filter {
+  const marks = scopes.map(() => "?").join(", ");
+  return {
+    sql: `((target_type = 'code' AND target_id IN (SELECT id FROM codes WHERE scope IN (${marks}))) OR (target_type = 'record' AND target_id IN (SELECT record_id FROM codes WHERE scope IN (${marks}))) OR (target_type = 'scope' AND target_id IN (${marks})))`,
+    params: [...scopes, ...scopes, ...scopes],
+  };
+}
+
+// GET /v1/audit (FR-016): the append-only log, newest last, for the scopes
+// the caller holds an auditor grant for.
 export async function listAudit(c: AppContext): Promise<Response> {
   const caller = await requireCaller(c);
   await limitUser(c, "audit", caller.id);
-  if (!(await isAuditor(c, caller.id))) throw forbidden();
+  const scopes = await auditorScopes(c, caller.id);
+  if (scopes.length === 0) throw forbidden();
   const limit = limitParam(c.req.query("limit"));
-  const where = filters(c);
-  const clause =
-    where.length === 0 ? "" : `WHERE ${where.map((f) => f.sql).join(" AND ")}`;
+  const where = [inScopes(scopes), ...filters(c)];
+  const clause = where.map((f) => f.sql).join(" AND ");
   const rows = await c.env.ZZ_DB.prepare(
-    `SELECT id, actor_id, action, target_type, target_id, result, created_at FROM audit_events ${clause} ORDER BY created_at ASC, id ASC LIMIT ?`,
+    `SELECT id, actor_id, action, target_type, target_id, result, created_at FROM audit_events WHERE ${clause} ORDER BY created_at ASC, id ASC LIMIT ?`,
   )
     .bind(...where.flatMap((f) => f.params), limit)
     .all();

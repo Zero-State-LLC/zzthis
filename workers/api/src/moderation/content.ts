@@ -1,5 +1,5 @@
 import type { Caller } from "../auth/caller.ts";
-import { auditDenied } from "../codes/scope.ts";
+import { auditDenied } from "../audit/denied.ts";
 import type { AppContext } from "../http/context.ts";
 import { ApiError } from "../http/respond.ts";
 import type { EverydayText } from "../lib/text.ts";
@@ -15,6 +15,6 @@ export async function refuseBlocked(
 ): Promise<void> {
   const blocklist = c.get("settings").blocklist;
   if (!blocklist.matches(text.title) && !blocklist.matches(text.body)) return;
-  await auditDenied(c, caller, action, target.type, target.id);
+  await auditDenied(c, caller.id, action, target);
   throw new ApiError(422, "content-refused");
 }

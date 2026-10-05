@@ -50,7 +50,7 @@ function pageLimit(text: string | undefined): number {
 // GET /v1/me/codes (FR-030): the caller's codes, newest first, each with its
 // record's current title. Codes retired by a re-roll are not listed.
 export async function listMyCodes(c: AppContext): Promise<Response> {
-  const caller = await requireActive(c);
+  const caller = await requireActive(c, "code.list");
   await limitUser(c, "owner-read", caller.id);
   const limit = pageLimit(c.req.query("limit"));
   const cursorText = c.req.query("cursor");

@@ -85,7 +85,7 @@ async function refusal(
 
 // POST /v1/codes/{id}/reroll. There is no 409.
 export async function rerollCode(c: AppContext): Promise<Response> {
-  const caller = await requireActive(c);
+  const caller = await requireActive(c, "code.reroll");
   await limitUser(c, "mint", caller.id);
   if (!c.get("settings").mintEnabled) throw notReady();
   const oldId = c.req.param("id") as string;

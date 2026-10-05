@@ -109,7 +109,7 @@ async function notFoundResolve(
   matchKey: string,
 ): Promise<never> {
   const target = await hmacTag(
-    c.get("settings").dataKey,
+    c.get("settings").dataKeys,
     "match-key",
     matchKey,
   );

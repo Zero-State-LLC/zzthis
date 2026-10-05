@@ -1,10 +1,10 @@
 import { env } from "cloudflare:workers";
 import { decodeJwt, decodeProtectedHeader } from "jose";
 import { afterEach, describe, expect, it, vi } from "vitest";
-import { sha256Hex } from "../src/lib/crypto.ts";
+import { hmacTag, sha256Hex } from "../src/lib/crypto.ts";
 import { call, count, nonce, signIn } from "./helpers/http.ts";
 import { expectMatchesSchema } from "./helpers/schema.ts";
-import { makeWorld, type World } from "./helpers/world.ts";
+import { makeWorld, testDataKeys, type World } from "./helpers/world.ts";
 
 afterEach(() => {
   vi.restoreAllMocks();
@@ -39,6 +39,97 @@ describe("POST /v1/auth/nonce (FR-020)", () => {
     >();
     expect(row?.nonce_hash).toBe(await sha256Hex(body.nonce));
     expect(JSON.stringify(row)).not.toContain(body.nonce);
+  });
+});
+
+describe("nonce audit events (FR-020, D-2026-10-05-04)", () => {
+  interface Row {
+    actor_id: string | null;
+    action: string;
+    target_type: string;
+    target_id: string;
+    result: string;
+  }
+
+  async function nonceEvents(): Promise<Row[]> {
+    const rows = await env.ZZ_DB.prepare(
+      "SELECT actor_id, action, target_type, target_id, result FROM audit_events WHERE action = 'auth.nonce' ORDER BY created_at, rowid",
+    ).all<Row>();
+    return rows.results;
+  }
+
+  function token(w: World, n: string): Promise<Response> {
+    return call(w, "POST", "/v1/auth/token", {
+      body: { provider: "dev", client: "ios", id_token: "dev:alice", nonce: n },
+    });
+  }
+
+  it("writes an ok event for a consumed nonce and a denied event for each failed consume", async () => {
+    const w = await makeWorld();
+    const used = await nonce(w);
+    expect((await token(w, used)).status).toBe(200);
+    expect((await token(w, used)).status).toBe(401);
+    expect((await token(w, "never-issued")).status).toBe(401);
+    const old = await nonce(w);
+    w.clock.advance(10 * 60 * 1000);
+    expect((await token(w, old)).status).toBe(401);
+    const keys = await testDataKeys();
+    const target = (n: string) => hmacTag(keys, "nonce", n);
+    expect(await nonceEvents()).toEqual([
+      {
+        actor_id: null,
+        action: "auth.nonce",
+        target_type: "nonce",
+        target_id: await target(used),
+        result: "ok",
+      },
+      {
+        actor_id: null,
+        action: "auth.nonce",
+        target_type: "nonce",
+        target_id: await target(used),
+        result: "denied",
+      },
+      {
+        actor_id: null,
+        action: "auth.nonce",
+        target_type: "nonce",
+        target_id: await target("never-issued"),
+        result: "denied",
+      },
+      {
+        actor_id: null,
+        action: "auth.nonce",
+        target_type: "nonce",
+        target_id: await target(old),
+        result: "denied",
+      },
+    ]);
+  });
+
+  it("never stores the nonce, or its stored hash, in the audit log", async () => {
+    const w = await makeWorld();
+    const n = await nonce(w);
+    await token(w, n);
+    await token(w, n);
+    const log = JSON.stringify(
+      (await env.ZZ_DB.prepare("SELECT * FROM audit_events").all()).results,
+    );
+    expect(log).not.toContain(n);
+    expect(log).not.toContain(await sha256Hex(n));
+  });
+
+  it("writes the consume event with the nonce's state change, or neither", async () => {
+    const w = await makeWorld();
+    const n = await nonce(w);
+    await env.ZZ_DB.prepare(
+      "CREATE TRIGGER audit_down BEFORE INSERT ON audit_events BEGIN SELECT RAISE (ABORT, 'audit down'); END",
+    ).run();
+    vi.spyOn(console, "error").mockImplementation(() => {});
+    expect((await token(w, n)).status).toBe(500);
+    await env.ZZ_DB.prepare("DROP TRIGGER audit_down").run();
+    // The nonce was not consumed, so it still works once.
+    expect((await token(w, n)).status).toBe(200);
   });
 });
 

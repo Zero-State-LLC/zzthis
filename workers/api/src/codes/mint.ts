@@ -74,7 +74,7 @@ async function writeHandle(
 
 // POST /v1/codes, the steps in spec 005 Mint.
 export async function mintCode(c: AppContext): Promise<Response> {
-  const caller = await requireActive(c);
+  const caller = await requireActive(c, "code.mint");
   await limitUser(c, "mint", caller.id);
   const request = await readJson(c, MintRequest);
   await checkMintScope(c, caller, request.scope);

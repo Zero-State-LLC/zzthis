@@ -32,7 +32,7 @@ async function take(
 // The limiter key holds an HMAC of the IP, never the IP (FR-027).
 async function ipSubject(c: AppContext): Promise<string> {
   const ip = c.req.header("CF-Connecting-IP") ?? "unknown";
-  return `ip:${await hmacTag(c.get("settings").dataKey, "limiter-ip", ip)}`;
+  return `ip:${await hmacTag(c.get("settings").dataKeys, "limiter-ip", ip)}`;
 }
 
 export async function limitIp(c: AppContext, rule: IpRule): Promise<void> {

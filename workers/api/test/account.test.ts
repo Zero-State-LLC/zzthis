@@ -19,6 +19,7 @@ import {
   APPLE_SERVICES_ID,
   appleSettings,
   makeWorld,
+  testDataKeys,
   testSecrets,
   type World,
 } from "./helpers/world.ts";
@@ -355,15 +356,17 @@ describe("DELETE /v1/me (FR-023, T007)", () => {
     });
     expect(Date.parse(row.next_attempt_at as string) - w.clock.ms).toBe(DAY);
     expect(Object.keys(row)).not.toContain("account_id");
-    // The copy is still encrypted, bound to its client id.
+    // The copy is still encrypted with the HKDF-derived AES key, bound to
+    // its client id.
     const token = await open(
-      (await import("../src/lib/encoding.ts")).fromBase64url(
-        (await testSecrets()).dataKey,
-      ) as Uint8Array,
+      await testDataKeys(),
       row.token_enc as string,
       APPLE_SERVICES_ID,
     );
     expect(token).toMatch(/^[A-Za-z0-9_-]{32}$/);
+    await expect(
+      open(await testDataKeys(), row.token_enc as string, APPLE_BUNDLE_ID),
+    ).rejects.toThrow();
   });
 
   it("keeps the token for retry when Apple cannot be reached or is no longer configured", async () => {

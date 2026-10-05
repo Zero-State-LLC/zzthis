@@ -61,7 +61,7 @@ async function retryRevocation(
     return "abandoned";
   }
   const revoked = await open(
-    settings.dataKey,
+    settings.dataKeys,
     row.token_enc,
     row.client_id,
   ).then(

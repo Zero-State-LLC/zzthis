@@ -1,3 +1,4 @@
+import { auditDenied } from "../audit/denied.ts";
 import type { AppContext } from "../http/context.ts";
 import { forbidden, unauthorized } from "../http/respond.ts";
 import { verifyAccessToken } from "./tokens.ts";
@@ -57,9 +58,16 @@ export async function requireCaller(c: AppContext): Promise<Caller> {
 
 // FR-025: a suspended account keeps sign-in, GET /v1/me, and DELETE /v1/me.
 // Every write and GET /v1/me/codes are 403 forbidden. This runs after the
-// deleted-account check.
-export async function requireActive(c: AppContext): Promise<Caller> {
+// deleted-account check. Each refusal writes a denied audit event naming
+// the attempted action, with the account as its target (D-2026-10-05-04).
+export async function requireActive(
+  c: AppContext,
+  action: string,
+): Promise<Caller> {
   const caller = await requireCaller(c);
-  if (caller.suspended) throw forbidden();
+  if (caller.suspended) {
+    await auditDenied(c, caller.id, action, { type: "account", id: caller.id });
+    throw forbidden();
+  }
   return caller;
 }
