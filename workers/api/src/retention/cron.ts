@@ -111,11 +111,13 @@ export async function runRetention(
     .prepare("DELETE FROM refresh_tokens WHERE expires_at <= ?")
     .bind(iso(nowMs - REFRESH_KEPT_AFTER_EXPIRY))
     .run();
+  // Due for a retry, or past the 30-day window even if the next retry is
+  // later, so no token outlives the window by a doubled wait.
   const due = await db
     .prepare(
-      "SELECT id, client_id, token_enc, attempts, created_at FROM pending_revocations WHERE next_attempt_at <= ?",
+      "SELECT id, client_id, token_enc, attempts, created_at FROM pending_revocations WHERE next_attempt_at <= ? OR created_at <= ?",
     )
-    .bind(now)
+    .bind(now, iso(nowMs - REVOCATION_WINDOW))
     .all<PendingRow>();
   const outcomes: Outcome[] = [];
   for (const row of due.results) {
