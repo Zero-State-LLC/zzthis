@@ -1,5 +1,7 @@
 import { auditDenied } from "../audit/denied.ts";
 import type { AppContext } from "../http/context.ts";
+import { firstRefusal, limitUser } from "../limits/enforce.ts";
+import type { UserRule } from "../limits/rules.ts";
 import { forbidden, unauthorized } from "../http/respond.ts";
 import { verifyAccessToken } from "./tokens.ts";
 
@@ -58,15 +60,27 @@ export async function requireCaller(c: AppContext): Promise<Caller> {
 
 // FR-025: a suspended account keeps sign-in, GET /v1/me, and DELETE /v1/me.
 // Every write and GET /v1/me/codes are 403 forbidden. This runs after the
-// deleted-account check. Each refusal writes a denied audit event naming
-// the attempted action, with the account as its target (D-2026-10-05-04).
+// deleted-account check.
+//
+// D-2026-10-05-05: the route's rate limit runs before the suspension check,
+// so a suspended account's flood gets 429 like any other. The first refusal
+// per account per limiter window writes a denied audit event naming the
+// attempted action, with the account as its target (D-2026-10-05-04); the
+// window's later refusals write none.
 export async function requireActive(
   c: AppContext,
   action: string,
+  rule: UserRule,
 ): Promise<Caller> {
   const caller = await requireCaller(c);
+  await limitUser(c, rule, caller.id);
   if (caller.suspended) {
-    await auditDenied(c, caller.id, action, { type: "account", id: caller.id });
+    if (await firstRefusal(c, rule, caller.id)) {
+      await auditDenied(c, caller.id, action, {
+        type: "account",
+        id: caller.id,
+      });
+    }
     throw forbidden();
   }
   return caller;

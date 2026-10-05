@@ -7,7 +7,6 @@ import { EverydayRecord } from "../http/schemas.ts";
 import { changes } from "../lib/db.ts";
 import { cleanRecord, type EverydayText } from "../lib/text.ts";
 import { iso } from "../lib/time.ts";
-import { limitUser } from "../limits/enforce.ts";
 import { refuseBlocked } from "../moderation/content.ts";
 import { purgeResolve } from "../resolve/cache.ts";
 import { ownedRecord, type CurrentVersion } from "./read.ts";
@@ -96,8 +95,7 @@ async function purgeRecordCodes(
 // POST /v1/records/{id}/versions: append a signed version with title and
 // body. A failed signature or audit write stores nothing.
 export async function addRecordVersion(c: AppContext): Promise<Response> {
-  const caller = await requireActive(c, "record.version");
-  await limitUser(c, "owner-write", caller.id);
+  const caller = await requireActive(c, "record.version", "owner-write");
   const recordId = c.req.param("id") as string;
   const request = await readJson(c, EverydayRecord);
   const text = cleanRecord(request.title, request.body);

@@ -4,7 +4,6 @@ import type { AppContext } from "../http/context.ts";
 import { json, malformed } from "../http/respond.ts";
 import { fromBase64url, toBase64url, utf8 } from "../lib/encoding.ts";
 import { iso, parseTimestamp } from "../lib/time.ts";
-import { limitUser } from "../limits/enforce.ts";
 import { codeBody, type CodeRow } from "./view.ts";
 
 type OwnedCode = components["schemas"]["OwnedCode"];
@@ -50,8 +49,7 @@ function pageLimit(text: string | undefined): number {
 // GET /v1/me/codes (FR-030): the caller's codes, newest first, each with its
 // record's current title. Codes retired by a re-roll are not listed.
 export async function listMyCodes(c: AppContext): Promise<Response> {
-  const caller = await requireActive(c, "code.list");
-  await limitUser(c, "owner-read", caller.id);
+  const caller = await requireActive(c, "code.list", "owner-read");
   const limit = pageLimit(c.req.query("limit"));
   const cursorText = c.req.query("cursor");
   const cursor = cursorText === undefined ? null : decodeCursor(cursorText);

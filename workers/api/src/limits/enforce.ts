@@ -60,3 +60,23 @@ export async function limitCaller(
     await take(c, rule, `user:${accountId}`, limits.user);
   }
 }
+
+// D-2026-10-05-05: a suspended account's refusals are audited once per
+// account per limiter window, so a flood stays visible without one audit
+// row per call. A separate count per rule, never refused, marks the first.
+export async function firstRefusal(
+  c: AppContext,
+  rule: UserRule,
+  accountId: string,
+): Promise<boolean> {
+  const namespace = c.env.ZZ_LIMITER;
+  const stub = namespace.get(
+    namespace.idFromName(`${rule}:refused:user:${accountId}`),
+  );
+  const result = await stub.take(
+    Number.MAX_SAFE_INTEGER,
+    USER_RULES[rule].windowMs,
+    c.get("now"),
+  );
+  return result.count === 1;
+}

@@ -6,7 +6,6 @@ import { ApiError, json, malformed, notReady } from "../http/respond.ts";
 import { MintRequest, type MintBody } from "../http/schemas.ts";
 import { cleanRecord } from "../lib/text.ts";
 import { iso, parseTimestamp } from "../lib/time.ts";
-import { limitUser } from "../limits/enforce.ts";
 import { refuseBlocked } from "../moderation/content.ts";
 import { matchKeyTaken, withDrawnCode } from "./draw.ts";
 import { requestedHandle } from "./handles.ts";
@@ -74,8 +73,7 @@ async function writeHandle(
 
 // POST /v1/codes, the steps in spec 005 Mint.
 export async function mintCode(c: AppContext): Promise<Response> {
-  const caller = await requireActive(c, "code.mint");
-  await limitUser(c, "mint", caller.id);
+  const caller = await requireActive(c, "code.mint", "mint");
   const request = await readJson(c, MintRequest);
   await checkMintScope(c, caller, request.scope);
   if (request.kind === "plain" && !c.get("settings").mintEnabled) {

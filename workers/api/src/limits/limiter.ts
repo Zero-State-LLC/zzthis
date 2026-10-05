@@ -4,6 +4,8 @@ export interface Take {
   readonly allowed: boolean;
   // Whole seconds until the window ends, at least 1, when refused.
   readonly retryAfter: number;
+  // Calls counted in this window, this one included when allowed.
+  readonly count: number;
 }
 
 interface Window {
@@ -34,12 +36,13 @@ export class Limiter extends DurableObject {
       return {
         allowed: false,
         retryAfter: Math.max(1, Math.ceil((end - now) / 1000)),
+        count,
       };
     }
     const window = { start, end, count: count + 1 };
     await this.ctx.storage.put<Window>(KEY, window);
     if (count === 0) await this.ctx.storage.setAlarm(clearAt(window));
-    return { allowed: true, retryAfter: 0 };
+    return { allowed: true, retryAfter: 0, count: count + 1 };
   }
 
   // Clears a finished window, so a key that goes quiet stores nothing.

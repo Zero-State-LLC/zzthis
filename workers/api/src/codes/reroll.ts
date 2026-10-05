@@ -4,7 +4,6 @@ import type { AppContext } from "../http/context.ts";
 import { ApiError, json, notFound, notReady } from "../http/respond.ts";
 import { changes } from "../lib/db.ts";
 import { iso } from "../lib/time.ts";
-import { limitUser } from "../limits/enforce.ts";
 import { purgeResolve } from "../resolve/cache.ts";
 import { withDrawnCode } from "./draw.ts";
 import { CODE_COLUMNS, codeBody, type CodeRow } from "./view.ts";
@@ -85,8 +84,7 @@ async function refusal(
 
 // POST /v1/codes/{id}/reroll. There is no 409.
 export async function rerollCode(c: AppContext): Promise<Response> {
-  const caller = await requireActive(c, "code.reroll");
-  await limitUser(c, "mint", caller.id);
+  const caller = await requireActive(c, "code.reroll", "mint");
   if (!c.get("settings").mintEnabled) throw notReady();
   const oldId = c.req.param("id") as string;
   const newId = await withDrawnCode(c, async (code) => {

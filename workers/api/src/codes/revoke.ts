@@ -4,7 +4,6 @@ import type { AppContext } from "../http/context.ts";
 import { json, notFound } from "../http/respond.ts";
 import { changes } from "../lib/db.ts";
 import { iso } from "../lib/time.ts";
-import { limitUser } from "../limits/enforce.ts";
 import { purgeResolve } from "../resolve/cache.ts";
 import { effectiveStatus } from "./view.ts";
 
@@ -19,8 +18,7 @@ interface RevokeRow {
 // gated on write_id = ?req (spec 005 Mint, FR-031), so two racing revokes
 // write one ok event.
 export async function revokeCode(c: AppContext): Promise<Response> {
-  const caller = await requireActive(c, "code.revoke");
-  await limitUser(c, "owner-write", caller.id);
+  const caller = await requireActive(c, "code.revoke", "owner-write");
   const codeId = c.req.param("id") as string;
   const db = c.env.ZZ_DB;
   const now = iso(c.get("now"));
