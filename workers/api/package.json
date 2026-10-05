@@ -9,6 +9,7 @@
     "lint:contract": "REDOCLY_TELEMETRY=off REDOCLY_SUPPRESS_UPDATE_NOTICE=true redocly lint ../../specs/005-v1-api/openapi.yaml",
     "typecheck": "tsc --noEmit",
     "test": "vitest run --coverage",
+    "build": "WRANGLER_SEND_METRICS=false WRANGLER_SEND_ERROR_REPORTS=false WRANGLER_HIDE_BANNER=true wrangler deploy --dry-run --outdir dist --metafile dist/meta.json",
     "api:types": "npm run generate && git diff --exit-code src/generated/",
     "generate": "openapi-typescript ../../specs/005-v1-api/openapi.yaml -o src/generated/api.ts && REDOCLY_TELEMETRY=off REDOCLY_SUPPRESS_UPDATE_NOTICE=true redocly bundle ../../specs/005-v1-api/openapi.yaml --ext json -o src/generated/openapi.json && WRANGLER_SEND_METRICS=false wrangler types src/generated/worker-configuration.d.ts --env-file .dev.vars.example --strict-vars=false"
   },
