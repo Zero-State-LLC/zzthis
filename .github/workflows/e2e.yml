@@ -1,0 +1,36 @@
+# The web client's Playwright run against the local Worker (spec 005 T032,
+# plan.md Tests). It runs on demand, or on a pull request that carries the
+# run-e2e label. It has no schedule and is not a required check: the
+# no-spend path in zzThat ZQ27, accepted by Danny on Zero-State-LLC/zzthat#39.
+name: e2e
+
+on:
+  workflow_dispatch:
+  pull_request:
+    types: [labeled, synchronize]
+
+permissions:
+  contents: read
+
+jobs:
+  e2e:
+    if: github.event_name == 'workflow_dispatch' || contains(github.event.pull_request.labels.*.name, 'run-e2e')
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install Chromium for Playwright
+        run: npx playwright install --with-deps chromium
+
+      # Playwright starts npm run dev:api -- --fresh itself (webServer).
+      - name: Run the end-to-end tests
+        run: npm run e2e -w apps/web
