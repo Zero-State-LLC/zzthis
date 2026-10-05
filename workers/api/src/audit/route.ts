@@ -48,14 +48,15 @@ function filters(c: AppContext): Filter[] {
 }
 
 // An event's scope is its target's: a code's scope, the scope of a
-// record's codes, or the scope a refused mint named. Events whose target has
-// no scope (accounts, nonces, reports, reads, and not-found resolves, whose
-// target is an HMAC) are listed for no auditor.
+// record's codes, the scope a refused mint named, or a grant's scope (the
+// operator's grant.add and grant.remove, D-2026-10-05-07). Events whose
+// target has no scope (accounts, nonces, reports, reads, and not-found
+// resolves, whose target is an HMAC) are listed for no auditor.
 function inScopes(scopes: readonly string[]): Filter {
   const marks = scopes.map(() => "?").join(", ");
   return {
-    sql: `((target_type = 'code' AND target_id IN (SELECT id FROM codes WHERE scope IN (${marks}))) OR (target_type = 'record' AND target_id IN (SELECT record_id FROM codes WHERE scope IN (${marks}))) OR (target_type = 'scope' AND target_id IN (${marks})))`,
-    params: [...scopes, ...scopes, ...scopes],
+    sql: `((target_type = 'code' AND target_id IN (SELECT id FROM codes WHERE scope IN (${marks}))) OR (target_type = 'record' AND target_id IN (SELECT record_id FROM codes WHERE scope IN (${marks}))) OR (target_type = 'scope' AND target_id IN (${marks})) OR (target_type = 'grant' AND target_id IN (SELECT id FROM grants WHERE scope IN (${marks}))))`,
+    params: [...scopes, ...scopes, ...scopes, ...scopes],
   };
 }
 

@@ -97,11 +97,11 @@ Done when: the Playwright run passes against `npm run dev:api -- --fresh`, and t
 
 Done when: running the script at the build commit produces every path in that table.
 
-## Group J. Operator SQL (pending Danny's yes on #78)
+## Group J. Operator SQL
 
-- [ ] T038 The operator SQL in `workers/api/ops/` from plan.md, Operator work. `reports.sql` lists the open reports and closes one by setting `closed_at`, which the FR-026 report deletion (D-2026-10-05-06) needs. `suspend.sql`, `revoke-code.sql`, and `grant.sql` do the jobs in the plan.md table. Each file takes quoted placeholders for `wrangler d1 execute` and writes its audit event in the same batch. Pending Danny's yes on #78.
+- [x] T038 The operator SQL in `workers/api/ops/` from plan.md, Operator work. `reports.sql` lists the open reports and closes one by setting `closed_at`, which the FR-026 report deletion (D-2026-10-05-06) needs. `suspend.sql`, `unsuspend.sql`, `revoke-code.sql`, `grant.sql`, and `remove-grant.sql` do the jobs in the plan.md table. Each file takes quoted placeholders for `wrangler d1 execute` and writes its audit event in the same batch. A grant event's target is the grant, so the scope's auditors list it (FR-016). Decided in D-2026-10-05-07 [DELEGATED 2026-10-05, zzThis #78].
 
-Done when: `test/ops.test.ts` runs each file against the migrated local D1 schema and checks the change and its audit event, and a file run as written changes nothing.
+Done when: `test/ops.test.ts` runs each file against the migrated local D1 schema and checks the change and its audit event, a file run as written changes nothing, and a grant's events are listed for its scope's auditor and not for another scope's.
 
 ## Human gate
 

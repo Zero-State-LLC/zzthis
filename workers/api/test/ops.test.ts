@@ -10,80 +10,19 @@ import {
   resolvePath,
   signIn,
 } from "./helpers/http.ts";
-import { makeWorld, type World } from "./helpers/world.ts";
+import {
+  audit,
+  codeRow,
+  DAY,
+  expectOperatorEvent,
+  report,
+  type Row,
+  runOps,
+} from "./helpers/ops.ts";
+import { makeWorld } from "./helpers/world.ts";
 
-// The operator SQL in workers/api/ops (spec 005 plan.md, Operator work),
-// run against the migrated local D1 schema (T038).
-
-const DAY = 24 * 60 * 60 * 1000;
-const UUID_V4 =
-  /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/;
-
-type Row = Record<string, unknown>;
-
-// The operator's sed: every :name in the file becomes its value. Then the
-// file's statements run in order in one batch, as wrangler d1 execute sends
-// them. The result is the rows of the file's last statement, its report.
-async function runOps(file: string, values: Record<string, string> = {}) {
-  let sql = env.TEST_OPS_SQL[file];
-  if (sql === undefined) throw new Error(`no ops/${file}`);
-  for (const [name, value] of Object.entries(values)) {
-    sql = sql.replaceAll(`:${name}`, value);
-  }
-  const statements = sql
-    .split("\n")
-    .filter((line) => !line.trimStart().startsWith("--"))
-    .join("\n")
-    .split(";")
-    .map((statement) => statement.trim())
-    .filter((statement) => statement !== "");
-  const results = await env.ZZ_DB.batch(
-    statements.map((statement) => env.ZZ_DB.prepare(statement)),
-  );
-  return (results.at(-1)?.results ?? []) as Row[];
-}
-
-async function audit(action: string): Promise<Row[]> {
-  const rows = await env.ZZ_DB.prepare(
-    "SELECT * FROM audit_events WHERE action = ? ORDER BY rowid",
-  )
-    .bind(action)
-    .all<Row>();
-  return rows.results;
-}
-
-function expectOperatorEvent(
-  row: Row | undefined,
-  action: string,
-  targetType: string,
-  targetId: string,
-): void {
-  expect(row).toMatchObject({
-    actor_id: null,
-    action,
-    target_type: targetType,
-    target_id: targetId,
-    result: "ok",
-  });
-  expect(row?.id).toMatch(UUID_V4);
-  expect(row?.created_at).toMatch(TIMESTAMP);
-}
-
-async function codeRow(id: string): Promise<Row | null> {
-  return env.ZZ_DB.prepare(
-    "SELECT status, revoked_reason FROM codes WHERE id = ?",
-  )
-    .bind(id)
-    .first<Row>();
-}
-
-async function report(w: World, canonical: string): Promise<string> {
-  const response = await call(w, "POST", "/v1/reports", {
-    body: { canonical, reason: "spam" },
-  });
-  expect(response.status).toBe(202);
-  return ((await response.json()) as { id: string }).id;
-}
+// The report, suspension, and revoke files in workers/api/ops (spec 005
+// plan.md, Operator work, T038). The grant files are in ops-grants.test.ts.
 
 describe("ops/reports.sql", () => {
   it("lists the open reports as written, and closes nothing", async () => {
@@ -249,6 +188,65 @@ describe("ops/suspend.sql", () => {
   });
 });
 
+describe("ops/unsuspend.sql", () => {
+  it("lifts the suspension with one audit event, and revoked codes stay revoked", async () => {
+    const w = await makeWorld();
+    const alice = await signIn(w);
+    const code = await mint(w, alice.access);
+    await runOps("suspend.sql", { account_id: alice.accountId });
+    expect((await mintRequest(w, alice.access)).status).toBe(403);
+    const shown = await runOps("unsuspend.sql", {
+      account_id: alice.accountId,
+    });
+    expect(shown).toEqual([
+      { id: alice.accountId, suspended_at: null, deleted_at: null },
+    ]);
+    const events = await audit("account.unsuspend");
+    expect(events).toHaveLength(1);
+    expectOperatorEvent(
+      events[0],
+      "account.unsuspend",
+      "account",
+      alice.accountId,
+    );
+    expect(await codeRow(code.id)).toEqual({
+      status: "revoked",
+      revoked_reason: "operator",
+    });
+    expect((await mintRequest(w, alice.access)).status).toBe(201);
+    // Running it again changes nothing and writes no second event.
+    await runOps("unsuspend.sql", { account_id: alice.accountId });
+    expect(await audit("account.unsuspend")).toHaveLength(1);
+  });
+
+  it("leaves an account that is not suspended, deleted, unknown, or unnamed alone", async () => {
+    const w = await makeWorld();
+    const alice = await signIn(w, "alice");
+    const gone = await signIn(w, "gone");
+    await runOps("suspend.sql", { account_id: gone.accountId });
+    expect(
+      (await call(w, "DELETE", "/v1/me", { token: gone.access })).status,
+    ).toBe(204);
+    const cases: Record<string, string>[] = [
+      { account_id: alice.accountId },
+      { account_id: gone.accountId },
+      { account_id: crypto.randomUUID() },
+      {},
+    ];
+    for (const values of cases) {
+      await runOps("unsuspend.sql", values);
+    }
+    expect(
+      await count(
+        w,
+        "SELECT count(*) AS n FROM accounts WHERE id = ? AND suspended_at IS NOT NULL",
+        gone.accountId,
+      ),
+    ).toBe(1);
+    expect(await audit("account.unsuspend")).toEqual([]);
+  });
+});
+
 describe("ops/revoke-code.sql", () => {
   it("revokes the reported code with one audit event, which the scope's auditor sees", async () => {
     const w = await makeWorld();
@@ -324,88 +322,5 @@ describe("ops/revoke-code.sql", () => {
         "SELECT count(*) AS n FROM audit_events WHERE action = 'code.revoke' AND actor_id IS NULL",
       ),
     ).toBe(0);
-  });
-});
-
-describe("ops/grant.sql", () => {
-  it("adds an issuer grant, so the account can mint in that scope, with one audit event", async () => {
-    const w = await makeWorld();
-    const alice = await signIn(w);
-    expect(
-      (await mintRequest(w, alice.access, { scope: "logistics" })).status,
-    ).toBe(403);
-    const shown = await runOps("grant.sql", {
-      subject_id: alice.accountId,
-      scope: "logistics",
-      role: "issuer",
-      expires_at: "",
-    });
-    expect(shown).toEqual([
-      {
-        id: expect.stringMatching(UUID_V4),
-        scope: "logistics",
-        role: "issuer",
-        expires_at: null,
-      },
-    ]);
-    expect(
-      (await mintRequest(w, alice.access, { scope: "logistics" })).status,
-    ).toBe(201);
-    const events = await audit("grant.add");
-    expect(events).toHaveLength(1);
-    expectOperatorEvent(events[0], "grant.add", "account", alice.accountId);
-  });
-
-  it("adds a viewer or auditor grant with an expiry in the spec 005 form", async () => {
-    const w = await makeWorld();
-    const alice = await signIn(w);
-    const expiry = new Date(w.clock.ms + 30 * DAY).toISOString();
-    for (const role of ["viewer", "auditor"]) {
-      await runOps("grant.sql", {
-        subject_id: alice.accountId,
-        scope: "enterprise",
-        role,
-        expires_at: expiry,
-      });
-    }
-    const grants = await env.ZZ_DB.prepare(
-      "SELECT role, expires_at FROM grants WHERE subject_id = ? ORDER BY role",
-    )
-      .bind(alice.accountId)
-      .all<Row>();
-    expect(grants.results).toEqual([
-      { role: "auditor", expires_at: expiry },
-      { role: "viewer", expires_at: expiry },
-    ]);
-    expect(await audit("grant.add")).toHaveLength(2);
-  });
-
-  it("writes nothing for an unknown or deleted account, a bad scope or role, or an expiry in another form", async () => {
-    const w = await makeWorld();
-    const alice = await signIn(w, "alice");
-    const gone = await signIn(w, "gone");
-    expect(
-      (await call(w, "DELETE", "/v1/me", { token: gone.access })).status,
-    ).toBe(204);
-    const good = {
-      subject_id: alice.accountId,
-      scope: "enterprise",
-      role: "issuer",
-      expires_at: "",
-    };
-    for (const values of [
-      { ...good, subject_id: crypto.randomUUID() },
-      { ...good, subject_id: gone.accountId },
-      { ...good, scope: "public" },
-      { ...good, role: "owner" },
-      { ...good, expires_at: "2027-01-01" },
-      { ...good, expires_at: "2027-02-30T00:00:00.000Z" },
-      { ...good, expires_at: "2027-01-01T00:00:00Z" },
-      {},
-    ]) {
-      await runOps("grant.sql", values);
-    }
-    expect(await count(w, "SELECT count(*) AS n FROM grants")).toBe(0);
-    expect(await audit("grant.add")).toEqual([]);
   });
 });
