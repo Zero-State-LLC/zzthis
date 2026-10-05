@@ -1,0 +1,60 @@
+---
+// Account and Delete confirm (spec 005 Web client, /account/). The support
+// address and the policy URL are build settings, not copy.
+import App from "../../layouts/App.astro";
+import { t } from "../../lib/strings.ts";
+
+const email = import.meta.env.PUBLIC_SUPPORT_EMAIL ?? "";
+const privacy = import.meta.env.PUBLIC_PRIVACY_URL ?? "";
+---
+
+<App title={t("account.title")} current="account">
+  <h1>{t("account.title")}</h1>
+  <p id="status" class="message" role="status" hidden></p>
+  <section id="account-signed-out" hidden>
+    <p>{t("common.sign_in_needed")}</p>
+    <a class="button" href="/signin/?next=/account/">
+      {t("signin.title")}
+    </a>
+  </section>
+  <section id="account" hidden>
+    <p id="signed-in-with" hidden></p>
+    <div class="actions">
+      <button id="sign-out" type="button">
+        {t("account.sign_out")}
+      </button>
+      <button id="delete-open" type="button" class="danger">
+        {t("account.delete")}
+      </button>
+    </div>
+  </section>
+  <ul class="links">
+    {email && <li>{t("account.support", { email })}</li>}
+    {privacy && (
+      <li>
+        <a href={privacy}>{t("account.privacy")}</a>
+      </li>
+    )}
+    <li>
+      <a href="/licenses/">{t("account.licenses")}</a>
+    </li>
+  </ul>
+  <dialog id="delete-dialog" aria-labelledby="delete-heading">
+    <h2 id="delete-heading">{t("delete.title")}</h2>
+    <p>{t("delete.body")}</p>
+    <div class="actions">
+      <button id="delete-confirm" type="button" class="danger">
+        {t("delete.action")}
+      </button>
+      <button id="delete-cancel" type="button" autofocus>
+        {t("common.cancel")}
+      </button>
+    </div>
+  </dialog>
+  <script>
+    import { browserEnv } from "../../lib/page.ts";
+    import { mountAccount } from "../../scripts/account.ts";
+
+    void mountAccount(browserEnv());
+  </script>
+</App>

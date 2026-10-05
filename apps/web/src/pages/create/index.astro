@@ -1,0 +1,64 @@
+---
+// Create and Minted code (spec 005 Web client, /create/).
+import App from "../../layouts/App.astro";
+import { t } from "../../lib/strings.ts";
+---
+
+<App title={t("nav.create")} current="create">
+  <h1>{t("nav.create")}</h1>
+  <p id="status" class="message" role="status" hidden></p>
+  <section id="create-signed-out" hidden>
+    <p>{t("create.signed_out")}</p>
+    <a class="button" href="/signin/?next=/create/">
+      {t("signin.title")}
+    </a>
+  </section>
+  <p id="create-unavailable" hidden>
+    {t("create.unavailable")}
+  </p>
+  <form id="create-form" class="record-form" hidden novalidate>
+    <label for="create-title">{t("create.title_label")}</label>
+    <input id="create-title" name="title" maxlength="120" autocomplete="off" />
+    <label for="create-body">{t("create.body_label")}</label>
+    <textarea
+      id="create-body"
+      name="body"
+      maxlength="4000"
+      rows="6"
+      aria-describedby="public-hint"
+    ></textarea>
+    <p id="public-hint" class="hint">
+      {t("create.public_hint")}
+    </p>
+    <p id="create-message" class="message" role="alert" hidden></p>
+    <button id="create-submit" type="submit">
+      {t("create.submit")}
+    </button>
+  </form>
+  <section id="minted" class="minted" hidden>
+    <h2>{t("minted.heading")}</h2>
+    <p id="minted-code" class="minted-code"></p>
+    <p id="check-word-label" class="label">
+      {t("minted.check_word_label")}
+    </p>
+    <p class="hint">{t("minted.check_word_help")}</p>
+    <p id="minted-message" class="message" role="alert" hidden></p>
+    <div class="actions">
+      <button id="reroll" type="button">
+        {t("minted.reroll")}
+      </button>
+      <button id="minted-share" type="button" hidden>
+        {t("resolve.share")}
+      </button>
+    </div>
+    <p id="reroll-cap" role="status" hidden>
+      {t("minted.reroll_cap")}
+    </p>
+  </section>
+  <script>
+    import { browserEnv } from "../../lib/page.ts";
+    import { mountCreate } from "../../scripts/create.ts";
+
+    void mountCreate(browserEnv());
+  </script>
+</App>

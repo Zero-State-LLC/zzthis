@@ -1,0 +1,66 @@
+---
+// The web client's one layout (spec 005 Web client). It does not use the
+// marketing BaseLayout, Header, or ThemeToggle, and it carries no inline
+// script or style, so every page stays inside the Worker's CSP.
+import "../../../../design/generated/tokens.css";
+import "@fontsource/ibm-plex-sans/latin-400.css";
+import "@fontsource/ibm-plex-sans/latin-500.css";
+import "@fontsource/ibm-plex-sans/latin-600.css";
+import "@fontsource/ibm-plex-sans-condensed/latin-600.css";
+import "@fontsource/ibm-plex-mono/latin-400.css";
+import "@fontsource/ibm-plex-mono/latin-500.css";
+import "../styles/app.css";
+import logoLight from "../../../../design/brand/zzthis-logo-on-light.webp";
+import logoDark from "../../../../design/brand/zzthis-logo-on-dark.webp";
+import { t, type StringKey } from "../lib/strings.ts";
+
+interface Props {
+  title: string;
+  current?: "scan" | "create" | "codes" | "account";
+}
+
+const { title, current } = Astro.props;
+
+// Scan, Create, and My codes, with Account, as one top bar (design/UX.md
+// Navigation).
+const links: { href: string; key: StringKey; id: Props["current"] }[] = [
+  { href: "/", key: "nav.scan", id: "scan" },
+  { href: "/create/", key: "nav.create", id: "create" },
+  { href: "/codes/", key: "nav.my_codes", id: "codes" },
+  { href: "/account/", key: "nav.account", id: "account" },
+];
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+  </head>
+  <body>
+    <header class="bar">
+      <picture class="brand">
+        <source srcset={logoDark.src} media="(prefers-color-scheme: dark)" />
+        <img src={logoLight.src} alt="" width="464" height="129" />
+      </picture>
+      <nav>
+        <ul>
+          {links.map((link) => (
+            <li>
+              <a
+                href={link.href}
+                aria-current={current === link.id ? "page" : undefined}
+              >
+                {t(link.key)}
+              </a>
+            </li>
+          ))}
+        </ul>
+      </nav>
+    </header>
+    <main>
+      <slot />
+    </main>
+  </body>
+</html>

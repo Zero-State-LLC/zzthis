@@ -6,8 +6,9 @@
   "type": "module",
   "scripts": {
     "typecheck": "astro check",
-    "test": "vitest run --coverage",
-    "build": "astro build"
+    "test": "astro build && vitest run --coverage",
+    "build": "astro build && node scripts/check-dist.mjs",
+    "e2e": "playwright test"
   },
   "dependencies": {
     "@fontsource/ibm-plex-mono": "^5.3.0",

@@ -1,0 +1,41 @@
+---
+// Edit record (spec 005 Web client, /edit/?id=<code id>).
+import App from "../../layouts/App.astro";
+import { t } from "../../lib/strings.ts";
+---
+
+<App title={t("detail.edit")} current="codes">
+  <h1>{t("detail.edit")}</h1>
+  <p id="status" class="message" role="status" hidden></p>
+  <section id="edit-signed-out" hidden>
+    <p>{t("codes.signed_out")}</p>
+    <a id="edit-signed-out-link" class="button" href="/signin/">
+      {t("signin.title")}
+    </a>
+  </section>
+  <form id="edit-form" class="record-form" hidden novalidate>
+    <label for="edit-title">{t("create.title_label")}</label>
+    <input id="edit-title" name="title" maxlength="120" autocomplete="off" />
+    <label for="edit-body">{t("create.body_label")}</label>
+    <textarea
+      id="edit-body"
+      name="body"
+      maxlength="4000"
+      rows="6"
+      aria-describedby="edit-hint"
+    ></textarea>
+    <p id="edit-hint" class="hint">
+      {t("create.public_hint")}
+    </p>
+    <p id="edit-message" class="message" role="alert" hidden></p>
+    <button id="edit-save" type="submit">
+      {t("edit.save")}
+    </button>
+  </form>
+  <script>
+    import { browserEnv } from "../../lib/page.ts";
+    import { mountEdit } from "../../scripts/edit.ts";
+
+    void mountEdit(browserEnv());
+  </script>
+</App>
