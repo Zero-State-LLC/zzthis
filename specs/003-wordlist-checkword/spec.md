@@ -149,7 +149,7 @@ Point of no return: after the first production mint, proto-v0 can never change, 
 
 [`vectors.json`](vectors.json) is the machine copy of the G9, G1a, and G10 rows in `docs/SPEC.md` Section 2.2a, plus the scanner rows (spec 004, Client read pipeline) and the check-word rows (fixture-7, with all 30 issuable codes). The G9 rows were checked against `src/lib/grammar.ts` on 2026-10-04. The `grammar_pending` rows fail against it until the spec 005 T035 parser change, which moves them into `grammar`. The check-word rows were checked exhaustively: every single wrong word and every swap of two words is detected on fixture-7. The TypeScript, Swift, and Kotlin libraries each run every row. Do not edit a row to match a bug. Rows whose `note` names a D-2026-10-04 decision come from the readings below.
 
-## Readings for review (INFERRED, 2026-10-04)
+## Readings (decided 2026-10-05 by established practice, docs/SPEC.md 9a)
 
 The pre-build audit found places where two careful builders could read the grammar or the classifier differently. Each row records the reading the build uses. These are INFERRED, not decided. OPEN: Michael and Danny review them before the build PR merges. Default: the build applies them as written. The full rows are in `docs/SPEC.md` Section 9a.
 
@@ -159,8 +159,8 @@ The pre-build audit found places where two careful builders could read the gramm
 | D-2026-10-04-05 | Edit distance is Levenshtein (FR-003). Near-word candidates sort by distance, then by list index (FR-021). A part at distance 1 has exactly one candidate at distance 1, listed first, and may also have candidates at distance 2 after it. | New G1a and `vectors.json` classifier rows: `zz-ocppr-zz` is field (Levenshtein 3; a metric that counts a swap as one edit would say confirm), and `zz-mapper-zz` is confirm with `copper`, then `maple`. |
 | D-2026-10-04-08 | The number words `zero` to `nine` count as parts with a digit in the near-word check (FR-021). | New classifier rows: `zz-coper-4-zz` is `confirm` with `copper`, and `zz-bravo-five-six-zz` is `field`. |
 | D-2026-10-04-09 | G10 runs number words, then the fold, then the digit-run join, over the parts only (FR-024). | New matching-key rows: `zz-bravo-l-2-zz` matches `zz-bravo-12-zz`, and `zz-@b0b-zz` matches `zz-@bob-zz`. |
-| D-2026-10-04-10 | G2 names its character sets: whitespace is U+0020, tab, CR, and LF; lowercasing covers ASCII `A` to `Z` only; the 256 guard counts UTF-16 code units. | Two new `grammar` rows check the UTF-16 guard and pass today. The U+00A0 and Kelvin sign rows wait in `grammar_pending` for the spec 005 T035 parser change. |
-| D-2026-10-04-03, D-2026-10-04-06, D-2026-10-04-11 | Scanner readings ([spec 004](../004-capture/spec.md), Readings for review) | New `vectors.json` scanner rows |
+| D-2026-10-04-10 | Decided 2026-10-05 by established practice (RFC 8265 and 8266, Unicode C6, UAX #15, UAX #44, UTS #39): the 256 guard counts raw UTF-16 code units first; fullwidth forms map to ASCII and the text is normalized to NFC; whitespace is the Unicode White_Space set; lowercasing is the Unicode mapping without locale rules; a letter that is still not ASCII fails with `unsupported-script`. | The U+00A0, em space, Kelvin sign, and Cyrillic rows join `grammar` and pass today. The fullwidth, combining-acute, and U+FEFF rows wait in `grammar_pending` for the spec 005 T035 parser change. |
+| D-2026-10-04-03, D-2026-10-04-06, D-2026-10-04-11 | Scanner readings, decided 2026-10-05 ([spec 004](../004-capture/spec.md), Readings) | New `vectors.json` scanner rows |
 
 ## Open questions
 

@@ -35,7 +35,7 @@ Build the zzThis central server (a Cloudflare Worker), the web client, and the z
 - The marketing site does not change, except the spec 005 T035 parser change in `src/lib/grammar.ts`, which its demo bundles. Its build, `check-dist`, its tests, and its no-cross-origin rule still pass.
 - Required checks stay green: zzThis `ci.yml` (`build`) and zzThat `ci.yml` (`build`).
 - Workflow skills named in the tasks (anti-slop-code, production-systems, google-developer-style) that are not installed where the build runs are style guidance. Each PR body says so.
-- CI spend is OPEN for Danny (zzThat ZQ27). Default until he decides: the no-spend path. The zzThat Android job runs on `ubuntu-latest` on every PR. The iOS job runs only on `workflow_dispatch` or the `ios-ci` label. zzThis `e2e.yml` and zzThat `apps-e2e.yml` run on `workflow_dispatch` or on a PR with the `run-e2e` label, with no schedule, and are not required checks. The builder runs the iOS tests and the iOS end-to-end run on the dev Mac and pastes the command, the sha, and the log tail into the PR body.
+- CI spend follows zzThat ZQ27, decided 2026-10-05 by established practice: the no-spend path. The zzThat Android job runs on `ubuntu-latest` on every PR. The iOS job runs only on `workflow_dispatch` or the `ios-ci` label. zzThis `e2e.yml` and zzThat `apps-e2e.yml` run on `workflow_dispatch` or on a PR with the `run-e2e` label, with no schedule, and are not required checks. The builder runs the iOS tests and the iOS end-to-end run on the dev Mac and pastes the command, the sha, and the log tail into the PR body.
 
 ## Done when
 

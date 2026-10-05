@@ -303,12 +303,12 @@ Not built here. When it is built it lives in `apps/web` in this repo, is served 
 
 The first web release has no camera and no microphone. Voice on the marketing demo stays a simulation and is not this client. The provider scripts (Google Identity Services and Sign in with Apple JS) load on `/signin/` only. No analytics. Fonts are self-hosted.
 
-### Web session (INFERRED)
+### Web session (D-2026-10-05-02)
 
-- The access token and its expiry live in `sessionStorage`.
-- `ensureSession()` in `apps/web/src/lib/api.ts` runs before any call that sends a bearer token. It refreshes inside `navigator.locks.request('zz-refresh', ...)`, re-reads `sessionStorage` inside the lock, and keeps one shared promise per page. Two calls or two tabs then make one refresh (FR-021).
-- A 401 from refresh clears storage and shows the signed-out copy. `/` sends no bearer token and never refreshes.
-- Sign-out and account deletion clear storage. The server clears the cookie (FR-021, FR-023).
+- The access token and its expiry live in memory only, never in `sessionStorage` or `localStorage` (D-2026-10-05-02, RFC 10017). Each page load gets a new access token from the refresh cookie the first time it needs one.
+- `ensureSession()` in `apps/web/src/lib/api.ts` runs before any call that sends a bearer token. It refreshes inside `navigator.locks.request('zz-refresh', ...)`, re-checks the in-memory token inside the lock, and keeps one shared promise per page. Two calls or two tabs then make one refresh (FR-021).
+- A 401 from refresh clears the in-memory token and shows the signed-out copy. `/` sends no bearer token and never refreshes.
+- Sign-out and account deletion clear the in-memory token. The server clears the cookie (FR-021, FR-023).
 - The web keeps no resolve cache. `api.ts` calls resolve with `fetch(url, { cache: "no-store" })`, so the browser's HTTP cache never answers a resolve. The edge cache (FR-018) is the only resolve cache for the web.
 - Write errors: a 400 `malformed` on mint, a record version, or a report shows `error.nothing_saved` and keeps the fields as typed. Only a 400 `malformed` on resolve shows `type.malformed` ([design/UX.md](../../design/UX.md) Errors).
 
