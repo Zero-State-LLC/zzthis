@@ -1,0 +1,19 @@
+zzThis third-party notices
+
+DRAFT. This text waits for Danny's legal yes before the build pull request
+merges (spec 005 T036).
+
+zzThis includes the third-party materials below. Each is licensed under its
+own terms, not under LICENSE.
+
+1. EFF Long Wordlist
+
+   Files:    packages/zz-core/wordlists/source/eff_large_wordlist.txt (copy)
+             packages/zz-core/wordlists/proto-v0.txt (adapted)
+   Source:   Electronic Frontier Foundation, EFF Long Wordlist
+             https://www.eff.org/files/2016/07/18/eff_large_wordlist.txt
+   License:  Creative Commons Attribution 3.0 United States (CC BY 3.0 US)
+             https://creativecommons.org/licenses/by/3.0/us/
+   Changes:  proto-v0.txt is adapted from the EFF Long Wordlist: its words are
+             filtered and reordered. The filters, their counts, and every
+             removed word are in packages/zz-core/wordlists/proto-v0.report.md.

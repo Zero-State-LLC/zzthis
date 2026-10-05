@@ -5,7 +5,16 @@ import globals from "globals";
 import { defineConfig, globalIgnores } from "eslint/config";
 
 export default defineConfig([
-  globalIgnores(["dist/", "node_modules/", ".astro/", "coverage/", "public/"]),
+  globalIgnores([
+    "**/dist/",
+    "**/node_modules/",
+    "**/.astro/",
+    "**/coverage/",
+    "**/.wrangler/",
+    "public/",
+    "workers/api/src/generated/",
+    "packages/zz-core/src/generated/",
+  ]),
   js.configs.recommended,
   tseslint.configs.recommended,
   astro.configs.recommended,

@@ -13,3 +13,5 @@ design/tokens.json
 .github/workflows/project-collaboration.yml
 .github/workflows/free-security-scan.yml
 .github/ISSUE_TEMPLATE
+workers/api/src/generated
+packages/zz-core/src/generated
