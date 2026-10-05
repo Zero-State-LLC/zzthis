@@ -57,6 +57,10 @@
       "text": "The camera is off for this app. You can type the code instead.",
       "source": "INFERRED 2026-10-04, for Michael's review"
     },
+    "scan.camera_purpose": {
+      "text": "zzThat uses the camera to read a code you choose to scan. The photo stays on your phone.",
+      "source": "INFERRED 2026-10-04, for Michael's review"
+    },
     "scan.pick_one": {
       "text": "Which code do you want to open?",
       "source": "INFERRED 2026-10-04, for Michael's review"
@@ -321,6 +325,18 @@
       "text": "Sign-in did not finish. Try again.",
       "source": "INFERRED 2026-10-04, for Michael's review"
     },
+    "provider.apple": {
+      "text": "Apple",
+      "source": "INFERRED 2026-10-04, for Michael's review"
+    },
+    "provider.google": {
+      "text": "Google",
+      "source": "INFERRED 2026-10-04, for Michael's review"
+    },
+    "provider.dev": {
+      "text": "Developer",
+      "source": "INFERRED 2026-10-04, for Michael's review"
+    },
     "account.title": {
       "text": "Account",
       "source": "INFERRED 2026-10-04, for Michael's review"
@@ -343,6 +359,10 @@
     },
     "account.privacy": {
       "text": "Privacy policy",
+      "source": "INFERRED 2026-10-04, for Michael's review"
+    },
+    "account.licenses": {
+      "text": "Open-source licenses",
       "source": "INFERRED 2026-10-04, for Michael's review"
     },
     "delete.title": {

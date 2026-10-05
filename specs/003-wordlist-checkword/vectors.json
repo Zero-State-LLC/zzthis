@@ -1,5 +1,5 @@
 {
-  "about": "Shared test vectors for the zz code library on every platform (TypeScript, Swift, Kotlin). The grammar, classifier, and matching-key rows copy docs/SPEC.md Section 2.2a (G9, G1a, G10). The scanner and check-word rows are the rules decided on 2026-10-04 (#74) in spec 003 and spec 004. A platform passes when every row passes. Do not edit a row to match a bug.",
+  "about": "Shared test vectors for the zz code library on every platform (TypeScript, Swift, Kotlin). The grammar, classifier, and matching-key rows copy docs/SPEC.md Section 2.2a (G9, G1a, G10). The scanner and check-word rows are the rules decided on 2026-10-04 (#74) in spec 003 and spec 004. A platform passes when every row passes. Do not edit a row to match a bug. Rows whose note starts with a D-2026-10-04 id follow an INFERRED reading in docs/SPEC.md Section 9a that waits for Michael and Danny's review. The grammar_pending rows need the parser change in spec 005 T035, and today's src/lib/grammar.ts fails them, so no platform runs them yet. T035 moves them into grammar and deletes grammar_pending.",
   "grammar": [
     {
       "input": "zz-copper-lantern-sky-zz",
@@ -453,11 +453,42 @@
       "expect": {
         "fail": "too-long"
       }
+    },
+    {
+      "input": "zz-𐌰𐌰𐌰𐌰𐌰𐌰𐌰𐌰𐌰𐌰𐌰𐌰𐌰𐌰𐌰𐌰𐌰𐌰𐌰𐌰𐌰𐌰𐌰𐌰𐌰𐌰𐌰𐌰𐌰𐌰𐌰𐌰𐌰𐌰𐌰𐌰𐌰𐌰𐌰𐌰𐌰𐌰𐌰𐌰𐌰𐌰𐌰𐌰𐌰𐌰𐌰𐌰𐌰𐌰𐌰𐌰𐌰𐌰𐌰𐌰𐌰𐌰𐌰𐌰𐌰𐌰𐌰𐌰𐌰𐌰𐌰𐌰𐌰𐌰𐌰𐌰𐌰𐌰𐌰𐌰𐌰𐌰𐌰𐌰𐌰𐌰𐌰𐌰𐌰𐌰𐌰𐌰𐌰𐌰𐌰𐌰𐌰𐌰𐌰𐌰𐌰𐌰𐌰𐌰𐌰𐌰𐌰𐌰𐌰𐌰𐌰𐌰𐌰𐌰𐌰𐌰𐌰𐌰𐌰𐌰𐌰𐌰𐌰𐌰𐌰-zz",
+      "note": "D-2026-10-04-10: 256 UTF-16 code units (131 code points), so the guard passes",
+      "expect": {
+        "fail": "unsupported-script"
+      }
+    },
+    {
+      "input": "zz-𐌰𐌰𐌰𐌰𐌰𐌰𐌰𐌰𐌰𐌰𐌰𐌰𐌰𐌰𐌰𐌰𐌰𐌰𐌰𐌰𐌰𐌰𐌰𐌰𐌰𐌰𐌰𐌰𐌰𐌰𐌰𐌰𐌰𐌰𐌰𐌰𐌰𐌰𐌰𐌰𐌰𐌰𐌰𐌰𐌰𐌰𐌰𐌰𐌰𐌰𐌰𐌰𐌰𐌰𐌰𐌰𐌰𐌰𐌰𐌰𐌰𐌰𐌰𐌰𐌰𐌰𐌰𐌰𐌰𐌰𐌰𐌰𐌰𐌰𐌰𐌰𐌰𐌰𐌰𐌰𐌰𐌰𐌰𐌰𐌰𐌰𐌰𐌰𐌰𐌰𐌰𐌰𐌰𐌰𐌰𐌰𐌰𐌰𐌰𐌰𐌰𐌰𐌰𐌰𐌰𐌰𐌰𐌰𐌰𐌰𐌰𐌰𐌰𐌰𐌰𐌰𐌰𐌰𐌰𐌰𐌰𐌰𐌰𐌰𐌰𐌰-zz",
+      "note": "D-2026-10-04-10: 258 UTF-16 code units (132 code points), so the guard fails",
+      "expect": {
+        "fail": "too-long"
+      }
+    }
+  ],
+  "grammar_pending": [
+    {
+      "input": "zz-copper lantern-zz",
+      "note": "D-2026-10-04-10: U+00A0 is not a separator; today's parser splits on it",
+      "expect": {
+        "fail": "invalid-character"
+      }
+    },
+    {
+      "input": "zz-Kite-zz",
+      "note": "D-2026-10-04-10: the Kelvin sign U+212A is not lowercased; today's parser reads it as k",
+      "expect": {
+        "fail": "unsupported-script"
+      }
     }
   ],
   "classifier": {
     "wordlist": ["copper", "lantern", "sky", "maple", "river", "harbor"],
     "max_near_distance": 2,
+    "distance": "levenshtein",
     "rows": [
       {
         "input": "zz-copper-lantern-sky-zz",
@@ -528,6 +559,20 @@
         "near_words": {}
       },
       {
+        "input": "zz-coper-4-zz",
+        "note": "D-2026-10-04-08: a digit part does not make the code field; coper is 1 from copper",
+        "class": "confirm",
+        "near_words": {
+          "1": ["copper"]
+        }
+      },
+      {
+        "input": "zz-bravo-five-six-zz",
+        "note": "D-2026-10-04-08: number words count as digits, so five and six are never near-words",
+        "class": "field",
+        "near_words": {}
+      },
+      {
         "input": "zz-@coper-zz",
         "class": "handle",
         "near_words": {}
@@ -536,6 +581,20 @@
         "input": "zz",
         "class": "bare",
         "near_words": {}
+      },
+      {
+        "input": "zz-ocppr-zz",
+        "note": "D-2026-10-04-05: Levenshtein 3 from copper, past the limit",
+        "class": "field",
+        "near_words": {}
+      },
+      {
+        "input": "zz-mapper-zz",
+        "note": "D-2026-10-04-05: copper and maple are both 2 away, so list order",
+        "class": "confirm",
+        "near_words": {
+          "1": ["copper", "maple"]
+        }
       }
     ]
   },
@@ -554,6 +613,18 @@
       "a": "zz-bravo-smith-1234-zz",
       "b": "zz-bravo-john-1234-zz",
       "same_key": false
+    },
+    {
+      "a": "zz-bravo-l-2-zz",
+      "b": "zz-bravo-12-zz",
+      "note": "D-2026-10-04-09: fold before join, so l-2 becomes 12",
+      "same_key": true
+    },
+    {
+      "a": "zz-@b0b-zz",
+      "b": "zz-@bob-zz",
+      "note": "D-2026-10-04-09: the fold applies to handle parts",
+      "same_key": true
     }
   ],
   "scanner": [
@@ -744,12 +815,12 @@
     },
     {
       "input": "zz-zz",
+      "note": "D-2026-10-04-11: an empty pair is one no-content candidate (Section 2.2a G3)",
       "candidates": [
         {
-          "kind": "bare"
-        },
-        {
-          "kind": "bare"
+          "kind": "invalid",
+          "reason": "no-content",
+          "text": "zz-zz"
         }
       ]
     },
@@ -770,6 +841,175 @@
     {
       "input": "",
       "candidates": []
+    },
+    {
+      "input": "zz@agentsmith-zz",
+      "note": "D-2026-10-04-03: the zz@ opener holds content",
+      "candidates": [
+        {
+          "kind": "code",
+          "canonical": "zz-@agentsmith-zz",
+          "code_kind": "handle"
+        }
+      ]
+    },
+    {
+      "input": "see zz@bob",
+      "note": "D-2026-10-04-03: a cut-off zz@ opener is partial",
+      "candidates": [
+        {
+          "kind": "partial",
+          "text": "zz@bob"
+        }
+      ]
+    },
+    {
+      "input": "ai-zz@bob",
+      "note": "D-2026-10-04-03: a zz@ opener joined by a hyphen to the word before it reads forward only",
+      "candidates": [
+        {
+          "kind": "partial",
+          "text": "zz@bob"
+        }
+      ]
+    },
+    {
+      "input": "zz copper zz@bob zz",
+      "note": "D-2026-10-04-03: zz@ opens a pair but never closes one",
+      "candidates": [
+        {
+          "kind": "partial",
+          "text": "zz copper"
+        },
+        {
+          "kind": "code",
+          "canonical": "zz-@bob-zz",
+          "code_kind": "handle"
+        }
+      ]
+    },
+    {
+      "input": "\u005A\u005A@AGENTSMITH-\u005A\u005A",
+      "note": "D-2026-10-04-03: zz@agentsmith-zz written all in capitals (Section 2.2a G7: the Z letters are JSON escapes)",
+      "candidates": [
+        {
+          "kind": "code",
+          "canonical": "zz-@agentsmith-zz",
+          "code_kind": "handle"
+        }
+      ]
+    },
+    {
+      "input": "(zz-copper-lantern-sky-zz)",
+      "note": "D-2026-10-04-06: brackets are set aside",
+      "candidates": [
+        {
+          "kind": "code",
+          "canonical": "zz-copper-lantern-sky-zz",
+          "code_kind": "plain"
+        }
+      ]
+    },
+    {
+      "input": "See zz-copper-lantern-sky-zz: it is on the box",
+      "note": "D-2026-10-04-06: a colon after a closing zz is set aside",
+      "candidates": [
+        {
+          "kind": "code",
+          "canonical": "zz-copper-lantern-sky-zz",
+          "code_kind": "plain"
+        }
+      ]
+    },
+    {
+      "input": "“zz-copper-lantern-sky-zz”",
+      "note": "D-2026-10-04-06: curly quotes are set aside",
+      "candidates": [
+        {
+          "kind": "code",
+          "canonical": "zz-copper-lantern-sky-zz",
+          "code_kind": "plain"
+        }
+      ]
+    },
+    {
+      "input": "copper-lantern-sky-zz",
+      "note": "D-2026-10-04-06: only the closing marker, so partial (Retry)",
+      "candidates": [
+        {
+          "kind": "partial",
+          "text": "copper-lantern-sky-zz"
+        }
+      ]
+    },
+    {
+      "input": "copper-lantern-sky-zz goes to bay 4",
+      "note": "D-2026-10-04-06: a marker joined by a hyphen to the word before it reads backward only, even with words after it",
+      "candidates": [
+        {
+          "kind": "partial",
+          "text": "copper-lantern-sky-zz"
+        }
+      ]
+    },
+    {
+      "input": "zz \"copper lantern zz",
+      "note": "D-2026-10-04-06: a leading quote is set aside",
+      "candidates": [
+        {
+          "kind": "code",
+          "canonical": "zz-copper-lantern-zz",
+          "code_kind": "plain"
+        }
+      ]
+    },
+    {
+      "input": "zz-time:-zz",
+      "note": "D-2026-10-04-06: a colon inside a code stays for the grammar",
+      "candidates": [
+        {
+          "kind": "invalid",
+          "reason": "reserved-symbol",
+          "text": "zz-time:-zz"
+        }
+      ]
+    },
+    {
+      "input": "(zz) (zz)",
+      "note": "D-2026-10-04-11: an empty circled pair is one no-content candidate",
+      "candidates": [
+        {
+          "kind": "invalid",
+          "reason": "no-content",
+          "text": "(zz) (zz)"
+        }
+      ]
+    },
+    {
+      "input": "zz-copper-lantern-sky-zz zz",
+      "note": "D-2026-10-04-11: no empty pair forms when a marker is joined by a hyphen to a word outside it",
+      "candidates": [
+        {
+          "kind": "code",
+          "canonical": "zz-copper-lantern-sky-zz",
+          "code_kind": "plain"
+        },
+        {
+          "kind": "bare"
+        }
+      ]
+    },
+    {
+      "input": "zz. zz.",
+      "note": "D-2026-10-04-11: bare marks are not merged",
+      "candidates": [
+        {
+          "kind": "bare"
+        },
+        {
+          "kind": "bare"
+        }
+      ]
     }
   ],
   "check_word": {

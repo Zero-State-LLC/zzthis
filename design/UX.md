@@ -64,7 +64,7 @@ Unavailable copy:
 
 The client does not invent a code in that state.
 
-Title and body are the everyday record. Both are what the person typed. The title is required. The body may be empty. No phone number goes in the code, and there is no phone field. The body may hold contact details the owner chooses to share (Q68), and Create shows `create.public_hint` beside it.
+Title and body are the everyday record. Both are what the person typed. The title is required. The body may be empty. The title is 1 to 120 Unicode code points after trim, and the body is 0 to 4000. Input stops at those limits, and a title of only spaces shows `create.title_required` (spec 005 FR-007). No phone number goes in the code, and there is no phone field. The body may hold contact details the owner chooses to share (Q68), and Create shows `create.public_hint` beside it.
 
 ## Share
 
@@ -89,8 +89,10 @@ The client shows one sentence. It does not show the JSON `error` code except whe
 |---|---|
 | 200 public record | The title and the body |
 | 404 `not-found` | `No match. Check the words and try again.` |
-| 400 `malformed` | `This is not a zz code. A code starts and ends with zz, like zz-copper-lantern-sky-zz.` |
+| 400 `malformed` on resolve or Type | `This is not a zz code. A code starts and ends with zz, like zz-copper-lantern-sky-zz.` |
+| 400 `malformed` on a write (mint, record version, report) | `Nothing was saved.` Keep the fields as typed. |
 | 400 `malformed` with reason `check-mismatch` | Confirm that code. Do not auto-correct. |
+| 400 `malformed` with reason `wrong-length` | `scan.wrong_length`. Offer typing. Do not add or drop a word. |
 | 422 bare mark | Not resolved. Offer typing. |
 | 422 `reserved-handle` | `That name cannot be claimed.` |
 | 409 `taken` | `That code is already taken.` Do not show an owner. |
@@ -100,11 +102,12 @@ The client shows one sentence. It does not show the JSON `error` code except whe
 | 403 otherwise | `You cannot do that.` |
 | 429 | Wait for `Retry-After`. One line: `Wait a moment, then try again.` Do not say whether the code exists. |
 | 500 on a write | `Nothing was saved.` |
+| 503 `not-ready` outside Create | `error.unavailable` |
 | No connection | The offline rules above |
 
 ## Account
 
-The account screen shows which provider the person signed in with (`account.signed_in_with`), Sign out, Delete account, the support contact (`account.support`), and the privacy policy link (`account.privacy`). The support address and the policy URL are build settings, not copy. Deletion calls `DELETE /v1/me` after the Delete confirm pattern.
+The account screen shows which provider the person signed in with (`account.signed_in_with`), Sign out, Delete account, the support contact (`account.support`), the privacy policy link (`account.privacy`), and `account.licenses`. The support address and the policy URL are build settings, not copy. `{provider}` is the `provider.*` string for the first entry of `providers` from `GET /v1/me`; an account has one provider. `account.licenses` opens the third-party notices (`NOTICE` and `OFL.txt`) as plain text (INFERRED). Deletion calls `DELETE /v1/me` after the Delete confirm pattern.
 
 ## Patterns added 2026-10-04
 
@@ -124,8 +127,9 @@ Loading keeps the previous content on screen and shows a small progress mark, ne
 2. The photo stays on screen. Each candidate from the spec 004 scanner gets a box on it and a row in a list below, in reading order.
 3. One candidate in Accept opens at once. Otherwise the list asks `scan.pick_one`, and nothing opens until the person taps a row.
 4. Clarify shows the one uncertain word, its list candidates, and `scan.clarify_as_written`. A check-word mismatch shows `scan.check_mismatch` with the words as read, and offers typing.
-5. Retry shows `scan.retry` with the reason. Abstain shows the parser reason in plain words, or `scan.bare`, and offers typing.
+5. Retry shows `scan.retry` with the reason. Abstain shows the parser reason in plain words, or `scan.bare`, and offers typing. A `wrong-length` result shows `scan.wrong_length` and offers typing; it is not sent.
 6. `scan.type_instead` is always one tap away. If the camera is off, the screen shows `scan.camera_off`.
+7. iOS shows `scan.camera_purpose` when it asks for the camera.
 
 ### Minted code
 
@@ -141,7 +145,7 @@ A list of rows: the code in mono, the record title, and a status word (`codes.st
 
 ### Code detail
 
-The code, the title, the body as plain text, and three actions: Share, Edit (`detail.edit`), and Revoke (`detail.revoke`). A revoked code shows `detail.revoked_note` and no Edit.
+The code, the title, the body as plain text, and three actions: Share, Edit (`detail.edit`), and Revoke (`detail.revoke`). Revoke shows only while the code is active. A revoked code shows `detail.revoked_note` and no Edit.
 
 ### Edit record
 
@@ -157,7 +161,7 @@ A sheet from the Resolve screen: `report.title`, four reasons (`report.reason_*`
 
 ### Sign in
 
-`signin.why`, then the provider buttons the platform draws itself: Sign in with Apple and Google on iOS, Google on Android, both on the web. Local builds add `signin.dev`. A failure shows `signin.failed` and leaves no half session.
+`signin.why`, then the provider buttons the platform draws itself: Sign in with Apple and Google on iOS, Google on Android, both on the web when configured. The web shows a provider button only when `GET /v1` lists that provider and its build setting is set (spec 005 Web client). Local builds add `signin.dev`, which uses the same server nonce flow (spec 005 FR-022). A failure shows `signin.failed` and leaves no half session.
 
 ### App icon
 

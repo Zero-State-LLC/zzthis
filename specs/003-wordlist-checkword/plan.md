@@ -11,7 +11,7 @@ anti-slop-code, production-systems, google-developer-style. CI: `ci.yml`, `site-
 | Item | Choice | Status |
 |---|---|---|
 | Pipeline shape | Ordered filters, each emitting a count, ending in a yield report | [issue #14] |
-| Distance metric | Edit distance between words, minimum 3 | [issue #14] |
+| Distance metric | Levenshtein distance between words, minimum 3. A swap of two letters costs 2. The same function serves FR-003, filter (6), and the G1 near-word check. | [issue #14]; metric INFERRED (`docs/SPEC.md` D-2026-10-04-05) |
 | Letter-shape and sound filters | Method not chosen | OPEN; SPECULATIVE options include a confusable-letter table and a phonetic key |
 | Check word algorithm | Not chosen | OPEN (Q30) |
 | Language for the library | TypeScript, so the site, the resolver, and the client can share it | INFERRED |
