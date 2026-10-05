@@ -25,6 +25,8 @@ interface Secrets {
   readonly signingKey: string;
   readonly applePem: string;
   readonly applePublicKey: CryptoKey;
+  // The public half of ZZ_RECORD_SIGNING_KEY, to check record signatures.
+  readonly signingPublicKey: CryptoKey;
 }
 
 async function generateSecrets(): Promise<Secrets> {
@@ -43,6 +45,7 @@ async function generateSecrets(): Promise<Secrets> {
     signingKey: toBase64(new Uint8Array(pkcs8)),
     applePem: apple.pem,
     applePublicKey: apple.publicKey,
+    signingPublicKey: pair.publicKey,
   };
 }
 

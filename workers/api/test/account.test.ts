@@ -290,6 +290,26 @@ describe("DELETE /v1/me (FR-023, T007)", () => {
     expect(refreshed.status).toBe(401);
   });
 
+  it("writes one deletion event when two deletions race in one millisecond", async () => {
+    const w = await makeWorld();
+    const phone = await signIn(w, "alice", "ios");
+    const tablet = await signIn(w, "alice", "android");
+    // The test clock does not move, so both calls share one timestamp.
+    const results = await Promise.all([
+      deleteMe(w, phone.access),
+      deleteMe(w, tablet.access),
+    ]);
+    for (const response of results)
+      expect([204, 401]).toContain(response.status);
+    expect(
+      await count(
+        w,
+        "SELECT count(*) AS n FROM audit_events WHERE action = 'account.delete' AND target_id = ?",
+        phone.accountId,
+      ),
+    ).toBe(1);
+  });
+
   it("creates a new, empty account on the next sign-in", async () => {
     const w = await makeWorld();
     const first = await signIn(w);
