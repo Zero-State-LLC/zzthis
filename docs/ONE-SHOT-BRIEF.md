@@ -7,7 +7,7 @@ Build the zzThis central server (a Cloudflare Worker), the web client, and the z
 ## Before the build (people, not the builder)
 
 1. Merge zzThis PR #59. Re-pin zzThat PR #31 to the merge commit (`contracts/ZZTHIS-API-PIN` and the files that name it), run `python3 scripts/lint-specs.py`, then merge #31.
-2. Danny answered Q66 ([#68](https://github.com/Zero-State-LLC/zzthis/issues/68)) [DANNY 2026-10-04]: native Apple and Google sign-in, provider ID token with a server nonce (spec 005 FR-020, FR-021). Danny answers Q69 ([#71](https://github.com/Zero-State-LLC/zzthis/issues/71)), says yes or no to the spec 003 prototype defaults (including the EFF list license), and picks the bundle ids (zzThat ZQ24, [zzThat #34](https://github.com/Zero-State-LLC/zzthat/issues/34)). Michael answers Q67 ([#69](https://github.com/Zero-State-LLC/zzthis/issues/69)) and Q68 ([#70](https://github.com/Zero-State-LLC/zzthis/issues/70)) and reviews the new strings in `design/copy.json`. The icon and the support contact (ZQ25, [zzThat #35](https://github.com/Zero-State-LLC/zzthat/issues/35)) can come after the build, because builds use placeholders.
+2. Done 2026-10-04. Danny answered Q66 ([#68](https://github.com/Zero-State-LLC/zzthis/issues/68)) himself and said yes to every other open decision on [#74](https://github.com/Zero-State-LLC/zzthis/issues/74), including the spec 003 defaults with the EFF list license and the bundle ids. They are recorded in `docs/SPEC.md` Section 9 and zzThat `decisions.md`. Michael reviews the new strings in `design/copy.json`. The icon artwork and the support mailbox (ZQ25) come before store submission, because builds use placeholders.
 3. Danny accepts [intent/2026-10-04-one-shot-build.md](../intent/2026-10-04-one-shot-build.md).
 
 ## Start here

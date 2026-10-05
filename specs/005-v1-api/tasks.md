@@ -48,7 +48,7 @@ Done when: a test mints, re-rolls three times, gets `reroll-cap`, and finds thre
 
 ## Group E. Resolve and owner records ([#64](https://github.com/Zero-State-LLC/zzthis/issues/64))
 
-- [ ] T012 `GET /v1/resolve/{code}` with the nine steps in spec.md Resolve and the cache rules in FR-018 and FR-019.
+- [ ] T012 `GET /v1/resolve/{code}` with the ten steps in spec.md Resolve, including the private-record check (FR-035) and the cache rules in FR-018 and FR-019.
 - [ ] T024 Purge that code's cache key on record update, revoke, and account deletion.
 - [ ] T013 `GET /v1/me/codes` with cursor and titles. Codes retired by a re-roll are not listed.
 - [ ] T034 `GET /v1/records/{id}` for the owner (FR-030).

@@ -64,7 +64,7 @@ Unavailable copy:
 
 The client does not invent a code in that state.
 
-Title and body are the everyday record. Both are what the person typed. The title is required. The body may be empty. No phone number goes in the code or in another field.
+Title and body are the everyday record. Both are what the person typed. The title is required. The body may be empty. No phone number goes in the code, and there is no phone field. The body may hold contact details the owner chooses to share (Q68), and Create shows `create.public_hint` beside it.
 
 ## Share
 

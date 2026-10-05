@@ -125,9 +125,9 @@ This spec says "check word". `docs/SPEC.md` also says "checksum word". Both mean
 
 Recognition models (spec 004), the resolver (spec 002), and human-factors studies.
 
-## Prototype defaults for the v1 build (proposed 2026-10-04)
+## Prototype defaults for the v1 build (decided 2026-10-04)
 
-Status: proposal, pending Danny's yes. Source: [analysis 2026-10-04](../analysis-2026-10-04.md), finding 1. Without a list and a check word the server cannot mint, so every client's Create stays on "not available". These defaults fill Q27, Q30, Q31, Q32, and Q35 for the prototype only. Michael's later answers replace them through a new list version (FR-017).
+Status: decided. Danny said yes on #74 (2026-10-04), so these are the v1 rules (`docs/SPEC.md` Q27, Q30 to Q32, Q35). Source: [analysis 2026-10-04](../analysis-2026-10-04.md), finding 1. Without a list and a check word the server cannot mint, so every client's Create stays on "not available". These defaults fill Q27, Q30, Q31, Q32, and Q35 for the prototype only. Michael's later answers replace them through a new list version (FR-017).
 
 | Item | Prototype default | Why |
 |---|---|---|
@@ -141,23 +141,23 @@ Status: proposal, pending Danny's yes. Source: [analysis 2026-10-04](../analysis
 | Version id | `proto-v0`. Files: `packages/zz-core/wordlists/proto-v0.txt` (one word per line; line order is the index), `proto-v0.report.md`, and `proto-v0.report.json` (FR-004 fields plus the source URL and its SHA-256). | FR-017: a published version never changes. |
 | Test list | `fixture-7`: the G1a words plus `falcon` (7 words, a prime). Tests and local runs only. The server refuses to start in production with it. | Every platform can test mint and verify before proto-v0 exists. |
 
-Gate: do not commit `proto-v0.txt` until Danny says yes to the source and license (plan, constitution VI). Until then, plain mint returns `not-ready` everywhere except local runs on `fixture-7`.
+License: Danny said yes to the source and the license on #74 (Q32). The build runs the pipeline and commits proto-v0 with its yield report and an EFF credit in `NOTICE`. Until that commit lands, plain mint returns `not-ready` everywhere except local runs on `fixture-7`.
 
 Point of no return: after the first production mint, proto-v0 can never change, because issued codes must keep verifying (FR-017) and retired words are never issued again (Q36 default).
 
 ### Shared test vectors
 
-[`vectors.json`](vectors.json) is the machine copy of the G9, G1a, and G10 rows in `docs/SPEC.md` Section 2.2a, plus the proposed scanner rows (spec 004, Client read pipeline) and check-word rows (fixture-7, with all 30 issuable codes). The G9 rows were checked against `src/lib/grammar.ts` on 2026-10-04. The check-word rows were checked exhaustively: every single wrong word and every swap of two words is detected on fixture-7. The TypeScript, Swift, and Kotlin libraries each run every row. Do not edit a row to match a bug.
+[`vectors.json`](vectors.json) is the machine copy of the G9, G1a, and G10 rows in `docs/SPEC.md` Section 2.2a, plus the scanner rows (spec 004, Client read pipeline) and the check-word rows (fixture-7, with all 30 issuable codes). The G9 rows were checked against `src/lib/grammar.ts` on 2026-10-04. The check-word rows were checked exhaustively: every single wrong word and every swap of two words is detected on fixture-7. The TypeScript, Swift, and Kotlin libraries each run every row. Do not edit a row to match a bug.
 
 ## Open questions
 
 | ID | Question | Default |
 |---|---|---|
-| Q27 | Which formats come first? | None chosen. Prototype default proposed 2026-10-04: two data words and a check word |
-| Q30 | Which error classes must the check word detect (one wrong word, swapped words, a dropped word, voice confusions)? | One wrong word (INFERRED minimum). Prototype default proposed 2026-10-04: (d1 + 2 * d2) mod a prime N, which also catches a swap of any two words |
-| Q31 | Target wordlist size. Sources differ: 5,000 words and a candidate 10,000 [PRODUCT], and "about 4,000 known words" in the recognition plan [OPERATOR 2026-10-02]. Michael adds that each scope can use its own list (FR-022) [MICHAEL 2026-10-03 #45]. | None chosen. Prototype: the proto-v0 filter yield |
-| Q32 | Language and licensing of the candidate word source | None chosen. Prototype default proposed 2026-10-04: EFF long wordlist, English, CC BY 3.0 US |
-| Q35 | How are "distinct letter shapes" and "distinct sounds" measured, and what is the pass rule for each? | None chosen; blocks the shape and sound filter tasks. Prototype: both filters skipped and reported |
+| Q27 | Which formats come first? | RESOLVED [DELEGATED 2026-10-04, #74]: Two data words and a check word |
+| Q30 | Which error classes must the check word detect (one wrong word, swapped words, a dropped word, voice confusions)? | RESOLVED [DELEGATED 2026-10-04, #74]: (d1 + 2 * d2) mod a prime N |
+| Q31 | Target wordlist size. Sources differ: 5,000 words and a candidate 10,000 [PRODUCT], and "about 4,000 known words" in the recognition plan [OPERATOR 2026-10-02]. Michael adds that each scope can use its own list (FR-022) [MICHAEL 2026-10-03 #45]. | RESOLVED [DELEGATED 2026-10-04, #74]: The proto-v0 filter yield, at least 1,000 |
+| Q32 | Language and licensing of the candidate word source | RESOLVED [DELEGATED 2026-10-04, #74]: EFF long wordlist, English, CC BY 3.0 US |
+| Q35 | How are "distinct letter shapes" and "distinct sounds" measured, and what is the pass rule for each? | RESOLVED [DELEGATED 2026-10-04, #74]: Both filters skipped in proto-v0; a confusable-letter table and Double Metaphone for the first real list |
 | Q50 | How many parts can a code have? (issue #36) | RESOLVED: no design limit (FR-012) |
 | Q51 | `zz@-` versus `zz-@`; more words after a handle? (issue #37) | RESOLVED: same code; qualifiers may follow (FR-010) |
 | Q52 | Dots outside handles? (issue #38) | RESOLVED: `.eth` names valid as written (FR-023) |
