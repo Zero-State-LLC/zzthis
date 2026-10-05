@@ -7,14 +7,14 @@ The groups run in this order in one build. Each group ends with a "done when" li
 
 ## Group 0. Shared library ([#14](https://github.com/Zero-State-LLC/zzthis/issues/14))
 
-- [ ] T035 First commit of Group 0, before any port: the grammar changes from `docs/SPEC.md` Section 9a D-2026-10-04-04 (the `@` rule on split parts) and D-2026-10-04-10 (the G2 character sets), both INFERRED. They change parser output, so this commit changes `src/lib/grammar.ts`:
+- [x] T035 First commit of Group 0, before any port: the grammar changes from `docs/SPEC.md` Section 9a D-2026-10-04-04 (the `@` rule on split parts) and D-2026-10-04-10 (the G2 character sets), both INFERRED. They change parser output, so this commit changes `src/lib/grammar.ts`:
   - D-2026-10-04-04: add that decision's G9 rows, `vectors.json` grammar rows, and the scanner row `zz@ AgentSmith neo zz` to `zz-@agentsmith-neo-zz`.
   - D-2026-10-04-10, as decided 2026-10-05: check the 256 guard on the raw input in UTF-16 code units first; then map fullwidth U+FF01 to U+FF5E to ASCII and normalize to NFC (JavaScript `normalize("NFC")`, Swift `precomposedStringWithCanonicalMapping`, Kotlin `java.text.Normalizer` with `Form.NFC`); whitespace and separators use the explicit Unicode White_Space set from G2 step 1, in place of `trim()` and `\s`; lowercase with the Unicode mapping without locale rules; a letter that is still not ASCII fails with `unsupported-script`. Move the `vectors.json` `grammar_pending` rows into `grammar`, delete `grammar_pending`, move the G9 rows that wait for T035 into the main G9 table, and add them to `tests/grammar.test.ts`.
   - Every existing grammar row must still pass. The other readings (D-2026-10-04-03, -05, -06, -07, -08, -09, and -11) already have their spec text and rows. OPEN: Michael and Danny review all of these readings before the build PR merges. Default: the build applies them as written.
-- [ ] T026 npm workspaces, in the order `packages/*`, `apps/*`, `workers/*`. Move `src/lib/grammar.ts` into `packages/zz-core`, and keep `src/lib/grammar.ts` as a re-export so the site and its tests do not change.
-- [ ] T027 Classifier, check word, issuer, matching key, scanner, and the wordlist loader (plan, Repo layout). The loader reads the generated `src/generated/wordlists.ts` module, with its drift check (plan, Bundled data).
-- [ ] T028 Run every row of `specs/003-wordlist-checkword/vectors.json`, plus the spec 003 property tests and the FR-020 check-word tests.
-- [ ] T029 The spec 003 pipeline script and `fixture-7.txt`. Commit the EFF source at `packages/zz-core/wordlists/source/eff_large_wordlist.txt`. Run the pipeline and commit `proto-v0.txt`, `proto-v0.report.md`, `proto-v0.report.json`, and a draft root `NOTICE` with the EFF credit (completed in T036). Q32 on #74 is the license yes, so no further gate applies before the commit. The run fails unless the source SHA-256 matches spec 003. The private blocklist is not applied, and the report records `blocklist: not applied`. Local runs use `fixture-7`.
+- [x] T026 npm workspaces, in the order `packages/*`, `apps/*`, `workers/*`. Move `src/lib/grammar.ts` into `packages/zz-core`, and keep `src/lib/grammar.ts` as a re-export so the site and its tests do not change.
+- [x] T027 Classifier, check word, issuer, matching key, scanner, and the wordlist loader (plan, Repo layout). The loader reads the generated `src/generated/wordlists.ts` module, with its drift check (plan, Bundled data).
+- [x] T028 Run every row of `specs/003-wordlist-checkword/vectors.json`, plus the spec 003 property tests and the FR-020 check-word tests.
+- [x] T029 The spec 003 pipeline script and `fixture-7.txt`. Commit the EFF source at `packages/zz-core/wordlists/source/eff_large_wordlist.txt`. Run the pipeline and commit `proto-v0.txt`, `proto-v0.report.md`, `proto-v0.report.json`, and a draft root `NOTICE` with the EFF credit (completed in T036). Q32 on #74 is the license yes, so no further gate applies before the commit. The run fails unless the source SHA-256 matches spec 003. The private blocklist is not applied, and the report records `blocklist: not applied`. Local runs use `fixture-7`.
 
 Done when: `npm run test` passes every vector row, and the site build, `check-dist`, and the site tests pass. Only the T035 parser change differs.
 
@@ -92,7 +92,7 @@ Done when: the Playwright run passes against `npm run dev:api -- --fresh`, and t
 ## Group I. Files zzThat pins
 
 - [ ] T030 `design/fonts/`. Pin `@ibm/plex-sans@1.1.0`, `@ibm/plex-sans-condensed@2.0.0`, and `@ibm/plex-mono@2.5.0` (OFL-1.1) as exact devDependencies. Copy the static TTF files the token files name (Regular, Medium, SemiBold, and Bold, as each family needs) and `OFL.txt` into `design/fonts/`.
-- [ ] T033 `scripts/pin-zzthis.sh` from plan.md, What zzThat pins. Keep `pin-design.sh` until zzThat moves to the new script.
+- [x] T033 `scripts/pin-zzthis.sh` from plan.md, What zzThat pins. Keep `pin-design.sh` until zzThat moves to the new script.
 - [ ] T036 Complete the draft root `NOTICE`: the EFF Long Wordlist credit from T029 (CC BY 3.0 US, adapted: filtered and reordered, see `proto-v0.report.md`) and IBM Plex from T030 (SIL Open Font License 1.1, `design/fonts/OFL.txt`). Draft one sentence for `LICENSE`: "Third-party materials listed in NOTICE are licensed under their own terms." Flag both in the PR body. OPEN: Danny's legal yes on both texts. Default: the drafts are committed in the build PR, and the PR does not merge without his yes.
 
 Done when: running the script at the build commit produces every path in that table.
