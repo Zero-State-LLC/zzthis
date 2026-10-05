@@ -68,7 +68,7 @@ EXCLUDES=(--exclude=.git --exclude=build --exclude=DerivedData
 note "secrets (gitleaks, full history)"
 GL_CONF=()
 [ -f "$ROOT/.gitleaks.toml" ] && GL_CONF=(--config "$ROOT/.gitleaks.toml")
-"$BIN/gitleaks" detect --source "$ROOT" "${GL_CONF[@]}" \
+"$BIN/gitleaks" detect --source "$ROOT" ${GL_CONF[@]+"${GL_CONF[@]}"} \
   --redact --no-banner || record "gitleaks: secrets detected"
 
 BANDIT_EXCLUDE="$ROOT/.git,$ROOT/build,$ROOT/DerivedData,$ROOT/.venv,$ROOT/node_modules"
