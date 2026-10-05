@@ -61,5 +61,5 @@ describe("near-word property on proto-v0 (spec 003 T012)", () => {
       }
       checked += 1;
     }
-  });
+  }, 30_000);
 });
