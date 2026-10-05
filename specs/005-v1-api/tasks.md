@@ -10,7 +10,7 @@ The groups run in this order in one build. Each group ends with a "done when" li
 - [ ] T026 npm workspaces. Move `src/lib/grammar.ts` into `packages/zz-core`, and keep `src/lib/grammar.ts` as a re-export so the site and its tests do not change.
 - [ ] T027 Classifier, check word, issuer, matching key, scanner, and the wordlist loader (plan, Repo layout).
 - [ ] T028 Run every row of `specs/003-wordlist-checkword/vectors.json`, plus the spec 003 property tests and the FR-020 check-word tests.
-- [ ] T029 The spec 003 pipeline script and `fixture-7.txt`. Run the pipeline on the EFF long list and commit `proto-v0` with its yield report only after Danny's yes in the PR (spec 003 gate).
+- [ ] T029 The spec 003 pipeline script and `fixture-7.txt`. Run the pipeline on the EFF long list and commit `proto-v0` with its yield report. Q32 on #74 is the license yes, so no further gate applies before the commit (spec 003).
 
 Done when: `npm run test` passes every vector row, and the site build is unchanged.
 
@@ -77,7 +77,7 @@ Done when: tests cover a per-minute IP rule and the hourly per-user mint rule.
 - [ ] T020 The screens in the spec Web client table. Typing only.
 - [ ] T021 Patterns from `design/UX.md` and strings from `design/copy.json`. The demo badge is only for scripted demo data.
 - [ ] T022 `design/generated/tokens.css` and self-hosted fonts. No second palette.
-- [ ] T032 Playwright end-to-end run from plan.md Tests, and `.github/workflows/e2e.yml` (manual and nightly).
+- [ ] T032 Playwright end-to-end run from plan.md Tests, and `.github/workflows/e2e.yml`. The workflow triggers on `workflow_dispatch` and on `pull_request` (`labeled`, `synchronize`), runs only with the `run-e2e` label, has no schedule, and is not a required check. This follows zzThat ZQ27, decided 2026-10-05: the no-spend path, accepted by Danny on Zero-State-LLC/zzthat#39.
 
 Done when: the Playwright run passes against `npm run dev:api`, and the PR links that run.
 
@@ -90,4 +90,4 @@ Done when: running the script at the build commit produces every path in that ta
 
 ## Human gate
 
-- [ ] T023 Danny's yes before any Cloudflare resource, OAuth client, deploy workflow, or the proto-v0 commit.
+- [ ] T023 Danny's yes before any Cloudflare resource, OAuth client, or deploy workflow. The first production mint needs his deploy yes, and after it proto-v0 is permanent (spec 003).

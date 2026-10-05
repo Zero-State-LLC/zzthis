@@ -1214,7 +1214,7 @@ One running list of decisions, so every agent and advisor works from the same ru
 | D-2026-10-03-09 | 2026-10-03 | #41 | Several candidates in view: box each, the person picks, never guess. Typed lookup takes one whole code | [MICHAEL 2026-10-03 #41] |
 | D-2026-10-03-10 | 2026-10-03 | #42 | Handles are unique per scope, not globally. Enterprise handles: server-issued to a signed-in owner. Free public duplicates and local priority, and reusable postal account codes, are v2 | [MICHAEL 2026-10-03 #42]; v1 and v2 split INFERRED |
 | D-2026-10-03-11 | 2026-10-03 | #42 | Spec examples of reusable account codes use words (`zz-post-maple-river-zz`) linked privately to the account's contact details, never a phone number or other personal data in the code. Michael's intent (owner reuse, spending cap, owner credited, scan trail) is kept | INFERRED privacy default for [MICHAEL 2026-10-03 #42] |
-| D-2026-10-04-01 | 2026-10-04 | #74 | Danny asked for every open decision to be made by best practice and said yes to the full list on issue #74. Each of those decisions is tagged [DELEGATED 2026-10-04, #74]. Danny or Michael can reopen any of them. Accepting the one-shot build intent was not on that list and stays Danny's | [DANNY 2026-10-04 #74] |
+| D-2026-10-04-12 | 2026-10-04 | #74 | Danny asked for every open decision to be made by best practice and said yes to the full list on issue #74. Each of those decisions is tagged [DELEGATED 2026-10-04, #74]. Danny or Michael can reopen any of them. Accepting the one-shot build intent was not on that list and stays Danny's | [DANNY 2026-10-04 #74] |
 | D-2026-10-03-12 | 2026-10-03 | #44 | Field-code matching key: number words to digits, digit runs joined, lookalikes folded. No two issued codes share a key in a scope | [MICHAEL 2026-10-03 #44]; key details INFERRED |
 | D-2026-10-03-13 | 2026-10-03 | #45 | Verify the check word before any match; a mismatch goes to a confirm step. Each scope names the wordlist and version its check word uses | [MICHAEL 2026-10-03 #45]; scope rule INFERRED |
 | D-2026-10-03-14 | 2026-10-03 | #45 | Creation check: after writing a code, the creator can photograph it so the app confirms it can read the handwriting (on device, or online when uniqueness must be checked) | [MICHAEL 2026-10-03 #45] |
@@ -1350,11 +1350,11 @@ The table rows are a comparison drawn up in this spec from the operator's factor
 3. If Option B wins, switch the on-device reader to Option B.
 4. Keep cloud vision for retries and hard cases either way.
 
-**Decision: OPEN.** Fine-tuning is deferred until the prototype benchmark is in (Q18) [OPERATOR 2026-10-02].
+**Decision: decided (Q18) [DELEGATED 2026-10-04, #74].** v1 ships Option A on the device. Fine-tuning is not in v1: the Option B benchmark waits for the real-photo test set (Q34) and is a v2 track.
 
 ### 10.9 Open items
 
-- **Fine-tune a small handwriting model?** Deferred pending a 2-week prototype benchmark (Section 10.8) [OPERATOR 2026-10-02]. See Q18.
+- **Fine-tune a small handwriting model?** Not in v1 (Q18, decided [DELEGATED 2026-10-04, #74]). The 2-week benchmark (Section 10.8) is a v2 track.
 - **API auth for partner apps.** Not decided [OPERATOR 2026-10-02]. See Q19.
 
 ## 11. Provenance
