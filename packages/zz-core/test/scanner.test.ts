@@ -13,6 +13,23 @@ describe("scanText", () => {
     ]);
   });
 
+  it("treats every White_Space character as a space, and U+FEFF as text", () => {
+    expect(scanText("zz\u000bcopper\u000csky\u0085lantern\u2028zz")).toEqual([
+      {
+        kind: "code",
+        canonical: "zz-copper-sky-lantern-zz",
+        codeKind: "plain",
+      },
+    ]);
+    expect(scanText("zz copper\ufeffsky zz")).toEqual([
+      {
+        kind: "invalid",
+        reason: "invalid-character",
+        text: "zz copper\ufeffsky zz",
+      },
+    ]);
+  });
+
   it("reads a zz@ token that ends a clause as partial", () => {
     expect(scanText("see zz@bob.")).toEqual([
       { kind: "partial", text: "zz@bob" },

@@ -1,4 +1,5 @@
 import { parseCode, type CodeKind, type ParseFailure } from "./grammar.ts";
+import { plainSpaces } from "./whitespace.ts";
 
 // spec 004, Scanner rules 1 to 8: find every marker pair in recognized or
 // typed text. The scanner never guesses; the person picks a candidate.
@@ -37,7 +38,6 @@ interface Found {
   readonly candidate: ScanCandidate;
 }
 
-const SPACES = /[\r\n\t\p{Zs}]/gu;
 const SEPARATOR = /^[- \u2010-\u2015\u2212]$/u;
 const HYPHEN_RUN = /^[-\u2010-\u2015\u2212]+$/u;
 const CIRCLED_SPLIT = /(\(zz\))/i;
@@ -73,13 +73,14 @@ function pushPieces(tokens: Token[], raw: string, before: string): void {
   }
 }
 
-// Rules 1 and 2: spaces, then tokens at spaces and hyphens, with a circled
-// (zz) split out of any token. Each token keeps the separators before it.
+// Rule 1: every White_Space character becomes U+0020 (docs/SPEC.md G2 step
+// 1). Rule 2: tokens at spaces and hyphens, with a circled (zz) split out of
+// any token. Each token keeps the separators before it.
 function tokenize(input: string): Token[] {
   const tokens: Token[] = [];
   let before = "";
   let raw = "";
-  for (const char of input.replace(SPACES, " ")) {
+  for (const char of plainSpaces(input)) {
     if (!SEPARATOR.test(char)) {
       raw += char;
       continue;

@@ -1,3 +1,5 @@
+import { isBlank, plainSpaces } from "./whitespace.ts";
+
 export type CodeKind = "plain" | "handle" | "name" | "bare";
 export type CodeVariant = "dash" | "circled";
 
@@ -33,13 +35,14 @@ const NAME = /^[a-z0-9]+(?:\.[a-z0-9]+)*\.eth$/;
 const HANDLE_BODY = /^[a-z0-9._]{1,32}$/;
 const NON_ASCII_LETTER = /(?![a-z])\p{L}/u;
 const RESERVED = /[#$/:]/;
-// G2 steps 1, 2, and 6 name these sets exactly (D-2026-10-04-10), so the
-// TypeScript, Swift, and Kotlin parsers agree. No Unicode-wide \s or trim().
-const BLANK = /^[ \t\r\n]*$/;
-const LINE_SPACE = /[\t\r\n]/g;
+// G2 step 1 (D-2026-10-04-10): the fullwidth forms U+FF01 to U+FF5E sit
+// U+FEE0 above their ASCII characters.
+const FULLWIDTH = /[\uff01-\uff5e]/g;
+const FULLWIDTH_OFFSET = 0xfee0;
 const EDGE_SPACE = /^ +| +$/g;
 const DASHES = /[\u2010-\u2015\u2212]/g;
-const ASCII_UPPER = /[A-Z]/g;
+// After normalize, every whitespace character is U+0020 and every dash is a
+// hyphen, so this is the G2 step 6 separator set.
 const SEPARATORS = /[- ]+/;
 
 interface Opened {
@@ -56,13 +59,24 @@ function fail(reason: ParseFailure): ParseResult {
   return { ok: false, reason };
 }
 
-function lowerAscii(letter: string): string {
-  return String.fromCharCode(letter.charCodeAt(0) + 32);
+function fromFullwidth(char: string): string {
+  return String.fromCharCode(char.charCodeAt(0) - FULLWIDTH_OFFSET);
 }
 
-function normalize(input: string): string {
-  const spaced = input.replace(LINE_SPACE, " ").replace(EDGE_SPACE, "");
-  return spaced.replace(DASHES, "-").replace(ASCII_UPPER, lowerAscii);
+// G2 step 1, after the guard: map the way the PRECIS UsernameCaseMapped
+// profile does, for an ASCII result. Fullwidth forms become ASCII, then NFC,
+// so the Kelvin sign U+212A becomes K (D-2026-10-04-10).
+function mapped(input: string): string {
+  return input.replace(FULLWIDTH, fromFullwidth).normalize("NFC");
+}
+
+// G2 steps 2 to 4: every whitespace character is a space and the ends are
+// trimmed, dashes are hyphens, and letters take the Unicode lowercase mapping
+// without locale rules. A letter that is still not ASCII fails later with
+// unsupported-script (earlyFault).
+function normalize(text: string): string {
+  const spaced = plainSpaces(text).replace(EDGE_SPACE, "");
+  return spaced.replace(DASHES, "-").toLowerCase();
 }
 
 function opening(text: string): Opened | null {
@@ -238,9 +252,16 @@ function earlyFault(parts: readonly string[]): ParseFailure | null {
 }
 
 export function parseCode(input: string): ParseResult {
-  if (BLANK.test(input)) return fail("empty");
-  if (input.length > MAX_INPUT) return fail("too-long");
-  const text = normalize(input);
+  // G2 step 1: the guard counts the raw input in UTF-16 code units, before
+  // any mapping. G6 still ranks empty ahead of too-long, and the mapping
+  // never turns whitespace into anything else or anything else into
+  // whitespace, so a long input that is only whitespace is empty.
+  if (input.length > MAX_INPUT) {
+    return fail(isBlank(input) ? "empty" : "too-long");
+  }
+  const prepared = mapped(input);
+  if (isBlank(prepared)) return fail("empty");
+  const text = normalize(prepared);
   if (text === "zz") {
     return {
       ok: true,

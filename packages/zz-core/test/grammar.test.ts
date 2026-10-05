@@ -29,8 +29,32 @@ const successRows = vectors.grammar.flatMap((row) =>
     : [],
 );
 
-const SEPARATOR_RUN = /[ \t\r\n\u2010-\u2015\u2212-]+/g;
-const SEPARATORS = ["-", " ", "--", "  ", " - ", "- -"];
+// G2 steps 1, 3, and 6 as the spec lists them (D-2026-10-04-10), typed here
+// independently of src/whitespace.ts.
+const G2_WHITE_SPACE = [
+  ..."\t\n\v\f\r \u0085\u00a0\u1680\u2028\u2029\u202f\u205f\u3000",
+  ...Array.from({ length: 11 }, (_, i) => String.fromCharCode(0x2000 + i)),
+];
+const G2_DASHES = [..."-\u2010\u2011\u2012\u2013\u2014\u2015\u2212"];
+// U+FF0D, the fullwidth hyphen-minus, maps to the hyphen in G2 step 1.
+const G2_SEPARATORS = new Set([...G2_WHITE_SPACE, ...G2_DASHES, "\uff0d"]);
+
+function escaped(char: string): string {
+  return `\\u${char.charCodeAt(0).toString(16).padStart(4, "0")}`;
+}
+
+const SEPARATOR_RUN = new RegExp(
+  `[${[...G2_SEPARATORS].map(escaped).join("")}]+`,
+  "g",
+);
+const SEPARATORS = [
+  ..."- \u00a0\u3000\u0085",
+  "--",
+  "  ",
+  " - ",
+  "- -",
+  "\u2003-\u2028",
+];
 const OPENING = /^(?:\(zz\)|zz)/i;
 const CLOSING = /(?:\(zz\)|zz)$/i;
 
@@ -99,6 +123,70 @@ describe("parseCode beyond the vectors", () => {
   });
 });
 
+describe("G2 character sets and mapping (D-2026-10-04-10)", () => {
+  it("splits parts on exactly the G2 separators", () => {
+    const splitOn: string[] = [];
+    for (let unit = 0; unit <= 0xffff; unit += 1) {
+      if (unit >= 0xd800 && unit <= 0xdfff) continue;
+      const char = String.fromCharCode(unit);
+      const parsed = parseCode(`zz-a${char}b-zz`);
+      if (parsed.ok && parsed.canonical === "zz-a-b-zz") splitOn.push(char);
+    }
+    expect(splitOn.map(escaped)).toEqual(
+      [...G2_SEPARATORS].sort().map(escaped),
+    );
+  });
+
+  it("trims every White_Space character at the ends, and U+FEFF never", () => {
+    const parsed = parseCode("\u3000\u0085zz-copper-zz\u2028\u00a0");
+    expect(parsed.ok && parsed.canonical).toBe("zz-copper-zz");
+    expect(parseCode("\ufeffzz-copper-zz")).toEqual({
+      ok: false,
+      reason: "no-marker",
+    });
+    expect(parseCode("zz-copper-zz\ufeff")).toEqual({
+      ok: false,
+      reason: "no-closing-marker",
+    });
+  });
+
+  it("reads input that is only whitespace as empty, ahead of too-long (G6)", () => {
+    for (const input of ["\u2028\u3000\u00a0", "\u3000".repeat(300)]) {
+      expect(parseCode(input)).toEqual({ ok: false, reason: "empty" });
+    }
+    expect(parseCode(`${"\u3000".repeat(300)}zz`)).toEqual({
+      ok: false,
+      reason: "too-long",
+    });
+  });
+
+  it("counts the raw input, before NFC changes its length", () => {
+    // 258 raw code units, which NFC would shrink to 132.
+    expect(parseCode(`zz-${"e\u0301".repeat(126)}-zz`)).toEqual({
+      ok: false,
+      reason: "too-long",
+    });
+    // 256 raw code units, which NFC grows to 506: the guard does not rerun.
+    expect(parseCode(`zz-${"\u0958".repeat(250)}-zz`)).toEqual({
+      ok: false,
+      reason: "unsupported-script",
+    });
+  });
+
+  it("maps fullwidth forms before NFC, then lowercases", () => {
+    // Fullwidth capitals, written as escapes (Section 2.2a G7).
+    const capitals = parseCode(
+      "\uff3a\uff3a\uff0d\uff23\uff2f\uff30\uff30\uff25\uff32\uff0d\uff3a\uff3a",
+    );
+    expect(capitals.ok && capitals.canonical).toBe("zz-copper-zz");
+    // A fullwidth e becomes e first, so NFC composes it with U+0301.
+    expect(parseCode("zz-caf\uff45\u0301-zz")).toEqual({
+      ok: false,
+      reason: "unsupported-script",
+    });
+  });
+});
+
 describe("parseCode properties (spec 003 US3)", () => {
   it("parses every canonical form back to itself", () => {
     for (const row of successRows) {
@@ -130,7 +218,7 @@ describe("parseCode properties (spec 003 US3)", () => {
         "",
       );
       const parsed = parseCode(text);
-      if (text.length > 256 && /[^ \t\r\n]/.test(text)) {
+      if (text.length > 256 && /[^\p{White_Space}]/u.test(text)) {
         expect(parsed).toEqual({ ok: false, reason: "too-long" });
       }
     }

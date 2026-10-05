@@ -198,6 +198,24 @@ const successes: readonly {
   { input: "(zz)", kind: "bare", canonical: "zz" },
   { input: "ZZ", kind: "bare", canonical: "zz" },
   { input: "(ZZ)", kind: "bare", canonical: "zz" },
+  // D-2026-10-04-10: U+00A0 and U+2003 are White_Space, NFC makes the Kelvin
+  // sign U+212A K, and fullwidth forms map to ASCII.
+  {
+    input: "zz-copper\u00a0lantern-zz",
+    kind: "plain",
+    canonical: "zz-copper-lantern-zz",
+  },
+  {
+    input: "zz-copper\u2003lantern-zz",
+    kind: "plain",
+    canonical: "zz-copper-lantern-zz",
+  },
+  { input: "zz-\u212aite-zz", kind: "plain", canonical: "zz-kite-zz" },
+  {
+    input: "ｚｚ－ｃｏｐｐｅｒ－ｚｚ",
+    kind: "plain",
+    canonical: "zz-copper-zz",
+  },
 ];
 
 const failures: readonly { input: string; reason: ParseFailure }[] = [
@@ -239,14 +257,17 @@ const failures: readonly { input: string; reason: ParseFailure }[] = [
   { input: "zz-@agentsmith-neo!-zz", reason: "invalid-character" },
   { input: "zz-vitalik.eth-wallet!-zz", reason: "invalid-character" },
   { input: "x".repeat(257), reason: "too-long" },
-  { input: "zz-copper\u00a0lantern-zz", reason: "invalid-character" },
-  { input: "zz-\u212aite-zz", reason: "unsupported-script" },
-  { input: "\u00a0\u00a0", reason: "no-marker" },
   {
     input: `zz-${"\u{10330}".repeat(125)}-zz`,
     reason: "unsupported-script",
   },
   { input: `zz-${"\u{10330}".repeat(126)}-zz`, reason: "too-long" },
+  // D-2026-10-04-10: U+00A0 is White_Space, a Cyrillic o and an NFC-composed
+  // e with acute are letters outside ASCII, and U+FEFF is not White_Space.
+  { input: "\u00a0\u00a0", reason: "empty" },
+  { input: "zz-c\u043epper-zz", reason: "unsupported-script" },
+  { input: "zz-cafe\u0301-zz", reason: "unsupported-script" },
+  { input: "zz-copper\ufefflantern-zz", reason: "invalid-character" },
 ];
 
 describe("parseCode G9", () => {
