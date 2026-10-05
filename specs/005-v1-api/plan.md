@@ -126,7 +126,7 @@ Coverage (INFERRED). The root, `packages/zz-core`, and `apps/web` keep the repo'
 
 Repo hygiene (INFERRED, T001). `.gitignore` covers `.wrangler/` and `.dev.vars`, and eslint and prettier skip the generated folders, so one `wrangler dev` run or one generator run never turns lint red and no local secret can be committed. These config edits are in scope and are not validator patches.
 
-The Playwright run needs a Worker process, so it lives in a new workflow, `.github/workflows/e2e.yml`, named here before it lands. It triggers on `workflow_dispatch` and on `pull_request` (`labeled`, `synchronize`), and runs only when the PR has the `run-e2e` label. It has no schedule and is not a required check. This is the no-spend default while zzThat ZQ27 (CI spend) is OPEN for Danny. A manual or scheduled trigger alone cannot run a workflow that exists only on an unmerged branch, so the label run on the build PR is the run the brief links.
+The Playwright run needs a Worker process, so it lives in a new workflow, `.github/workflows/e2e.yml`, named here before it lands. It triggers on `workflow_dispatch` and on `pull_request` (`labeled`, `synchronize`), and runs only when the PR has the `run-e2e` label. It has no schedule and is not a required check. This follows zzThat ZQ27 (CI spend), decided 2026-10-05: the no-spend path, accepted by Danny on Zero-State-LLC/zzthat#39. A manual or scheduled trigger alone cannot run a workflow that exists only on an unmerged branch, so the label run on the build PR is the run the brief links.
 
 ## Operator work without an admin route
 
@@ -164,4 +164,4 @@ The operator runs these with `wrangler d1 execute` against the production databa
 - A purge clears one data center. Other data centers serve the old copy for up to 60 seconds (FR-019).
 - One Durable Object call per request adds a few milliseconds. That is fine for the prototype.
 - Enumeration by timing. The not-found path is one code path (spec 002).
-- proto-v0 is permanent after the first production mint (spec 003). Danny may re-run the pipeline with `ZZ_BLOCKLIST` before that mint.
+- proto-v0 is permanent after the first production mint (spec 003). Before that mint, re-running the pipeline with `ZZ_BLOCKLIST` and checking the result is required, and the mint needs Danny's deploy yes (tasks T037).

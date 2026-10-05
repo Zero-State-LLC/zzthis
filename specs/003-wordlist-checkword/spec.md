@@ -54,7 +54,7 @@ Acceptance:
 |---|---|---|
 | FR-001 | Filter for distinct letter shapes when handwritten. | [issue #14]; method and pass rule OPEN (Q35) |
 | FR-002 | Remove homophones (distinct sounds). | [issue #14]; method and pass rule OPEN (Q35) |
-| FR-003 | Every pair of words has an edit distance of at least 3. Edit distance is Levenshtein distance over the lowercase ASCII letters: insert, delete, or substitute one letter, each costing 1. Swapping two letters is not one edit; it costs 2. FR-003, filter (6), and the G1 near-word check all use this one function. | [issue #14]; metric INFERRED (`docs/SPEC.md` D-2026-10-04-05, for Michael and Danny to review) |
+| FR-003 | Every pair of words has an edit distance of at least 3. Edit distance is Levenshtein distance over the lowercase ASCII letters: insert, delete, or substitute one letter, each costing 1. Swapping two letters is not one edit; it costs 2. FR-003, filter (6), and the G1 near-word check all use this one function. | [issue #14]; metric decided 2026-10-05 (`docs/SPEC.md` D-2026-10-04-05) |
 | FR-004 | Report yield after each filter and the gap to the needed code-space size. | [issue #14] |
 | FR-005 | A check word library tuned to handwriting and voice errors. The check word adds error detection, not capacity. | [issue #14] [PRODUCT] |
 | FR-006 | The library implements the v1 text grammar in `docs/SPEC.md` Section 2.2a (G1 to G8) and passes its G9 test vectors. This replaces the earlier placeholder that excluded the circled marker, `@`, and mixed case. | [MICHAEL 2026-10-02 #33] [MICHAEL 2026-10-02 #34] |
@@ -143,7 +143,7 @@ Status: decided. Danny said yes on #74 (2026-10-04), so these are the v1 rules (
 
 License: Danny said yes to the source and the license on #74 (Q32). The build runs the spec 003 pipeline and commits `proto-v0.txt`, `proto-v0.report.md`, `proto-v0.report.json`, and a draft root `NOTICE` crediting EFF (CC BY 3.0 US). Q32 on #74 is the license yes, so no further gate applies before the commit. The `NOTICE` wording itself waits for Danny's legal yes before the build PR merges (spec 005 T036). Local runs use `fixture-7`.
 
-Point of no return: after the first production mint, proto-v0 can never change, because issued codes must keep verifying (FR-017) and retired words are never issued again (Q36 default). Danny may re-run the pipeline with `ZZ_BLOCKLIST` before that mint. The committed file then changes before the point of no return.
+Point of no return: after the first production mint, proto-v0 can never change, because issued codes must keep verifying (FR-017) and retired words are never issued again (Q36 default). Required before that mint: re-run the pipeline with `ZZ_BLOCKLIST`, check the yield report (the removed words and the new N), and commit the new list, so the file changes before the point of no return. The first production mint needs Danny's deploy yes (spec 005 T037).
 
 ### Shared test vectors
 
@@ -151,7 +151,7 @@ Point of no return: after the first production mint, proto-v0 can never change, 
 
 ## Readings (decided 2026-10-05 by established practice, docs/SPEC.md 9a)
 
-The pre-build audit found places where two careful builders could read the grammar or the classifier differently. Each row records the reading the build uses. These are INFERRED, not decided. OPEN: Michael and Danny review them before the build PR merges. Default: the build applies them as written. The full rows are in `docs/SPEC.md` Section 9a.
+The pre-build audit found places where two careful builders could read the grammar or the classifier differently. Each row records the reading the build uses. They were decided on 2026-10-05 by established practice, each with its sources, as Danny asked on #75. The full rows are in `docs/SPEC.md` Section 9a.
 
 | ID | Reading | Effect on vectors |
 |---|---|---|
