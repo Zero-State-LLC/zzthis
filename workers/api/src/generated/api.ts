@@ -424,7 +424,7 @@ export interface components {
             /** @description Required when kind is handle. Ignored for plain. The server does not invent a different handle. */
             handle?: string;
             /**
-             * @description free_public is always public, and private there is 400 malformed. enterprise and logistics default to private (spec.md FR-035).
+             * @description free_public is always public, and private there is 400 malformed. It defaults to public; only enterprise and logistics records can be private (spec.md FR-035).
              * @enum {string}
              */
             visibility?: "public" | "private";
