@@ -175,12 +175,12 @@ After the person confirms `coper` as written, `zz-coper-lantern-sky-zz` is a fie
 2. Trim leading and trailing whitespace. Treat every other whitespace character, including line breaks and tabs, as a space, so a code written across two lines is one code [MICHAEL 2026-10-02 #33].
 3. Treat the dash characters U+2010 to U+2015 and U+2212 as a hyphen, because phone keyboards replace typed hyphens (INFERRED).
 4. Lowercase with the Unicode lowercase mapping, without locale rules (JavaScript `toLowerCase()`, Swift `lowercased()`, Kotlin `lowercase(Locale.ROOT)`). A letter that is still not ASCII after steps 1 and 4 fails with `unsupported-script` (G4), so a lookalike from another script, such as a Cyrillic `о` inside a word, never matches an ASCII code (D-2026-10-04-10). Case never changes which code it is: `Zz-HELLO-zz`, `zz-Hello-zz`, and `zz-hello-zz` are the same code, and so is the same code written all in capitals [MICHAEL 2026-10-02 #33].
-5. Rewrite an `@` that touches the opening marker (`zz@-name-zz` or `zz@name-zz`) as `zz-@name-zz`. Touching is not intentional, and the reader treats the `@` as separate even when it touches or overlaps the zz [MICHAEL 2026-10-03 #37]. Rewrite a tag part that ends in `@` (`zz-ai@-name-zz`, `zz-ai@ name-zz`, `zz-ai@name-zz`) as the tag plus the handle: `zz-ai-@name-zz` (INFERRED from the About photo in issue #37). A proposed reading moves this rewrite onto the split parts, so the result no longer depends on the separator or the marker form (D-2026-10-04-04, INFERRED, for Michael and Danny to review). It changes parser output, so it lands together with a grammar code change and new G9 rows (spec 005 T035).
+5. Rewrite an `@` that touches the opening marker (`zz@-name-zz` or `zz@name-zz`) as `zz-@name-zz`. Touching is not intentional, and the reader treats the `@` as separate even when it touches or overlaps the zz [MICHAEL 2026-10-03 #37]. Rewrite a tag part that ends in `@` (`zz-ai@-name-zz`, `zz-ai@ name-zz`, `zz-ai@name-zz`) as the tag plus the handle: `zz-ai-@name-zz` (INFERRED from the About photo in issue #37). The rewrite runs on the split parts, so the result does not depend on the separator or the marker form (D-2026-10-04-04, INFERRED, for Michael and Danny to review): an `@` touching the opening marker is read as separate, a first part `tag@rest` becomes `tag` and `@rest`, and a part that is exactly `@` joins the part after it. It landed with the grammar code change and its G9 rows in spec 005 T035.
 6. Find the markers (G3), then split the content on separators. Hyphens, spaces, or a mix count as separators, and a run of them counts as one separator [MICHAEL 2026-10-02 #33]. The separators are the whitespace characters of step 1, the hyphen U+002D, and the dashes in step 3. No other character is a separator: a format character such as U+FEFF stays in the part and fails with `invalid-character` (D-2026-10-04-10).
 7. Check each part (G4) and the part count (G5).
 8. Return the canonical form: `zz-` plus the parts joined by single hyphens plus `-zz`. The canonical form of a bare mark is `zz` [MICHAEL 2026-10-02 #33].
 
-Steps 1, 2, 4, and 6 name exact character sets so the TypeScript, Swift, and Kotlin parsers agree (D-2026-10-04-10, INFERRED, for Michael and Danny to review). Today's `src/lib/grammar.ts` lowercases with full Unicode rules and treats every Unicode space as whitespace, so the change lands with the grammar code change in spec 005 T035, together with the G9 rows that wait for it (G9, below).
+Steps 1, 2, 4, and 6 name exact character sets so the TypeScript, Swift, and Kotlin parsers agree (D-2026-10-04-10, INFERRED, for Michael and Danny to review). `src/lib/grammar.ts` follows them since spec 005 T035, which moved the G9 rows that waited for it into the table below.
 
 **G3. Markers**
 
@@ -255,6 +255,9 @@ The parser returns exactly one reason. When several apply, it returns the first 
 | `zz@-AgentSmith-neo-zz` | handle | `zz-@agentsmith-neo-zz` |
 | `zz-ai@-agentsmith-zz` | handle | `zz-ai-@agentsmith-zz` (tag `ai`) |
 | `zz-ai@ agentsmith-zz` | handle | `zz-ai-@agentsmith-zz` (tag `ai`) |
+| `zz@ agentsmith zz` | handle | `zz-@agentsmith-zz` (D-2026-10-04-04) |
+| `(zz)@ agentsmith (zz)` | handle | `zz-@agentsmith-zz` (D-2026-10-04-04) |
+| `zz ai@ agentsmith zz` | handle | `zz-ai-@agentsmith-zz` (tag `ai`, D-2026-10-04-04) |
 | `zz-vitalik.eth-zz` | name | `zz-vitalik.eth-zz` |
 | `zz-Vitalik.ETH-zz` | name | `zz-vitalik.eth-zz` |
 | `zz-one-two-three-four-five-six-zz` | plain | `zz-one-two-three-four-five-six-zz` |
@@ -298,14 +301,9 @@ The parser returns exactly one reason. When several apply, it returns the first 
 | `zz-copper` + U+2003 (em space) + `lantern-zz` | plain | `zz-copper-lantern-zz` |
 | `zz-` + U+212A (the Kelvin sign) + `ite-zz` | plain | `zz-kite-zz` (NFC makes U+212A `K`, D-2026-10-04-10) |
 | `zz-c` + U+043E (Cyrillic о) + `pper-zz` | fail | `unsupported-script` (UTS #39 ASCII-Only, D-2026-10-04-10) |
-
-**G9 rows that wait for spec 005 T035** (D-2026-10-04-10). Today's `src/lib/grammar.ts` fails these rows, so `vectors.json` keeps them in `grammar_pending`, not in `grammar`. T035 moves them into the table above and into `grammar` with its parser change.
-
-| Input | Result | Canonical form or reason |
-|---|---|---|
-| fullwidth `ｚｚ－ｃｏｐｐｅｒ－ｚｚ` (U+FF5A, U+FF0D, and so on) | plain | `zz-copper-zz` (today's parser keeps fullwidth letters and fails with `unsupported-script`) |
-| `zz-cafe` + U+0301 (combining acute) + `-zz` | fail | `unsupported-script` (NFC makes it `é`; today's parser reports `invalid-character`) |
-| `zz-copper` + U+FEFF + `lantern-zz` | fail | `invalid-character` (U+FEFF is not White_Space; today's parser splits on it) |
+| fullwidth `ｚｚ－ｃｏｐｐｅｒ－ｚｚ` (U+FF5A, U+FF0D, and so on) | plain | `zz-copper-zz` (fullwidth forms map to ASCII, D-2026-10-04-10) |
+| `zz-cafe` + U+0301 (combining acute) + `-zz` | fail | `unsupported-script` (NFC makes it `é`, D-2026-10-04-10) |
+| `zz-copper` + U+FEFF + `lantern-zz` | fail | `invalid-character` (U+FEFF is not White_Space, D-2026-10-04-10) |
 
 **G10. Matching key for field codes** (Q57, issue #44)
 

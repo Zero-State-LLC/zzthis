@@ -142,6 +142,32 @@ const successes: readonly {
     handle: "@agentsmith",
   },
   {
+    input: "zz@ agentsmith zz",
+    kind: "handle",
+    canonical: "zz-@agentsmith-zz",
+    handle: "@agentsmith",
+  },
+  {
+    input: "(zz)@ agentsmith (zz)",
+    kind: "handle",
+    canonical: "zz-@agentsmith-zz",
+    handle: "@agentsmith",
+  },
+  {
+    input: "zz ai@ agentsmith zz",
+    kind: "handle",
+    canonical: "zz-ai-@agentsmith-zz",
+    tag: "ai",
+    handle: "@agentsmith",
+  },
+  {
+    input: "zz@ AgentSmith neo zz",
+    kind: "handle",
+    canonical: "zz-@agentsmith-neo-zz",
+    handle: "@agentsmith",
+    qualifiers: ["neo"],
+  },
+  {
     input: "zz-vitalik.eth-zz",
     kind: "name",
     canonical: "zz-vitalik.eth-zz",
@@ -199,6 +225,8 @@ const failures: readonly { input: string; reason: ParseFailure }[] = [
   { input: "zz-hello-x@y-zz", reason: "misplaced-at" },
   { input: "zz-1.2-@smith-zz", reason: "misplaced-at" },
   { input: "zz-@-zz", reason: "invalid-handle" },
+  { input: "zz-ai@-zz", reason: "invalid-handle" },
+  { input: "zz-a_b@c-zz", reason: "misplaced-at" },
   { input: "zz-@.agent-zz", reason: "invalid-handle" },
   { input: "zz-@agent.-zz", reason: "invalid-handle" },
   { input: "zz-@agent..smith-zz", reason: "invalid-handle" },
@@ -211,6 +239,14 @@ const failures: readonly { input: string; reason: ParseFailure }[] = [
   { input: "zz-@agentsmith-neo!-zz", reason: "invalid-character" },
   { input: "zz-vitalik.eth-wallet!-zz", reason: "invalid-character" },
   { input: "x".repeat(257), reason: "too-long" },
+  { input: "zz-copper\u00a0lantern-zz", reason: "invalid-character" },
+  { input: "zz-\u212aite-zz", reason: "unsupported-script" },
+  { input: "\u00a0\u00a0", reason: "no-marker" },
+  {
+    input: `zz-${"\u{10330}".repeat(125)}-zz`,
+    reason: "unsupported-script",
+  },
+  { input: `zz-${"\u{10330}".repeat(126)}-zz`, reason: "too-long" },
 ];
 
 describe("parseCode G9", () => {

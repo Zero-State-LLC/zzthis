@@ -33,6 +33,14 @@ const NAME = /^[a-z0-9]+(?:\.[a-z0-9]+)*\.eth$/;
 const HANDLE_BODY = /^[a-z0-9._]{1,32}$/;
 const NON_ASCII_LETTER = /(?![a-z])\p{L}/u;
 const RESERVED = /[#$/:]/;
+// G2 steps 1, 2, and 6 name these sets exactly (D-2026-10-04-10), so the
+// TypeScript, Swift, and Kotlin parsers agree. No Unicode-wide \s or trim().
+const BLANK = /^[ \t\r\n]*$/;
+const LINE_SPACE = /[\t\r\n]/g;
+const EDGE_SPACE = /^ +| +$/g;
+const DASHES = /[\u2010-\u2015\u2212]/g;
+const ASCII_UPPER = /[A-Z]/g;
+const SEPARATORS = /[- ]+/;
 
 interface Opened {
   variant: CodeVariant;
@@ -48,23 +56,25 @@ function fail(reason: ParseFailure): ParseResult {
   return { ok: false, reason };
 }
 
+function lowerAscii(letter: string): string {
+  return String.fromCharCode(letter.charCodeAt(0) + 32);
+}
+
 function normalize(input: string): string {
-  const spaced = input.replace(/[\t\r\n]/g, " ").trim();
-  const hyphens = spaced.replace(/[\u2010-\u2015\u2212]/g, "-");
-  const lower = hyphens.toLowerCase();
-  const opened = lower.replace(/^zz@-?/, "zz-@");
-  return opened.replace(/^zz-([a-z0-9]+)@[\s-]*/, "zz-$1-@");
+  const spaced = input.replace(LINE_SPACE, " ").replace(EDGE_SPACE, "");
+  return spaced.replace(DASHES, "-").replace(ASCII_UPPER, lowerAscii);
 }
 
 function opening(text: string): Opened | null {
   if (text.startsWith("(zz)")) {
     return { variant: "circled", rest: text.slice(4) };
   }
-  if (/^zz[-\s]/.test(text)) {
-    return {
-      variant: "dash",
-      rest: text.slice(2).replace(/^[-\s]+/, ""),
-    };
+  // An @ touching the opening zz is read as separate (D-2026-10-04-04).
+  if (text.startsWith("zz@")) {
+    return { variant: "dash", rest: text.slice(2) };
+  }
+  if (/^zz[- ]/.test(text)) {
+    return { variant: "dash", rest: text.slice(3) };
   }
   return null;
 }
@@ -72,8 +82,27 @@ function opening(text: string): Opened | null {
 function closing(rest: string): string | "no-closing-marker" | "no-content" {
   if (rest === "zz" || rest === "(zz)") return "no-content";
   if (rest.endsWith("(zz)")) return rest.slice(0, -4);
-  if (/[-\s]zz$/.test(rest)) return rest.replace(/[-\s]+zz$/, "");
+  if (/[- ]zz$/.test(rest)) return rest.slice(0, -2);
   return "no-closing-marker";
+}
+
+// G2 step 5 on the split parts (D-2026-10-04-04): a first part tag@rest
+// becomes tag and @rest, and a part that is exactly @ joins the next part.
+function splitTagAt(parts: readonly string[]): readonly string[] {
+  return parts.flatMap((part, index) => {
+    const at = part.indexOf("@");
+    if (index > 0 || at < 1 || !PLAIN.test(part.slice(0, at))) return [part];
+    return [part.slice(0, at), part.slice(at)];
+  });
+}
+
+function joinLoneAt(parts: readonly string[]): readonly string[] {
+  const joined: string[] = [];
+  for (const part of parts) {
+    if (joined.at(-1) === "@") joined[joined.length - 1] = `@${part}`;
+    else joined.push(part);
+  }
+  return joined;
 }
 
 function soleAt(parts: readonly string[]): LocatedAt | "misplaced" | "none" {
@@ -209,7 +238,7 @@ function earlyFault(parts: readonly string[]): ParseFailure | null {
 }
 
 export function parseCode(input: string): ParseResult {
-  if (input.trim() === "") return fail("empty");
+  if (BLANK.test(input)) return fail("empty");
   if (input.length > MAX_INPUT) return fail("too-long");
   const text = normalize(input);
   if (text === "zz") {
@@ -236,7 +265,8 @@ export function parseCode(input: string): ParseResult {
   if (opened === null) return fail("no-marker");
   const body = closing(opened.rest);
   if (body === "no-closing-marker" || body === "no-content") return fail(body);
-  const parts = body.split(/[-\s]+/).filter((part) => part !== "");
+  const split = body.split(SEPARATORS).filter((part) => part !== "");
+  const parts = joinLoneAt(splitTagAt(split));
   const fault = earlyFault(parts);
   if (fault !== null) return fail(fault);
   return classify(parts, opened.variant);
