@@ -1,0 +1,6 @@
+# Placeholder until spec 005 T001 adds the bindings, assets, cron, and vars.
+# No Cloudflare resource exists for this Worker (spec 005 T023).
+name = "zzthis-api"
+main = "src/index.ts"
+compatibility_date = "2026-08-15"
+compatibility_flags = ["nodejs_compat"]
