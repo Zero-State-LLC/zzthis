@@ -25,6 +25,10 @@
       "text": "Done",
       "source": "INFERRED 2026-10-04, for Michael's review"
     },
+    "common.back": {
+      "text": "Back",
+      "source": "[proposed for DANNY on #78]; text INFERRED, for Michael's review"
+    },
     "common.sign_in_needed": {
       "text": "Sign in to do this.",
       "source": "INFERRED 2026-10-04, for Michael's review"

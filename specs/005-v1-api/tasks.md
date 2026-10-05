@@ -97,6 +97,12 @@ Done when: the Playwright run passes against `npm run dev:api -- --fresh`, and t
 
 Done when: running the script at the build commit produces every path in that table.
 
+## Group J. Operator SQL (pending Danny's yes on #78)
+
+- [ ] T038 The operator SQL in `workers/api/ops/` from plan.md, Operator work. `reports.sql` lists the open reports and closes one by setting `closed_at`, which the FR-026 report deletion (D-2026-10-05-06) needs. `suspend.sql`, `revoke-code.sql`, and `grant.sql` do the jobs in the plan.md table. Each file takes quoted placeholders for `wrangler d1 execute` and writes its audit event in the same batch. Pending Danny's yes on #78.
+
+Done when: `test/ops.test.ts` runs each file against the migrated local D1 schema and checks the change and its audit event, and a file run as written changes nothing.
+
 ## Human gate
 
 - [ ] T023 Danny's yes before any Cloudflare resource, OAuth client, or deploy workflow. His legal yes on the `NOTICE` text and the LICENSE sentence (T036) was given on #78.

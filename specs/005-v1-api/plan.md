@@ -61,7 +61,7 @@ workers/api/
   src/resolve/              resolve steps and the cache
   src/records/              owner read, versions, signing
   src/reads/ src/reports/ src/audit/ src/account/ src/moderation/ src/limits/
-  ops/                      operator SQL: suspend, revoke a reported code, add a grant
+  ops/                      operator SQL: list and close reports, suspend, revoke a reported code, add a grant
   test/                     one file per route group
 apps/web/
   astro.config.mjs          output 'static', build.inlineStylesheets 'never', vite.build.assetsInlineLimit 0, no base path
@@ -131,14 +131,14 @@ The Playwright run needs a Worker process, so it lives in a new workflow, `.gith
 
 ## Operator work without an admin route
 
-The operator runs these with `wrangler d1 execute` against the production database. Each SQL file in `workers/api/ops/` writes its audit row in the same statement batch.
+The operator runs these with `wrangler d1 execute` against the production database. Each SQL file in `workers/api/ops/` writes its audit row in the same statement batch. `wrangler d1 execute` binds no parameters, so each file names its inputs as quoted placeholders, such as `':account_id'`. The operator replaces them, for example with `sed`, and passes the result as `--command="..."`. Use that `=` form: each file starts with a `--` comment, and wrangler reads a separate value that starts with `--` as an option. A placeholder left as written matches no row, so the file changes nothing. Each change and its audit event share one condition, so both happen or neither does. The audit events have no actor: `report.close` (target the report), `account.suspend` (the account), `code.revoke` (the code), and `grant.add` (the account). SQL cannot purge the edge cache, so a revoke from SQL has the FR-018 worst case of 60 seconds. These files are T038, pending Danny's yes on #78 (INFERRED).
 
 | Job | File |
 |---|---|
-| List open reports | `ops/reports.sql` |
+| List open reports, and close one by setting `closed_at` (FR-026) | `ops/reports.sql` |
 | Suspend an account and revoke its codes (`revoked_reason` `operator`) | `ops/suspend.sql` |
 | Revoke one reported code | `ops/revoke-code.sql` |
-| Add an issuer or auditor grant | `ops/grant.sql` |
+| Add an issuer, viewer, or auditor grant (FR-034) | `ops/grant.sql` |
 
 ## Human-gated setup (not part of the build)
 
