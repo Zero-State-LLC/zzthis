@@ -40,7 +40,7 @@ packages/zz-core/
   src/scanner.ts            spec 004 scanner rules
   src/wordlist.ts           loads a list by version id
   wordlists/fixture-7.txt
-  wordlists/proto-v0.txt    only after Danny's yes (spec 003 gate), with its reports
+  wordlists/proto-v0.txt    built in the build (Q32 yes on #74), with its reports
   scripts/build-wordlist.ts the spec 003 pipeline; writes the list and the yield report
   test/vectors.test.ts      runs every row of specs/003-wordlist-checkword/vectors.json
 workers/api/
@@ -104,7 +104,7 @@ scripts/pin-zzthis.sh       replaces pin-design.sh for zzThat (manifest below)
 
 Coverage keeps the repo thresholds and extends them to `packages/zz-core/src` and `workers/api/src`.
 
-The Playwright run needs a Worker process, so it lives in a new workflow, `.github/workflows/e2e.yml` (manual and nightly), named here before it lands. It is not a merge gate until Danny makes it one.
+The Playwright run needs a Worker process, so it lives in a new workflow, `.github/workflows/e2e.yml`, named here before it lands. It triggers on `workflow_dispatch` and on `pull_request` (`labeled`, `synchronize`), and runs only when the PR has the `run-e2e` label. It has no schedule and is not a required check. This follows zzThat ZQ27 (CI spend), decided 2026-10-05: the no-spend path, accepted by Danny on Zero-State-LLC/zzthat#39.
 
 ## Operator work without an admin route
 
@@ -133,7 +133,7 @@ The operator runs these with `wrangler d1 execute` against the production databa
 | I. Security lives in the resolver | Revoke, single use, expiry, rate limits, and the content check are server-side. |
 | III. Exact match | Resolve is exact. One not-found body. |
 | V. Do not invent the format | The issued format and the check word are the spec 003 prototype defaults, behind Danny's yes. |
-| VI. Public repo | Secrets are Worker secrets. The env table names them and holds no values. proto-v0 is committed only after the license yes. |
+| VI. Public repo | Secrets are Worker secrets. The env table names them and holds no values. proto-v0 is committed in the build (Q32, #74). It is permanent only after the first production mint, which needs Danny's deploy yes. |
 | VIII. Human gates | No Cloudflare resource and no OAuth client is created by an agent. |
 
 ## Risks

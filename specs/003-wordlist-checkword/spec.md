@@ -143,7 +143,7 @@ Status: decided. Danny said yes on #74 (2026-10-04), so these are the v1 rules (
 
 License: Danny said yes to the source and the license on #74 (Q32). The build runs the pipeline and commits proto-v0 with its yield report and an EFF credit in `NOTICE`. Until that commit lands, plain mint returns `not-ready` everywhere except local runs on `fixture-7`.
 
-Point of no return: after the first production mint, proto-v0 can never change, because issued codes must keep verifying (FR-017) and retired words are never issued again (Q36 default).
+Point of no return: after the first production mint, proto-v0 can never change, because issued codes must keep verifying (FR-017) and retired words are never issued again (Q36 default). The first production mint needs Danny's deploy yes (spec 005 T023).
 
 ### Shared test vectors
 
