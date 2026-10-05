@@ -2,7 +2,8 @@
 
 Author: Claude, for Luna, from the 2026-10-04 spec review
 Date: 2026-10-04, revised 2026-10-05 from Danny's review on #75
-Status: draft
+Status: accepted
+Accepted-by: Danny on 2026-10-05 PT (zzthis #77 comment)
 Product: zzThis (`Zero-State-LLC/zzthis`) and zzThat (`Zero-State-LLC/zzthat`)
 
 This file is a proto-spec. It comes **before** specify.
