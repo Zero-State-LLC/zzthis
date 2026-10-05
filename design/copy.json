@@ -49,6 +49,10 @@
       "text": "Take a photo of the code",
       "source": "INFERRED 2026-10-04, for Michael's review"
     },
+    "scan.choose_photo": {
+      "text": "Choose a photo of the code",
+      "source": "[DANNY 2026-10-05 zzthat#43 A1]; text INFERRED, for Michael's review"
+    },
     "scan.type_instead": {
       "text": "Type it instead",
       "source": "INFERRED 2026-10-04, for Michael's review"

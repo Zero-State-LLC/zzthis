@@ -4,7 +4,8 @@
     "title": "zzThis API",
     "version": "1",
     "license": {
-      "name": "Proprietary"
+      "name": "Proprietary",
+      "identifier": "LicenseRef-Proprietary"
     },
     "summary": "Contract header X-ZZ-Contract 1.",
     "description": "Wire contract for the zzThis central server. Behavior rules are in spec.md.\nEvery /v1 request sends X-ZZ-Contract: 1. JSON names are snake_case.\nA code in a path is the canonical form, percent-encoded.\nGET /v1/resolve/{code} is the only edge-cached response. Store it with the\nWorkers Cache API only when the code is active, reusable, and public and\nthe caller is unauthenticated. That response sends\nCache-Control: public, max-age=60, stale-while-revalidate=300.\nThe cache key is https://cache.zzthis.internal/v1/resolve/{canonical}\nwith the canonical form percent-encoded once. It is not the caller's URL.\nA record update, revoke, or expiry purges that key. Single-use,\nshort-expiry, private, authenticated, 404, and 429 responses send\nCache-Control: no-store. Every other response sends\nCache-Control: no-store too (spec.md FR-028).\nSign-in: POST /v1/auth/nonce, then the provider's own sign-in with that\nnonce, then POST /v1/auth/token with the ID token (spec.md FR-020).\nEvery operation may return 503 not-ready (spec.md Environment, FR-022).\nEvery operation that writes may return 500 failed.\nTimes are RFC 3339 UTC with exactly three fractional digits and Z, as\nDate.prototype.toISOString() writes them (spec.md Data model).\nAdding an enum value is a breaking change in contract 1.\n"

@@ -147,7 +147,7 @@ Point of no return: after the first production mint, proto-v0 can never change, 
 
 ### Shared test vectors
 
-[`vectors.json`](vectors.json) is the machine copy of the G9, G1a, and G10 rows in `docs/SPEC.md` Section 2.2a, plus the scanner rows (spec 004, Client read pipeline) and the check-word rows (fixture-7, with all 30 issuable codes). The G9 rows were checked against `src/lib/grammar.ts` on 2026-10-04. The spec 005 T035 parser change moved the former `grammar_pending` rows into `grammar` and added the D-2026-10-04-04 rows. The check-word rows were checked exhaustively: every single wrong word and every swap of two words is detected on fixture-7. The TypeScript, Swift, and Kotlin libraries each run every row. Do not edit a row to match a bug. Rows whose `note` names a D-2026-10-04 decision come from the readings below.
+[`vectors.json`](vectors.json) is the machine copy of the G9, G1a, and G10 rows in `docs/SPEC.md` Section 2.2a, plus the scanner rows (spec 004, Client read pipeline) and the check-word rows (fixture-7, with all 30 issuable codes). The G9 rows were checked against `src/lib/grammar.ts` on 2026-10-04. The spec 005 T035 parser change moved the former `grammar_pending` rows into `grammar` and added the D-2026-10-04-04 rows. The check-word rows were checked exhaustively: every single wrong word and every swap of two words is detected on fixture-7. The TypeScript, Swift, and Kotlin libraries each run every row. Do not edit a row to match a bug. Rows whose `note` names a D-2026-10-04 decision come from the readings below. The `see zz@bob.` scanner row is D-2026-10-05-06, Danny's decision on zzThat #43 (spec 004 Scanner rule 7).
 
 ## Readings (decided 2026-10-05 by established practice, docs/SPEC.md 9a)
 

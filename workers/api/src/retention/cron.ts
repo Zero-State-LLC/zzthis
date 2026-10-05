@@ -6,6 +6,8 @@ import { DAY, iso } from "../lib/time.ts";
 
 const REFRESH_KEPT_AFTER_EXPIRY = 30 * DAY;
 const REVOCATION_WINDOW = 30 * DAY;
+// D-2026-10-05-06: one year, counted as 365 days.
+const REPORT_KEPT_AFTER_CLOSE = 365 * DAY;
 
 interface PendingRow {
   id: string;
@@ -19,6 +21,7 @@ export interface RetentionReport {
   readonly photos: number;
   readonly nonces: number;
   readonly refreshTokens: number;
+  readonly reports: number;
   readonly revoked: number;
   readonly retried: number;
   readonly abandoned: number;
@@ -84,8 +87,8 @@ async function retryRevocation(
 }
 
 // FR-026, daily at 03:17 UTC: expired photos and their rows, used or
-// expired nonces, refresh tokens 30 days past expiry, and the pending Apple
-// revocations that are due.
+// expired nonces, refresh tokens 30 days past expiry, reports 365 days
+// after they were closed, and the pending Apple revocations that are due.
 export async function runRetention(
   env: WorkerEnv,
   deps: Deps,
@@ -111,6 +114,14 @@ export async function runRetention(
     .prepare("DELETE FROM refresh_tokens WHERE expires_at <= ?")
     .bind(iso(nowMs - REFRESH_KEPT_AFTER_EXPIRY))
     .run();
+  // An open report has no closed_at, so it is never deleted here. Its audit
+  // rows stay.
+  const reports = await db
+    .prepare(
+      "DELETE FROM reports WHERE closed_at IS NOT NULL AND closed_at <= ?",
+    )
+    .bind(iso(nowMs - REPORT_KEPT_AFTER_CLOSE))
+    .run();
   // Due for a retry, or past the 30-day window even if the next retry is
   // later, so no token outlives the window by a doubled wait.
   const due = await db
@@ -129,6 +140,7 @@ export async function runRetention(
     photos,
     nonces: nonces.meta.changes,
     refreshTokens: refresh.meta.changes,
+    reports: reports.meta.changes,
     revoked: count("revoked"),
     retried: count("retried"),
     abandoned: count("abandoned"),

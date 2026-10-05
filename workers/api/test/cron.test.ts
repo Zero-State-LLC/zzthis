@@ -147,6 +147,55 @@ describe("daily retention run (FR-026, T031)", () => {
     ).toBe(0);
   });
 
+  it("deletes a report 365 days after it was closed, and never an open one (D-2026-10-05-06)", async () => {
+    const logs = vi.spyOn(console, "log").mockImplementation(() => {});
+    const w = await makeWorld();
+    const filed: string[] = [];
+    for (let i = 0; i < 4; i += 1) {
+      const response = await call(w, "POST", "/v1/reports", {
+        body: { canonical: "zz-copper-lantern-sky-zz", reason: "spam" },
+      });
+      expect(response.status).toBe(202);
+      filed.push(((await response.json()) as { id: string }).id);
+    }
+    const [closed364, closed365, closed366, open] = filed as [
+      string,
+      string,
+      string,
+      string,
+    ];
+    // Every report is 400 days old. The operator closed three of them.
+    w.clock.advance(400 * DAY);
+    for (const [id, days] of [
+      [closed364, 364],
+      [closed365, 365],
+      [closed366, 366],
+    ] as const) {
+      await env.ZZ_DB.prepare("UPDATE reports SET closed_at = ? WHERE id = ?")
+        .bind(new Date(w.clock.ms - days * DAY).toISOString(), id)
+        .run();
+    }
+    await run(w);
+    const kept = await env.ZZ_DB.prepare(
+      "SELECT id FROM reports ORDER BY rowid",
+    ).all<{ id: string }>();
+    expect(kept.results.map((row) => row.id)).toEqual([closed364, open]);
+    // The audit rows of the deleted reports stay.
+    expect(
+      await count(
+        w,
+        "SELECT count(*) AS n FROM audit_events WHERE target_type = 'report'",
+      ),
+    ).toBe(4);
+    const report = logs.mock.calls
+      .map((args) => String(args[0]))
+      .find((line) => line.includes('"retention"'));
+    expect(JSON.parse(report as string)).toMatchObject({
+      event: "retention",
+      reports: 2,
+    });
+  });
+
   it("retries a due Apple revocation with its stored client id, then removes it", async () => {
     const logs = vi.spyOn(console, "log").mockImplementation(() => {});
     const w = await makeWorld({ settings: await appleSettings() });
