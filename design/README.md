@@ -62,4 +62,4 @@ Commit only the pinned files in zzThat. Do not commit a second hand-written pale
 
 To move the pin later, run the script with the new sha and replace those same files in one pull request. Do not track `main`.
 
-The one-shot build adds `scripts/pin-zzthis.sh` (spec 005 T033). It copies this folder plus `copy.json`, the fonts, the OpenAPI file, the shared test vectors, and the wordlist at one sha, so zzThat keeps one pin for all of them. The list of paths is in [spec 005 plan.md](../specs/005-v1-api/plan.md), What zzThat pins.
+[`scripts/pin-zzthis.sh`](../scripts/pin-zzthis.sh) (spec 005 T033) copies the token files, `brand/`, `fonts/`, `copy.json`, the OpenAPI file, the shared test vectors, the wordlists, and `NOTICE` at one sha into one folder, with a `PIN` file, so zzThat keeps one pin for all of them. It takes the same arguments as `pin-design.sh` and fails when any path is missing at that sha. The list of paths is in [spec 005 plan.md](../specs/005-v1-api/plan.md), What zzThat pins. `pin-design.sh` stays until zzThat moves to the new script.
