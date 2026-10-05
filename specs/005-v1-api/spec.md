@@ -6,7 +6,7 @@ Phase: specify. The how is in [plan.md](plan.md). Tasks are in [tasks.md](tasks.
 Wire shapes: [openapi.yaml](openapi.yaml). If a field and this prose disagree, the OpenAPI file is the field and this prose is the rule. File a bug rather than guessing.
 Constitution: [.specify/memory/constitution.md](../../.specify/memory/constitution.md).
 Intent: [intent/2026-10-04-v1-api-and-design-system.md](../../intent/2026-10-04-v1-api-and-design-system.md) (contract, accepted) and [intent/2026-10-04-one-shot-build.md](../../intent/2026-10-04-one-shot-build.md) (build, draft).
-Deepened 2026-10-04 so the server, the web client, and both apps can be built in one pass: [analysis 2026-10-04](../analysis-2026-10-04.md). New choices are INFERRED. Danny answered Q66 directly and said yes to every other open decision on issue #74 (2026-10-04, `docs/SPEC.md` Section 9a D-2026-10-04-01). The pre-build audit (2026-10-04) added the settings rules, the refresh and D1 guard rules, the web session and CSP rules, and the test toolchain. Each of those engineering choices is INFERRED.
+Deepened 2026-10-04 so the server, the web client, and both apps can be built in one pass: [analysis 2026-10-04](../analysis-2026-10-04.md). New choices are INFERRED. Danny answered Q66 directly and said yes to every other open decision on issue #74 (2026-10-04, `docs/SPEC.md` Section 9a D-2026-10-04-12). The pre-build audit (2026-10-04) added the settings rules, the refresh and D1 guard rules, the web session and CSP rules, and the test toolchain. Each of those engineering choices is INFERRED.
 
 ## Why
 
@@ -65,7 +65,7 @@ This changes the earlier exchange of an authorization code with PKCE and a redir
 
 `POST /v1/reads` accepts `image/jpeg` only after the person has accepted the sentence in [design/UX.md](../../design/UX.md). The response `band` is `accept`, `clarify`, `retry`, or `abstain`. The server may store the photo for review of that read, for 30 days (FR-026). It is not a training set.
 
-Until Q18 picks a reader, `GET /v1` reports `photo_reads: false`, `POST /v1/reads` returns 503 `not-ready`, and clients do not offer the upload. Tests use a reader port that returns `abstain`.
+Q18 is decided: v1 reads on the device only, with Apple Vision on iOS and ML Kit on Android, and has no cloud reader [DELEGATED 2026-10-04, #74]. So `GET /v1` reports `photo_reads: false`, `POST /v1/reads` returns 503 `not-ready`, and clients do not offer the upload. Tests use a reader port that returns `abstain`.
 
 ### US6. Web client (P2)
 

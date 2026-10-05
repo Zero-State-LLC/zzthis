@@ -1,7 +1,7 @@
 # Feature spec: capture by camera, typing, or voice
 
 Feature ID: 004-capture
-Status: not built. Recognition approach decision OPEN (Q18). Deepened 2026-10-03: grammar path, decision-band triggers, error states, and edge cases. v1 reads English (ASCII) codes with Option A; trained models and other scripts are v2 (issue #35).
+Status: not built. Recognition approach decided (Q18, #74): Option A on the device. Deepened 2026-10-03: grammar path, decision-band triggers, error states, and edge cases. v1 reads English (ASCII) codes with Option A; trained models and other scripts are v2 (issue #35).
 Phase: specify (what and why). The how is in [plan.md](plan.md).
 Constitution: [.specify/memory/constitution.md](../../.specify/memory/constitution.md).
 
@@ -42,7 +42,7 @@ Acceptance: the photo leaves the device only on a retry or hard case [OPERATOR 2
 | ID | Requirement | Source |
 |---|---|---|
 | FR-001 | Inputs: camera, typing, voice. | [BRIEF] |
-| FR-002 | On-device recognition first; photo stays on the device by default. | [OPERATOR 2026-10-02]; whether Option A must include an on-device model is OPEN (Q18) |
+| FR-002 | On-device recognition first; photo stays on the device by default. | [OPERATOR 2026-10-02]; Q18 is decided [DELEGATED 2026-10-04, #74]: Option A on the device (Apple Vision, ML Kit), no cloud reader in v1 |
 | FR-003 | Every reading is snapped to the closed wordlist (spec 003) and the check word is verified. | [OPERATOR 2026-10-02] |
 | FR-004 | Calibrated confidence decides accept, clarify, retry, or abstain, separately for voice, image, and typed input. | [PRODUCT]; thresholds OPEN (Q37) |
 | FR-005 | A person confirms low-confidence readings. | [OPERATOR 2026-10-02] [PRODUCT] |
@@ -135,7 +135,7 @@ Thresholds stay parameters (Q37). These values let the apps ship. They are not m
 
 Bands use the local verify only when step 4 ran. When the list versions differ, the server's 400 `wrong-length` maps to `scan.wrong_length` (zzThat spec.md Errors).
 
-After two retries in one scan, a client may offer the server read (US3) only when `GET /v1` reports `photo_reads: true`. It is false until Q18 picks a reader, so the v1 apps do not show the offer.
+After two retries in one scan, a client may offer the server read (US3) only when `GET /v1` reports `photo_reads: true`. It is false in v1, because Q18 chose on-device reading only, so the v1 apps do not show the offer.
 
 The creation check (FR-017) runs the same steps on the person's photo and passes when the picked candidate's canonical form equals the minted code.
 
