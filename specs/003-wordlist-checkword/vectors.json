@@ -1,5 +1,5 @@
 {
-  "about": "Shared test vectors for the zz code library on every platform (TypeScript, Swift, Kotlin). The grammar, classifier, and matching-key rows copy docs/SPEC.md Section 2.2a (G9, G1a, G10). The scanner and check-word rows are the prototype proposal of 2026-10-04 in spec 003 and spec 004, pending Danny's yes. A platform passes when every row passes. Do not edit a row to match a bug.",
+  "about": "Shared test vectors for the zz code library on every platform (TypeScript, Swift, Kotlin). The grammar, classifier, and matching-key rows copy docs/SPEC.md Section 2.2a (G9, G1a, G10). The scanner and check-word rows are the rules decided on 2026-10-04 (#74) in spec 003 and spec 004. A platform passes when every row passes. Do not edit a row to match a bug.",
   "grammar": [
     {
       "input": "zz-copper-lantern-sky-zz",

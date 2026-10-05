@@ -89,9 +89,9 @@ Not set for this feature. Research accuracy targets are not acceptance criteria 
 
 The phone and web apps as products (not yet specified; Q33), the resolver (spec 002), and the wordlist (spec 003).
 
-## Client read pipeline for the v1 build (proposed 2026-10-04)
+## Client read pipeline for the v1 build (decided 2026-10-04)
 
-Status: proposal, pending Danny's yes. Source: [analysis 2026-10-04](../analysis-2026-10-04.md). The iOS and Android apps both scan, so they need one rule for finding codes in text, or the two apps will disagree. The rows in [spec 003 `vectors.json`](../003-wordlist-checkword/vectors.json) (`scanner`) are the test. The web client in v1 is typing only (spec 005 US6), so it uses steps 3 to 6 on the typed text.
+Status: decided. Danny said yes on #74 (2026-10-04). Source: [analysis 2026-10-04](../analysis-2026-10-04.md). The iOS and Android apps both scan, so they need one rule for finding codes in text, or the two apps will disagree. The rows in [spec 003 `vectors.json`](../003-wordlist-checkword/vectors.json) (`scanner`) are the test. The web client in v1 is typing only (spec 005 US6), so it uses steps 3 to 6 on the typed text.
 
 1. Recognize text on the device. Join the recognized lines in reading order (top to bottom, then left to right) with spaces. Each line keeps the recognizer's confidence, from 0 to 1.
 2. Find candidates with the scanner rules below.
@@ -132,11 +132,11 @@ The creation check (FR-017) runs the same steps on the person's photo and passes
 
 | ID | Question | Default |
 |---|---|---|
-| Q18 | Fine-tune our own small model (Option B)? Also: must Option A include an on-device model, or may US1 fall back to cloud vision? | Deferred; ship Option A, run a 2-week Option B benchmark [OPERATOR 2026-10-02]. On-device part of Option A: none chosen |
-| Q33 | Scope of the zzThat app (web, Android, iOS) as a product: which features ship first? | Not specified |
-| Q34 | Where the test set of real photos comes from, and consent for using them | None chosen |
-| Q37 | Confidence thresholds for accept, clarify, retry, and abstain, and how read-back errors are measured | None chosen. Prototype parameters proposed 2026-10-04: accept at 0.80, retry below 0.50 (Client read pipeline). Not a measured result |
-| Q38 | Where voice input is processed, and whether audio leaves the device | None chosen |
+| Q18 | Fine-tune our own small model (Option B)? Also: must Option A include an on-device model, or may US1 fall back to cloud vision? | RESOLVED [DELEGATED 2026-10-04, #74]: Option A on the device (Apple Vision, ML Kit); no cloud reader in v1; the Option B benchmark is v2 |
+| Q33 | Scope of the zzThat app (web, Android, iOS) as a product: which features ship first? | RESOLVED [DELEGATED 2026-10-04, #74]: iOS and Android together with the zzThat spec 001 scope; the web client in spec 005 |
+| Q34 | Where the test set of real photos comes from, and consent for using them | RESOLVED [DELEGATED 2026-10-04, #74]: Team-made photos with written consent, no faces or personal data, kept private, used to measure only |
+| Q37 | Confidence thresholds for accept, clarify, retry, and abstain, and how read-back errors are measured | RESOLVED [DELEGATED 2026-10-04, #74]: Accept at 0.80, retry below 0.50, as parameters |
+| Q38 | Where voice input is processed, and whether audio leaves the device | RESOLVED [DELEGATED 2026-10-04, #74]: No voice in v1; later, on the device only |
 | Q55 | How is a `zz` inside running text treated? (issue #41) | RESOLVED: box every candidate, the person picks (FR-013) |
 
 ## Workflows

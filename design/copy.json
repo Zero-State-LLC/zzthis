@@ -157,6 +157,10 @@
       "text": "Message",
       "source": "INFERRED 2026-10-04, for Michael's review"
     },
+    "create.public_hint": {
+      "text": "Anyone who scans this code can read this page. Share only what you are happy for anyone to see.",
+      "source": "INFERRED 2026-10-04, for Michael's review (Q68)"
+    },
     "create.title_required": {
       "text": "Add a title.",
       "source": "INFERRED 2026-10-04, for Michael's review"

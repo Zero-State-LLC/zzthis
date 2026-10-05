@@ -19,7 +19,7 @@ Checked 2026-10-04 against this folder, after the deepening in [analysis 2026-10
 
 - [ ] The build itself (tasks Group 0 to Group I).
 - [x] Danny's yes on Q66 ([#68](https://github.com/Zero-State-LLC/zzthis/issues/68)): native Apple and Google sign-in, provider ID token with a server nonce [DANNY 2026-10-04].
-- [ ] Danny's yes on Q69, the spec 003 prototype defaults, and the spec 004 pipeline.
+- [x] Danny's yes on Q67 to Q71, the spec 003 prototype defaults, and the spec 004 pipeline ([#74](https://github.com/Zero-State-LLC/zzthis/issues/74), 2026-10-04).
 - [ ] Danny's yes for Cloudflare and OAuth clients (T023).
 
 ## Consistency

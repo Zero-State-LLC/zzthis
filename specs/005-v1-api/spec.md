@@ -6,7 +6,7 @@ Phase: specify. The how is in [plan.md](plan.md). Tasks are in [tasks.md](tasks.
 Wire shapes: [openapi.yaml](openapi.yaml). If a field and this prose disagree, the OpenAPI file is the field and this prose is the rule. File a bug rather than guessing.
 Constitution: [.specify/memory/constitution.md](../../.specify/memory/constitution.md).
 Intent: [intent/2026-10-04-v1-api-and-design-system.md](../../intent/2026-10-04-v1-api-and-design-system.md) (contract, accepted) and [intent/2026-10-04-one-shot-build.md](../../intent/2026-10-04-one-shot-build.md) (build, draft).
-Deepened 2026-10-04 so the server, the web client, and both apps can be built in one pass: [analysis 2026-10-04](../analysis-2026-10-04.md). New choices are INFERRED. Choices that change an earlier decision say so and wait for a yes where one is still open (Q67 to Q69). Q66 is answered [DANNY 2026-10-04].
+Deepened 2026-10-04 so the server, the web client, and both apps can be built in one pass: [analysis 2026-10-04](../analysis-2026-10-04.md). New choices are INFERRED. Danny answered Q66 directly and said yes to every other open decision on issue #74 (2026-10-04, `docs/SPEC.md` Section 9a D-2026-10-04-01).
 
 ## Why
 
@@ -85,8 +85,8 @@ The server refuses record text that contains a blocklisted term (FR-024). The op
 | FR-004 | Plain codes: the server chooses the words and the check word with the spec 003 issuer (format and rules in spec 003, Prototype defaults). Until the issuer is configured (`ZZ_MINT_ENABLED` false), plain mint returns 503 `{ "error": "not-ready" }` and stores nothing. | spec 002 US2. The not-ready code is INFERRED so a builder has a status. |
 | FR-005 | `free_public` defaults off. Discovery lists it in `scopes` only when the flag is on. | spec 002 FR-016 kept the scope out of the first deployment. [DANNY 2026-10-04] puts the shape in the contract. |
 | FR-006 | Re-roll budget is 3 on mint, then one less per successful re-roll. Exhausted codes, and codes with `first_resolved_at` set, return `reroll-cap`. Retired words are not issued again. The retired code gets `revoked_reason` `reroll` and leaves the owner list. | zzThat runtime re-roll cap. Q36 default is never reissue. |
-| FR-007 | Everyday fields are `title` (1 to 120 characters) and `body` (0 to 4000), counted in Unicode code points. Text is plain: no markup, and clients do not turn links into tappable links. The server trims the title and removes control characters other than line feed. There is no phone field, and no code string holds a phone number. The server does not scan the body for phone numbers (Q68). | zzThat ZQ5. Lengths INFERRED so the columns are closed. Plain-text rule INFERRED against phishing. |
-| FR-008 | Public resolve needs no session. Writes need a bearer token. Contract 1 records are all public, because mint has no visibility field. Clients do not send `Authorization` on resolve. A resolve that carries one is answered the same way with `Cache-Control: no-store`. | zzThat ZQ6. spec 002 FR-020. Client rule INFERRED so signed-in reads stay cacheable. |
+| FR-007 | Everyday fields are `title` (1 to 120 characters) and `body` (0 to 4000), counted in Unicode code points. Text is plain: no markup, and clients do not turn links into tappable links. The server trims the title and removes control characters other than line feed. There is no phone field, and no code string holds a phone number. The server does not scan the body for phone numbers, and Create shows `create.public_hint` so the owner knows anyone who scans can read the page. | zzThat ZQ5. Q68 [DELEGATED 2026-10-04, #74]. Lengths INFERRED so the columns are closed. Plain-text rule INFERRED against phishing. |
+| FR-008 | A public record resolves with no session. Writes need a bearer token. A private record resolves only as FR-035 says. The everyday apps and the web client mint only public records and do not send `Authorization` on resolve. A resolve that carries one is answered with `Cache-Control: no-store`. | zzThat ZQ6. spec 002 FR-020. Q70 [DELEGATED 2026-10-04, #74]. Client rule INFERRED so signed-in reads stay cacheable. |
 | FR-009 | One not-found body, identical for unknown, expired, used, revoked, and a signed-out read of a private record. | spec 002 FR-011 |
 | FR-010 | Check-word failure is 400 `{ "error": "malformed", "reason": "check-mismatch" }`. A plain code whose parts are all on the list but whose part count is not the issued count is 400 `malformed` with reason `wrong-length`. Neither resolves, and neither suggests another code. | spec 002 FR-021. spec 003 FR-018. |
 | FR-011 | Rate limits are the table below. They are global, not per data center. 429 body is `{ "error": "rate-limited" }` and does not depend on whether the code exists. `Retry-After` is whole seconds. | spec 002 FR-006. Numbers for the zzThat routes are the zzThat proposal. Other rows are INFERRED. |
@@ -107,12 +107,13 @@ The server refuses record text that contains a blocklisted term (FR-024). The op
 | FR-026 | Retention. A retry photo is deleted 30 days after upload. A daily scheduled run deletes expired photos and rows, used or expired nonces, and refresh tokens 30 days past expiry. It also retries each pending Apple revocation, with the wait doubling after each failure, until Apple accepts it or 30 days pass, then deletes the token and logs the outcome. | INFERRED. The privacy policy states the 30 days. |
 | FR-027 | Logs hold the method, the route template, the status, the duration, cache hit or miss, the limiter rule, and the data center. Logs never hold a code, record text, a token, a nonce, a photo, or an IP address. Limiter keys use an HMAC of the IP. | INFERRED from Section 2.7 and zzThat's analytics-free rule |
 | FR-028 | Every `/v1` response except a cacheable resolve sends `Cache-Control: no-store`. | INFERRED. Token and owner responses must never be cached. |
-| FR-029 | One Worker serves `/v1/*` and the web client's static files on one origin. The API sends no CORS headers. The marketing site stays on GitHub Pages. | INFERRED (Q69). One origin removes CORS and lets the web refresh token live in a cookie. |
+| FR-029 | One Worker serves `/v1/*` and the web client's static files on one origin: `https://zz.zer0state.com` in production, and the Worker's workers.dev name for staging. The zer0state.com zone is already on Cloudflare, so the custom domain needs no purchase; Danny adds it at deploy. The API sends no CORS headers. The marketing site stays on GitHub Pages. | Q69 [DELEGATED 2026-10-04, #74]. One origin removes CORS and lets the web refresh token live in a cookie. |
 | FR-030 | Owner reads. `GET /v1/me/codes` items carry `title`, the current record title. `GET /v1/records/{id}` returns `id`, `version`, `title`, `body`, and `updated_at` to the record's owner, and the one not-found body to anyone else. | INFERRED. The zzThat Code detail and Edit record screens need them. |
 | FR-031 | Every state change and its audit event are written in one D1 batch, which is all or nothing. Re-roll, revoke, single-use resolve, and the first-resolve mark use conditional updates (`WHERE status = 'active' ...`), so two racing calls cannot both win. | spec 002 FR-018 and US1 acceptance 6. D1 has no interactive transactions. |
-| FR-032 | In contract 1, `match_key` is unique across every code in every scope, retired codes included, so resolve needs no scope. The issuer draws again on a conflict, up to 8 times, then returns 500 `failed`. | INFERRED. Per-scope duplicates are v2 (zzThat ZQ4, Q56). |
+| FR-032 | In contract 1, `match_key` is unique across every code in every scope, retired codes included, so resolve needs no scope. The issuer draws again on a conflict, up to 8 times, then returns 500 `failed`. | Q71 [DELEGATED 2026-10-04, #74]. A handwritten code carries no scope, so two scopes with one handle would make resolve ambiguous. Per-scope duplicates come with a scope-aware resolve (Q56 v2 items, zzThat ZQ4). |
 | FR-033 | Discovery also returns `wordlist_version` (`fixture-7` or `proto-v0`) and `photo_reads`. `auth_providers` lists only the providers this deployment accepts. | INFERRED. Clients skip the local check word when their bundled list version differs. |
-| FR-034 | Scopes and roles. `free_public` minting needs `ZZ_FREE_PUBLIC`. `enterprise` and `logistics` minting need a `grants` row with role `issuer` for that scope and account, else 403 `forbidden`. The auditor role is a `grants` row with role `auditor`. The operator adds grants with SQL. | INFERRED. spec 002 FR-016 |
+| FR-034 | Scopes and roles. `free_public` minting needs `ZZ_FREE_PUBLIC`. `enterprise` and `logistics` minting need a `grants` row with role `issuer` for that scope and account, else 403 `forbidden`. The auditor role is a `grants` row with role `auditor`, and a `viewer` grant lets an account read that scope's private records (FR-035). The operator adds grants with SQL. | INFERRED. spec 002 FR-016 |
+| FR-035 | Private records. Mint takes `visibility`, `public` or `private`. `free_public` is always public, and a `private` request there is 400 `malformed`. `enterprise` and `logistics` default to `private`. A private record resolves only when the bearer token belongs to the owner (view `owner`) or to an account with a `viewer` grant on the code's scope (view `viewer`). Anyone else, signed in or not, gets the one not-found body. Private responses are never cached (FR-018, FR-019). | Q70 [DELEGATED 2026-10-04, #74]. spec 002 FR-007 and FR-020 |
 
 ## Resolve
 
@@ -124,9 +125,10 @@ The server runs these steps for `GET /v1/resolve/{code}`, in order.
 4. For a plain code whose parts are all on the list: verify the check word. `check-mismatch` or `wrong-length`: 400 `malformed` with that reason.
 5. With no `Authorization` header, look up the cache key (FR-019). A hit is returned as stored.
 6. Look up `match_key` in D1. For a word code it is the canonical form. For a handle or a name it is the Section 2.2a G10 key of the canonical form, with the leading `@` dropped from a handle that is a name, so `zz-@vitalik.eth-zz` and `zz-vitalik.eth-zz` meet (spec 002 FR-022) and lookalike handles such as `@b0b` and `@bob` are one handle (spec 002 FR-016). No row, or a row that is revoked, used, expired, or deleted: 404.
-7. Single-use code: mark it used with a conditional update. If the update changed no row, 404.
-8. If `first_resolved_at` is null, set it with a conditional update, in the same batch as the audit event.
-9. Build the body from the record's current version. Cacheable (FR-019): send the public header and put the response in the cache. Otherwise: `no-store`.
+7. Private record: without a bearer token for the owner or for a `viewer` grant on the code's scope, 404 (FR-035).
+8. Single-use code: mark it used with a conditional update. If the update changed no row, 404.
+9. If `first_resolved_at` is null, set it with a conditional update, in the same batch as the audit event.
+10. Build the body from the record's current version, with `view` set to `public`, `owner`, or `viewer`. Cacheable (FR-019): send the public header and put the response in the cache. Otherwise: `no-store`.
 
 Every resolve that reaches step 6 writes an audit event with result `ok` or `not-found`. Cache hits and malformed calls write none. Malformed calls still count toward the limit (spec 002 FR-014).
 
@@ -165,7 +167,7 @@ Portable SQL, SQLite-compatible for D1. Ids are UUID text. Times are ISO-8601 UT
 | codes | id, scope, canonical, match_key, kind, check_word, list_version, status (`active`, `used`, `revoked`, `expired`), revoked_reason (`owner`, `reroll`, `account-deleted`, `operator`), single_use, expires_at, record_id, owner_id, first_resolved_at, rerolls_remaining, replaced_by, created_at. Unique (match_key) across all rows, retired rows included. |
 | records | id, owner_id, visibility (`public` or `private`), current_version_id, created_at, deleted_at |
 | record_versions | id, record_id, version, title, body, signature, signing_key_id, created_by, created_at, erased_at |
-| grants | id, subject_id, scope, role (`issuer`, `auditor`), expires_at |
+| grants | id, subject_id, scope, role (`issuer`, `viewer`, `auditor`), expires_at |
 | audit_events | id, actor_id, action, target_type, target_id, result, created_at. No update, no delete. |
 | read_photos | id, account_id nullable, canonical nullable, object_key, created_at, expires_at |
 | pending_revocations | id, provider (`apple`), client_id, token_enc, attempts, next_attempt_at, created_at. Holds no account id, so an erased account stays erased. |
@@ -273,21 +275,25 @@ The first web release has no camera and no microphone. Voice on the marketing de
 - A global cache purge through the Cloudflare zone API.
 - Payments, store submission, and production deploy.
 
-## Open questions
+## Decisions
 
-| ID | Still open | Prototype default in this contract |
-|---|---|---|
-| Q19 | Partner auth | No partner route |
-| Q25 | No-device linking | Not a route |
-| Q27 | Which formats the issuer emits | Two data words and a check word (spec 003, Prototype defaults) |
-| Q28 | Key rotation | One Ed25519 key. Clients do not verify. |
-| Q30, Q31, Q32, Q35 | Check word, list size, source, filters | spec 003, Prototype defaults (proto-v0) |
-| Q37 | Capture thresholds | spec 004, Client read pipeline (0.80 and 0.50) |
-| Q18 | Which vision model | `photo_reads` false. `POST /v1/reads` returns `not-ready`. Tests use a port that returns `abstain`. |
-| Q36 | Reissue of retired words | Never |
-| Q67 ([#69](https://github.com/Zero-State-LLC/zzthis/issues/69)) | Sign in with Apple on Android | Not in v1. Android offers Google. |
-| Q68 ([#70](https://github.com/Zero-State-LLC/zzthis/issues/70)) | May the body hold a phone number the owner typed? | Yes. The code never does. |
-| Q69 ([#71](https://github.com/Zero-State-LLC/zzthis/issues/71)) | Hosting: one Worker serves the API and the web client on one origin. Which domain? | One Worker. Staging on its workers.dev name. The domain is Danny's. |
+Every question that was open here was decided on 2026-10-04. Danny answered Q26, Q29, and Q66 himself. The rest are [DELEGATED 2026-10-04, #74]: Danny asked for best-practice decisions and said yes to this list on #74. Danny or Michael can reopen any of them in `docs/SPEC.md` Section 9.
+
+| ID | Decision |
+|---|---|
+| Q18 | Apple Vision and ML Kit on the device. No cloud reader in v1: `photo_reads` is false and `POST /v1/reads` returns `not-ready`. Tests use a port that returns `abstain`. |
+| Q19 | No partner route in contract 1. v2 uses OAuth 2.0 client credentials, one client per partner. |
+| Q25 | No-device linking is a v2 claim flow, not a route here. |
+| Q27, Q30, Q31, Q32, Q35 | spec 003, Prototype defaults (proto-v0), now decided. Q32 is the license yes. |
+| Q28 | One Ed25519 key with its id on every version. Contract 2 publishes keys at `GET /v1/keys` and rotates at least yearly. Clients do not verify in contract 1. |
+| Q36 | Never reissue retired words. |
+| Q37 | spec 004, Client read pipeline (0.80 and 0.50), as parameters. |
+| Q40 | Suggestions are off everywhere in v1. |
+| Q67 ([#69](https://github.com/Zero-State-LLC/zzthis/issues/69)) | No Sign in with Apple on Android in v1. Android offers Google. |
+| Q68 ([#70](https://github.com/Zero-State-LLC/zzthis/issues/70)) | The body may hold a phone number the owner typed. Create shows `create.public_hint`. The code never holds one. |
+| Q69 ([#71](https://github.com/Zero-State-LLC/zzthis/issues/71)) | One Worker at `zz.zer0state.com` (FR-029). |
+| Q70 | Private records for `enterprise` and `logistics` (FR-035). |
+| Q71 | Handles are unique across all scopes in contract 1 (FR-032). |
 
 Q29 (where the code lives) is answered for this API: the server and the later web client live in this repo [DANNY 2026-10-04].
 

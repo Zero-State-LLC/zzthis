@@ -132,17 +132,17 @@ Recognition (spec 004), the wordlist and check word (spec 003), payments, partne
 
 | ID | Question | Default |
 |---|---|---|
-| Q19 | How do partner apps authenticate? | None chosen |
-| Q25 | How does a person pick a valid code with no device: pre-issued code cards, or claiming a handwritten code that the server checks? | None chosen |
+| Q19 | How do partner apps authenticate? | RESOLVED [DELEGATED 2026-10-04, #74]: OAuth 2.0 client credentials in v2; no partner route in contract 1 |
+| Q25 | How does a person pick a valid code with no device: pre-issued code cards, or claiming a handwritten code that the server checks? | RESOLVED [DELEGATED 2026-10-04, #74]: A v2 claim flow for no-device field codes |
 | Q26 | Purge window for revoked codes at the edge, and rate-limit values | RESOLVED for the edge cache [DANNY 2026-10-04]. Spec 005 FR-018 is the rule: public resolve `Cache-Control: public, max-age=60, stale-while-revalidate=300`, Workers Cache API, purge on record update, revoke, or expiry. Excluded classes send `no-store`. Rate-limit numbers are the spec 005 table. |
-| Q27 | Which code formats does the prototype support first (two-word, three-word, check word, prefix, enterprise, one-time, reusable-account [PRODUCT])? | None chosen |
-| Q28 | Where the server's record-signing keys live and how they rotate | None chosen; blocks T001 |
-| Q29 | Where the resolver code lives (this repo or a separate repo) | None chosen; blocks T001 |
-| Q40 | Suggestion policy details: allowed tenant types, what a suggestion reveals, misread grading for high-security tenants | Off by default; never on for high-security [MICHAEL 2026-10-02] |
+| Q27 | Which code formats does the prototype support first (two-word, three-word, check word, prefix, enterprise, one-time, reusable-account [PRODUCT])? | RESOLVED [DELEGATED 2026-10-04, #74]: Two data words and a check word (spec 003) |
+| Q28 | Where the server's record-signing keys live and how they rotate | RESOLVED [DELEGATED 2026-10-04, #74]: One Ed25519 key with key ids; keys published and rotated from contract 2 |
+| Q29 | Where the resolver code lives (this repo or a separate repo) | RESOLVED: This repo (spec 005) [DANNY 2026-10-04] |
+| Q40 | Suggestion policy details: allowed tenant types, what a suggestion reveals, misread grading for high-security tenants | RESOLVED [DELEGATED 2026-10-04, #74]: Off everywhere in v1; never on for high-security |
 | Q56 | Who can create a handle, and how is it protected? (issue #42) | RESOLVED for v1 [MICHAEL 2026-10-03 #42]: per-scope uniqueness (FR-016); free public duplicates, local priority, and postal account codes are v2 |
 | Q59 | One-part codes and private records (issue #46) | RESOLVED (FR-020) |
 | Q60 | Reserved handles (issue #47) | RESOLVED (FR-019) |
-| Q36 | Can the words of a revoked, used, or expired code be issued again? Reissue would let a copied old mark open a new record. | None chosen; "never reissue" proposed for Danny |
+| Q36 | Can the words of a revoked, used, or expired code be issued again? Reissue would let a copied old mark open a new record. | RESOLVED [DELEGATED 2026-10-04, #74]: Never reissue |
 
 ## Workflows
 
