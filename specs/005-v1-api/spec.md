@@ -69,7 +69,7 @@ Until Q18 picks a reader, `GET /v1` reports `photo_reads: false`, `POST /v1/read
 
 ### US6. Web client (P2)
 
-A browser client in this repo, not the marketing site, does US1 to US4 with the same API and the same UX patterns. The Worker serves it on the API's own origin (FR-029). In v1 the web client reads codes by typing only: browsers have no dependable on-device handwriting reader, and the server read is off (US5). The camera arrives with Q18.
+A browser client in this repo, not the marketing site, does US1 to US4 with the same API and the same UX patterns. The Worker serves it on the API's own origin (FR-029). In v1 the web client reads codes by typing only: browsers have no dependable on-device handwriting reader, and the server read is off (US5). The camera arrives with Q18. Its v1 choices are in Web client, Web client choices (D-2026-10-05-05).
 
 ### US7. Operator safety (P2)
 
@@ -94,7 +94,7 @@ The server refuses record text that contains a blocklisted term (FR-024). The op
 | FR-013 | Retry upload is jpeg, at most 8 MiB (8388608 bytes) (INFERRED). The server checks the JPEG signature (bytes FF D8 FF), not only the content type. Other types are 400 `{ "error": "malformed" }`. A body over 8 MiB is 413 `{ "error": "payload-too-large" }` and is refused before anything is written to R2. When `photo_reads` is false the call is 503 `not-ready` and stores nothing. | zzThat FR-005 |
 | FR-014 | The web client is a thin client. It does not embed a resolver database. Screens follow [design/UX.md](../../design/UX.md) and use the strings in [design/copy.json](../../design/copy.json). | [DANNY 2026-10-04] |
 | FR-015 | `share.url` is null. Share text is the canonical code. | zzThat ZQ9 |
-| FR-016 | `GET /v1/audit` is limited to an auditor role (FR-034). The apps do not call it. An auditor reads only the events of the scopes it holds an `auditor` grant for. An event's scope is its target's: a code's scope, the scope of a record's codes, or the scope a refused mint named. Events whose target has no scope (accounts, nonces, reports, reads, and not-found resolves) are listed for no auditor. `since` is inclusive (D-2026-10-05-04). | spec 002 US4 |
+| FR-016 | `GET /v1/audit` is limited to an auditor role (FR-034). The apps do not call it. An auditor reads only the events of the scopes it holds an `auditor` grant for. An event's scope is its target's: a code's scope, the scope of a record's codes, or the scope a refused mint named. Events whose target has no scope (accounts, nonces, reports, reads, and not-found resolves) are listed for no auditor; they stay operator-SQL-only (D-2026-10-05-05). `since` is inclusive (D-2026-10-05-04). | spec 002 US4 |
 | FR-017 | Reports return 202 when the body parses, including when the code is unknown. `canonical` must pass the grammar. Reports are stored for the operator. | zzThat FR-035 |
 | FR-018 | Edge-cache only an active, reusable, public, unauthenticated resolve. Header `Cache-Control: public, max-age=60, stale-while-revalidate=300`, stored with the Workers Cache API. The cache key is `https://cache.zzthis.internal/v1/resolve/{canonical}`, with the canonical form percent-encoded once. It is not the caller's URL. A record update, revoke, or expiry purges that key. If the purge fails, 60 seconds is the worst case. Single-use codes, short-expiry codes, private records, authenticated responses, 404 misses, and 429s are not stored and send `Cache-Control: no-store`. | [DANNY 2026-10-04] (Q26) |
 | FR-019 | How FR-018 runs on Workers. (a) Cacheable means: code active, not single use, `expires_at` null, record public, and no `Authorization` on the request. Any code with an expiry counts as short-expiry, so expiry never needs a purge. (b) The key is `https://cache.zzthis.internal/v1/resolve/{canonical}`, with the canonical form percent-encoded once, so every spelling of a code shares one key. The lookup happens before the D1 read. A hit is returned as stored and does not classify the row again. (c) `cache.delete` clears only the data center that handles the write. Other data centers keep their copy until `max-age` ends, so 60 seconds is the normal worst case at the edge, not only when a purge fails. (d) The Workers Cache API ignores `stale-while-revalidate`. Clients still receive it. zzThat FR-041 keeps the apps from showing a stale record while online. (e) The rate limit runs before the cache, so a cached hit still counts. (f) Only the stored spelling is put in the cache, so a purge by the stored canonical form always reaches it. A lookalike spelling of a handle still gets the public header, from D1 (D-2026-10-05-04). | INFERRED from the Workers Cache API documentation, checked 2026-10-04 |
@@ -103,7 +103,7 @@ The server refuses record text that contains a blocklisted term (FR-024). The op
 | FR-022 | Developer sign-in for tests and local runs. `provider: "dev"` with `id_token` `dev:<name>` (`<name>` is 1 to 40 of `a` to `z`, `0` to `9`, `-`) works only when `ZZ_DEV_AUTH` is `true` and `ZZ_ENV` is not `production`. If both are set in production, the Worker answers every request 503 `not-ready` and logs a configuration error. Discovery lists `dev` only when it works. Developer sign-in uses the FR-020 nonce flow: the client calls `POST /v1/auth/nonce` first and sends that nonce, and the server consumes it like any other (unknown, expired, or used is 401). A dev token is not a JWT, so there is no signature, issuer, audience, expiry, or nonce-claim check. The account is found or created by provider `dev` and subject `<name>`. | INFERRED, so CI can test every write without real Apple or Google clients |
 | FR-023 | `DELETE /v1/me`: (1) revoke the stored Apple token through Apple's revoke endpoint, with `client_id` set to `identities.apple_client_id` and a client secret whose `sub` equals it (Provider constants); if the call fails, copy the still-encrypted token and that `client_id` into `pending_revocations` so the daily run can retry it with the stored `client_id` (FR-026); (2) in one D1 batch, revoke the account's active codes (`revoked_reason` `account-deleted`), mark its records deleted, empty the title and body of every version and set `erased_at`, delete its identities, `grants`, and read-photo rows, revoke its refresh tokens, set `accounts.deleted_at`, and append the audit event; (3) delete the photo objects and purge the cache keys of the revoked codes; (4) return 204. For a web session, the 204 also clears `__Host-zz_refresh` with Max-Age 0. Signing in again later creates a new, empty account. Erasing a version also clears its signature (D-2026-10-05-04). | zzThat FR-034, DEP-012. Erasing record text is INFERRED for store deletion rules. |
 | FR-024 | Content check. `ZZ_BLOCKLIST` holds lowercase terms, one per line, kept out of the repo. Mint and record versions check the title and body (case-folded, whole words). A match is 422 `{ "error": "content-refused" }`, stores nothing, and writes an audit event with result `denied`. The same list feeds the offensive-terms category of spec 002 FR-019, and the proto-v0 filter in the required re-run before the first production mint (spec 003, Prototype defaults). | INFERRED for App Store review guideline 1.2 |
-| FR-025 | Suspension. When `accounts.suspended_at` is set, every write and `GET /v1/me/codes` return 403 `forbidden`. Sign-in, `GET /v1/me`, and `DELETE /v1/me` still work, so the person can always delete the account. Each refusal for suspension writes a `denied` audit event that names the attempted action, with the account as its target (D-2026-10-05-04). | INFERRED |
+| FR-025 | Suspension. When `accounts.suspended_at` is set, every write and `GET /v1/me/codes` return 403 `forbidden`. Sign-in, `GET /v1/me`, and `DELETE /v1/me` still work, so the person can always delete the account. The route's rate limit runs before this check, so a suspended account's flood gets 429 like any other caller's. The first refusal per account per limiter window writes a `denied` audit event that names the attempted action, with the account as its target; the window's later refusals write none (D-2026-10-05-04, D-2026-10-05-05). | INFERRED |
 | FR-026 | Retention. A retry photo is deleted 30 days after upload. A daily scheduled run deletes expired photos and rows, used or expired nonces, and refresh tokens 30 days past expiry. It also retries each pending Apple revocation, with the wait doubling after each failure, until Apple accepts it or 30 days pass, then deletes the token and logs the outcome. The first retry waits 1 day, and the wait doubles after each failure (D-2026-10-05-04). | INFERRED. The privacy policy states the 30 days. |
 | FR-027 | Logs hold the method, the route template, the status, the duration, cache hit or miss, the limiter rule, and the data center. Logs never hold a code, record text, a token, a nonce, a photo, or an IP address. Limiter keys use an HMAC of the IP. | INFERRED from Section 2.7 and zzThat's analytics-free rule |
 | FR-028 | Every `/v1` response except a cacheable resolve sends `Cache-Control: no-store`. | INFERRED. Token and owner responses must never be cached. |
@@ -134,9 +134,9 @@ Every resolve that reaches step 6 writes an audit event with result `ok` or `not
 
 ## Mint
 
-1. Check the header, the bearer token and its account (FR-021, including the deleted-account check), suspension, and the rate limit.
+1. Check the header, the bearer token and its account (FR-021, including the deleted-account check), the rate limit, and then suspension (D-2026-10-05-05).
 2. Check the scope (FR-005, FR-034). `kind` plain: the issuer must be configured (FR-004).
-3. Check the title and body (FR-007, FR-024).
+3. Check the title and body (FR-007, FR-024), and that `expires_at`, when sent, is in the server's timestamp form and later than now; otherwise 400 `malformed` (D-2026-10-05-05).
 4. Draw a code (spec 003 issuer rule). Build `match_key`.
 5. One D1 batch: insert the record, version 1 (signed), the code with `rerolls_remaining` 3 (0 for a handle), and the audit event. A unique-key conflict draws again (FR-032).
 6. Return 201 with the code.
@@ -208,7 +208,7 @@ Record signatures use one Ed25519 key from the Worker secret store (INFERRED, so
 | 202 | | Report |
 | 204 | | Auth revoke, delete account |
 | 400 | contract-version | Bad or missing `X-ZZ-Contract` |
-| 400 | malformed | Grammar failure (`reason` is the parser reason), check word (`check-mismatch`, `wrong-length`), a bad body, or a photo that is not jpeg |
+| 400 | malformed | Grammar failure (`reason` is the parser reason), check word (`check-mismatch`, `wrong-length`), a bad body, or a photo that is not jpeg. A JSON request body needs `Content-Type: application/json` and at most 256 KiB, or it is a bad body (D-2026-10-05-05). |
 | 401 | unauthorized | On an owner route, no usable bearer token (bad, expired, or for a missing or deleted account). Also a bad ID token, a used nonce, or a bad refresh token. Resolve, reads, and reports never return 401 (FR-021). |
 | 403 | forbidden | Authenticated, not allowed, or suspended |
 | 403 | scope-unavailable | Scope flag is off |
@@ -302,6 +302,19 @@ Not built here. When it is built it lives in `apps/web` in this repo, is served 
 `id` in a web query string is always a code id. When no row matches after the last page, or the record read returns 404, the page shows `resolve.not_found`, the one not-found state. Revoke uses the code id, and versions use the row's `record_id`. Contract 1 adds no route for this (INFERRED).
 
 The first web release has no camera and no microphone. Voice on the marketing demo stays a simulation and is not this client. The provider scripts (Google Identity Services and Sign in with Apple JS) load on `/signin/` only. No analytics. Fonts are self-hosted.
+
+### Web client choices (D-2026-10-05-05)
+
+Decided by Danny on #78 for the first web release.
+
+1. Developer sign-in signs in as the subject `dev:web`. It is local and test only: discovery lists `dev` only where developer sign-in works (FR-022).
+2. Report is offered after any resolve that reaches the lookup, including a not-found answer. The answer is always `report.sent`.
+3. Share appears only where the browser has the Web Share API (v1). Michael can add a clipboard string later.
+4. My codes loads every page of `GET /v1/me/codes` at once (v1).
+5. After sign-in the page returns only to an internal `?next=` path, or to `/codes/`. An external target is ignored.
+6. The logo stays decorative, with empty alt text, until Michael adds an app-name string.
+7. No Write check on the web in v1 (Q18: no camera).
+8. The web unit tests build the pages first and drive the built markup, under the root Vitest 5.
 
 ### Web session (D-2026-10-05-02)
 

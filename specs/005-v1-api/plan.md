@@ -119,6 +119,7 @@ Web templates use no `is:inline`, `define:vars`, `style=`, `on*=` attribute, or 
 | Web | Unit tests for the page logic, including resolve with `cache: "no-store"` and one refresh for two concurrent expired-token calls. Playwright against `npm run dev:api -- --fresh` with developer sign-in, in one browser context: sign in, create, re-roll to the cap, sign out, resolve while signed out, sign in again, edit, revoke then not-found, report, delete the account. A second case opens two signed-in tabs at once, and both stay signed in. Any `securitypolicyviolation` event fails the run. | `apps/web/test`, `apps/web/e2e` |
 | Web build | A dist check over `apps/web/dist/**/*.html` fails on a script without `src`, a `<style>` element, `style=`, an `on*=` attribute, a `data:` URI, or a provider origin outside `/signin/`. | `apps/web` build |
 | Contract | `openapi.yaml` lints clean with Redocly. The generated types match. | `npm run lint` |
+| Worker bundle | `npm run build` runs `wrangler deploy --dry-run --outdir dist --metafile dist/meta.json` in `workers/api`: the production bundle is built with no upload, no Cloudflare login, and no network, into the git-ignored `dist/` (D-2026-10-05-05). | `workers/api` build |
 
 Playwright settings (INFERRED): `webServer` runs `npm run dev:api -- --fresh`, `baseURL` is `http://localhost:8787`, and `reuseExistingServer` is false. Projects are Chromium only, because the Secure `__Host-zz_refresh` cookie is set over plain `http://localhost` in local runs, and Playwright's WebKit drops it there. `e2e.yml` runs `npx playwright install --with-deps chromium`.
 
@@ -144,6 +145,7 @@ The operator runs these with `wrangler d1 execute` against the production databa
 | Where | What |
 |---|---|
 | Cloudflare | The Worker, the D1 database, the R2 bucket, the Durable Object migration, the cron, and the secrets |
+| Cloudflare logs | Workers Logs and Logpush off, or filtered for `/v1/resolve`, because a resolve URL carries the code and FR-027 keeps codes out of logs (D-2026-10-05-05) |
 | Apple | The App ID with Sign in with Apple, a Services ID and domain check for the web, and a Sign in with Apple key |
 | Google | OAuth clients for the web, iOS, and Android (with the release signing SHA-1) |
 | Domain | Q69 |
