@@ -484,6 +484,25 @@ describe("suspension (FR-025)", () => {
         error: "forbidden",
       });
     }
+    // Each refusal writes a denied event naming the attempted action, with
+    // the account as its target (FR-025, D-2026-10-05-04).
+    const denied = await env.ZZ_DB.prepare(
+      "SELECT actor_id, action, target_type, target_id FROM audit_events WHERE result = 'denied' ORDER BY rowid",
+    ).all<Record<string, string>>();
+    expect(denied.results).toEqual(
+      [
+        "code.mint",
+        "code.reroll",
+        "code.revoke",
+        "record.version",
+        "code.list",
+      ].map((action) => ({
+        actor_id: alice.accountId,
+        action,
+        target_type: "account",
+        target_id: alice.accountId,
+      })),
+    );
     // The owner record read is not a write, so it still works.
     expect(
       (
