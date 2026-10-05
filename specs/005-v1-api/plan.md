@@ -61,7 +61,7 @@ workers/api/
   src/resolve/              resolve steps and the cache
   src/records/              owner read, versions, signing
   src/reads/ src/reports/ src/audit/ src/account/ src/moderation/ src/limits/
-  ops/                      operator SQL: suspend, revoke a reported code, add a grant
+  ops/                      operator SQL: list and close reports, suspend and unsuspend, revoke a reported code, add and remove a grant
   test/                     one file per route group
 apps/web/
   astro.config.mjs          output 'static', build.inlineStylesheets 'never', vite.build.assetsInlineLimit 0, no base path
@@ -119,6 +119,7 @@ Web templates use no `is:inline`, `define:vars`, `style=`, `on*=` attribute, or 
 | Web | Unit tests for the page logic, including resolve with `cache: "no-store"` and one refresh for two concurrent expired-token calls. Playwright against `npm run dev:api -- --fresh` with developer sign-in, in one browser context: sign in, create, re-roll to the cap, sign out, resolve while signed out, sign in again, edit, revoke then not-found, report, delete the account. A second case opens two signed-in tabs at once, and both stay signed in. Any `securitypolicyviolation` event fails the run. | `apps/web/test`, `apps/web/e2e` |
 | Web build | A dist check over `apps/web/dist/**/*.html` fails on a script without `src`, a `<style>` element, `style=`, an `on*=` attribute, a `data:` URI, or a provider origin outside `/signin/`. | `apps/web` build |
 | Contract | `openapi.yaml` lints clean with Redocly. The generated types match. | `npm run lint` |
+| Worker bundle | `npm run build` runs `wrangler deploy --dry-run --outdir dist --metafile dist/meta.json` in `workers/api`: the production bundle is built with no upload, no Cloudflare login, and no network, into the git-ignored `dist/` (D-2026-10-05-05). | `workers/api` build |
 
 Playwright settings (INFERRED): `webServer` runs `npm run dev:api -- --fresh`, `baseURL` is `http://localhost:8787`, and `reuseExistingServer` is false. Projects are Chromium only, because the Secure `__Host-zz_refresh` cookie is set over plain `http://localhost` in local runs, and Playwright's WebKit drops it there. `e2e.yml` runs `npx playwright install --with-deps chromium`.
 
@@ -130,20 +131,23 @@ The Playwright run needs a Worker process, so it lives in a new workflow, `.gith
 
 ## Operator work without an admin route
 
-The operator runs these with `wrangler d1 execute` against the production database. Each SQL file in `workers/api/ops/` writes its audit row in the same statement batch.
+The operator runs these with `wrangler d1 execute` against the production database. Each SQL file in `workers/api/ops/` writes its audit row in the same statement batch. `wrangler d1 execute` binds no parameters, so each file names its inputs as quoted placeholders, such as `':account_id'`. The operator replaces them, for example with `sed`, and passes the result as `--command="..."`. Use that `=` form: each file starts with a `--` comment, and wrangler reads a separate value that starts with `--` as an option. A placeholder left as written matches no row, so the file changes nothing. Each change and its audit event happen together or not at all: most files check one condition in both statements, and `grant.sql` writes its event only for the row its insert added (`changes()` and `last_insert_rowid()`). The audit events have no actor: `report.close` (target the report), `account.suspend` and `account.unsuspend` (the account), `code.revoke` (the code), and `grant.add` and `grant.remove` (the grant). A grant event takes the grant's scope, so that scope's auditors list it (FR-016). The audit row has no column for the role; the grant row holds it. `remove-grant.sql` ends a grant by setting `expires_at` to now and keeps the row, so its scope still resolves for both events. Every grant check already treats an expired grant as absent. SQL cannot purge the edge cache, so a revoke from SQL has the FR-018 worst case of 60 seconds. Codes revoked during a suspension stay revoked after `unsuspend.sql`. These files are T038, decided in D-2026-10-05-07 [DELEGATED 2026-10-05, zzThis #78].
 
 | Job | File |
 |---|---|
-| List open reports | `ops/reports.sql` |
+| List open reports, and close one by setting `closed_at` (FR-026) | `ops/reports.sql` |
 | Suspend an account and revoke its codes (`revoked_reason` `operator`) | `ops/suspend.sql` |
+| Lift a suspension; revoked codes stay revoked | `ops/unsuspend.sql` |
 | Revoke one reported code | `ops/revoke-code.sql` |
-| Add an issuer or auditor grant | `ops/grant.sql` |
+| Add an issuer, viewer, or auditor grant (FR-034) | `ops/grant.sql` |
+| Remove one grant | `ops/remove-grant.sql` |
 
 ## Human-gated setup (not part of the build)
 
 | Where | What |
 |---|---|
 | Cloudflare | The Worker, the D1 database, the R2 bucket, the Durable Object migration, the cron, and the secrets |
+| Cloudflare logs | Workers Logs and Logpush off, or filtered for `/v1/resolve`, because a resolve URL carries the code and FR-027 keeps codes out of logs (D-2026-10-05-05) |
 | Apple | The App ID with Sign in with Apple, a Services ID and domain check for the web, and a Sign in with Apple key |
 | Google | OAuth clients for the web, iOS, and Android (with the release signing SHA-1) |
 | Domain | Q69 |

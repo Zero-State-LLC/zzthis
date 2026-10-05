@@ -1,0 +1,32 @@
+{
+  "name": "@zzthis/api",
+  "version": "0.1.0",
+  "private": true,
+  "license": "UNLICENSED",
+  "type": "module",
+  "scripts": {
+    "lint": "npm run api:types && npm run lint:contract",
+    "lint:contract": "REDOCLY_TELEMETRY=off REDOCLY_SUPPRESS_UPDATE_NOTICE=true redocly lint ../../specs/005-v1-api/openapi.yaml",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run --coverage",
+    "build": "WRANGLER_SEND_METRICS=false WRANGLER_SEND_ERROR_REPORTS=false WRANGLER_HIDE_BANNER=true wrangler deploy --dry-run --outdir dist --metafile dist/meta.json",
+    "api:types": "npm run generate && git diff --exit-code src/generated/",
+    "generate": "openapi-typescript ../../specs/005-v1-api/openapi.yaml -o src/generated/api.ts && REDOCLY_TELEMETRY=off REDOCLY_SUPPRESS_UPDATE_NOTICE=true redocly bundle ../../specs/005-v1-api/openapi.yaml --ext json -o src/generated/openapi.json && WRANGLER_SEND_METRICS=false wrangler types src/generated/worker-configuration.d.ts --env-file .dev.vars.example --strict-vars=false"
+  },
+  "dependencies": {
+    "@zzthis/zz-core": "0.1.0",
+    "hono": "4.13.13",
+    "jose": "6.2.12",
+    "zod": "4.6.5"
+  },
+  "devDependencies": {
+    "@cfworker/json-schema": "4.1.1",
+    "@cloudflare/vitest-pool-workers": "^0.22.0",
+    "@redocly/cli": "2.57.0",
+    "@vitest/coverage-istanbul": "4.1.11",
+    "openapi-typescript": "7.13.0",
+    "typescript": "^6.0.3",
+    "vitest": "4.1.11",
+    "wrangler": "4.147.0"
+  }
+}

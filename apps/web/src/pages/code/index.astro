@@ -1,0 +1,56 @@
+---
+// Code detail and Revoke confirm (spec 005 Web client, /code/?id=<code id>).
+import App from "../../layouts/App.astro";
+import { t } from "../../lib/strings.ts";
+---
+
+<App title={t("nav.my_codes")} current="codes">
+  <p id="status" class="message" role="status" hidden></p>
+  <section id="detail-signed-out" hidden>
+    <p>{t("codes.signed_out")}</p>
+    <a id="detail-signed-out-link" class="button" href="/signin/">
+      {t("signin.title")}
+    </a>
+  </section>
+  <article id="detail" class="detail" hidden>
+    <p id="detail-code" class="detail-code"></p>
+    <h1 id="detail-title"></h1>
+    <p id="detail-state" class="row-status" hidden></p>
+    <p id="detail-saved" class="note" role="status" hidden>
+      {t("edit.saved")}
+    </p>
+    <p id="detail-revoked" class="note" hidden>
+      {t("detail.revoked_note")}
+    </p>
+    <p id="detail-body" class="body-text"></p>
+    <div class="actions">
+      <button id="detail-share" type="button" hidden>
+        {t("resolve.share")}
+      </button>
+      <a id="detail-edit" class="button" href="/edit/" hidden>
+        {t("detail.edit")}
+      </a>
+      <button id="detail-revoke" type="button" class="danger" hidden>
+        {t("detail.revoke")}
+      </button>
+    </div>
+  </article>
+  <dialog id="revoke-dialog" aria-labelledby="revoke-heading">
+    <h2 id="revoke-heading">{t("revoke.title")}</h2>
+    <p>{t("revoke.body")}</p>
+    <div class="actions">
+      <button id="revoke-confirm" type="button" class="danger">
+        {t("revoke.action")}
+      </button>
+      <button id="revoke-cancel" type="button" autofocus>
+        {t("common.cancel")}
+      </button>
+    </div>
+  </dialog>
+  <script>
+    import { browserEnv } from "../../lib/page.ts";
+    import { mountDetail } from "../../scripts/detail.ts";
+
+    void mountDetail(browserEnv());
+  </script>
+</App>

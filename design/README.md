@@ -11,7 +11,7 @@ This folder is the shared design source for zzThis and for the zzThat apps. The 
 | [`brand/`](brand/) | Logo and mark files already in this repo. |
 | [`UX.md`](UX.md) | Patterns for scan, resolve, create, share, errors, empty states, the demo badge, and copy. |
 | [`copy.json`](copy.json) | Every sentence the apps and the web client show, by key. Clients build their catalogs from it. Added 2026-10-04. |
-| `fonts/` | Not here yet. The build copies the static IBM Plex TTF files the token files name, with `OFL.txt`, from `@ibm/plex-sans` 1.1.0, `@ibm/plex-sans-condensed` 2.0.0, and `@ibm/plex-mono` 2.5.0, pinned as exact devDependencies (OFL-1.1, spec 005 T030). iOS and Android cannot load the site's woff2 files. |
+| [`fonts/`](fonts/) | IBM Plex Sans, Sans Condensed, and Mono TTF files (Regular, Medium, SemiBold, Bold) with `OFL.txt`, rebuilt from the pinned `@ibm/plex` packages by `npm run fonts:build`. iOS and Android load these; the site keeps its woff2 files. |
 
 The site still loads `src/styles/tokens.css`. `npm run design:build` reads that file and rewrites this folder. `npm run design:check` fails if the folder drifts. The site build runs the check.
 
@@ -62,4 +62,4 @@ Commit only the pinned files in zzThat. Do not commit a second hand-written pale
 
 To move the pin later, run the script with the new sha and replace those same files in one pull request. Do not track `main`.
 
-The one-shot build adds `scripts/pin-zzthis.sh` (spec 005 T033). It copies this folder plus `copy.json`, the fonts, the OpenAPI file, the shared test vectors, and the wordlist at one sha, so zzThat keeps one pin for all of them. The list of paths is in [spec 005 plan.md](../specs/005-v1-api/plan.md), What zzThat pins.
+[`scripts/pin-zzthis.sh`](../scripts/pin-zzthis.sh) (spec 005 T033) copies the token files, `brand/`, `fonts/`, `copy.json`, the OpenAPI file, the shared test vectors, the wordlists, and `NOTICE` at one sha into one folder, with a `PIN` file, so zzThat keeps one pin for all of them. It takes the same arguments as `pin-design.sh` and fails when any path is missing at that sha. The list of paths is in [spec 005 plan.md](../specs/005-v1-api/plan.md), What zzThat pins. `pin-design.sh` stays until zzThat moves to the new script.

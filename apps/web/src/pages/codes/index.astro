@@ -1,0 +1,26 @@
+---
+// My codes (spec 005 Web client, /codes/).
+import App from "../../layouts/App.astro";
+import { t } from "../../lib/strings.ts";
+---
+
+<App title={t("nav.my_codes")} current="codes">
+  <h1>{t("nav.my_codes")}</h1>
+  <p id="status" class="message" role="status" hidden></p>
+  <section id="codes-signed-out" hidden>
+    <p>{t("codes.signed_out")}</p>
+    <a class="button" href="/signin/?next=/codes/">
+      {t("signin.title")}
+    </a>
+  </section>
+  <p id="codes-empty" hidden>
+    {t("codes.empty")}
+  </p>
+  <ul id="codes-list" class="codes" hidden></ul>
+  <script>
+    import { browserEnv } from "../../lib/page.ts";
+    import { mountCodes } from "../../scripts/codes.ts";
+
+    void mountCodes(browserEnv());
+  </script>
+</App>

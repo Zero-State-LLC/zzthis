@@ -1,0 +1,84 @@
+---
+// Type and resolve (spec 005 Web client, /). Typing only: the first web
+// release has no camera and no microphone.
+import App from "../layouts/App.astro";
+import { t, type StringKey } from "../lib/strings.ts";
+
+const reasons: [string, StringKey][] = [
+  ["spam", "report.reason_spam"],
+  ["harassment", "report.reason_harassment"],
+  ["personal-data", "report.reason_personal_data"],
+  ["other", "report.reason_other"],
+];
+---
+
+<App title={t("nav.scan")} current="scan">
+  <h1>{t("nav.scan")}</h1>
+  <form id="type-form" class="type-form" novalidate>
+    <label for="code-input">{t("type.field_label")}</label>
+    <div class="field-row">
+      <input
+        id="code-input"
+        name="code"
+        class="code-input"
+        autocomplete="off"
+        autocapitalize="none"
+        spellcheck="false"
+        placeholder={t("type.empty")}
+      />
+      <button type="submit">{t("type.open")}</button>
+    </div>
+  </form>
+  <p id="type-message" class="message" role="status" hidden></p>
+  <section id="result" class="result" hidden>
+    <h2 id="result-title"></h2>
+    <p id="result-body" class="body-text"></p>
+    <div class="actions">
+      <button id="result-share" type="button" hidden>
+        {t("resolve.share")}
+      </button>
+    </div>
+  </section>
+  <button id="report-open" type="button" class="quiet" hidden>
+    {t("resolve.report")}
+  </button>
+  <dialog id="report-dialog" aria-labelledby="report-heading">
+    <h2 id="report-heading">{t("report.title")}</h2>
+    <form id="report-form">
+      <fieldset class="choices">
+        {reasons.map(([value, key]) => (
+          <label class="choice">
+            <input type="radio" name="reason" value={value} required />
+            {t(key)}
+          </label>
+        ))}
+      </fieldset>
+      <label for="report-note">{t("report.note_label")}</label>
+      <textarea
+        id="report-note"
+        name="note"
+        maxlength="500"
+        rows="3"
+      ></textarea>
+      <p id="report-message" class="message" role="alert" hidden></p>
+      <div class="actions">
+        <button type="submit">{t("report.send")}</button>
+        <button id="report-cancel" type="button" class="quiet">
+          {t("common.cancel")}
+        </button>
+      </div>
+    </form>
+    <div id="report-sent" hidden>
+      <p role="status">{t("report.sent")}</p>
+      <button id="report-done" type="button">
+        {t("common.done")}
+      </button>
+    </div>
+  </dialog>
+  <script>
+    import { browserEnv } from "../lib/page.ts";
+    import { mountResolve } from "../scripts/resolve.ts";
+
+    mountResolve(browserEnv());
+  </script>
+</App>

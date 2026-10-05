@@ -1,0 +1,43 @@
+---
+// Sign in (spec 005 Web client, /signin/). Provider buttons are drawn by
+// the providers' own scripts, which load on this page only.
+import App from "../../layouts/App.astro";
+import { t } from "../../lib/strings.ts";
+
+const google = import.meta.env.PUBLIC_GOOGLE_WEB_CLIENT_ID ?? "";
+const appleServices = import.meta.env.PUBLIC_APPLE_SERVICES_ID ?? "";
+const appleRedirect = import.meta.env.PUBLIC_APPLE_REDIRECT_URI ?? "";
+---
+
+<App title={t("signin.title")}>
+  <h1>{t("signin.title")}</h1>
+  <p>{t("signin.why")}</p>
+  <p id="status" class="message" role="status" hidden></p>
+  <div
+    id="providers"
+    class="providers"
+    data-google-client-id={google}
+    data-apple-services-id={appleServices}
+    data-apple-redirect-uri={appleRedirect}
+  >
+    {appleServices && appleRedirect && (
+      <div
+        id="appleid-signin"
+        data-color="black"
+        data-border="true"
+        data-type="sign-in"
+        hidden
+      />
+    )}
+    {google && <div id="signin-google" hidden />}
+    <button id="signin-dev" type="button" hidden>
+      {t("signin.dev")}
+    </button>
+  </div>
+  <script>
+    import { browserEnv } from "../../lib/page.ts";
+    import { mountSignIn } from "../../scripts/signin.ts";
+
+    void mountSignIn(browserEnv());
+  </script>
+</App>

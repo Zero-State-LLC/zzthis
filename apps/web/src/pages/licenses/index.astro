@@ -1,0 +1,14 @@
+---
+// Licenses (spec 005 Web client, /licenses/): NOTICE and OFL.txt as plain
+// text.
+import App from "../../layouts/App.astro";
+import { t } from "../../lib/strings.ts";
+import notice from "../../../../../NOTICE?raw";
+import ofl from "../../../../../design/fonts/OFL.txt?raw";
+---
+
+<App title={t("account.licenses")} current="account">
+  <h1>{t("account.licenses")}</h1>
+  <pre class="license">{notice}</pre>
+  <pre class="license">{ofl}</pre>
+</App>
