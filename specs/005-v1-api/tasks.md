@@ -91,9 +91,9 @@ Done when: the Playwright run passes against `npm run dev:api -- --fresh`, and t
 
 ## Group I. Files zzThat pins
 
-- [ ] T030 `design/fonts/`. Pin `@ibm/plex-sans@1.1.0`, `@ibm/plex-sans-condensed@2.0.0`, and `@ibm/plex-mono@2.5.0` (OFL-1.1) as exact devDependencies. Copy the static TTF files the token files name (Regular, Medium, SemiBold, and Bold, as each family needs) and `OFL.txt` into `design/fonts/`.
+- [x] T030 `design/fonts/`. Pin `@ibm/plex-sans@1.1.0`, `@ibm/plex-sans-condensed@2.0.0`, and `@ibm/plex-mono@2.5.0` (OFL-1.1) as exact devDependencies. Those packages ship WOFF and WOFF2 only, and iOS and Android load neither, so `npm run fonts:build` (`scripts/build-fonts.mjs`) unwraps each WOFF 1 file, which is a zlib wrapper around the original TrueType tables, into the original `.ttf`: Regular, Medium, SemiBold, and Bold for each family, plus `OFL.txt`. `npm run build` runs `fonts:check`, which fails if a committed font differs from the pinned packages.
 - [x] T033 `scripts/pin-zzthis.sh` from plan.md, What zzThat pins. Keep `pin-design.sh` until zzThat moves to the new script.
-- [ ] T036 Complete the draft root `NOTICE`: the EFF Long Wordlist credit from T029 (CC BY 3.0 US, adapted: filtered and reordered, see `proto-v0.report.md`) and IBM Plex from T030 (SIL Open Font License 1.1, `design/fonts/OFL.txt`). Draft one sentence for `LICENSE`: "Third-party materials listed in NOTICE are licensed under their own terms." Flag both in the PR body. OPEN: Danny's legal yes on both texts. Default: the drafts are committed in the build PR, and the PR does not merge without his yes.
+- [x] T036 (drafted; Danny's legal yes still OPEN) Complete the draft root `NOTICE`: the EFF Long Wordlist credit from T029 (CC BY 3.0 US, adapted: filtered and reordered, see `proto-v0.report.md`) and IBM Plex from T030 (SIL Open Font License 1.1, `design/fonts/OFL.txt`). Draft one sentence for `LICENSE`: "Third-party materials listed in NOTICE are licensed under their own terms." Flag both in the PR body. OPEN: Danny's legal yes on both texts. Default: the drafts are committed in the build PR, and the PR does not merge without his yes.
 
 Done when: running the script at the build commit produces every path in that table.
 
