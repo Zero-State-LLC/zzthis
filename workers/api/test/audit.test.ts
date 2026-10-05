@@ -43,9 +43,7 @@ async function events(w: World, token: string, query = ""): Promise<Event[]> {
 }
 
 // One enterprise and one logistics issuer, each with a few events.
-async function twoScopes(
-  w: World,
-): Promise<{
+async function twoScopes(w: World): Promise<{
   ent: Session;
   log: Session;
   entCode: string;
