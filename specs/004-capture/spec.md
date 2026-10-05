@@ -103,7 +103,7 @@ Status: decided. Danny said yes on #74 (2026-10-04). Source: [analysis 2026-10-0
 
 ### Scanner rules
 
-Rules 1, 3, and 6, and the closing-only partial in rule 7, are the D-2026-10-04-06 reading. Rules 4 and 5, and the `zz@` partial in rule 7, are the D-2026-10-04-03 reading. The empty pair in rule 5 and the listing in rule 8 are the D-2026-10-04-11 reading. All are INFERRED and wait for review (Readings, below).
+Rules 1, 3, and 6, and the closing-only partial in rule 7, are the D-2026-10-04-06 reading. Rules 4 and 5, and the `zz@` partial in rule 7, are the D-2026-10-04-03 reading. The empty pair in rule 5 and the listing in rule 8 are the D-2026-10-04-11 reading. All were decided on 2026-10-05 (Readings, below).
 
 1. Replace every character with the Unicode White_Space property (docs/SPEC.md G2 step 1), such as a line break, a tab, or U+00A0, with U+0020.
 2. Split the text into tokens at spaces and at hyphen characters (U+002D, U+2010 to U+2015, U+2212). Split a circled marker `(zz)` out of any token as its own token.
@@ -141,12 +141,12 @@ The creation check (FR-017) runs the same steps on the person's photo and passes
 
 ## Readings (decided 2026-10-05 by established practice, docs/SPEC.md 9a)
 
-The pre-build audit found that the scanner rules, read literally, could not pair a `zz@name` token, dropped codes inside brackets or before a colon, and read `zz-zz` as two bare marks, and that a `wrong-length` code had no band. Each row records the reading the build uses. These are INFERRED, not decided. OPEN: Michael and Danny review them before the build PR merges. Default: the build applies them as written. The full rows are in `docs/SPEC.md` Section 9a. None of these readings changes `src/lib/grammar.ts`.
+The pre-build audit found that the scanner rules, read literally, could not pair a `zz@name` token, dropped codes inside brackets or before a colon, and read `zz-zz` as two bare marks, and that a `wrong-length` code had no band. Each row records the reading the build uses. They were decided on 2026-10-05 by established practice, each with its sources, as Danny asked on #75. The full rows are in `docs/SPEC.md` Section 9a. None of these readings changes `src/lib/grammar.ts`.
 
 | ID | Reading | New `vectors.json` scanner rows |
 |---|---|---|
 | D-2026-10-04-03 | The `zz@` opener holds content (rules 4, 5, and 7). | `zz@agentsmith-zz` gives the handle `zz-@agentsmith-zz`. `see zz@bob` gives a partial, `zz@bob`. `ai-zz@bob` gives one partial, `zz@bob`, because a `zz@` token reads forward only. `zz copper zz@bob zz` gives a partial, `zz copper`, then the handle `zz-@bob-zz`. `zz@agentsmith-zz` written all in capitals gives the same handle, `zz-@agentsmith-zz`. |
-| D-2026-10-04-06 | The punctuation set, Zs spaces, the grammar input, and a closing-only fragment as partial, so it bands as Retry (rules 1, 3, 6, and 7). | `(zz-copper-lantern-sky-zz)`, `See zz-copper-lantern-sky-zz: it is on the box`, and the code in curly quotes each give `zz-copper-lantern-sky-zz`. `copper-lantern-sky-zz` gives a partial. `copper-lantern-sky-zz goes to bay 4` gives one partial, `copper-lantern-sky-zz`, because the backward reading wins. `zz "copper lantern zz` gives `zz-copper-lantern-zz`. `zz-time:-zz` stays invalid with `reserved-symbol`, which guards the narrow `:` rule. |
+| D-2026-10-04-06 | The punctuation set, Unicode White_Space characters as spaces, the grammar input, and a closing-only fragment as partial, so it bands as Retry (rules 1, 3, 6, and 7). | `(zz-copper-lantern-sky-zz)`, `See zz-copper-lantern-sky-zz: it is on the box`, and the code in curly quotes each give `zz-copper-lantern-sky-zz`. `copper-lantern-sky-zz` gives a partial. `copper-lantern-sky-zz goes to bay 4` gives one partial, `copper-lantern-sky-zz`, because the backward reading wins. `zz "copper lantern zz` gives `zz-copper-lantern-zz`. `zz-time:-zz` stays invalid with `reserved-symbol`, which guards the narrow `:` rule. |
 | D-2026-10-04-07 | A word code whose verify returns `wrong-length` goes to Abstain with `scan.wrong_length` (FR-016 and both band tables). | None. The check-word rows `zz-copper-lantern-zz` and `zz-copper-lantern-sky-maple-zz` already return `wrong-length`. |
 | D-2026-10-04-11 | An empty pair is one `no-content` candidate unless a marker is joined by a hyphen to a word outside it (rule 5). Only codes are merged (rule 8). | `zz-zz` and `(zz) (zz)` each give one invalid candidate with `no-content`. `zz-copper-lantern-sky-zz zz` gives the code, then a bare mark. `zz. zz.` gives two bare marks. |
 
