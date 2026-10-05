@@ -70,7 +70,7 @@ apps/web/
   src/lib/api.ts            /v1 calls: contract header, bearer, ensureSession() with one shared refresh under navigator.locks, resolve with cache "no-store"
   src/lib/strings.ts        reads design/copy.json
   e2e/                      Playwright
-NOTICE                      draft third-party credits (T036); merges only with Danny's legal yes
+NOTICE                      third-party credits (T036); Danny's legal yes on #78
 scripts/pin-zzthis.sh       replaces pin-design.sh for zzThat (manifest below)
 ```
 
@@ -89,7 +89,7 @@ Web templates use no `is:inline`, `define:vars`, `style=`, `on*=` attribute, or 
 | `specs/005-v1-api/openapi.yaml` | Generated clients |
 | `specs/003-wordlist-checkword/vectors.json` | Library tests on both platforms |
 | `packages/zz-core/wordlists/*.txt` | The bundled list |
-| `NOTICE` | The licenses screen (`account.licenses`), with `OFL.txt` (INFERRED; the text waits for Danny's legal yes, T036) |
+| `NOTICE` | The licenses screen (`account.licenses`), with `OFL.txt` (INFERRED; Danny's legal yes on #78, T036) |
 
 ## Worker request flow
 

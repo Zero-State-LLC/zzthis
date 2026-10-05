@@ -93,11 +93,11 @@ Done when: the Playwright run passes against `npm run dev:api -- --fresh`, and t
 
 - [ ] T030 `design/fonts/`. Pin `@ibm/plex-sans@1.1.0`, `@ibm/plex-sans-condensed@2.0.0`, and `@ibm/plex-mono@2.5.0` (OFL-1.1) as exact devDependencies. Copy the static TTF files the token files name (Regular, Medium, SemiBold, and Bold, as each family needs) and `OFL.txt` into `design/fonts/`.
 - [ ] T033 `scripts/pin-zzthis.sh` from plan.md, What zzThat pins. Keep `pin-design.sh` until zzThat moves to the new script.
-- [ ] T036 Complete the draft root `NOTICE`: the EFF Long Wordlist credit from T029 (CC BY 3.0 US, adapted: filtered and reordered, see `proto-v0.report.md`) and IBM Plex from T030 (SIL Open Font License 1.1, `design/fonts/OFL.txt`). Draft one sentence for `LICENSE`: "Third-party materials listed in NOTICE are licensed under their own terms." Flag both in the PR body. OPEN: Danny's legal yes on both texts. Default: the drafts are committed in the build PR, and the PR does not merge without his yes.
+- [ ] T036 Complete the draft root `NOTICE`: the EFF Long Wordlist credit from T029 (CC BY 3.0 US, adapted: filtered and reordered, see `proto-v0.report.md`) and IBM Plex from T030 (SIL Open Font License 1.1, `design/fonts/OFL.txt`). Draft one sentence for `LICENSE`: "Third-party materials listed in NOTICE are licensed under their own terms." Flag both in the PR body. Danny gave his legal yes on #78 (2026-10-05): the drafts are fine for now and stay as written.
 
 Done when: running the script at the build commit produces every path in that table.
 
 ## Human gate
 
-- [ ] T023 Danny's yes before any Cloudflare resource, OAuth client, or deploy workflow, and his legal yes on the `NOTICE` text and the LICENSE sentence (T036) before the build PR merges.
+- [ ] T023 Danny's yes before any Cloudflare resource, OAuth client, or deploy workflow. His legal yes on the `NOTICE` text and the LICENSE sentence (T036) was given on #78.
 - [ ] T037 Required before the first production mint: re-run the spec 003 pipeline with `ZZ_BLOCKLIST`, check the yield report (the removed words and the new N), and commit the new list. The mint itself needs Danny's deploy yes, and after it proto-v0 is permanent.
