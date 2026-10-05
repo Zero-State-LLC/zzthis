@@ -15,6 +15,7 @@
   "scripts": {
     "dev": "astro dev",
     "preview": "astro preview",
+    "dev:api": "node workers/api/scripts/dev.mjs",
     "lint": "eslint . && prettier --check . && npm run lint --workspaces --if-present",
     "format": "prettier --write .",
     "typecheck": "astro check && tsc --noEmit && npm run typecheck --workspaces --if-present",
