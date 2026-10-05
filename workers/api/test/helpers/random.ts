@@ -15,5 +15,6 @@ export function repeating(...values: number[]): RandomUint32 {
 // Plays the given values once, then falls back to crypto randomness.
 export function scripted(...values: number[]): RandomUint32 {
   const queue = [...values];
-  return () => queue.shift() ?? crypto.getRandomValues(new Uint32Array(1))[0] as number;
+  return () =>
+    queue.shift() ?? (crypto.getRandomValues(new Uint32Array(1))[0] as number);
 }
