@@ -178,6 +178,16 @@ describe("POST /v1/reads (US5, T017)", () => {
     expect(await expectMatchesSchema(huge, "submitRead", 413)).toEqual({
       error: "payload-too-large",
     });
+    // A declared length over the limit is refused before the body is read.
+    // (In production the runtime sets Content-Length; here the test does.)
+    const declared = await call(w, "POST", "/v1/reads", {
+      raw: form(jpeg()),
+      headers: { "Content-Length": String(MAX_PHOTO + 128 * 1024) },
+      ip: "192.0.2.250",
+    });
+    expect(await expectMatchesSchema(declared, "submitRead", 413)).toEqual({
+      error: "payload-too-large",
+    });
     expect(reader.calls).toHaveLength(0);
     expect(await stored(w)).toEqual({ rows: 0, objects: 0 });
     expect((await upload(w, form(jpeg(MAX_PHOTO)))).status).toBe(200);

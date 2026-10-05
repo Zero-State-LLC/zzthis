@@ -296,14 +296,15 @@ describe("developer sign-in (FR-022)", () => {
   it("signs a racing first sign-in for one subject in to one account", async () => {
     const w = await makeWorld();
     const db = w.env.ZZ_DB;
-    let raced = false;
-    // The first batch finds that another sign-in for alice just won.
+    let batches = 0;
+    // The call's second batch (after the nonce) creates the account; just
+    // before it, another sign-in for alice wins.
     const racing = new Proxy(db, {
       get(target, property) {
         if (property === "batch") {
           return async (statements: D1PreparedStatement[]) => {
-            if (!raced) {
-              raced = true;
+            batches += 1;
+            if (batches === 2) {
               await signIn({ ...w, env: { ...w.env, ZZ_DB: db } }, "alice");
             }
             return target.batch(statements);
@@ -330,6 +331,25 @@ describe("developer sign-in (FR-022)", () => {
     expect(response.status).toBe(200);
     expect(await count(w, "SELECT count(*) AS n FROM accounts")).toBe(1);
     expect(await count(w, "SELECT count(*) AS n FROM identities")).toBe(1);
+  });
+});
+
+describe("account creation failure", () => {
+  it("answers 500 failed and stores nothing when the new account cannot be written", async () => {
+    vi.spyOn(console, "error").mockImplementation(() => {});
+    const w = await makeWorld();
+    const n = await nonce(w);
+    await env.ZZ_DB.prepare(
+      "CREATE TRIGGER accounts_down BEFORE INSERT ON accounts BEGIN SELECT RAISE (ABORT, 'accounts down'); END",
+    ).run();
+    const response = await call(w, "POST", "/v1/auth/token", {
+      body: { provider: "dev", client: "ios", id_token: "dev:alice", nonce: n },
+    });
+    expect(await expectMatchesSchema(response, "exchangeToken", 500)).toEqual({
+      error: "failed",
+    });
+    expect(await count(w, "SELECT count(*) AS n FROM identities")).toBe(0);
+    expect(await count(w, "SELECT count(*) AS n FROM refresh_tokens")).toBe(0);
   });
 });
 
@@ -361,6 +381,7 @@ describe("request body (FR-020, TokenRequest)", () => {
       { raw: "{not json", contentType: "application/json" },
       { raw: JSON.stringify({ provider: "dev" }), contentType: "text/plain" },
       { raw: JSON.stringify({ provider: "dev" }) },
+      { raw: new TextEncoder().encode(JSON.stringify({ provider: "dev" })) },
       {
         raw: "{}",
         contentType: "application/json",

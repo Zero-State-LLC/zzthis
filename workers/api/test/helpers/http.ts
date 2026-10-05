@@ -10,7 +10,8 @@ export interface CallOptions {
   // null sends no X-ZZ-Contract header.
   readonly contract?: string | null;
   readonly cookie?: string;
-  readonly ip?: string;
+  // null sends no CF-Connecting-IP header.
+  readonly ip?: string | null;
 }
 
 export const TEST_IP = "203.0.113.7";
@@ -26,7 +27,8 @@ export function request(
   if (options.token !== undefined)
     headers.set("Authorization", `Bearer ${options.token}`);
   if (options.cookie !== undefined) headers.set("Cookie", options.cookie);
-  headers.set("CF-Connecting-IP", options.ip ?? TEST_IP);
+  if (options.ip !== null)
+    headers.set("CF-Connecting-IP", options.ip ?? TEST_IP);
   let body: BodyInit | undefined = options.raw;
   if (options.body !== undefined) {
     body = JSON.stringify(options.body);

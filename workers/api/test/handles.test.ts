@@ -148,7 +148,10 @@ describe("taken and reserved handles", () => {
   });
 
   it("is 422 reserved-handle for a reserved name, on the G10 key, and for fewer than 3 characters", async () => {
-    const w = await makeWorld({ settings: { ZZ_BLOCKLIST: "badword\n" } });
+    // "bad#word" cannot be a handle, so it reserves nothing.
+    const w = await makeWorld({
+      settings: { ZZ_BLOCKLIST: "badword\nbad#word\n" },
+    });
     const acme = await issuer(w, "acme");
     for (const value of [
       "@admin",
@@ -178,6 +181,22 @@ describe("taken and reserved handles", () => {
     expect(
       (await handle(w, (await signIn(w, "acme")).access, "@abc")).status,
     ).toBe(201);
+  });
+
+  it("answers 500 failed, not taken, when the write fails for another reason", async () => {
+    const w = await makeWorld();
+    const acme = await issuer(w, "acme");
+    await env.ZZ_DB.prepare(
+      "CREATE TRIGGER audit_down BEFORE INSERT ON audit_events BEGIN SELECT RAISE (ABORT, 'audit down'); END",
+    ).run();
+    const errors = console.error;
+    console.error = () => {};
+    const response = await handle(w, acme.access, "@acme");
+    console.error = errors;
+    expect(await expectMatchesSchema(response, "mintCode", 500)).toEqual({
+      error: "failed",
+    });
+    expect(await count(w, "SELECT count(*) AS n FROM codes")).toBe(0);
   });
 
   it("treats a name and its handle as one (spec 002 FR-022)", async () => {

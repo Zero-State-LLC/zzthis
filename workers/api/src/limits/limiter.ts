@@ -12,6 +12,13 @@ interface Window {
   readonly count: number;
 }
 
+// Storage is cleared one window length after the window ends. The alarm
+// runs on the runtime clock while windows use the request's clock, so the
+// margin keeps a cleanup from ever landing inside a live window.
+function clearAt(window: Window): number {
+  return window.end + (window.end - window.start);
+}
+
 const KEY = "window";
 
 // One instance per limiter key, fixed windows (spec 005 plan). The count
@@ -29,16 +36,17 @@ export class Limiter extends DurableObject {
         retryAfter: Math.max(1, Math.ceil((end - now) / 1000)),
       };
     }
-    await this.ctx.storage.put<Window>(KEY, { start, end, count: count + 1 });
-    if (count === 0) await this.ctx.storage.setAlarm(end);
+    const window = { start, end, count: count + 1 };
+    await this.ctx.storage.put<Window>(KEY, window);
+    if (count === 0) await this.ctx.storage.setAlarm(clearAt(window));
     return { allowed: true, retryAfter: 0 };
   }
 
   // Clears a finished window, so a key that goes quiet stores nothing.
   async alarm(): Promise<void> {
     const stored = await this.ctx.storage.get<Window>(KEY);
-    if (stored !== undefined && stored.end > Date.now()) {
-      await this.ctx.storage.setAlarm(stored.end);
+    if (stored !== undefined && clearAt(stored) > Date.now()) {
+      await this.ctx.storage.setAlarm(clearAt(stored));
       return;
     }
     await this.ctx.storage.deleteAll();
