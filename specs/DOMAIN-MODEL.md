@@ -1,5 +1,7 @@
 # zzThis domain model
 
+Evidence classification: **OBSERVED** for statements describing current repository code/tests; **INFERRED** for governance, production gates, or design choices accepted by the convergence intent; **SPECULATIVE** only where explicitly marked as future research.
+
 Status: current V1 model plus reserved future semantic terms.
 
 ## V1 entities
