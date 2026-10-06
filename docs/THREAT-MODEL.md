@@ -1,5 +1,7 @@
 # zzThis consolidated threat model
 
+Evidence classification: **OBSERVED** for statements describing current repository code/tests; **INFERRED** for governance, production gates, or design choices accepted by the convergence intent; **SPECULATIVE** only where explicitly marked as future research.
+
 Status: pre-production security governance. This consolidates existing invariants; it does not authorize deployment.
 
 ## Assets
