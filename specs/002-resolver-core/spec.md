@@ -109,6 +109,29 @@ As a field user who wrote a code by hand with no device, I can link it to a reco
 
 Status codes are a prototype choice and may change with Q19. The not-found response must also match in timing within a stated budget (plan risk); the budget is set when T007 measures it.
 
+## Future structured semantic resolution (CANON-SHADOW; issue #81)
+
+This section records a future resolver boundary. It does not change contract 1.
+
+For a code explicitly bound to a structured semantic profile, semantic resolution happens only after spec 003 has parsed and canonicalized the visible code and this resolver has authenticated and authorized the caller. The resolver owns namespace authority and semantic disclosure; capture does not.
+
+Future bindings are separate fields:
+- `semantic_profile_id`: interpretation schema.
+- `dictionary_version`: version of the semantic mappings used by that profile.
+- `namespace_id`: authority/domain binding.
+
+`wordlist_version` remains the recognition/check-word vocabulary version and MUST NOT be reused as a semantic dictionary version.
+
+A structured profile may assign positional roles such as X1 = schema/class selector, X2 = schema-defined locus/target, and X3 = schema-defined state/action/qualifier. Those roles apply only when the code is explicitly profile-bound; the resolver MUST NOT infer them from an arbitrary three-part code.
+
+Contract-1 invariants remain authoritative:
+1. The visible physical code is public and copyable and is never proof of identity, authority, or semantic entitlement.
+2. Resolver authentication/authorization is the semantic disclosure boundary.
+3. Unknown and unauthorized resolution preserves the existing non-enumerability rules.
+4. The same visible code MUST NOT acquire tenant-dependent meanings under contract 1. Global `match_key` uniqueness remains in force until a separately specified scope-aware resolver contract exists.
+5. Namespace cryptographic keys MUST NOT be derived directly from usernames, email addresses, or other profile fields.
+6. Merkle-committed dictionaries, zero-knowledge selective disclosure, and steganographic provenance are V2+ research, not implemented resolver security. Steganography, if evaluated, is provenance/tamper evidence only.
+
 ## Edge cases
 
 - Two resolves of one single-use code at the same moment: exactly one view (US1 acceptance 6).
