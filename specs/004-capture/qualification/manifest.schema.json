@@ -1,0 +1,59 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://zer0state.com/schemas/zz-ocr-qual-manifest-v1.json",
+  "title": "ZZ-OCR-QUAL-001 corpus manifest",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "qualification_id", "split", "samples"],
+  "properties": {
+    "schema_version": { "const": 1 },
+    "qualification_id": { "const": "ZZ-OCR-QUAL-001" },
+    "split": { "enum": ["tuning", "final"] },
+    "samples": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/sample" }
+    }
+  },
+  "$defs": {
+    "box": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["x", "y", "width", "height"],
+      "properties": {
+        "x": { "type": "number", "minimum": 0, "maximum": 1 },
+        "y": { "type": "number", "minimum": 0, "maximum": 1 },
+        "width": { "type": "number", "exclusiveMinimum": 0, "maximum": 1 },
+        "height": { "type": "number", "exclusiveMinimum": 0, "maximum": 1 }
+      }
+    },
+    "fiducial": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["pair_id", "role", "box"],
+      "properties": {
+        "pair_id": { "type": "string", "minLength": 1 },
+        "role": { "enum": ["opening", "closing"] },
+        "box": { "$ref": "#/$defs/box" }
+      }
+    },
+    "sample": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["sample_id", "asset_sha256", "consent_class", "writer_group", "device_class", "case_kind", "stress_tags", "ground_truth_codes", "fiducials"],
+      "properties": {
+        "sample_id": { "type": "string", "pattern": "^[A-Za-z0-9._-]+$" },
+        "asset_sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+        "consent_class": { "enum": ["team-made", "synthetic", "separately-approved"] },
+        "writer_group": { "type": "string", "minLength": 1 },
+        "device_class": { "type": "string", "minLength": 1 },
+        "case_kind": { "enum": ["valid-word", "field", "handle", "partial", "bare", "invalid", "multi-code", "no-code"] },
+        "stress_tags": { "type": "array", "uniqueItems": true, "items": { "type": "string", "minLength": 1 } },
+        "ground_truth_codes": { "type": "array", "uniqueItems": true, "items": { "type": "string" } },
+        "fiducials": { "type": "array", "items": { "$ref": "#/$defs/fiducial" } },
+        "expected_band_constraints": { "type": "array", "uniqueItems": true, "items": { "enum": ["accept", "clarify", "retry", "abstain"] } },
+        "notes": { "type": "string" }
+      }
+    }
+  }
+}
