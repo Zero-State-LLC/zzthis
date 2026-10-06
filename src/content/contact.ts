@@ -13,7 +13,28 @@ export interface Prototype {
   name: string;
   href: string;
   text: string;
+  logo?: { src: string; width: number; height: number; alt: string };
 }
+
+// [MICHAEL 2026-10-06 change list] A small zzThat wordmark under zzthat.com on
+// About only. Two capitalization variants exist (GPT-Astra assets, orange zz
+// #FF5500, deep teal #0B7480). Pick the primary here until Michael and Danny
+// finalize capitalization; show only one at a time.
+const zzthatLogos = {
+  camelcase: {
+    src: "images/logos/zzthat-camelcase.webp",
+    width: 382,
+    height: 96,
+    alt: "zzThat",
+  },
+  lowercase: {
+    src: "images/logos/zzthat-lowercase.webp",
+    width: 355,
+    height: 96,
+    alt: "zzThat",
+  },
+} as const;
+export const zzthatLogoVariant: keyof typeof zzthatLogos = "camelcase";
 
 export const aboutPage = {
   title: "About zzThis",
@@ -58,6 +79,7 @@ export const prototypes: readonly Prototype[] = [
   {
     name: "zzthat.com",
     href: "https://zzthat.com",
+    logo: zzthatLogos[zzthatLogoVariant],
     text: "Scanner and creator prototype, launching as a free web, Android, and iOS app. zzThat will be our separate consumer product and brand, for people to create and use zz-codes for their personal uses.",
   },
 ];

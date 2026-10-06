@@ -37,6 +37,17 @@ const handwritten = [
       {prototypes.map((site) => (
         <li>
           <a href={site.href}>{site.name}</a>
+          {site.logo && (
+            <img
+              class="explore__logo"
+              src={url(site.logo.src)}
+              width={site.logo.width}
+              height={site.logo.height}
+              alt={site.logo.alt}
+              loading="lazy"
+              decoding="async"
+            />
+          )}
           <p>{site.text}</p>
         </li>
       ))}
