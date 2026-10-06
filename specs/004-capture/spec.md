@@ -7,7 +7,7 @@ Constitution: [.specify/memory/constitution.md](../../.specify/memory/constituti
 
 ## Why
 
-A person reads a code by camera, typing, or voice [BRIEF]. Handwriting and print recognition of zz codes is untested [PRODUCT]. Capture must turn a messy real-world mark into exactly one code, or ask for help, and never silently pick the wrong one [PRODUCT] [OPERATOR 2026-10-02].
+A person reads a code by camera, typing, or voice [BRIEF]. Handwriting and print recognition of zz codes is untested [PRODUCT]. Capture must turn a messy real-world mark into exactly one code, or ask for help, and never silently pick the wrong one [PRODUCT] [OPERATOR 2026-10-02]. In camera capture, the terminal `zz` marks are also the code's human-readable fiducial/index marks: vision finds and pairs them to localize the symbol before payload recognition. They remain literal grammar markers, but are not payload data.
 
 ## User stories
 
@@ -42,6 +42,11 @@ Acceptance: v1 never uploads the raw photo for recognition. A server/VLM hard-ca
 | ID | Requirement | Source |
 |---|---|---|
 | FR-001 | Inputs: camera, typing, voice. | [BRIEF] |
+| FR-018 | In camera capture, the opening and closing `zz` markers are structural fiducials/index marks. Detection and pairing of marker regions happens before payload OCR. A valid pair defines a candidate region of interest (ROI), orientation/baseline evidence, and payload extent. Fiducials are framing evidence and literal grammar markers, not X1/X2/X3 payload fields. | [DANNY 2026-10-06] |
+| FR-019 | Fiducial detection never fabricates a missing endpoint. One endpoint, an occluded/cut endpoint, implausible pairing, or ambiguous geometry produces Retry/Clarify/Abstain as specified; it cannot reach Accept by inferring the missing marker. | Safety requirement from FR-018 |
+| FR-020 | Multiple plausible fiducial pairs produce multiple boxed candidates. Pairing uses geometry/reading order only and never resolver existence, wordlist proximity, or live-code knowledge to choose a pair. The person chooses when more than one valid candidate remains. | FR-013/FR-014 refined by FR-018 |
+| FR-021 | After a pair is selected, the client rectifies/crops the ROI when geometry permits and recognizes the interior payload. The shared grammar still receives a representation containing the literal opening/closing markers so existing spec 003 grammar/vectors remain authoritative. Marker recognition confidence does not count as payload-word confidence. | [DANNY 2026-10-06]; compatibility rule |
+| FR-022 | Typed and voice input do not require visual fiducial detection. They continue to use literal `zz` grammar markers and the shared decoder. | Input-mode boundary |
 | FR-002 | Recognition runs on device in v1 and the raw photo stays on device. The recognizer is an adapter that emits evidence; it does not own zz semantics. Apple Vision is the iOS baseline. Android ML Kit and PP-OCR are qualification candidates; ZZ-OCR-QUAL-001 selects the promoted Android adapter. | [OPERATOR 2026-10-02]; Q18 [DELEGATED 2026-10-04, #74], refined by accepted 2026-10-06 recognizer-qualification intent |
 | FR-003 | Every reading is snapped to the closed wordlist (spec 003) and the check word is verified. | [OPERATOR 2026-10-02] |
 | FR-004 | The shared decision-band function decides accept, clarify, retry, or abstain from normalized recognition evidence plus grammar/check-word results. Engine confidence is evidence only; missing confidence is explicit and is never invented. | [PRODUCT]; Q37 prototype thresholds are parameters |
@@ -76,8 +81,11 @@ Handles and field codes never reach Accept without a person confirming them (FR-
 
 - Markers written in capitals: accepted and shown in lowercase (FR-008). The display rule bars a capital-letter zz in our own materials, not in what people write.
 - A circled `(zz)` at one end and a plain `zz` at the other: one code (`docs/SPEC.md` Section 2.2a G3).
-- Only the opening marker visible: Retry, not a guess.
-- Only the closing marker visible: Retry (INFERRED, D-2026-10-04-06).
+- Only the opening fiducial visible: Retry, not a guess.
+- Only the closing fiducial visible: Retry (INFERRED, D-2026-10-04-06).
+- Two endpoint-like `zz` marks with ambiguous pairing: box the plausible candidates and Clarify/pick; never select by payload plausibility or resolver existence.
+- A false `zz` in surrounding prose: may be a fiducial candidate, but geometry/pairing and later grammar validation must reject or expose it without silently changing the payload.
+- Rotation, skew, perspective, curved/wrapped surfaces, partial occlusion, and unequal marker sizes are qualification stress cases. Rectification may improve payload OCR but cannot create a missing endpoint.
 - A smiley or star drawn next to the code: ignored by the text reader; drawn symbols are a separate v2 mode.
 - Korean, Japanese, or other non-ASCII words between markers: Abstain with `unsupported-script` in v1 (issue #35 for v2).
 - Voice input that sounds like two different wordlist words: Clarify with both candidates, never auto-pick.
@@ -101,12 +109,13 @@ App product behavior outside capture (zzThat owns the native app implementation)
 
 Status: decided. Danny said yes on #74 (2026-10-04). Source: [analysis 2026-10-04](../analysis-2026-10-04.md). The iOS and Android apps both scan, so they need one rule for finding codes in text, or the two apps will disagree. The rows in [spec 003 `vectors.json`](../003-wordlist-checkword/vectors.json) (`scanner`) are the test. The web client in v1 is typing only (spec 005 US6), so it uses steps 3 to 6 on the typed text.
 
-1. Recognize text on the device through the platform adapter and normalize it to `RecognitionResult` (plan.md): engine/version, raw candidates, confidence when the engine exposes a meaningful score, and geometry/line provenance when available. Apple Vision is the iOS baseline. Android ML Kit and PP-OCR remain candidates until ZZ-OCR-QUAL-001 promotes one. Shared grammar code never receives vendor recognizer objects. Join recognized lines in reading order (top to bottom, then left to right) with spaces. Where line confidence exists, each token remembers its line and a candidate takes the lowest relevant line confidence. Missing confidence is not synthesized; the qualification report must define how that adapter maps evidence to bands before promotion. "Every word" in the band table means every part between the markers, including the check word; markers do not count.
-2. Find candidates with the scanner rules below.
-3. Classify each plain code against the bundled list (Section 2.2a G1): word, field, or confirm.
-4. For a word code, verify the check word (spec 003) when the bundled list version equals `wordlist_version` from `GET /v1`. Otherwise skip the local check. The server still verifies.
-5. Set the band (table below).
-6. One candidate in Accept: resolve it. More than one candidate: list them all and wait for a tap. Never resolve a candidate the person did not pick (FR-013, FR-014).
+1. Detect candidate terminal `zz` fiducial regions on device. Pair plausible opening/closing fiducials from geometry and reading order. Each pair defines an ROI; preserve endpoint boxes, pairing score/evidence, baseline/orientation, and rectification transform when available. Do not consult resolver/live-code data or payload wordlist proximity to choose a pair.
+2. Rectify/crop each paired ROI when geometry permits, then recognize the interior payload through the platform adapter and normalize it to `RecognitionResult` (plan.md): engine/version, raw candidates, confidence when the engine exposes a meaningful score, and geometry/line provenance when available. Apple Vision is the iOS baseline. Android ML Kit and PP-OCR remain candidates until ZZ-OCR-QUAL-001 promotes one. Shared grammar code never receives vendor recognizer objects. Join recognized lines in reading order (top to bottom, then left to right) with spaces. Where line confidence exists, each token remembers its line and a candidate takes the lowest relevant line confidence. Missing confidence is not synthesized; the qualification report must define how that adapter maps evidence to bands before promotion. "Every word" in the band table means every part between the markers, including the check word; markers do not count.
+3. Reconstruct normalized candidate evidence with literal boundary markers plus the recognized payload, then run the scanner rules below. The fiducial boxes are structural evidence; their recognition score is not a payload-word confidence.
+4. Classify each plain code against the bundled list (Section 2.2a G1): word, field, or confirm.
+5. For a word code, verify the check word (spec 003) when the bundled list version equals `wordlist_version` from `GET /v1`. Otherwise skip the local check. The server still verifies.
+6. Set the band (table below).
+7. One candidate in Accept: resolve it. More than one candidate: list them all and wait for a tap. Never resolve a candidate the person did not pick (FR-013, FR-014).
 
 ### Scanner rules
 
