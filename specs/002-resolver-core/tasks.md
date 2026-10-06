@@ -3,6 +3,10 @@
 Feature: [spec.md](spec.md) · Plan: [plan.md](plan.md) · Issue: #13 (prototype), #12 (no live-code hints)
 Workflows for every implementing task: anti-slop-code, production-systems, google-developer-style. CI: `ci.yml`, `site-ci.yml`, `free-security-scan.yml`.
 
+
+## Status reconciliation
+
+This is the original resolver decomposition. Do **not** interpret unchecked boxes as current implementation status. The V1 resolver/API implementation was consolidated under spec 005 and current main. Use [TRACEABILITY](../TRACEABILITY.md) and spec 005 tasks for observed status. Remaining items here are either historical decomposition, production deployment gates, or V2/deferred work.
 ## Phase 0: Decisions (blocking)
 
 - [ ] T001 Decide where the resolver code lives (Q29) and the signing-key approach (Q28). Owner: Danny.
