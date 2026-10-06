@@ -1,5 +1,7 @@
 # zzThis cross-spec traceability
 
+Evidence classification: **OBSERVED** for statements describing current repository code/tests; **INFERRED** for governance, production gates, or design choices accepted by the convergence intent; **SPECULATIVE** only where explicitly marked as future research.
+
 Status: current convergence artifact. This file links existing requirements; it does not create product behavior.
 
 | Journey | Workflow | State transitions | Requirements/contracts | Acceptance evidence | Implementation task/status |
