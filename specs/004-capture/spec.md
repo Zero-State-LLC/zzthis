@@ -31,11 +31,11 @@ Acceptance:
 1. Typed input goes through the same grammar library as the demo and the resolver; every `docs/SPEC.md` Section 2.2a G9 vector gives the same result here (FR-008).
 2. Spoken words are joined into a code and shown back before lookup. If the person says only the words, the client adds the `zz` markers in what it shows back, and lookup waits for the person to confirm (INFERRED; the closing-marker rule applies to written codes, and the confirm step stands in for it in speech).
 
-### US3. Retry a hard case (P2)
+### US3. Retry a hard case without leaking the photo (P2)
 
-As a user whose reading failed, I can send the photo for a server-side read, so that hard cases still work [OPERATOR 2026-10-02].
+As a user whose reading failed, I can rescan or type the code, so that v1 fails safely without sending the raw photo off device.
 
-Acceptance: the photo leaves the device only on a retry or hard case [OPERATOR 2026-10-02].
+Acceptance: v1 never uploads the raw photo for recognition. A server/VLM hard-case read is a v2 candidate and requires a separate decision.
 
 ## Functional requirements
 
