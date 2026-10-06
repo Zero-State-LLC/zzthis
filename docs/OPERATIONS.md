@@ -46,7 +46,7 @@ The operator owns declaration and closure. Every P0/P1 needs a preserved timelin
 Production logging must be purpose-limited and redact:
 - raw bearer/refresh tokens;
 - provider ID tokens;
-- raw zz codes where not necessary;
+- raw zz codes, unconditionally, per spec 005 FR-027;
 - record body/title content;
 - uploaded images;
 - secrets/keys;
