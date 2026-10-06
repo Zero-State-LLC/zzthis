@@ -1,7 +1,7 @@
 # Feature spec: resolver core
 
 Feature ID: 002-resolver-core
-Status: not built. Prototype requested in issue #13. Deepened 2026-10-03: canonical-form rules from the v1 grammar, handles, error states, and edge cases.
+Status: implemented/subsumed by spec 005 on main; production deployment remains gated. Originally requested in issue #13. Deepened 2026-10-03: canonical-form rules from the v1 grammar, handles, error states, and edge cases.
 Phase: specify (what and why). The how is in [plan.md](plan.md), which carries the architecture proposal from `docs/SPEC.md` Section 10.
 Constitution: [.specify/memory/constitution.md](../../.specify/memory/constitution.md).
 
@@ -9,7 +9,7 @@ The `/v1` wire contract is [spec 005](../005-v1-api/spec.md). This file stays th
 
 ## Why
 
-A zz code on paper is public. Anyone can copy it, photograph it, or guess at it. The value of zzThis depends on a resolver that turns a code into the right record for the right person, and nothing else [PRODUCT] [OPERATOR 2026-10-02]. No resolver exists yet; its security is untested [PRODUCT].
+A zz code on paper is public. Anyone can copy it, photograph it, or guess at it. The value of zzThis depends on a resolver that turns a code into the right record for the right person, and nothing else [PRODUCT] [OPERATOR 2026-10-02]. The original product source stated that no resolver existed and its security was untested [PRODUCT]. OBSERVED 2026-10-05: the V1 resolver implementation and automated tests now exist under spec 005; production behavior remains unvalidated until deployment/pilot evidence exists.
 
 ## Users
 
