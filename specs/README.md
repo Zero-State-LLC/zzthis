@@ -53,6 +53,14 @@ The `/v1` API and the later web client are [spec 005](005-v1-api/spec.md). The z
 | [#68](https://github.com/Zero-State-LLC/zzthis/issues/68) Q66 (answered [DANNY 2026-10-04]) | 005 FR-020, FR-021 |
 | [#69](https://github.com/Zero-State-LLC/zzthis/issues/69) to [#71](https://github.com/Zero-State-LLC/zzthis/issues/71) Q67 to Q69, one-shot build questions (open) | 005 Open questions; [analysis 2026-10-04](analysis-2026-10-04.md) |
 
+## CANON-SHADOW specification tracks
+
+| Issue | Track | Ownership | Runtime authority |
+|---|---|---|---|
+| [#81](https://github.com/Zero-State-LLC/zzthis/issues/81) | ZZ-SEMANTIC-PROFILE-001: structured semantic profiles and private resolution | 002 resolver authority/disclosure; 003 syntax/profile distinction; 004 perception boundary; 005 future contract boundary; `docs/SPEC.md` roadmap | None. Specification assimilation only; contract 1 unchanged. |
+
+Issue #81 does not justify a new 006 spec: the responsibilities remain separable under the existing feature owners. A new feature spec is warranted only if later implementation introduces a coherent subsystem whose requirements cannot be owned without ambiguity by 002 to 005.
+
 ## Labels
 
 Findings and choices carry one label: OBSERVED (seen in the repo or the live site), INFERRED (a reasoned choice in a spec), SPECULATIVE (an idea to test). OPEN marks a decision that Michael or Danny must make. Specs do not invent requirements or metrics.
