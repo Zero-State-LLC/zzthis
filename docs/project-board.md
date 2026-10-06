@@ -49,7 +49,7 @@ Project field changes are manual unless the board workflow explicitly automates 
 | #83 | Backlog | SPECULATIVE ZK research |
 | PR #84 | In review after reconciliation | S1 research PR depends on semantic parent/rebase |
 | PR #85 | In review | completeness audit and convergence repair stream |
-| production operations gate | Ready after #85 merge | docs exist; numeric RTO/RPO/SLO, restore evidence, deploy approval remain |
-| contract-2/semantic domain work | Backlog | not eligible until #81 promotion decision |
+| #86 production readiness evidence | Ready after #85 merge | numeric RTO/RPO/SLO, restore evidence, observability, key lifecycle and deploy approval remain |
+| #87 contract-2/semantic domain gate | Backlog | required before #81 can leave CANON-SHADOW |
 
 When repo state and Project status disagree, fix the Project field rather than changing repo truth to match the board.
