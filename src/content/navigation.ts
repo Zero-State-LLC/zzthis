@@ -36,4 +36,4 @@ export const footerNotice = "Patent pending";
 // Site-wide note. The home-only prototype sentence about the console is omitted
 // because that sentence is false on every other page.
 export const footerNote =
-  "Panel images are concept renderings that show intended use, not a deployed system, except where marked as real photos.";
+  "Panel images are concept renderings that show intended use, not a deployed system, except where marked as real photos. Third-party names, logos, and artwork shown belong to their respective owners and appear for illustration only; no affiliation is implied.";

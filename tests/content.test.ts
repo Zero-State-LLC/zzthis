@@ -241,7 +241,6 @@ describe("navigation and people", () => {
       "Adam Fry",
       "Patrick Muggler",
       "Arshi Chadha",
-      "Ridham Bhagat",
     ]);
     expect(advisors.every((person) => person.initials !== undefined)).toBe(
       true,
@@ -252,11 +251,9 @@ describe("navigation and people", () => {
     const byName = (name: string) =>
       advisors.find((person) => person.name === name);
     expect(advisors.some((person) => person.name === "Jim White")).toBe(false);
-    expect(byName("Ridham Bhagat")?.role).toBe(
-      "Cybersecurity, cryptography and research methods",
-    );
-    expect(byName("Ridham Bhagat")?.bio).toMatch(
-      /^Ridham Bhagat will contribute/,
+    // [MICHAEL 2026-10-06 change list] Ridham Bhagat is removed from the site.
+    expect(advisors.some((person) => person.name === "Ridham Bhagat")).toBe(
+      false,
     );
     expect(byName("Adam Fry")?.role).toBe(
       "AI agents, infrastructure and deployment",
@@ -267,7 +264,6 @@ describe("navigation and people", () => {
     for (const name of [
       "Patrick Muggler",
       "Arshi Chadha",
-      "Ridham Bhagat",
       "Daniel Meyer",
       "Adam Fry",
     ]) {
@@ -284,9 +280,6 @@ describe("navigation and people", () => {
     );
     expect(byName("Arshi Chadha")?.photo?.src).toBe(
       "images/people/arshi-chadha.webp",
-    );
-    expect(byName("Ridham Bhagat")?.photo?.src).toBe(
-      "images/people/ridham-bhagat.webp",
     );
     expect(byName("Daniel Meyer")?.photo).toBeUndefined();
     // [MICHAEL 2026-10-06 change list] Adam now has a headshot.

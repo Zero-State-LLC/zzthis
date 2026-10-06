@@ -43,6 +43,7 @@ export const founder: Founder = {
 // Q6, Q10, Q12, Q16, Q46 [MICHAEL 2026-10-02]: headshots where supplied.
 // Daniel Meyer keeps initials. [MICHAEL 2026-10-06 change list] Daniel and
 // Adam move to the first two places; Adam's photo and bio are updated.
+// Ridham Bhagat is removed from the site.
 // Earlier: Profile links only where a URL
 // was supplied. The 2026-10-02 brief and wireframes drop the Future space
 // card. Michael's later 2026-10-02 answers remove Jim White and update
@@ -88,18 +89,6 @@ export const advisors: readonly Person[] = [
     role: "AI security",
     profileUrl: "https://www.linkedin.com/in/arshichadha/",
     bio: "Arshi is a security engineer at Zscaler and a co-lead of the OWASP Top 10 for LLM Applications work. She earned a master’s degree in information security at Carnegie Mellon and advises zzThis on AI and application security.",
-  },
-  {
-    name: "Ridham Bhagat",
-    initials: "RB",
-    photo: {
-      src: "images/people/ridham-bhagat.webp",
-      width: 440,
-      height: 440,
-    },
-    role: "Cybersecurity, cryptography and research methods",
-    bio: "Ridham Bhagat will contribute cybersecurity, cryptography, and research methods. He holds degrees in computer science and cybersecurity, develops post-quantum smart wallets, and performs security audits at Postquant Labs. His Northeastern University research included Internet topology and resilient networking.",
-    profileUrl: "https://www.linkedin.com/in/ridham-bhagat-22a047106/",
   },
 ];
 
