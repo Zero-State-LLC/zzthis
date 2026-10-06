@@ -1,6 +1,6 @@
 # zzThis constitution
 
-Version 1.1.1. Ratified: pending (draft for operator acceptance in the PR that adds this file). Amend through a pull request that bumps the version and records the change at the end of this file.
+Version 1.1.2. Ratified: 2026-10-05 by operator approval of the specification-convergence repair stream. Amend through a pull request that bumps the version and records the change at the end of this file.
 
 This file is the governing contract for every zzThis spec, plan, and task under `specs/`. When an artifact conflicts with this file, this file wins until it is amended. Product-true locks from the operator win over this file.
 
@@ -70,3 +70,4 @@ Do not weaken tests, fixtures, or CI to force green. Open a `bug` issue instead 
 | 1.0.0 | 2026-10-02 | First draft, derived from `docs/SPEC.md`, repo `AGENTS.md`, and operator decisions to date. |
 | 1.1.0 | 2026-10-02 | Principle III allows a per-tenant suggestion policy, off by default and never on for high-security tenants (Michael's Q20 answer, Q40). |
 | 1.1.1 | 2026-10-03 | Governance names `docs/SPEC.md` Section 9a, the running decisions log (Claude's suggestion, passed on by Michael with his 2026-10-03 answers). |
+| 1.1.2 | 2026-10-05 | Ratified the constitution and aligned governance status with the accepted specification/build stream. No product behavior changed. |
