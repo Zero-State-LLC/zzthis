@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "qualification_id": "ZZ-OCR-QUAL-001",
+  "split": "tuning",
+  "samples": [
+    {
+      "sample_id": "synthetic-one-code",
+      "asset_sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+      "consent_class": "synthetic",
+      "writer_group": "synthetic-a",
+      "device_class": "fixture",
+      "case_kind": "valid-word",
+      "stress_tags": ["clean", "single-code"],
+      "ground_truth_codes": ["zz-copper-lantern-sky-zz"],
+      "fiducials": [
+        {"pair_id":"p1","role":"opening","box":{"x":0.05,"y":0.4,"width":0.1,"height":0.2}},
+        {"pair_id":"p1","role":"closing","box":{"x":0.85,"y":0.4,"width":0.1,"height":0.2}}
+      ],
+      "expected_band_constraints": ["accept", "clarify"]
+    },
+    {
+      "sample_id": "synthetic-missing-close",
+      "asset_sha256": "1111111111111111111111111111111111111111111111111111111111111111",
+      "consent_class": "synthetic",
+      "writer_group": "synthetic-a",
+      "device_class": "fixture",
+      "case_kind": "partial",
+      "stress_tags": ["missing-endpoint"],
+      "ground_truth_codes": [],
+      "fiducials": [
+        {"pair_id":"p1","role":"opening","box":{"x":0.05,"y":0.4,"width":0.1,"height":0.2}}
+      ],
+      "expected_band_constraints": ["retry"]
+    }
+  ]
+}
