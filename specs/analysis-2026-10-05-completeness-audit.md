@@ -1,6 +1,6 @@
-# zzThis specification completeness audit — 2026-10-05
+# zzThis specification completeness audit - 2026-10-05
 
-Scope: constitution, AGENTS contract, docs/SPEC.md governance surface, specs 001–005 and their plans/checklists/tasks, prior analyses, accepted one-shot intent, current main implementation, open issue lifecycle, and CANON-SHADOW PRs #82/#84.
+Scope: constitution, AGENTS contract, docs/SPEC.md governance surface, specs 001-005 and their plans/checklists/tasks, prior analyses, accepted one-shot intent, current main implementation, open issue lifecycle, and CANON-SHADOW PRs #82/#84.
 
 ## Executive result
 
@@ -15,14 +15,14 @@ No evidence supports a new feature spec 006 today.
 | # | Severity | Label | Finding | Required disposition |
 |---|---|---|---|---|
 | A1 | HIGH | OBSERVED | Constitution says v1.1.1 but remains `Ratified: pending`; specs/README says constitution v1.1.0. Accepted intents/spec work now depend on an unresolved governance state. | Human governance decision: ratify current constitution or amend+ratify. Then fix README version/status. |
-| A2 | HIGH | OBSERVED | `specs/005-v1-api/checklists/requirements.md` still says “server is not built” and “build itself” unchecked, while 005 tasks Group 0–J are implemented/checked and runtime files exist. | Refresh checklist from observed main; separate built/tested from deployed/production-ready. |
-| A3 | HIGH | OBSERVED | Issue lifecycle is stale. #60–#67 remain open although their 005 groups are checked complete. #13/#14 also remain open despite resolver/core and wordlist work being substantially implemented/subsumed. | Reconcile each issue against main, close only with evidence/commit/PR, or rewrite remaining scope. |
-| A4 | HIGH | INFERRED | Journey → Workflow → State Transition → Contract → Acceptance Test → Task is not explicit across specs. User stories and numbered flows contain much of it, but no traceability matrix makes coverage mechanically reviewable. | Add a cross-spec traceability artifact; do not duplicate requirements. |
+| A2 | HIGH | OBSERVED | `specs/005-v1-api/checklists/requirements.md` still says “server is not built” and “build itself” unchecked, while 005 tasks Group 0-J are implemented/checked and runtime files exist. | Refresh checklist from observed main; separate built/tested from deployed/production-ready. |
+| A3 | HIGH | OBSERVED | Issue lifecycle is stale. #60-#67 remain open although their 005 groups are checked complete. #13/#14 also remain open despite resolver/core and wordlist work being substantially implemented/subsumed. | Reconcile each issue against main, close only with evidence/commit/PR, or rewrite remaining scope. |
+| A4 | HIGH | INFERRED | Journey -> Workflow -> State Transition -> Contract -> Acceptance Test -> Task is not explicit across specs. User stories and numbered flows contain much of it, but no traceability matrix makes coverage mechanically reviewable. | Add a cross-spec traceability artifact; do not duplicate requirements. |
 | A5 | HIGH | OBSERVED | No canonical SLO/error budget, RTO/RPO, backup/restore verification, incident/runbook ownership, or production observability contract was found. | Add an operations/governance specification section before production authorization. |
 | A6 | HIGH | OBSERVED | Privacy/retention rules exist in feature requirements, but there is no single retention/deletion matrix covering raw photos, derived reads, records, audit events, auth/session material, provider revocations, telemetry/logs, caches, backups, and future semantic/ZK artifacts. | Add canonical data lifecycle matrix and deletion evidence rules. |
 | A7 | MEDIUM | OBSERVED | `docs/project-board.md` is stale and explicitly lists an old board inventory. It omits recent semantic/ZK issues and PRs. | Make board inventory dynamic or remove the enumerated list; keep workflow/field semantics. |
 | A8 | MEDIUM | OBSERVED | Prior analyses are historically useful but their “next work” and “not built” statements are stale. No current converge report supersedes 2026-10-04 for main. | Add this audit as the new converge snapshot and point specs/README to it. |
-| A9 | MEDIUM | OBSERVED | 002–004 plans/tasks still read as proposal/draft/unimplemented even though portions are implemented through spec 005. Ownership between legacy feature tasks and 005 build tasks is ambiguous. | Mark tasks as superseded, implemented-by-005, still-open, or deferred. Do not double-build. |
+| A9 | MEDIUM | OBSERVED | 002-004 plans/tasks still read as proposal/draft/unimplemented even though portions are implemented through spec 005. Ownership between legacy feature tasks and 005 build tasks is ambiguous. | Mark tasks as superseded, implemented-by-005, still-open, or deferred. Do not double-build. |
 | A10 | MEDIUM | OBSERVED | Security is strong at route-level invariants, but there is no consolidated production threat model for auth, resolver enumeration, cache staleness, D1/R2/DO compromise, operator SQL, provider outage, key compromise/rotation, and recovery. | Consolidate existing security requirements into one threat-model artifact before deploy. |
 | A11 | MEDIUM | OBSERVED | No explicit compatibility/versioning policy was found for contract evolution beyond contract 1, including client pin lifetime, deprecation, migration, and semantic-profile V2 negotiation. | Define compatibility/deprecation rules before contract 2 or namespace-aware resolution. |
 | A12 | MEDIUM | OBSERVED | #81 semantic profile is branch-only in PR #82. #83/S1 depends conceptually on it; PR #84 was cut from main before #82 and is currently not mergeable. | Review/merge #82 first if clean, then rebase/reconcile #84. Keep both CANON-SHADOW. |
@@ -37,7 +37,7 @@ No evidence supports a new feature spec 006 today.
 |---|---|---|
 | Constitution | PARTIAL | Strong principles; ratification/version drift. |
 | Domain model | PARTIAL | V1 data model strong in 005; Scope/Namespace/Profile/Dictionary need canonical relation. |
-| Requirements | STRONG | 001–005 have extensive FRs and source labels. |
+| Requirements | STRONG | 001-005 have extensive FRs and source labels. |
 | Journeys | PARTIAL | Present as user stories/screens/flows, not canonical journey artifacts. |
 | Workflows | PARTIAL | Workflows sections mostly name engineering workflows, not product/business workflows. |
 | State machines | PARTIAL | Demo explicit; resolver/auth/code lifecycle states distributed through prose/tests. |
@@ -46,7 +46,7 @@ No evidence supports a new feature spec 006 today.
 | Security/privacy/governance | PARTIAL | Good local invariants; missing consolidated threat model, lifecycle matrix, ops/recovery, constitution closure. |
 | Architecture | STRONG V1 / PARTIAL FUTURE | Boundaries clear; semantic/ZK tracks isolated. |
 | Acceptance tests | STRONG V1 | Extensive done-when, vectors, route tests, E2E design. Traceability matrix missing. |
-| Implementation tasks | STRONG 005 / DRIFT 002–004 | 005 detailed/largely checked; older tasks need reconciliation. |
+| Implementation tasks | STRONG 005 / DRIFT 002-004 | 005 detailed/largely checked; older tasks need reconciliation. |
 | Operations | WEAK | Production SLO/RTO/RPO/backup/restore/incident/observability not canonicalized. |
 
 ## Required traceability shape
@@ -118,7 +118,7 @@ Before #83/S1 selects a proof system:
 ## Recommended repair order
 
 1. Governance truth: ratification/version, stale README/checklist/project-board state.
-2. Lifecycle reconciliation: #13/#14/#60–#67 and 002–004 tasks vs main.
+2. Lifecycle reconciliation: #13/#14/#60-#67 and 002-004 tasks vs main.
 3. Traceability matrix.
 4. Production governance: operations contract, data lifecycle matrix, consolidated threat model.
 5. Current converge report.
