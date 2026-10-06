@@ -5,7 +5,8 @@ export const mailto = `mailto:${contactEmail}`;
 export const contactPage = {
   title: "Contact",
   text: "Discuss a pilot, field feedback, or collaboration.",
-  location: "Silicon Valley (Mountain View / Santa Clara; Hacker Dojo) and New York City.",
+  location:
+    "Silicon Valley (Mountain View / Santa Clara; Hacker Dojo) and New York City.",
 };
 
 export interface Prototype {
@@ -16,15 +17,18 @@ export interface Prototype {
 
 export const aboutPage = {
   title: "About zzThis",
-  intro: "A code a person can write anywhere, linked to a digital record and the next work.",
+  intro:
+    "A code a person can write anywhere, linked to a digital record and the next work.",
   contactCardHeading: "Contact",
   contactCardText: "Invite collaboration and test partners.",
   explorationsHeading: "Current prototypes and explorations",
-  prototypeLabel: "These are prototypes and explorations; capabilities described as planned are not deployed features.",
+  prototypeLabel:
+    "These are prototypes and explorations; capabilities described as planned are not deployed features.",
   handwrittenHeading: "Codes written by hand",
   handwrittenLabel: "Real photos of handwritten codes.",
   locationHeading: "Location",
-  locationText: "Silicon Valley (Mountain View / Santa Clara; Hacker Dojo) and New York City.",
+  locationText:
+    "Silicon Valley (Mountain View / Santa Clara; Hacker Dojo) and New York City.",
   nextHeading: "Next action",
   nextText: "Discuss a pilot, test cohort or collaboration.",
 };
