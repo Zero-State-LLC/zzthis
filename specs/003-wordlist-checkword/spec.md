@@ -1,7 +1,7 @@
 # Feature spec: wordlist and check word
 
 Feature ID: 003-wordlist-checkword
-Status: not built. Requested in issue #14. Deepened 2026-10-03: the v1 text grammar (US3) is accepted from Michael's Q48 and Q49 answers ([`docs/SPEC.md` Section 2.2a](../../docs/SPEC.md)), and updated the same day from his answers to Q50 to Q61 (draft PR, pending Danny's merge).
+Status: parser/check-word/shared-core implementation is present under spec 005 on main; human-factors validation of the production wordlist remains open. Originally requested in issue #14. Deepened 2026-10-03: the v1 text grammar (US3) is accepted from Michael's Q48 and Q49 answers ([`docs/SPEC.md` Section 2.2a](../../docs/SPEC.md)), and updated the same day from his answers to Q50 to Q61 (draft PR, pending Danny's merge).
 Phase: specify (what and why). The how is in [plan.md](plan.md).
 Constitution: [.specify/memory/constitution.md](../../.specify/memory/constitution.md).
 
