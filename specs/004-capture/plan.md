@@ -44,7 +44,7 @@ Rules:
 
 ## ZZ-OCR-QUAL-001
 
-Run every candidate recognizer on the same frozen corpus and expected canonical outputs.
+The normative protocol is [qualification.md](qualification.md). Run every candidate recognizer on the same frozen corpus and expected canonical outputs.
 
 Required measures:
 - exact-code accuracy;
@@ -79,3 +79,17 @@ iOS starts with Apple Vision. Android carries ML Kit and PP-OCR as qualification
 - Spec 003 wordlist/check word and vectors are required before qualification can measure false-valid decoding.
 - zzThat owns the native adapter implementations and platform packaging.
 - Spec 002 resolver is downstream of an accepted canonical reading and is not recognition evidence.
+
+## Traceability
+
+| Requirement / risk | Contract or rule | Acceptance evidence | Task |
+|---|---|---|---|
+| Engine-neutral OCR | RecognitionResult | adapter contract tests | T001, T007-T009 |
+| No semantic authority in OCR | spec 003 decoder boundary | replay harness + negative resolver-query test | T003-T006 |
+| No raw-photo transport | v1 privacy invariant | network/log inspection + E2E | T015 |
+| False valid / false Accept | qualification.md safety definitions | frozen-corpus receipt | T010-T013 |
+| Multi-line / multi-code | scanner rules + geometry provenance | corpus buckets + vectors | T006, T010 |
+| Missing confidence | explicit optional confidence | adapter/band mapping tests | T001, T005 |
+| Android engine choice | promotion rule | PASS receipt + recorded pin | T012 |
+| iOS baseline eligibility | same promotion rule | PASS receipt | T013 |
+| Change/rollback safety | qualification.md change control | regression receipt or disable-camera-Accept path | T016 |
