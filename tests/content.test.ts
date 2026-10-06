@@ -213,9 +213,11 @@ describe("applications (spec 3.2 H.7 and 3.4)", () => {
   });
 
   it("matches the page intro and the aliases extra sentence", () => {
-    expect(applicationsPage.intro).toBe(
-      "AI belongs across field logistics and parcel workflows. Digital aliases are a separate application.",
+    // [MICHAEL 2026-10-06 change list] The intro leads with the kinds of use.
+    expect(applicationsPage.intro).toMatch(
+      /^One writable code serves five kinds of use:/,
     );
+    expect(applicationsPage.intro).toContain("AI is the new UI");
     expect(
       applications.find((entry) => entry.id === "aliases")?.pageExtra,
     ).toBe("Deeper blockchain/AI architecture can grow into a later page.");
@@ -232,13 +234,14 @@ describe("navigation and people", () => {
     ]);
   });
 
-  it("lists the advisors in the 2026-10-02 order, all with initials", () => {
+  it("lists the advisors in the 2026-10-06 order, all with initials", () => {
+    // [MICHAEL 2026-10-06 change list] Daniel and Adam move to first.
     expect(advisors.map((person) => person.name)).toEqual([
+      "Daniel Meyer",
+      "Adam Fry",
       "Patrick Muggler",
       "Arshi Chadha",
       "Ridham Bhagat",
-      "Daniel Meyer",
-      "Adam Fry",
     ]);
     expect(advisors.every((person) => person.initials !== undefined)).toBe(
       true,
@@ -258,7 +261,8 @@ describe("navigation and people", () => {
     expect(byName("Adam Fry")?.role).toBe(
       "AI agents, infrastructure and deployment",
     );
-    expect(byName("Adam Fry")?.bio).toMatch(/^Adam Fry will contribute/);
+    // [MICHAEL 2026-10-06 change list] Adam's bio now reads "has".
+    expect(byName("Adam Fry")?.bio).toMatch(/^Adam Fry has AI-agent/);
     expect(byName("Adam Fry")?.profileUrl).toBeUndefined();
     for (const name of [
       "Patrick Muggler",
@@ -285,7 +289,8 @@ describe("navigation and people", () => {
       "images/people/ridham-bhagat.webp",
     );
     expect(byName("Daniel Meyer")?.photo).toBeUndefined();
-    expect(byName("Adam Fry")?.photo).toBeUndefined();
+    // [MICHAEL 2026-10-06 change list] Adam now has a headshot.
+    expect(byName("Adam Fry")?.photo?.src).toBe("images/people/adam-fry.webp");
     expect(footerNotice).toBe("Patent pending");
     expect(footerItems.map((item) => item.label)).toEqual([
       "How it works",
@@ -297,7 +302,8 @@ describe("navigation and people", () => {
     expect(demoTitle).toBe("See zzThis in action.");
     expect(conceptLabels.standalone).toBe("Concept illustration");
     expect(technologyDraft.status).toBe("unpublished");
-    expect(fieldLogistics.images).toEqual(["a", "alt-b", "c"]);
+    // [MICHAEL 2026-10-06 change list] The batched pallet moves to second.
+    expect(fieldLogistics.images).toEqual(["a", "c", "alt-b"]);
   });
 });
 
@@ -349,7 +355,7 @@ describe("application galleries", () => {
 
   it("keeps parcel, community, and aliases galleries in order", () => {
     expect(ids("parcel")).toEqual([
-      ["app-super-identifier"],
+      ["app-super-identifier", "app-postage-letters"],
       ["app-delivery-1", "app-delivery-2", "app-delivery-3", "app-delivery-4"],
     ]);
     expect(ids("community")).toEqual([

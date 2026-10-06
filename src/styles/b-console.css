@@ -449,6 +449,24 @@
   color: var(--color-ink-2);
 }
 
+/* [MICHAEL 2026-10-06 change list] Both headings use the specimen's type.
+   "Why the zz markers matter" is orange; the language heading is framed
+   by orange zz markers. */
+.why__heading,
+.langs__heading {
+  font-family: var(--font-mono);
+  font-size: var(--text-code);
+  font-weight: 500;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  overflow-wrap: anywhere;
+}
+
+.why__heading,
+.langs__mark {
+  color: var(--color-accent-ink);
+}
+
 .langs__list {
   list-style: none;
   padding: 0;

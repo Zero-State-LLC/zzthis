@@ -21,12 +21,14 @@ export const aboutPage = {
     "A code a person can write anywhere, linked to a digital record and the next work.",
   contactCardHeading: "Contact",
   contactCardText: "Invite collaboration and test partners.",
-  explorationsHeading: "Current explorations",
-  prototypeLabel: "Both sites are concept-stage explorations.",
+  explorationsHeading: "Current prototypes and explorations",
+  prototypeLabel:
+    "zzThing is a concept showcase; zzThat is a working prototype, launching soon.",
   handwrittenHeading: "Codes written by hand",
   handwrittenLabel: "Real photos of handwritten codes.",
   locationHeading: "Location",
-  locationText: "Mountain View / Santa Clara area; Hacker Dojo work base.",
+  locationText:
+    "Silicon Valley (Mountain View / Santa Clara; Hacker Dojo) and New York City.",
   nextHeading: "Next action",
   nextText: "Discuss a pilot, test cohort or collaboration.",
 };
@@ -35,8 +37,9 @@ export const hackerDojo = {
   heading: "Hacker Dojo",
   subtitle: "Innovation community and advisory network",
   // [MICHAEL 2026-10-03 v1.0 change list] One paragraph. The logo stays in the data and is not shown.
+  // [MICHAEL 2026-10-06 change list] Paragraph replaced as given.
   paragraphs: [
-    "Many of us are at Hacker Dojo, a top coworking, maker, and networking space and community in the heart of Silicon Valley, minutes from the headquarters of Google, NVIDIA, Apple, and more. Every day brings direct participation in, and access to, the latest ideas in problem solving, innovation, and creativity, along with cutting-edge work and trends, a deep and broad knowledge base, news, and resources. Its several hundred members cover the full range of skills, from software, hardware, and robotics to physical AI, IoT, security, and design.",
+    "Many of us are at Hacker Dojo, a premier coworking, maker, and networking community in the heart of Silicon Valley, minutes from the headquarters of Google, NVIDIA, Apple, Meta, NASA Ames, Stanford, SRI International, and many more. Every day brings direct discussions with, and participation in, the latest ideas, backed by a deep and broad knowledge, professional, and experience base. We get cutting-edge developments and information, news, and trends for problem solving and opportunities, innovation and creativity, and resources. Its several hundred members cover the full range of skills: blockchain, crypto, and decentralized and distributed systems; software, hardware, devices, IoT, physical AI, and robotics; AI agents and local (on-device) AI; cybersecurity and cryptography; networking and infrastructure; UX and UI design.",
   ],
   logo: {
     src: "images/logos/hacker-dojo.webp",
@@ -55,6 +58,6 @@ export const prototypes: readonly Prototype[] = [
   {
     name: "zzthat.com",
     href: "https://zzthat.com",
-    text: "Scanner/creator prototype; planned free web, Android, and iOS app.",
+    text: "Scanner and creator prototype, launching as a free web, Android, and iOS app. zzThat will be our separate consumer product and brand, for people to create and use zz-codes for their personal uses.",
   },
 ];
