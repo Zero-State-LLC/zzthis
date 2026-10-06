@@ -7,7 +7,7 @@ Status: current V1 model plus reserved future semantic terms.
 - **Scope**: current product partition used for issuance/access policy.
 - **Code**: public, copyable human-writable identifier with lifecycle state.
 - **Record**: owner-linked digital record addressed by a code.
-- **RecordVersion**: immutable appended version of a record.
+- **RecordVersion**: append-only for ordinary record history. Account deletion is the explicit privacy-erasure exception: retained version rows have content/signature fields erased and `erased_at` recorded as required by spec 005 FR-023.
 - **AuditEvent**: append-only evidence of state-changing and governed read actions.
 - **Report**: safety/moderation report.
 - **Session/RefreshFamily**: authentication lifecycle.
