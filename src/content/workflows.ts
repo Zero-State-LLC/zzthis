@@ -26,7 +26,7 @@ export const coreIdentity = {
     {
       numeral: "02",
       title: "Read",
-      text: "Camera or manual entry.",
+      text: "For camera reading, find the two zz endpoints first, then read the words between them. Manual entry uses the same code grammar.",
       image: "d",
     },
     {
@@ -83,12 +83,12 @@ export const howItWorksPage = {
   readWays: {
     heading: "Three ways to read a code",
     methods: ["Camera", "Typing", "Voice"],
-    line: "Read by camera or manual entry. Report the words by voice where useful. Voice and manual entry are alternate input paths.",
+    line: "Camera reading uses the two zz endpoints to frame the code before reading the words between them. Manual entry uses the same code grammar. Voice remains a later input path.",
     images: ["d", "f"] satisfies ImageId[],
   },
   uncertain: {
     heading: "When a reading is uncertain",
-    text: "The design resolves only above a confidence threshold. Otherwise it asks for confirmation, another view, or manual handling.",
+    text: "If the endpoints or words are uncertain, the design asks for confirmation, another view, or manual entry. It does not guess a missing endpoint or another live code.",
   },
   aiHeading: "AI-assisted work",
   publicRecord: {
