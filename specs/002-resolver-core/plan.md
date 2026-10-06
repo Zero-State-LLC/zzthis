@@ -19,9 +19,9 @@ anti-slop-code, production-systems, google-developer-style. ADVERSARY reviews th
 | Cache rule | Only an active, reusable, public, unauthenticated resolve is cached. Header `Cache-Control: public, max-age=60, stale-while-revalidate=300`. Purge that code's key on write. Excluded classes are `no-store` | [DANNY 2026-10-04] (Q26). Spec 005 FR-018 |
 | API shape | `POST /codes`, `GET /resolve/{code}`, `POST /codes/{id}/revoke`, `POST /records/{id}/versions`, `GET /audit` | INFERRED sketch (Section 10.6), not a contract |
 | Data model | `codes`, `records`, `record_versions`, `grants`, `audit_events` | INFERRED sketch (Section 10.7) |
-| Signing keys | Not decided: algorithm, storage, and rotation | OPEN (Q28) |
-| Language and framework for the Worker | Not decided | OPEN; TypeScript on Node 24 tooling matches the repo (INFERRED) |
-| Where the code lives | Not decided: this repo or a new one | OPEN (Q29) |
+| Signing keys | Ed25519; one active signing key/id for contract 1. Contract 2 publishes verification keys and supports rotation. Production storage/rotation remains a deploy gate. | Q28 RESOLVED [DELEGATED 2026-10-04, #74] |
+| Language and framework for the Worker | TypeScript Worker in this repository | OBSERVED in spec 005 implementation |
+| Where the code lives | This repository (`workers/api`, shared `packages/zz-core`) | Q29 RESOLVED [DANNY 2026-10-04]; OBSERVED implementation |
 
 ## Constitution check
 
