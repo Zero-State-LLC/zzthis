@@ -3,6 +3,7 @@
 Status: implementation reconciliation
 Authority: today's canonical architecture/spec work is normative; Michael's 2026-10-06 website notes are subordinate content input.
 Tracking: #90
+Bundle: **B5 Public Site** · Target: **v1** · Status: **ACTIVE**. Website copy may describe QUEUED/SHADOW/RESEARCH bundles only as clearly labeled future/exploration material; it cannot promote them into v1.
 
 ## Non-regression rule
 
@@ -26,10 +27,10 @@ The current architecture remains:
 | “zz- In any language -zz” treatment | ADAPT/DEFER | Compatible as marketing language, but v1 capture remains ASCII/English and other scripts are v2. Do not imply v1 multilingual recognition. |
 | Field logistics image reorder | DEFER | Do not guess image-ID-to-caption mapping. Apply after exact asset mapping is verified. |
 | Parcel pack-and-ship first | DEFER | Same asset-order verification requirement. |
-| Five application directions | ADAPT | Added as non-normative product directions. Blockchain/AI are not made v1 dependencies. |
+| Five application directions | ADAPT | B5 may describe them. Field/enterprise maps to B7, postal to B8, community to B9, semantic/profile concepts to B10, and ledger/agent/blockchain integrations to B16. None becomes v1 implementation authority from website copy. |
 | “AI is new UI / connector / flattens stack” | ADAPT | Site now describes AI as UI/connector, while explicitly denying semantic/resolution authority. |
-| X1/X2/X3 structured profile | ADAPT | Site describes versioned positional roles only as planned structured profiles. Canonical #81 boundary remains authoritative; site does not hard-code meanings into the protocol. |
-| Private versioned dictionaries | ADAPT | Expressed as downstream authorized semantic dictionaries, not OCR vocabulary or contract-1 behavior. |
+| X1/X2/X3 structured profile | SHADOW via B10 | Site may describe it as planned exploration. #87/#81 remain authoritative; no Contract-1/v1 semantic change. |
+| Private versioned dictionaries | SHADOW via B10 | Downstream authorized semantic dictionaries only; not OCR vocabulary or Contract-1 behavior. |
 | Recognition separate from interpretation | ADOPT | Matches current architecture. |
 | Signed resolution receipts | DEFER | Do not imply a shipped receipt contract until the relevant resolver/contract work defines it. |
 | Applications title/caption changes | DEFER | Exact approved strings are not fully recoverable from the summary source. |
