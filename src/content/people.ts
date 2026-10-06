@@ -51,7 +51,11 @@ export const advisors: readonly Person[] = [
   {
     name: "Patrick Muggler",
     initials: "PM",
-    photo: { src: "images/people/patrick-muggler.webp", width: 300, height: 300 },
+    photo: {
+      src: "images/people/patrick-muggler.webp",
+      width: 300,
+      height: 300,
+    },
     role: "Connected logistics and IoT",
     profileUrl: "https://www.linkedin.com/in/pmuggler",
     bio: "Patrick leads product and strategic programs at Trackonomy. His work has connected more than 200,000 assets across over 100 airports and 40 countries. He advises zzThis on logistics workflows, connected assets, and commercialization.",
