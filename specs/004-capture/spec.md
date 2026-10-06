@@ -67,7 +67,7 @@ Thresholds stay OPEN (Q37). The triggers below say which band applies; they set 
 |---|---|---|
 | Accept | Grammar passes, every snapped word is above the accept threshold, and the check word verifies (word codes) | The canonical code, then the record view |
 | Clarify | Grammar passes, but one or more words fall between the thresholds, the check word fails with one uncertain word, or the classifier returns `confirm` (a near-word, FR-015) | The uncertain word with wordlist candidates and the part as written; confirm or type it |
-| Retry | A marker is missing or cut off, the photo is blurred, or glare hides part of the code | "Take another photo" with the reason; after a set number of retries, offer the server read (US3) |
+| Retry | A marker is missing or cut off, the photo is blurred, or glare hides part of the code | "Take another photo" with the reason; after two retries, continue to offer rescan or typed entry. No server/cloud read exists in v1. |
 | Abstain | Grammar fails for any reason other than a missing or cut-off marker (that is Retry), including `unsupported-script` and `reserved-symbol` (FR-012). A bare mark also lands here in v1 (FR-011), and so does a word code whose check-word verify returns `wrong-length` (FR-016) | The reason in plain words, and typed entry |
 
 Handles and field codes never reach Accept without a person confirming them (FR-010).
@@ -84,11 +84,18 @@ Handles and field codes never reach Accept without a person confirming them (FR-
 
 ## Success criteria
 
-Not set for this feature. Research accuracy targets are not acceptance criteria and are not kept in this repo (Q24). Option A and B are compared on the same test set before any switch [OPERATOR 2026-10-02].
+Product-level qualification is defined by [ZZ-OCR-QUAL-001](qualification.md). The protocol defines the corpus, safety metrics, evidence receipt, promotion/no-promotion outcome, change control, and rollback rule. Generic OCR benchmark claims are not acceptance evidence. Numerical release gates are frozen from tuning evidence before the final split is run; they are not invented here and cannot be relaxed after final results are seen.
 
 ## Out of scope
 
-The phone and web apps as products (not yet specified; Q33), the resolver (spec 002), and the wordlist (spec 003).
+App product behavior outside capture (zzThat owns the native app implementation), the resolver (spec 002), the wordlist/check-word algorithm (spec 003), cloud OCR, and custom/VLM recognition in v1.
+
+## Privacy and data lifecycle
+
+- Raw v1 scan images are ephemeral app-cache data. They are deleted when the attempt/flow ends and are never uploaded for recognition.
+- Recognition evidence is processed locally. Production logs, analytics, crash reports, and API payloads do not contain raw images, OCR candidate text, canonical codes, or tokens.
+- The private qualification corpus is governed by [qualification.md](qualification.md); raw private images never enter Git or CI artifacts and are not training data by default.
+- A rescan is a new recognition attempt. Clarify may retain only the current attempt's local evidence until the person confirms, retries, types, or leaves the flow.
 
 ## Client read pipeline for the v1 build (decided 2026-10-04)
 
