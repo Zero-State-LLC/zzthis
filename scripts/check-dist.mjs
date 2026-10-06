@@ -2,7 +2,7 @@ import { readdirSync, readFileSync, statSync, existsSync } from "node:fs";
 import { join, relative } from "node:path";
 
 const DIST = "dist";
-const BASE = "/zzthis/";
+const BASE = process.env.ASTRO_BASE ?? "/zzthis/";
 const MAX_FILE = 2 * 1024 * 1024;
 const MAX_TOTAL = 20 * 1024 * 1024;
 const REQUIRED = [
@@ -68,6 +68,9 @@ function collectPaths(content) {
 }
 
 function checkRootPaths(file, content) {
+  // A Workers deployment is served from its origin root. GitHub Pages uses
+  // /zzthis/ instead, so enforce the prefix only when one is configured.
+  if (BASE === "/") return;
   for (const path of collectPaths(content)) {
     if (path.startsWith("/") && !path.startsWith(BASE)) {
       report(file, `root path without base: ${path}`);

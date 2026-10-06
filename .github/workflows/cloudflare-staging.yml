@@ -23,6 +23,7 @@ jobs:
       - uses: actions/checkout@v4
         with:
           persist-credentials: false
+          fetch-depth: 0
       - uses: actions/setup-node@v4
         with:
           node-version: "24"
@@ -32,7 +33,7 @@ jobs:
       - run: npm run lint
       - run: npm run typecheck
       - run: npm run test
-      - run: npm run build
+      - run: ASTRO_BASE=/ npm run build
       - run: ./scripts/security-scan.sh
       - name: Dry-run marketing Worker
         run: npm exec --workspace @zzthis/api -- wrangler deploy --dry-run --config ../../wrangler.site.toml --outdir ../../.wrangler/site-dry-run
