@@ -10,7 +10,7 @@ This roadmap groups fragmented product input into promotable capability bundles.
 | B1 Core Identifier | v1 | ACTIVE | write/type a human-readable zz code, canonicalize/validate it, resolve its authorized record, and manage basic lifecycle | semantic positional meaning, macros, bare contextual matching |
 | B2 Camera Capture | v1 | ACTIVE / qualification-gated | find paired terminal zz fiducials, localize ROI, read payload on device, fail closed | cloud OCR, custom/VLM model, stylized finder glyph |
 | B3 Native Clients | v1 | ACTIVE | iOS + Android create/scan/type/resolve/share/my-codes/account flows against pinned v1 authority | voice, partner machine client, web-camera capture |
-| B4 Production Operations | v1 launch | READY / evidence-gated | production security, recovery, OAuth/secrets, monitoring, moderation, privacy/store evidence and deploy authorization | invented SLO/RTO/RPO |
+| B4 Production Operations / Cloudflare Runtime | v1 launch | ACTIVE / evidence-gated | Cloudflare runtime substrate plus production security, recovery, OAuth/secrets, monitoring, moderation, privacy/store evidence and deploy authorization | invented SLO/RTO/RPO; future AI/vector products without bundle promotion |
 | B5 Public Site | v1 | ACTIVE | truthful site/demo of current product plus clearly labeled explorations | site copy does not promote roadmap scope |
 | B6 Production Wordlist | v1 launch | RESEARCH -> READY | freeze a human/OCR-qualified production wordlist before first production mint | changing a list after first production mint |
 | B7 Field & Enterprise Workflows | v1.x | QUEUED | cohesive logistics/inventory/enterprise workflows around the core identifier | redefining core grammar per customer |
