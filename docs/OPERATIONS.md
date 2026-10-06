@@ -15,11 +15,13 @@ The production readiness review must set:
 
 ## Recovery objectives
 
-Before production, the operator must approve numeric RTO and RPO after the deployed Cloudflare topology and backup/export capabilities are verified. Until then:
-- RTO: OPEN, production blocker.
-- RPO: OPEN, production blocker.
+Before production, the operator must approve numeric RTO and RPO after the deployed Cloudflare topology and backup/export capabilities are verified. The recovery mechanism is now evidence-backed: production D1 supports always-on Time Travel with minute-level point-in-time restore and a 30-day window on Workers Paid; longer retention can use D1 export to R2. This establishes a candidate **RPO capability of one minute for D1 state**, subject to a restore drill and confirmation that every authoritative state store is covered. It does not establish end-to-end product RPO for R2/DO/secrets.
 
-No document may claim backup/recovery guarantees before a restore test demonstrates them.
+Until measured:
+- RTO: OPEN, production blocker; measure from incident declaration through validated service restoration.
+- Product RPO: OPEN, production blocker; D1 supports minute-level restore points, but the product objective must cover every authoritative store.
+
+No document may claim an end-to-end backup/recovery guarantee before a restore test demonstrates it. Cloudflare platform capability is evidence for the mechanism, not evidence for zzThis recovery time.
 
 ## Backup and restore
 
