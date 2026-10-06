@@ -261,7 +261,6 @@ describe("navigation and people", () => {
     for (const name of [
       "Patrick Muggler",
       "Arshi Chadha",
-      "Ridham Bhagat",
       "Daniel Meyer",
       "Adam Fry",
     ]) {
