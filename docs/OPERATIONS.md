@@ -35,6 +35,15 @@ Required evidence before production:
 5. owner for recurring restore tests;
 6. key/secret recovery and rotation procedure that does not put secrets in the repo.
 
+
+## Canonical Cloudflare substrate
+
+Runtime topology is governed by `specs/CLOUDFLARE-RUNTIME.md`. GitHub is source/PR/CI; Cloudflare is the v1 runtime. Production inventory must record the Worker, static-asset deployments, D1 database, R2 buckets actually authorized by the data-lifecycle spec, Durable Object namespaces/classes, Cron triggers, domains/routes, secret names (never values), and environment ownership.
+
+Environments are local, staging, and production. Staging/preview must use isolated stateful resources where sharing could expose or mutate production data. A preview may not inherit production D1/R2/secrets merely for convenience.
+
+A Worker rollback is code/config rollback only. D1/R2/DO recovery follows the data recovery procedure. D1 Time Travel provides minute-granularity restore points on supported production storage; the product RTO/RPO remain measured gates.
+
 ## Incident management
 
 Minimum incident classes:
