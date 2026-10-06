@@ -26,6 +26,30 @@ GitHub's built-in Repository field shows which repo an item comes from. There is
 
 Ready, In progress, In review, and Done are set on the board by hand.
 
-## On the board
+## Board truth and maintenance
 
-These items are on the board: zzThis issues #6, #7, #8, #10, #11, #13, #14, #33, #34, #35, #57, #58, #60, #61, #62, #63, #64, #65, #66, and #67; zzThis pull request #59; zzThat pull request #31.
+Do not keep a hand-maintained exhaustive item list in this file. The GitHub Project is the live inventory; static enumerations became stale during the V1 build.
+
+Repository issue/PR state is the minimum source of truth:
+- closed issue/merged PR -> candidate for **Done**;
+- open PR -> **In review**;
+- accepted, buildable issue with no active PR -> **Ready**;
+- active implementation -> **In progress**;
+- research/deferred/not-ready -> **Backlog**.
+
+Project field changes are manual unless the board workflow explicitly automates them.
+
+## Current convergence map (2026-10-05)
+
+| Item | Intended board status | Reason |
+|---|---|---|
+| #13, #14, #60–#67 | Done | reconciled to implementation evidence and closed |
+| #81 | Backlog | CANON-SHADOW semantic-profile specification track |
+| PR #82 | In review | semantic-profile spec assimilation |
+| #83 | Backlog | SPECULATIVE ZK research |
+| PR #84 | In review after reconciliation | S1 research PR depends on semantic parent/rebase |
+| PR #85 | In review | completeness audit and convergence repair stream |
+| production operations gate | Ready after #85 merge | docs exist; numeric RTO/RPO/SLO, restore evidence, deploy approval remain |
+| contract-2/semantic domain work | Backlog | not eligible until #81 promotion decision |
+
+When repo state and Project status disagree, fix the Project field rather than changing repo truth to match the board.
