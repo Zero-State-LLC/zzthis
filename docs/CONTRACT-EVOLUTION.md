@@ -3,6 +3,9 @@
 Status: governing compatibility policy for future contracts. Contract 1 behavior is unchanged.
 
 ## Rules
+
+Evidence level: **INFERRED**, accepted as future compatibility policy by `intent/2026-10-05-spec-convergence-governance.md`. These rules do not change observed contract 1 behavior.
+
 1. Contract 1 is immutable except for backward-compatible bug fixes that do not change accepted wire shapes or security semantics.
 2. A breaking route, field, error, auth, scope/namespace, uniqueness, or disclosure change requires a new contract version.
 3. Clients send the contract version explicitly and fail closed on unsupported versions.
@@ -13,6 +16,9 @@ Status: governing compatibility policy for future contracts. Contract 1 behavior
 8. Contract-2 design must define migration for persisted data, cache keys, auth/session compatibility, client discovery, and rollback.
 
 ## Semantic-profile implications
+
+Evidence level: **INFERRED** future-contract constraint.
+
 
 Namespace-aware resolution or tenant-dependent interpretation cannot be added to contract 1. Contract 2 (or later) must define:
 - how namespace/profile is selected or proven;
@@ -25,8 +31,14 @@ Namespace-aware resolution or tenant-dependent interpretation cannot be added to
 
 ## Deprecation record
 
+Evidence level: **INFERRED** governance requirement.
+
+
 Every future deprecation must state: version, affected client cohort, announcement date, minimum supported client, end-of-support date, security rationale if any, migration test, rollback plan, and operator approval.
 
 ## Research boundary
+
+Evidence level: **OBSERVED** status boundary for the current research tracks.
+
 
 CANON-SHADOW semantic/ZK research may reference hypothetical future contracts but must not imply support until a versioned contract is accepted.
