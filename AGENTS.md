@@ -30,7 +30,8 @@ Fill the table from this repo's README or package scripts. Do not invent command
 ## Invariants
 
 - Do not invent the code format. Encoding rules come from the accepted spec only.
-- Human yes (Danny) on deploy (Vercel), domain/DNS, spend, and legal.
+- Cloudflare is the canonical runtime substrate; GitHub is source/PR/CI. Read `specs/CLOUDFLARE-RUNTIME.md` before adding infrastructure.
+- Human yes (Danny) on production deploy, Cloudflare resource/DNS changes, spend, and legal.
   Agents do not dispatch production deploys or buy things.
 - Do not put secrets, tokens, or live credentials in the tree.
 - Do not invent product behavior the spec does not name.

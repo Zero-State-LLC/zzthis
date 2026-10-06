@@ -1,11 +1,7 @@
 # The zzThis Worker: the /v1 API and the web client's files on one origin
 # (spec 005 FR-029, plan.md Repo layout).
 #
-# No Cloudflare resource exists for this Worker. The D1 database, the R2
-# bucket, the Durable Object namespace, the cron, and the secrets are created
-# at deploy time, with Danny's yes (spec 005 T023). Local runs and tests use
-# local state only, so the database id below is a placeholder that fails a
-# deploy until a person replaces it.
+# Base/local contract. Remote staging/production resource identifiers are operator-managed and must be supplied through an approved environment-specific configuration before deploy. Do not replace placeholders on a feature branch with production ids. Local runs/tests use local state only.
 name = "zzthis-api"
 main = "src/index.ts"
 compatibility_date = "2026-08-15"
@@ -20,13 +16,13 @@ run_worker_first = true
 
 [[d1_databases]]
 binding = "ZZ_DB"
-database_name = "zzthis"
-database_id = "set-at-deploy"
+database_name = "zzthis-local-placeholder"
+database_id = "00000000-0000-0000-0000-000000000000"
 migrations_dir = "migrations"
 
 [[r2_buckets]]
 binding = "ZZ_PHOTOS"
-bucket_name = "zzthis-photos"
+bucket_name = "zzthis-photos-local-placeholder"
 
 [[durable_objects.bindings]]
 name = "ZZ_LIMITER"
