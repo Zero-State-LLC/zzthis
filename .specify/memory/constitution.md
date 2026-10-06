@@ -12,6 +12,10 @@ This file is the governing contract for every zzThis spec, plan, and task under 
 - **OPEN**: a decision for Michael Chung (product and copy) or Danny (operator). Each OPEN item names its default, if one exists, and its question ID in [`docs/SPEC.md` Section 9](../../docs/SPEC.md#9-out-of-scope-and-open-questions).
 - Source tags carry over unchanged from `docs/SPEC.md`: [BRIEF], [WIRE], [OVERVIEW], [PRODUCT] (Michael's private product write-up, not in the repo), [ASSETS], [OPERATOR date], and [MICHAEL date].
 
+## Scope control
+
+New product input does not automatically expand the active release. `specs/SCOPE-GOVERNANCE.md` defines intake dispositions and the append-closed release rule; `specs/CAPABILITY-ROADMAP.md` assigns capability bundles to releases. An implementation task must belong to an ACTIVE bundle and target release. SHADOW, RESEARCH, and QUEUED work may preserve provenance/interfaces but cannot silently become runtime behavior. Only the operator promotes a bundle to ACTIVE or expands an append-closed release outcome.
+
 ## Principles
 
 ### I. The code on paper is public; security lives in the resolver
