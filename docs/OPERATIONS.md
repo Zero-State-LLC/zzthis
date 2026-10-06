@@ -1,5 +1,7 @@
 # zzThis operations contract
 
+Evidence classification: **OBSERVED** for statements describing current repository code/tests; **INFERRED** for governance, production gates, or design choices accepted by the convergence intent; **SPECULATIVE** only where explicitly marked as future research.
+
 Status: pre-production governance. No production deployment is authorized by this file.
 
 ## Service objectives
