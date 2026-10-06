@@ -1,5 +1,7 @@
 # Tasks: capture
 
+Bundle: **B2 Camera Capture** · Target: **v1** · Status: **ACTIVE / qualification-gated**. Scope expansion follows `specs/SCOPE-GOVERNANCE.md`; T017-T018 belong to B12 Advanced Recognition and are not v1 implementation authority.
+
 Feature: [spec.md](spec.md) · Plan: [plan.md](plan.md) · Recognition intent: [2026-10-06 v1 recognizer qualification](../../intent/2026-10-06-v1-recognizer-qualification.md)
 Workflows for every implementing task: anti-slop-code, production-systems, google-developer-style.
 
@@ -37,7 +39,7 @@ Workflows for every implementing task: anti-slop-code, production-systems, googl
 - [ ] T015 Verify raw photos never leave the device in v1 and no cloud/server vision path is reachable or advertised.
 - [ ] T016 End-to-end evidence on representative iOS and Android devices: camera -> recognizer -> shared decoder -> band -> canonical code/clarify/retry/abstain. Verify two-retry behavior, typed-entry fallback, local photo deletion, no raw-photo network request, and the rollback/disable-camera-Accept path.
 
-## Deferred v2
+## Deferred v2 — B12 Advanced Recognition (RESEARCH; not active v1 tasks)
 
 - [ ] T017 Evaluate a Qwen-class VLM only as a hard-case verifier behind RecognitionResult; no v1 dependency.
 - [ ] T018 Evaluate a custom zz-specific recognizer after enough governed data exists. Compare it against the frozen qualification baseline before promotion.
