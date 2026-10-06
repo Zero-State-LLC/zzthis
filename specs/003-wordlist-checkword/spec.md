@@ -52,8 +52,8 @@ Acceptance:
 
 | ID | Requirement | Source |
 |---|---|---|
-| FR-001 | Filter for distinct letter shapes when handwritten. | [issue #14]; method and pass rule OPEN (Q35) |
-| FR-002 | Remove homophones (distinct sounds). | [issue #14]; method and pass rule OPEN (Q35) |
+| FR-001 | The production list filters empirically confusable handwritten forms using a versioned confusable-shape model/table validated against the governed corpus. proto-v0 skips and reports this filter. | Q35 RESOLVED [DELEGATED 2026-10-04, #74]; empirical threshold evidence-gated |
+| FR-002 | The production list uses a phonetic key (Double Metaphone) to identify candidate sound-confusable pairs, then validates/removes empirically confusable pairs. proto-v0 skips and reports this filter. | Q35 RESOLVED [DELEGATED 2026-10-04, #74]; empirical threshold evidence-gated |
 | FR-003 | Every pair of words has an edit distance of at least 3. Edit distance is Levenshtein distance over the lowercase ASCII letters: insert, delete, or substitute one letter, each costing 1. Swapping two letters is not one edit; it costs 2. FR-003, filter (6), and the G1 near-word check all use this one function. | [issue #14]; metric decided 2026-10-05 (`docs/SPEC.md` D-2026-10-04-05) |
 | FR-004 | Report yield after each filter and the gap to the needed code-space size. | [issue #14] |
 | FR-005 | A check word library tuned to handwriting and voice errors. The check word adds error detection, not capacity. | [issue #14] [PRODUCT] |
