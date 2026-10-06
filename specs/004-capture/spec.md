@@ -59,6 +59,16 @@ Acceptance: the photo leaves the device only on a retry or hard case [OPERATOR 2
 | FR-017 | Creation check: after a person writes a code on an object, the client can photograph it and confirm it reads the handwriting back to the same canonical form. The check runs on the device, or online when the scope needs a uniqueness check. A failed read asks the person to rewrite or confirm. | [MICHAEL 2026-10-03 #45]; flow INFERRED |
 | FR-015 | Before snapping is turned off for a part, the client runs the near-word check (`docs/SPEC.md` Section 2.2a G1, spec 003 FR-021). A letters-only part within edit distance 2 of a wordlist word goes to Clarify with the candidates and the part as written. The part is read as written only after the person picks that. A misread word such as `coper` is never silently kept as field data, and never silently snapped. | INFERRED, PR #43 review |
 
+## Semantic-boundary invariant (CANON-SHADOW; issue #81)
+
+Capture is a perception adapter, not an authority or semantic interpreter.
+
+Camera, OCR, handwriting recognition, typing, and future vision models may emit candidate text/symbols, candidate boundaries, and confidence. They MUST NOT assign an operational meaning, choose a semantic profile, authorize a namespace, or decide what a structured code means.
+
+The normal privacy path remains on-device recognition followed by transmission of canonical text. Raw imagery SHOULD remain on the device. If a future server-side vision path is introduced, its spec must define explicit retention, isolation, deletion, and cryptographic artifact/provenance commitments before that path is enabled.
+
+Recognition output flows through spec 003 parsing/canonicalization before any resolver lookup. Semantic interpretation, if a future structured profile is present, happens only after spec 002 authorization.
+
 ## Decision bands and error states
 
 Thresholds stay OPEN (Q37). The triggers below say which band applies; they set no numbers.
