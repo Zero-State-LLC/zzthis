@@ -37,6 +37,8 @@ export const applications: readonly Application[] = [
     title: "Field logistics",
     story:
       "Hand-mark bags, crates, pallets, and mixed goods; read or relay a code; connect it to existing identifiers. Then photograph loose items, prepare a turn-in, compare inventory, and use touch-first actions.",
+    pageExtra:
+      "Planned structured profiles can assign versioned roles to code positions, such as purpose, place or target, and state. Those meanings belong to authorized semantic profiles and private dictionaries after recognition and canonicalization; the camera reader does not decide them.",
     homeImages: ["j"],
     pageImages: ["a", "alt-b", "c", "d", "e", "f", "j", "k", "l", "m", "n"],
     homeWideOnly: true,
@@ -69,26 +71,10 @@ export const applications: readonly Application[] = [
         ordered: true,
         frame: "4 / 5",
         items: [
-          {
-            image: "app-delivery-1",
-            numeral: "Step 1",
-            title: "Anonymous customer orders online",
-          },
-          {
-            image: "app-delivery-2",
-            numeral: "Step 2",
-            title: "Merchant ships only with the zz-Code",
-          },
-          {
-            image: "app-delivery-3",
-            numeral: "Step 3",
-            title: "Delivery man only knows drop-off address",
-          },
-          {
-            image: "app-delivery-4",
-            numeral: "Step 4",
-            title: "Anonymous customer gives matching secret code or signature",
-          },
+          { image: "app-delivery-1", numeral: "Step 1", title: "Anonymous customer orders online" },
+          { image: "app-delivery-2", numeral: "Step 2", title: "Merchant ships only with the zz-Code" },
+          { image: "app-delivery-3", numeral: "Step 3", title: "Delivery man only knows drop-off address" },
+          { image: "app-delivery-4", numeral: "Step 4", title: "Anonymous customer gives matching secret code or signature" },
         ],
         closing: [
           "This is an example of end-to-end anonymous delivery to a drop store and anonymous pickup. The receiver would pick up by identification using private-key to the package’s public key.",
@@ -100,86 +86,28 @@ export const applications: readonly Application[] = [
   {
     id: "community",
     title: "Everyday and community",
-    story:
-      "A handwritten code on a lost-cat flyer or other public surface can lead to a useful page.",
+    story: "A handwritten code on a lost-cat flyer or other public surface can lead to a useful page.",
     homeImages: ["h"],
     pageImages: ["h"],
     homeWideOnly: false,
     pageGalleries: [
-      {
-        label: "group",
-        columns: "3",
-        frame: "6 / 5",
-        items: [
-          { image: "app-for-sale" },
-          { image: "app-help-wanted" },
-          { image: "app-event-cancelled" },
-        ],
-      },
-      {
-        label: "group",
-        columns: "3",
-        frame: "9 / 10",
-        items: [
-          { image: "app-connect" },
-          { image: "app-shop-pay" },
-          { image: "app-donate" },
-        ],
-      },
-      {
-        label: "standalone",
-        columns: "2",
-        frame: "812 / 431",
-        items: [{ image: "app-trail-marker" }],
-      },
-      {
-        label: "group",
-        columns: "3",
-        frame: "4 / 5",
-        items: [
-          { image: "app-share" },
-          { image: "app-community" },
-          { image: "app-handwritten-works" },
-        ],
-      },
-      {
-        heading: "Businesses",
-        intro: [
-          "Businesses can convert their product names with the scannable zz-Codes.",
-        ],
-        label: "group",
-        columns: "2",
-        frame: "4 / 3",
-        items: [{ image: "app-tape-before" }, { image: "app-tape-after" }],
-      },
-      {
-        intro: [
-          "A commercial moving truck signage has a zz mark added to it, and people can scan it for the information.",
-        ],
-        label: "group",
-        columns: "2",
-        frame: "342 / 281",
-        items: [{ image: "app-truck-before" }, { image: "app-truck-after" }],
-      },
+      { label: "group", columns: "3", frame: "6 / 5", items: [{ image: "app-for-sale" }, { image: "app-help-wanted" }, { image: "app-event-cancelled" }] },
+      { label: "group", columns: "3", frame: "9 / 10", items: [{ image: "app-connect" }, { image: "app-shop-pay" }, { image: "app-donate" }] },
+      { label: "standalone", columns: "2", frame: "812 / 431", items: [{ image: "app-trail-marker" }] },
+      { label: "group", columns: "3", frame: "4 / 5", items: [{ image: "app-share" }, { image: "app-community" }, { image: "app-handwritten-works" }] },
+      { heading: "Businesses", intro: ["Businesses can convert their product names with the scannable zz-Codes."], label: "group", columns: "2", frame: "4 / 3", items: [{ image: "app-tape-before" }, { image: "app-tape-after" }] },
+      { intro: ["A commercial moving truck signage has a zz mark added to it, and people can scan it for the information."], label: "group", columns: "2", frame: "342 / 281", items: [{ image: "app-truck-before" }, { image: "app-truck-after" }] },
     ],
   },
   {
     id: "aliases",
     title: "Digital aliases",
-    story:
-      "A short human-readable code can stand in for a long machine address used by software agents.",
-    pageExtra: "Deeper blockchain/AI architecture can grow into a later page.",
+    story: "A short human-readable code can stand in for a long machine address used by software agents.",
+    pageExtra: "Blockchain and agent integrations are exploration paths, not requirements of the v1 resolver.",
     homeImages: ["i"],
     pageImages: ["i"],
     homeWideOnly: false,
-    pageGalleries: [
-      {
-        label: "standalone",
-        columns: "2",
-        frame: "733 / 436",
-        items: [{ image: "app-wallet-ens" }],
-      },
-    ],
+    pageGalleries: [{ label: "standalone", columns: "2", frame: "733 / 436", items: [{ image: "app-wallet-ens" }] }],
   },
 ];
 
@@ -192,5 +120,5 @@ export const applicationsHome = {
 export const applicationsPage = {
   title: "Applications",
   intro:
-    "AI belongs across field logistics and parcel workflows. Digital aliases are a separate application.",
+    "Five directions share the same human-readable identifier: field logistics, enterprise and postal workflows, free consumer uses, blockchain aliases, and AI-assisted work. AI is a user interface and connector across these workflows, not the authority that defines or resolves a zz code.",
 };
