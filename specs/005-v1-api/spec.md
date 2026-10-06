@@ -350,6 +350,14 @@ One mechanism sends them. `wrangler.toml` `[assets]` sets `run_worker_first = tr
 
 `'unsafe-inline'` is on `/signin/` only, because Apple's button injects inline styles. `/signin/` also sends `Cross-Origin-Opener-Policy: same-origin-allow-popups` (never `same-origin`, which breaks the provider popups) and `Referrer-Policy: strict-origin-when-cross-origin`. The Astro settings and the checks are in plan.md and tasks T019, T022, and T032.
 
+## Future namespace-aware semantic contract (CANON-SHADOW; issue #81)
+
+Contract 1 is unchanged by the structured-semantic work. No route, request field, response field, OpenAPI shape, uniqueness rule, or current code kind changes in this spec.
+
+A later contract may add namespace-aware semantic resolution with distinct `semantic_profile_id`, `dictionary_version`, and `namespace_id` bindings after resolver authorization. That later contract MUST preserve the distinction between recognition vocabulary and semantic interpretation: the existing `wordlist_version` discovery field MUST NOT be overloaded to carry a semantic dictionary version.
+
+Until that later contract is separately specified and approved, contract 1 keeps global `match_key` uniqueness. It does not allow the same visible code to resolve to tenant-dependent meanings.
+
 ## Out of scope
 
 - Implementing the Worker, the web client, or a vision vendor in this change.
