@@ -27,6 +27,8 @@ Each sample has:
 | ground_truth | Expected literal/canonical result kept with the private corpus |
 | case_kind | valid-word, field, handle, partial, bare, invalid, multi-code, or no-code |
 | stress_tags | Zero or more controlled stress buckets |
+| fiducial_truth | Expected opening/closing endpoint boxes or `none`; pair membership for multi-code images |
+| roi_truth | Expected payload ROI/polygon when a complete visual code exists |
 | expected_band_constraints | Allowed product states when the sample is intentionally ambiguous |
 | notes | Non-identifying qualification notes only |
 
@@ -40,18 +42,20 @@ Each sample has:
 
 ## Stress matrix
 
-The final set covers ordinary handwriting and print, low contrast, glare, blur, motion blur, perspective, rotation, distance, two-line/wrapped codes, multiple codes, partial markers, running text, confusable characters, near-word cases, invalid/reserved characters, no-code images, handles, and field-code parts. Record bucket counts in the receipt. A missing required bucket makes the run incomplete, not passing.
+The final set covers terminal-fiducial localization and pairing plus ordinary handwriting and print, low contrast, glare, blur, motion blur, perspective, rotation, distance, two-line/wrapped codes, multiple codes, partial/occluded fiducials, false `zz` marks in surrounding text, ambiguous endpoint pairing, unequal endpoint size, curved/wrapped surfaces, running text, confusable characters, near-word cases, invalid/reserved characters, no-code images, handles, and field-code parts. Record bucket counts in the receipt. A missing required bucket makes the run incomplete, not passing.
 
 ## Adapter input and output
 
-Input is one still image plus immutable adapter configuration. Output is `RecognitionResult` as defined in plan.md.
+Input is one still image plus immutable adapter configuration. Camera qualification measures two separable stages: (A) terminal-`zz` fiducial detection/pairing and ROI localization/rectification, then (B) payload recognition and shared decoding. Output is `RecognitionResult` as defined in plan.md.
 
 The adapter must record:
 
 - engine id and exact engine/model/runtime version;
 - platform and OS version;
 - preprocessing version and parameters;
-- candidate text in original recognizer order;
+- detected fiducial regions, endpoint role/pairing evidence, and detection score when meaningful;
+- ROI/polygon, orientation/baseline, and rectification transform when used;
+- candidate payload text in original recognizer order;
 - confidence semantics, including "not available";
 - geometry/line provenance when exposed;
 - elapsed recognition time measured by the harness.
@@ -62,11 +66,16 @@ No network access is allowed during a v1 qualification read.
 
 ```text
 CAPTURED
+  -> FIDUCIALS_DETECTED
+  -> ROI_LOCALIZED
   -> RECOGNIZED
   -> DECODED
   -> ACCEPT | CLARIFY | RETRY | ABSTAIN
 
-CAPTURED -> RETRY        capture/reader failure with no usable evidence
+CAPTURED -> RETRY        no usable endpoint evidence
+FIDUCIALS_DETECTED -> RETRY   one/cut/occluded endpoint or unusable geometry
+FIDUCIALS_DETECTED -> CLARIFY multiple plausible pairings requiring selection
+ROI_LOCALIZED -> RETRY        rectification/crop unusable
 RECOGNIZED -> ABSTAIN    unsupported/invalid evidence
 DECODED -> CLARIFY       ambiguity or confirmation required
 DECODED -> RETRY         incomplete/low-quality recoverable read
@@ -80,6 +89,11 @@ Terminal states for one attempt are Accept, Clarify, Retry, and Abstain. A resca
 
 For every engine and stress bucket report:
 
+- fiducial endpoint detection precision/recall;
+- complete-pair detection rate;
+- endpoint pairing accuracy;
+- false-finder and false-pair counts/rates, including prose `zz` distractors;
+- ROI localization overlap/error and rectification success where ground truth exists;
 - exact canonical-code accuracy;
 - part/word accuracy;
 - character error rate;
@@ -91,6 +105,16 @@ For every engine and stress bucket report:
 - median and p95 adapter latency on each representative device class;
 - package/download-size delta and peak runtime memory where measurable;
 - crash/exception count.
+
+### Fiducial safety definitions
+
+**False finder:** a region without a ground-truth terminal marker is emitted as a terminal `zz` fiducial.
+
+**False pair:** two detected regions are paired as one code when they are not the ground-truth endpoints of the same code.
+
+**Missed endpoint:** a ground-truth opening or closing fiducial is not detected. A missed endpoint cannot be synthesized from payload plausibility.
+
+Fiducial errors are reported separately from payload OCR errors so a good OCR engine cannot hide unsafe localization.
 
 ### Safety definitions
 
@@ -106,7 +130,7 @@ The final numerical release gates are frozen in the qualification receipt before
 
 An engine is ineligible if:
 
-1. it produces any uninvestigated False Accept;
+1. it produces any uninvestigated False Accept or unsafe false-pair path;
 2. it requires network/cloud inference in the v1 path;
 3. it cannot reproduce its result from a pinned version/configuration;
 4. its license or redistribution terms are not approved for the shipping use;
@@ -126,7 +150,7 @@ Each run produces a machine-readable receipt and a short Markdown report contain
 - adapter commit, engine/model/runtime version, platform/OS/device class;
 - preprocessing and band-mapping configuration hashes;
 - zz decoder/spec 003 vector version, wordlist version, and check-word implementation version;
-- all required aggregate metrics and per-bucket metrics;
+- all required aggregate metrics and per-bucket metrics, including fiducial localization/pairing and payload metrics;
 - every False Accept/false-valid case by sample_id with disposition;
 - dependency/license/security-review disposition;
 - PASS, FAIL, or INCOMPLETE;
