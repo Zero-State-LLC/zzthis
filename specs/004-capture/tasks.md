@@ -6,7 +6,7 @@ Workflows for every implementing task: anti-slop-code, production-systems, googl
 ## Phase 0: Contract and corpus
 
 - [ ] T001 Define the Swift and Kotlin `RecognitionResult` adapters from the plan. Preserve engine ID/version, raw candidates, confidence when available, and geometry/line provenance when available. Missing confidence stays missing.
-- [ ] T002 Freeze ZZ-OCR-QUAL-001 corpus manifest and expected canonical outputs under private test-data handling. Use team-made photos with written consent, no faces/personal data. Record stress-bucket tags; do not commit private photos to the public repo.
+- [ ] T002 Implement the private corpus manifest from qualification.md, split by writer group. Freeze tuning and final splits, expected outputs, required stress-bucket counts, and the manifest hash. Use team-made/synthetic/separately-approved images with no faces or personal data. Do not commit private photos to Git or CI artifacts.
 - [ ] T003 Add a qualification harness/fixture format that can replay normalized recognition evidence through the shared spec 003 scanner/classifier/check-word path without network access.
 
 ## Phase 1: Shared decoder path
@@ -23,8 +23,8 @@ Workflows for every implementing task: anti-slop-code, production-systems, googl
 
 ## Phase 3: ZZ-OCR-QUAL-001
 
-- [ ] T010 Run Apple Vision, ML Kit, and PP-OCR candidates against the same frozen corpus where platform execution permits. Produce machine-readable results plus a short qualification report.
-- [ ] T011 Report exact-code accuracy, part/word accuracy, CER, false-valid-decode rate, band distribution, wrapped/multi-code behavior, latency, and package/runtime footprint.
+- [ ] T010 Run Apple Vision, ML Kit, and PP-OCR candidates under qualification.md against the frozen final corpus where platform execution permits. Produce the machine-readable receipt and Markdown report with version/configuration hashes, device/OS evidence, per-bucket metrics, and PASS/FAIL/INCOMPLETE.
+- [ ] T011 Report every metric required by qualification.md, including false-valid-decode, False Accept, no-code false positives, band distribution, crash count, median/p95 latency, and footprint. Disposition every False Accept by sample_id; resolver state cannot hide it.
 - [ ] T012 Android promotion decision: choose ML Kit or PP-OCR from ZZ-OCR-QUAL-001 evidence. False-valid-decode behavior is the primary safety metric; generic vendor benchmark claims are not promotion evidence. Record the decision and engine/version pin.
 - [ ] T013 iOS release gate: Apple Vision must pass the same product-level qualification. If it does not, stop and open a replacement-engine decision; do not lower validation requirements to make it pass.
 
@@ -32,9 +32,13 @@ Workflows for every implementing task: anti-slop-code, production-systems, googl
 
 - [ ] T014 Creation check and ordinary scan both use the promoted platform adapter plus the same shared decoder.
 - [ ] T015 Verify raw photos never leave the device in v1 and no cloud/server vision path is reachable or advertised.
-- [ ] T016 End-to-end evidence on representative iOS and Android devices: camera -> recognizer -> shared decoder -> band -> canonical code/clarify/retry/abstain.
+- [ ] T016 End-to-end evidence on representative iOS and Android devices: camera -> recognizer -> shared decoder -> band -> canonical code/clarify/retry/abstain. Verify two-retry behavior, typed-entry fallback, local photo deletion, no raw-photo network request, and the rollback/disable-camera-Accept path.
 
 ## Deferred v2
 
 - [ ] T017 Evaluate a Qwen-class VLM only as a hard-case verifier behind RecognitionResult; no v1 dependency.
 - [ ] T018 Evaluate a custom zz-specific recognizer after enough governed data exists. Compare it against the frozen qualification baseline before promotion.
+
+## Definition of done
+
+Capture v1 is implementation-ready only when every normative rule has a task and test owner, no OPEN item blocks implementation, qualification.md can produce a reproducible receipt without inventing fields, and zzThat consumes the same boundary. Camera Accept is release-ready only after a PASS receipt for that platform's pinned adapter. NO_PROMOTION is a valid qualification outcome and leaves typed entry available.
