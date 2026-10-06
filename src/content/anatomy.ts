@@ -2,7 +2,7 @@
 
 export const whyMarkers = {
   heading: "Why the zz markers matter",
-  text: "The zz markers are to zzThis what the start and stop bars are to a barcode, or the three corner squares to a QR code: a fixed frame that tells people and machines exactly where a code begins and ends. Two lowercase letters, recognizable almost anywhere, in any handwriting.",
+  text: "The two zz markers frame the code. For camera reading, they also act as index marks: find the endpoints first, then read the words between them. That gives the reader a bounded region to inspect while the words remain readable and writable by people.",
 };
 
 export const languagesHeading = "In any language";
