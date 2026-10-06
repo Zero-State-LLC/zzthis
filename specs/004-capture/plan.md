@@ -10,6 +10,7 @@ anti-slop-code, production-systems, google-developer-style. CI: `ci.yml`, `site-
 
 | Item | Choice | Status |
 |---|---|---|
+| Fiducial stage | Terminal `zz` regions are detected and paired before payload OCR; pair geometry defines ROI/orientation/rectification evidence. | v1 camera requirement |
 | Recognition boundary | Engine-neutral `RecognitionResult`: candidates, confidence, geometry/line provenance when available, engine ID/version. Recognizers emit evidence only. | v1 requirement |
 | iOS baseline | Apple Vision text recognition, on device. | v1 baseline; must pass ZZ-OCR-QUAL-001 |
 | Android candidates | Google ML Kit Text Recognition and PP-OCR mobile/ONNX path, on device. | Benchmark both; promote from evidence |
@@ -32,6 +33,12 @@ RecognitionResult
     raw_text
     confidence
     regions[]? / line_provenance?
+  fiducials[]?
+    role: opening | closing
+    region
+    detection_score?
+  roi?
+  orientation? / rectification_transform?
   capture_quality?
 ```
 
@@ -63,7 +70,9 @@ Corpus stress buckets include ordinary handwriting and print plus 0/O, 1/I/l, 2/
 
 ```text
 camera
-  -> platform recognizer adapter
+  -> zz fiducial detection + pairing
+  -> ROI localization / optional rectification
+  -> platform payload recognizer adapter
   -> RecognitionResult
   -> scanner / candidate extraction
   -> spec 003 classify + near-word rules
@@ -88,6 +97,7 @@ iOS starts with Apple Vision. Android carries ML Kit and PP-OCR as qualification
 | No semantic authority in OCR | spec 003 decoder boundary | replay harness + negative resolver-query test | T003-T006 |
 | No raw-photo transport | v1 privacy invariant | network/log inspection + E2E | T015 |
 | False valid / false Accept | qualification.md safety definitions | frozen-corpus receipt | T010-T013 |
+| Fiducial localization/pairing | FR-018 to FR-021 | endpoint localization, pairing, false-finder, ROI/rectification metrics | T001, T006A, T010 |
 | Multi-line / multi-code | scanner rules + geometry provenance | corpus buckets + vectors | T006, T010 |
 | Missing confidence | explicit optional confidence | adapter/band mapping tests | T001, T005 |
 | Android engine choice | promotion rule | PASS receipt + recorded pin | T012 |
