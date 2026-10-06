@@ -2,6 +2,7 @@
 
 Status: normative qualification protocol. No engine is promoted by this document alone.
 Parent: [spec 004](spec.md) · [plan](plan.md) · [tasks](tasks.md)
+Machine contracts: [manifest schema](qualification/manifest.schema.json) · [receipt schema](qualification/receipt.schema.json) · [scoring rules](qualification/scoring.md) · [fixture manifest](qualification/fixture-manifest.json)
 
 ## Purpose
 
@@ -15,7 +16,7 @@ The recognizer may emit text, confidence when meaningful, geometry, and provenan
 
 The qualification corpus is private. The repository stores only a manifest schema, synthetic/non-sensitive fixtures, aggregate results, and hashes needed for reproducibility. Raw private photographs never enter Git, pull-request attachments, Actions artifacts, logs, crash reports, analytics, or model-training sets.
 
-Each sample has:
+Each sample is validated by `qualification/manifest.schema.json`. Each sample has:
 
 | Field | Rule |
 |---|---|
@@ -143,7 +144,7 @@ If no engine qualifies, v1 camera recognition does not ship as an Accept-capable
 
 ## Receipt
 
-Each run produces a machine-readable receipt and a short Markdown report containing:
+Each run produces a machine-readable receipt validated by `qualification/receipt.schema.json` and a short Markdown report. Metric computation follows `qualification/scoring.md`. The receipt contains:
 
 - qualification id and UTC timestamp;
 - corpus-manifest hash and sample counts by split/bucket;
