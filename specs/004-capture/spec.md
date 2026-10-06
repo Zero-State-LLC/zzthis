@@ -1,7 +1,7 @@
 # Feature spec: capture by camera, typing, or voice
 
 Feature ID: 004-capture
-Status: not built. Recognition approach decided (Q18, #74): Option A on the device. Deepened 2026-10-03: grammar path, decision-band triggers, error states, and edge cases. v1 reads English (ASCII) codes with Option A; trained models and other scripts are v2 (issue #35).
+Status: not built. Recognition boundary decided: on-device, engine-neutral evidence feeds the shared zz decoder. Apple Vision is the iOS baseline; Android ML Kit and PP-OCR are qualification candidates under ZZ-OCR-QUAL-001. No cloud reader in v1. Trained/VLM readers and other scripts are v2 (issue #35).
 Phase: specify (what and why). The how is in [plan.md](plan.md).
 Constitution: [.specify/memory/constitution.md](../../.specify/memory/constitution.md).
 
@@ -42,9 +42,9 @@ Acceptance: the photo leaves the device only on a retry or hard case [OPERATOR 2
 | ID | Requirement | Source |
 |---|---|---|
 | FR-001 | Inputs: camera, typing, voice. | [BRIEF] |
-| FR-002 | On-device recognition first; photo stays on the device by default. | [OPERATOR 2026-10-02]; Q18 is decided [DELEGATED 2026-10-04, #74]: Option A on the device (Apple Vision, ML Kit), no cloud reader in v1 |
+| FR-002 | Recognition runs on device in v1 and the raw photo stays on device. The recognizer is an adapter that emits evidence; it does not own zz semantics. Apple Vision is the iOS baseline. Android ML Kit and PP-OCR are qualification candidates; ZZ-OCR-QUAL-001 selects the promoted Android adapter. | [OPERATOR 2026-10-02]; Q18 [DELEGATED 2026-10-04, #74], refined by accepted 2026-10-06 recognizer-qualification intent |
 | FR-003 | Every reading is snapped to the closed wordlist (spec 003) and the check word is verified. | [OPERATOR 2026-10-02] |
-| FR-004 | Calibrated confidence decides accept, clarify, retry, or abstain, separately for voice, image, and typed input. | [PRODUCT]; thresholds OPEN (Q37) |
+| FR-004 | The shared decision-band function decides accept, clarify, retry, or abstain from normalized recognition evidence plus grammar/check-word results. Engine confidence is evidence only; missing confidence is explicit and is never invented. | [PRODUCT]; Q37 prototype thresholds are parameters |
 | FR-005 | A person confirms low-confidence readings. | [OPERATOR 2026-10-02] [PRODUCT] |
 | FR-006 | Correction happens on the client against the wordlist and check word, never by asking the server for nearby codes. | [OPERATOR 2026-10-02] |
 | FR-007 | Read-back confirmation errors are measured, not assumed away. | [PRODUCT]; method OPEN (Q37) |
@@ -94,7 +94,7 @@ The phone and web apps as products (not yet specified; Q33), the resolver (spec 
 
 Status: decided. Danny said yes on #74 (2026-10-04). Source: [analysis 2026-10-04](../analysis-2026-10-04.md). The iOS and Android apps both scan, so they need one rule for finding codes in text, or the two apps will disagree. The rows in [spec 003 `vectors.json`](../003-wordlist-checkword/vectors.json) (`scanner`) are the test. The web client in v1 is typing only (spec 005 US6), so it uses steps 3 to 6 on the typed text.
 
-1. Recognize text on the device. Join the recognized lines in reading order (top to bottom, then left to right) with spaces. Each line keeps the recognizer's confidence, from 0 to 1: on iOS the top candidate's `VNRecognizedText.confidence`, on Android `Text.Line.getConfidence()`. Never use ML Kit Element or Symbol confidence. Each token remembers the line it came from, and a word takes its line's confidence. A candidate takes the lowest confidence among the lines its words came from, so a code that wraps onto two lines takes the lower of the two. "Every word" in the band table means every part between the markers, including the check word; the markers do not count (INFERRED). The band function takes a list of (token, line index, line confidence), not recognizer objects. The same band rows run in the Swift and Kotlin grammar libraries: for a word code whose check word verifies, every line at 0.80 gives Accept, one line at 0.79 gives Clarify, and a code wrapped across lines at 0.90 and 0.45 gives Retry.
+1. Recognize text on the device through the platform adapter and normalize it to `RecognitionResult` (plan.md): engine/version, raw candidates, confidence when the engine exposes a meaningful score, and geometry/line provenance when available. Apple Vision is the iOS baseline. Android ML Kit and PP-OCR remain candidates until ZZ-OCR-QUAL-001 promotes one. Shared grammar code never receives vendor recognizer objects. Join recognized lines in reading order (top to bottom, then left to right) with spaces. Where line confidence exists, each token remembers its line and a candidate takes the lowest relevant line confidence. Missing confidence is not synthesized; the qualification report must define how that adapter maps evidence to bands before promotion. "Every word" in the band table means every part between the markers, including the check word; markers do not count.
 2. Find candidates with the scanner rules below.
 3. Classify each plain code against the bundled list (Section 2.2a G1): word, field, or confirm.
 4. For a word code, verify the check word (spec 003) when the bundled list version equals `wordlist_version` from `GET /v1`. Otherwise skip the local check. The server still verifies.
@@ -135,7 +135,7 @@ Thresholds stay parameters (Q37). These values let the apps ship. They are not m
 
 Bands use the local verify only when step 4 ran. When the list versions differ, the server's 400 `wrong-length` maps to `scan.wrong_length` (zzThat spec.md Errors).
 
-After two retries in one scan, a client may offer the server read (US3) only when `GET /v1` reports `photo_reads: true`. It is false in v1, because Q18 chose on-device reading only, so the v1 apps do not show the offer.
+After two retries in one scan, v1 continues to offer rescan or typed entry. `photo_reads` remains false: no raw-photo cloud/server read is enabled in v1. A future server/VLM hard-case verifier requires a separate v2 decision.
 
 The creation check (FR-017) runs the same steps on the person's photo and passes when the picked candidate's canonical form equals the minted code.
 
@@ -154,7 +154,7 @@ The pre-build audit found that the scanner rules, read literally, could not pair
 
 | ID | Question | Default |
 |---|---|---|
-| Q18 | Fine-tune our own small model (Option B)? Also: must Option A include an on-device model, or may US1 fall back to cloud vision? | RESOLVED [DELEGATED 2026-10-04, #74]: Option A on the device (Apple Vision, ML Kit); no cloud reader in v1; the Option B benchmark is v2 |
+| Q18 | Which recognition engine ships? | REFINED 2026-10-06: on-device and no-cloud remain locked. Apple Vision is the iOS baseline. Android ML Kit and PP-OCR are qualified under ZZ-OCR-QUAL-001 and the winner is pinned from evidence. Custom/VLM readers remain v2. |
 | Q33 | Scope of the zzThat app (web, Android, iOS) as a product: which features ship first? | RESOLVED [DELEGATED 2026-10-04, #74]: iOS and Android together with the zzThat spec 001 scope; the web client in spec 005 |
 | Q34 | Where the test set of real photos comes from, and consent for using them | RESOLVED [DELEGATED 2026-10-04, #74]: Team-made photos with written consent, no faces or personal data, kept private, used to measure only |
 | Q37 | Confidence thresholds for accept, clarify, retry, and abstain, and how read-back errors are measured | RESOLVED [DELEGATED 2026-10-04, #74]: Accept at 0.80, retry below 0.50, as parameters |
