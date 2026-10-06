@@ -40,19 +40,7 @@ export const applications: readonly Application[] = [
     pageExtra:
       "Planned structured profiles can assign versioned roles to code positions, such as purpose, place or target, and state. Those meanings belong to authorized semantic profiles and private dictionaries after recognition and canonicalization; the camera reader does not decide them.",
     homeImages: ["j"],
-    pageImages: [
-      "a",
-      "alt-b",
-      "c",
-      "d",
-      "e",
-      "f",
-      "j",
-      "k",
-      "l",
-      "m",
-      "n",
-    ],
+    pageImages: ["a", "alt-b", "c", "d", "e", "f", "j", "k", "l", "m", "n"],
     homeWideOnly: true,
   },
   {
