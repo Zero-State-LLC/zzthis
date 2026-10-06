@@ -2,7 +2,7 @@
 
 zzThis uses [Spec Kit](https://github.com/github/spec-kit) order: constitution, specify, clarify, plan, checklist, tasks, analyze, implement, converge. The rules for every spec are in [`.specify/memory/constitution.md`](../.specify/memory/constitution.md) (v1.1.2, ratified 2026-10-05).
 
-`docs/SPEC.md` stays as the source for verbatim copy, source tags, and the decision log (Section 9). [`DECISION-STATUS.md`](DECISION-STATUS.md) is the current convergence index: use it before treating OPEN text in historical analyses as current. [`SCOPE-GOVERNANCE.md`](SCOPE-GOVERNANCE.md) controls intake/promotion, and [`CAPABILITY-ROADMAP.md`](CAPABILITY-ROADMAP.md) assigns work to release bundles. Its banner maps each section to the artifact that now holds it.
+`docs/SPEC.md` stays as the source for verbatim copy, source tags, and the decision log (Section 9). [`DECISION-STATUS.md`](DECISION-STATUS.md) is the current convergence index: use it before treating OPEN text in historical analyses as current. [`SCOPE-GOVERNANCE.md`](SCOPE-GOVERNANCE.md) controls intake/promotion, [`CAPABILITY-ROADMAP.md`](CAPABILITY-ROADMAP.md) assigns work to release bundles, and [`CLOUDFLARE-RUNTIME.md`](CLOUDFLARE-RUNTIME.md) is the canonical runtime/substrate architecture. Its banner maps each section to the artifact that now holds it.
 
 ## Features
 
