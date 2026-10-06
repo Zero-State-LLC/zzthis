@@ -5,7 +5,7 @@ Workflows for every implementing task: anti-slop-code, production-systems, googl
 
 ## Phase 0: Contract and corpus
 
-- [ ] T001 Define the Swift and Kotlin `RecognitionResult` adapters from the plan. Preserve engine ID/version, raw candidates, confidence when available, and geometry/line provenance when available. Missing confidence stays missing.
+- [ ] T001 Define the Swift and Kotlin `RecognitionResult` adapters from the plan, including optional terminal-fiducial boxes/roles, pair evidence, ROI, orientation/rectification provenance. Preserve engine ID/version, raw candidates, confidence when available, and geometry/line provenance when available. Missing confidence stays missing.
 - [ ] T002 Implement the private corpus manifest from qualification.md, split by writer group. Freeze tuning and final splits, expected outputs, required stress-bucket counts, and the manifest hash. Use team-made/synthetic/separately-approved images with no faces or personal data. Do not commit private photos to Git or CI artifacts.
 - [ ] T003 Add a qualification harness/fixture format that can replay normalized recognition evidence through the shared spec 003 scanner/classifier/check-word path without network access.
 
@@ -14,6 +14,7 @@ Workflows for every implementing task: anti-slop-code, production-systems, googl
 - [ ] T004 Snap-to-wordlist, near-word handling, and check-word verification remain shared with spec 003. Every camera reading passes through the same grammar/vectors; recognizers cannot query live codes or resolver records.
 - [ ] T005 Decision bands: Accept, Clarify, Retry, Abstain. Preserve the accepted prototype thresholds as parameters. Add explicit tests proving a wrong-but-valid decoded code is never silently corrected by resolver lookup.
 - [ ] T006 Multi-line, multi-code, partial-marker, bare-mark, non-ASCII, reserved-symbol, running-text, handle, and field-code cases use the existing spec 004 rules.
+- [ ] T006A Implement terminal-`zz` fiducial detection/pairing before payload OCR. Preserve opening/closing regions and ROI/rectification evidence. Test one endpoint, occlusion, false `zz` prose, ambiguous pairing, multiple codes, rotation/skew/perspective, wrapping, and no-code images. Pairing cannot consult resolver/live-code state or payload wordlist proximity.
 
 ## Phase 2: Platform adapters
 
@@ -23,8 +24,8 @@ Workflows for every implementing task: anti-slop-code, production-systems, googl
 
 ## Phase 3: ZZ-OCR-QUAL-001
 
-- [ ] T010 Run Apple Vision, ML Kit, and PP-OCR candidates under qualification.md against the frozen final corpus where platform execution permits. Produce the machine-readable receipt and Markdown report with version/configuration hashes, device/OS evidence, per-bucket metrics, and PASS/FAIL/INCOMPLETE.
-- [ ] T011 Report every metric required by qualification.md, including false-valid-decode, False Accept, no-code false positives, band distribution, crash count, median/p95 latency, and footprint. Disposition every False Accept by sample_id; resolver state cannot hide it.
+- [ ] T010 Run the fiducial stage plus Apple Vision, ML Kit, and PP-OCR payload candidates under qualification.md against the frozen final corpus where platform execution permits. Produce the machine-readable receipt and Markdown report with version/configuration hashes, device/OS evidence, per-bucket metrics, and PASS/FAIL/INCOMPLETE.
+- [ ] T011 Report every metric required by qualification.md, including fiducial precision/recall, pair accuracy, false-finder/false-pair, ROI/rectification performance, false-valid-decode, False Accept, no-code false positives, band distribution, crash count, median/p95 latency, and footprint. Disposition every False Accept by sample_id; resolver state cannot hide it.
 - [ ] T012 Android promotion decision: choose ML Kit or PP-OCR from ZZ-OCR-QUAL-001 evidence. False-valid-decode behavior is the primary safety metric; generic vendor benchmark claims are not promotion evidence. Record the decision and engine/version pin.
 - [ ] T013 iOS release gate: Apple Vision must pass the same product-level qualification. If it does not, stop and open a replacement-engine decision; do not lower validation requirements to make it pass.
 
