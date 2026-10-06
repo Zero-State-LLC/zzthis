@@ -1,6 +1,6 @@
 # Plan: v1 API and web client
 
-Feature: [spec.md](spec.md). Status: not built. This plan names the stack, the files, and the tests. Deepened 2026-10-04 for a one-shot build ([analysis](../analysis-2026-10-04.md), [brief](../../docs/ONE-SHOT-BRIEF.md)).
+Feature: [spec.md](spec.md). Status: implemented/tested in repository; production deployment remains gated. Runtime authority: [CLOUDFLARE-RUNTIME.md](../CLOUDFLARE-RUNTIME.md). This plan names the stack, the files, and the tests. Deepened 2026-10-04 for a one-shot build ([analysis](../analysis-2026-10-04.md), [brief](../../docs/ONE-SHOT-BRIEF.md)).
 
 ## Workflows (copied from the spec)
 
@@ -10,7 +10,7 @@ anti-slop-code, production-systems, google-developer-style. CI: `ci.yml`, `site-
 
 | Item | Choice | Status |
 |---|---|---|
-| Where the server lives | This repo | [DANNY 2026-10-04]. Answers Q29 for the v1 API. |
+| Source / runtime | Source, specs and CI live in GitHub; the application runtime is Cloudflare Workers. | [DANNY 2026-10-06]; CLOUDFLARE-RUNTIME.md |
 | Runtime | Cloudflare Workers, TypeScript strict, Node 24 tooling, `wrangler` pinned in devDependencies | spec 002 plan [OPERATOR 2026-10-02] |
 | Router | Hono | INFERRED |
 | Tokens and ID-token checks | `jose` (HS256 sign and verify, remote JWKS for Apple and Google, ES256 for the Apple client secret) | INFERRED |
