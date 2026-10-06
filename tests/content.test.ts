@@ -214,11 +214,13 @@ describe("applications (spec 3.2 H.7 and 3.4)", () => {
 
   it("matches the page intro and the aliases extra sentence", () => {
     expect(applicationsPage.intro).toBe(
-      "AI belongs across field logistics and parcel workflows. Digital aliases are a separate application.",
+      "Five directions share the same human-readable identifier: field logistics, enterprise and postal workflows, free consumer uses, blockchain aliases, and AI-assisted work. AI is a user interface and connector across these workflows, not the authority that defines or resolves a zz code.",
     );
     expect(
       applications.find((entry) => entry.id === "aliases")?.pageExtra,
-    ).toBe("Deeper blockchain/AI architecture can grow into a later page.");
+    ).toBe(
+      "Blockchain and agent integrations are exploration paths, not requirements of the v1 resolver.",
+    );
   });
 });
 
@@ -232,13 +234,12 @@ describe("navigation and people", () => {
     ]);
   });
 
-  it("lists the advisors in the 2026-10-02 order, all with initials", () => {
+  it("lists the advisors in the reconciled 2026-10-06 order, all with initials", () => {
     expect(advisors.map((person) => person.name)).toEqual([
-      "Patrick Muggler",
-      "Arshi Chadha",
-      "Ridham Bhagat",
       "Daniel Meyer",
       "Adam Fry",
+      "Patrick Muggler",
+      "Arshi Chadha",
     ]);
     expect(advisors.every((person) => person.initials !== undefined)).toBe(
       true,
@@ -249,11 +250,8 @@ describe("navigation and people", () => {
     const byName = (name: string) =>
       advisors.find((person) => person.name === name);
     expect(advisors.some((person) => person.name === "Jim White")).toBe(false);
-    expect(byName("Ridham Bhagat")?.role).toBe(
-      "Cybersecurity, cryptography and research methods",
-    );
-    expect(byName("Ridham Bhagat")?.bio).toMatch(
-      /^Ridham Bhagat will contribute/,
+    expect(advisors.some((person) => person.name === "Ridham Bhagat")).toBe(
+      false,
     );
     expect(byName("Adam Fry")?.role).toBe(
       "AI agents, infrastructure and deployment",
