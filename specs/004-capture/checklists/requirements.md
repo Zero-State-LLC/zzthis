@@ -24,3 +24,13 @@ Checked 2026-10-06. Capture is not built. Recognition architecture refined by th
 - [x] Missing recognizer confidence is explicit; adapters cannot invent confidence.
 - [x] The existing prototype decision thresholds remain parameters; qualification does not silently rewrite them.
 - [x] Android engine promotion requires evidence from the same frozen corpus.
+
+## Fiducial refinement 2026-10-06
+
+- [x] Terminal `zz` markers have a dual role: literal grammar markers and camera fiducial/index marks.
+- [x] Camera localization/pairing precedes payload OCR; typed/voice grammar behavior is unchanged.
+- [x] Missing endpoints are never inferred from payload plausibility.
+- [x] Ambiguous/multiple endpoint pairings remain visible candidates and never use resolver/live-code knowledge for selection.
+- [x] Marker confidence is separate from payload-word confidence.
+- [x] Qualification measures endpoint precision/recall, pair accuracy, false finders/pairs, ROI/rectification, and downstream decode safety separately.
+- [x] Ordinary handwritten/printed `zz` is the v1 format; no new stylized finder glyph is required by this spec.
