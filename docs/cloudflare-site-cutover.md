@@ -18,6 +18,14 @@ Bundle: B4/B5. Status: marketing staging smoke check passed; route-parity and ro
 - Basic behavior: root returned HTTP 200 and an unknown route returned HTTP 404.
 - Still required: explicit route/asset/header comparison against the accepted GitHub Pages surface and a recorded Worker-version rollback rehearsal. Neither is a production cutover.
 
+## Parity checkpoint (2026-10-07)
+
+- Compared `/`, `/about/`, `/applications/`, `/contact/`, `/demo/`, and `/how-it-works/`: all returned HTTP 200 on both the staging Worker and GitHub Pages. All 137 page-local asset references checked on each surface returned HTTP 200. An unknown route returned HTTP 404 on both.
+- The root HTML contains no third-party `src`/`href` hosts. This is not a complete runtime-network audit of every script or responsive browser rendering.
+- Parity is **partial, not passed**: staging returns a Cloudflare-generated `/robots.txt` (HTTP 200) while GitHub Pages returns 404; `/sitemap-index.xml` is 404 on both. Content-Security-Policy, X-Content-Type-Options, Referrer-Policy, and Permissions-Policy were absent on both; GitHub Pages returned Strict-Transport-Security while the staging Worker did not. Review these differences and complete a browser/network and responsive-layout comparison before any cutover.
+- The staging marketing Worker has only one uploaded version and one deployment, so a code-version rollback rehearsal has no prior Worker version to target. No artificial version or production route was created for this checkpoint.
+- These checks do not authorize production DNS, custom domains, routes, or deployment.
+
 ## Cutover prerequisites
 
 - Site reconciliation is merged or explicitly superseded.

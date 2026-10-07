@@ -96,3 +96,22 @@ Production approval must define budget guardrails, storage-growth monitoring, ra
 ## Production gate
 
 Production authorization requires: numeric SLO posture, RTO/RPO, successful restore test, incident contacts/runbook, observability/redaction review, secret/key lifecycle, data-lifecycle review, security threat-model review, and Danny's explicit deploy approval.
+
+## Production readiness packet (2026-10-07)
+
+**Decision: NO-GO for production.** Staging evidence does not authorize production resources, routes, DNS, or deployment.
+
+| Gate | Evidence/status |
+|---|---|
+| Service objectives | No production SLO is set; define it from an approved pilot. |
+| Recovery objectives | Product RTO/RPO remain open. Staging D1 restore passed; end-to-end D1/R2/DO/configuration/secret recovery is not proven. |
+| API and limiter | Contract discovery returned 200; bounded discovery limit check returned 60 × 200 then 429. Other route limits and broader API behavior remain to be verified. |
+| R2 data lifecycle | Private staging bucket has the 30-day `reads/` expiration rule and zero objects; actual expiry has not been exercised. |
+| Durable Object recovery | Limiter is non-authoritative; no namespace recovery drill is recorded. |
+| Site parity and rollback | Six required routes and 137 local assets passed HTTP checks; robots/security-header differences remain, responsive/runtime-network review is incomplete, and marketing Worker rollback lacks a previous version. |
+| Observability and privacy | Staging invocation logs are disabled while persisted application logs remain enabled. Production redaction/retention/alerting review is open. |
+| Secret/key lifecycle | Staging token-secret replacement passed with no staged accounts/sessions and API readiness remained 200. Production ownership, cadence, recovery, and emergency rotation procedure remain open. |
+| Incident readiness | Contacts, escalation path, and measured incident restoration exercise remain open. |
+| Security/data approval | Threat-model and data-lifecycle reviews remain open; no production deploy approval is recorded. |
+
+Close each open gate with dated evidence and the accountable operator before reconsidering production. Do not infer approval from completion of staging drills.
