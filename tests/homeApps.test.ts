@@ -8,7 +8,8 @@ describe("home application entries", () => {
 
   it("shows both Postal and parcel images side by side", () => {
     const parcel = entries.find((entry) => entry.id === "parcel");
-    expect(parcel?.images.map((image) => image.id)).toEqual(["g", "o"]);
+    // [MICHAEL 2026-10-06 change list] Pack and ship comes first.
+    expect(parcel?.images.map((image) => image.id)).toEqual(["o", "g"]);
   });
 
   it("marks Field logistics as wide-only and keeps the other rows", () => {

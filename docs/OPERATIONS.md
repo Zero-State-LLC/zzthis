@@ -23,15 +23,19 @@ Until measured:
 
 No document may claim an end-to-end backup/recovery guarantee before a restore test demonstrates it. Cloudflare platform capability is evidence for the mechanism, not evidence for zzThis recovery time.
 
+Staging evidence: on 2026-10-07, `zzthis-staging` was restored in place to a D1 Time Travel bookmark taken immediately before a disposable marker was created. A repeated controlled drill confirmed all application-table counts were zero before and after. The restore request returned in 1.287 seconds and the first verification query completed 0.448 seconds later (1.735 seconds request-to-verified-query); the probe table was absent after restore. This is a measured staging D1 restore interval, not an incident-to-service RTO, production recovery objective, or product RPO.
+
 ## Backup and restore
 
 Production runbook must cover D1, R2, Durable Object state, configuration, and signing/secret material.
 
+The `ZZ_LIMITER` Durable Object is non-authoritative: it stores only the current rate-limit window and clears it by alarm one window length after that window ends, leaving a safety margin against request/runtime clock skew. Its recovery posture is to resume or recreate the limiter namespace; lost limiter state can only reset a transient rate-limit window. It does not recover or replace D1, R2, configuration, or secret material.
+
 Required evidence before production:
 1. documented backup/export mechanism and cadence;
 2. retention and encryption policy;
-3. restore procedure into a non-production environment;
-4. dated restore test with integrity checks;
+3. restore procedure into a non-production environment; the D1 staging path was exercised on 2026-10-07;
+4. dated restore test with integrity checks; D1-only staging evidence exists, while R2/DO/configuration/secret recovery remains open;
 5. owner for recurring restore tests;
 6. key/secret recovery and rotation procedure that does not put secrets in the repo.
 
@@ -92,3 +96,23 @@ Production approval must define budget guardrails, storage-growth monitoring, ra
 ## Production gate
 
 Production authorization requires: numeric SLO posture, RTO/RPO, successful restore test, incident contacts/runbook, observability/redaction review, secret/key lifecycle, data-lifecycle review, security threat-model review, and Danny's explicit deploy approval.
+
+## Production readiness packet (2026-10-07)
+
+**Decision: NO-GO for production.** Staging evidence does not authorize production resources, routes, DNS, or deployment.
+
+| Gate | Evidence/status |
+|---|---|
+| Service objectives | No production SLO is set; define it from an approved pilot. |
+| Recovery objectives | Product RTO/RPO remain open. Staging D1 restore passed; end-to-end D1/R2/DO/configuration/secret recovery is not proven. |
+| API and limiter | Contract discovery returned 200; bounded discovery limit check returned 60 × 200 then 429. Other route limits and broader API behavior remain to be verified. |
+| Retention/retry schedule | Staging API Cron Trigger `17 3 * * *` UTC ran at 2026-10-07 03:17:58 UTC; its count-only report showed zero work and zero logged errors. This verifies one scheduled execution, not nonzero cleanup behavior. Production schedule remains human-gated. |
+| R2 data lifecycle | Staging API is bound to the private `zzthis-photos-staging` bucket; public r2.dev and custom domains are disabled, no CORS policy exists, and `ZZ_PHOTO_READS=false`. The enabled 30-day `reads/` expiration rule is configured. A controlled non-sensitive 93-byte probe, `reads/b4-lifecycle-probe-20261007T050522Z.txt`, was uploaded and verified present on 2026-10-07 05:05:32 UTC. Observe after 2026-11-06 05:05 UTC plus Cloudflare lifecycle processing; deletion is not yet verified. |
+| Durable Object recovery | Limiter is non-authoritative; no namespace recovery drill is recorded. |
+| Site parity and rollback | Six required routes and 137 local assets passed earlier HTTP checks; titles/H1s match and CSS/JS assets match after base-path normalization; staging Worker-version rollback passed. Clef judged paired 390×844 screenshots equivalent on all six currently served routes (confidence 0.840–0.913); a bounded Browser Run initial-load inventory found no external origins on either host. These checks predate the accepted PR #91 baseline and are not a complete interactive request trace. Staging now sends Pages-matching HSTS (`max-age=31556952`) on all six required routes, confirmed on Worker version `dd1abc3c-0052-4170-baff-91a5f25d04ce` (workflow 37585374449). `/robots.txt` remains Cloudflare-generated on the staging workers.dev host (200) vs Pages 404; `/sitemap-index.xml` is 404 on both. Other checked security headers are absent on both. Final-baseline staging deployment/recheck, full interaction/network review, and final acceptance remain open. |
+| Observability and privacy | Staging invocation logs are disabled while persisted application logs remain enabled. Production redaction/retention/alerting review is open. |
+| Secret/key lifecycle | Staging token-secret replacement passed with no staged accounts/sessions and API readiness remained 200. Production ownership, cadence, recovery, and emergency rotation procedure remain open. |
+| Incident readiness | Contacts, escalation path, and measured incident restoration exercise remain open. |
+| Security/data approval | Threat-model and data-lifecycle reviews remain open; no production deploy approval is recorded. |
+
+Close each open gate with dated evidence and the accountable operator before reconsidering production. Do not infer approval from completion of staging drills.

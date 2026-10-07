@@ -71,7 +71,7 @@ Acceptance: `/contact`, the Home contact action, the About contact card, and the
 | FR-006 | No rendered em dash, with no exceptions. The hero H1 uses a spaced hyphen: "readable-writable - and smart." (Q47, Q62). | [MICHAEL 2026-10-02]; [DANNY 2026-10-03, revised: "Fix the em dashes"] |
 | FR-007 | No research target or unmeasured performance figures, and no claims of pilots, customers, endorsement, or adoption, appear on any page. | [MICHAEL 2026-10-02] [PRODUCT] |
 | FR-008 | Standalone AI-render panels carry "Concept illustration". Each grouped gallery carries one label above its panels. Captions name the workflow. | [MICHAEL 2026-10-02] |
-| FR-009 | Founder and advisor cards show a supplied headshot where one exists (Michael, Patrick, Arshi, Ridham) and initials otherwise (Q46). No LinkedIn scraping. | [MICHAEL 2026-10-02] [WIRE] |
+| FR-009 | Founder and advisor cards show a supplied headshot where one exists (Michael, Patrick, Arshi, Adam) and initials otherwise (Q46). No LinkedIn scraping. Ridham Bhagat removed from the site (Danny approved 2026-10-07). | [MICHAEL 2026-10-06] [WIRE] |
 | FR-010 | `/technology` is not built and nothing links to it until it has Michael's draft explanation plus a supporting example. | [MICHAEL 2026-10-02] |
 | FR-011 | The demo is scripted: no recognition, no backend, no camera, microphone, network calls, or storage. Every step shows "Demo · demo data". User-facing labels say demo instead of mock. | [OPERATOR 2026-10-01]; override [MICHAEL 2026-10-03 #54] [DANNY 2026-10-04] |
 | FR-012 | The demo is fully usable by keyboard. Drag is never required. Reduced motion removes transitions. Without JavaScript, a static list of steps appears. | INFERRED (`docs/SPEC.md` Section 4.5) |
@@ -111,7 +111,7 @@ Real recognition, a real resolver, accounts, forms or email backends, analytics,
 | ID | Question | Default |
 |---|---|---|
 | Q10 (part) | Daniel Meyer's profile URL and project accomplishments | Role and bio only |
-| Q12 (part) | Adam Fry's profile URL and photo | Specialty and bio supplied [MICHAEL 2026-10-02] |
+| Q12 (part) | Adam Fry's profile URL | Specialty, bio, and photo supplied [MICHAEL 2026-10-06] |
 | Q20 | Flow B behavior on a miss | PARTLY RESOLVED: context dependent [MICHAEL 2026-10-02]; the public demo stays "No match" (FR-013). Policy details: Q40 |
 | Q39 | What event or date counts as the zzThat app launch for FR-016? | None chosen |
 | Q21 | Which handling verbs does the demo show? The brief lists pack, ship, return, repair, and dispose [BRIEF]; the 2026-10-02 wireframe shows Pack, Ship, Turn In, Dispose; the demo uses Pack, Return, Repair, Dispose (OBSERVED). | Keep the demo as built |
