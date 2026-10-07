@@ -83,16 +83,16 @@ export const hackerDojo = {
 
 export const prototypes: readonly Prototype[] = [
   // [MICHAEL 2026-10-07] zzthis.com replaces zzthing.com, with its wordmark:
-  // white "this" on the dark theme (the default); on the light theme, a black
-  // "this" on a minimal white badge (Michael's GPT-made file, 2026-10-07).
+  // the same two logos as the header
+  // (white "this" on the dark theme, black "this" on the light theme).
   {
     name: "zzthis.com",
     href: "https://zzthis.com",
     logo: {
-      src: "images/logos/zzthis-dark.webp",
-      srcLight: "images/logos/zzthis-light.webp",
-      widthLight: 372,
-      width: 333,
+      src: "images/logos/zzthis-logo-on-dark.webp",
+      srcLight: "images/logos/zzthis-logo-on-light.webp",
+      widthLight: 345,
+      width: 329,
       height: 96,
       alt: "zzThis",
     },
