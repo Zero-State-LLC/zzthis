@@ -5,6 +5,8 @@ Bundle: **B2 Camera Capture** · Target: **v1** · Status: **ACTIVE / qualificat
 Feature: [spec.md](spec.md) · Plan: [plan.md](plan.md) · Recognition intent: [2026-10-06 v1 recognizer qualification](../../intent/2026-10-06-v1-recognizer-qualification.md)
 Workflows for every implementing task: anti-slop-code, production-systems, google-developer-style.
 
+This qualification-gated task list supersedes the earlier capture decomposition. It keeps v1 on-device and no-cloud for raw photos; unchecked tasks are planned work, not implementation evidence. Use [TRACEABILITY](../TRACEABILITY.md) and current product specs before scheduling work.
+
 ## Phase 0: Contract and corpus
 
 - [ ] T001 Define the Swift and Kotlin `RecognitionResult` adapters from the plan, including optional terminal-fiducial boxes/roles, pair evidence, ROI, orientation/rectification provenance. Preserve engine ID/version, raw candidates, confidence when available, and geometry/line provenance when available. Missing confidence stays missing.

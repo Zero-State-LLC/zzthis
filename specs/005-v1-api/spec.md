@@ -1,7 +1,7 @@
 # Feature spec: v1 API and later web client
 
 Feature ID: 005-v1-api
-Status: not built. This change publishes the contract only.
+Status: implemented and tested in this repository; production deployment remains gated. This spec remains the authoritative contract for the implementation.
 Phase: specify. The how is in [plan.md](plan.md). Tasks are in [tasks.md](tasks.md). The build brief is [docs/ONE-SHOT-BRIEF.md](../../docs/ONE-SHOT-BRIEF.md).
 Wire shapes: [openapi.yaml](openapi.yaml). If a field and this prose disagree, the OpenAPI file is the field and this prose is the rule. File a bug rather than guessing.
 Constitution: [.specify/memory/constitution.md](../../.specify/memory/constitution.md).

@@ -3,6 +3,10 @@
 Feature: [spec.md](spec.md) · Plan: [plan.md](plan.md) · Issue: #14
 Workflows for every implementing task: anti-slop-code, production-systems, google-developer-style. CI: `ci.yml`, `site-ci.yml`, `free-security-scan.yml`.
 
+
+## Status reconciliation
+
+This is the original wordlist/check-word decomposition. Much of it was implemented in the one-shot/shared-core stream under spec 005 (including grammar, vectors, pipeline artifacts, proto-v0, and check-word behavior). Unchecked boxes are historical and are **not** a current backlog. Use [TRACEABILITY](../TRACEABILITY.md), spec 005 Group 0, and current main as status authority.
 ## Phase 0: Decisions
 
 - [x] T001 Choose the candidate word source and confirm its license (Q32). Done on #74: the EFF long wordlist, CC BY 3.0 US (spec.md, Prototype defaults).

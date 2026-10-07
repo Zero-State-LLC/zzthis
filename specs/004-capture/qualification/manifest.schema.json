@@ -40,18 +40,56 @@
     "sample": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["sample_id", "asset_sha256", "consent_class", "writer_group", "device_class", "case_kind", "stress_tags", "ground_truth_codes", "fiducials"],
+      "required": [
+        "sample_id",
+        "asset_sha256",
+        "consent_class",
+        "writer_group",
+        "device_class",
+        "case_kind",
+        "stress_tags",
+        "ground_truth_codes",
+        "fiducials"
+      ],
       "properties": {
         "sample_id": { "type": "string", "pattern": "^[A-Za-z0-9._-]+$" },
         "asset_sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
-        "consent_class": { "enum": ["team-made", "synthetic", "separately-approved"] },
+        "consent_class": {
+          "enum": ["team-made", "synthetic", "separately-approved"]
+        },
         "writer_group": { "type": "string", "minLength": 1 },
         "device_class": { "type": "string", "minLength": 1 },
-        "case_kind": { "enum": ["valid-word", "field", "handle", "partial", "bare", "invalid", "multi-code", "no-code"] },
-        "stress_tags": { "type": "array", "uniqueItems": true, "items": { "type": "string", "minLength": 1 } },
-        "ground_truth_codes": { "type": "array", "uniqueItems": true, "items": { "type": "string" } },
-        "fiducials": { "type": "array", "items": { "$ref": "#/$defs/fiducial" } },
-        "expected_band_constraints": { "type": "array", "uniqueItems": true, "items": { "enum": ["accept", "clarify", "retry", "abstain"] } },
+        "case_kind": {
+          "enum": [
+            "valid-word",
+            "field",
+            "handle",
+            "partial",
+            "bare",
+            "invalid",
+            "multi-code",
+            "no-code"
+          ]
+        },
+        "stress_tags": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": { "type": "string", "minLength": 1 }
+        },
+        "ground_truth_codes": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": { "type": "string" }
+        },
+        "fiducials": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/fiducial" }
+        },
+        "expected_band_constraints": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": { "enum": ["accept", "clarify", "retry", "abstain"] }
+        },
         "notes": { "type": "string" }
       }
     }
