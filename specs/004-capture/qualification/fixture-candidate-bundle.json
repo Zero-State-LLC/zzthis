@@ -3,7 +3,7 @@
   "qualification_id": "ZZ-OCR-QUAL-001",
   "candidate_id": "synthetic-fixture-ios-001",
   "platform": "ios",
-  "device_matrix_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+  "device_matrix_sha256": "d0f29243fb657abda08f79586cf4d98cd0c323a1f5c31d799625ca5b081bc3c4",
   "adapter": {
     "commit": "1111111111111111111111111111111111111111",
     "artifact_sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",

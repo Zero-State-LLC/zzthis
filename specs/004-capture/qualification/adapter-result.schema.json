@@ -25,8 +25,6 @@
       "required": [
         "commit",
         "platform",
-        "os_version",
-        "device_class",
         "engine_id",
         "engine_version",
         "artifact_sha256",
@@ -38,8 +36,6 @@
       "properties": {
         "commit": { "type": "string", "pattern": "^[a-f0-9]{40}$" },
         "platform": { "enum": ["ios", "android"] },
-        "os_version": { "type": "string", "minLength": 1 },
-        "device_class": { "type": "string", "minLength": 1 },
         "engine_id": { "type": "string", "minLength": 1 },
         "engine_version": { "type": "string", "minLength": 1 },
         "artifact_sha256": { "$ref": "#/$defs/sha256" },
@@ -162,6 +158,9 @@
         "sample_id",
         "split",
         "input_image_sha256",
+        "device_matrix_entry_id",
+        "os_version",
+        "device_class",
         "elapsed_ms",
         "fiducials",
         "rois",
@@ -172,6 +171,12 @@
         "sample_id": { "type": "string", "pattern": "^[A-Za-z0-9._-]+$" },
         "split": { "enum": ["tuning", "final"] },
         "input_image_sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+        "device_matrix_entry_id": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9._-]+$"
+        },
+        "os_version": { "type": "string", "minLength": 1 },
+        "device_class": { "type": "string", "minLength": 1 },
         "elapsed_ms": { "type": "number", "minimum": 0 },
         "fiducials": {
           "type": "array",
