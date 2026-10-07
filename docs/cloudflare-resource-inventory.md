@@ -36,7 +36,7 @@ Staging uses distinct D1/R2 state and secrets. No preview/staging Worker may bin
 - R2 check: `zzthis-photos-staging` was created 2026-10-07 with Standard storage, default jurisdiction, and WNAM location; it contains no application data.
 - API deployment: [run 37553276969](https://github.com/Zero-State-LLC/zzthis/actions/runs/37553276969) completed successfully from `main` at `89c2e3b659d04fa83eed8b010508a161489a9ed7`. The deployed Worker is `zzthis-api-staging` at `https://zzthis-api-staging.zer0state-noema.workers.dev`.
 - API secret names stored in Cloudflare Worker secret storage: `ZZ_TOKEN_SECRET`, `ZZ_DATA_KEY`, and `ZZ_RECORD_SIGNING_KEY`; values are not recorded here.
-- API readiness check: a corrected Base64URL 32-byte `ZZ_DATA_KEY` secret was promoted in Worker version `4254460f`. `GET /v1` with `X-ZZ-Contract: 1` then returned HTTP 200 and the expected staging discovery payload. Without the header it returns the expected HTTP 400 `contract-version` gate. Public/free access, developer sign-in, minting, and photo reads remain disabled.
+- API readiness check: a corrected Base64URL 32-byte `ZZ_DATA_KEY` secret was promoted in Worker version `4254460f`. `GET /v1` with `X-ZZ-Contract: 1` then returned HTTP 200 and the expected staging discovery payload. Without the header it returns the expected HTTP 400 `contract-version` gate. Free-public minting, developer sign-in, minting, and photo reads remain disabled. Resolution of any separately-created public record is a distinct, intentionally unauthenticated feature and has not been exercised in staging.
 - No production Worker, D1, R2, DNS, or custom-domain configuration was created or changed in this staging milestone.
 
 ## Remote-resource creation gate
