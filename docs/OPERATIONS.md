@@ -106,6 +106,7 @@ Production authorization requires: numeric SLO posture, RTO/RPO, successful rest
 | Service objectives | No production SLO is set; define it from an approved pilot. |
 | Recovery objectives | Product RTO/RPO remain open. Staging D1 restore passed; end-to-end D1/R2/DO/configuration/secret recovery is not proven. |
 | API and limiter | Contract discovery returned 200; bounded discovery limit check returned 60 × 200 then 429. Other route limits and broader API behavior remain to be verified. |
+| Retention/retry schedule | Staging API Cron Trigger `17 3 * * *` UTC is configured; a completed scheduled invocation/result has not yet been verified. Production schedule remains human-gated. |
 | R2 data lifecycle | Private staging bucket has the 30-day `reads/` expiration rule and zero objects; actual expiry has not been exercised. |
 | Durable Object recovery | Limiter is non-authoritative; no namespace recovery drill is recorded. |
 | Site parity and rollback | Six required routes and 137 local assets passed HTTP checks; a staging marketing Worker version rollback rehearsal passed with post-rollback 200/404 smoke checks. Robots/security-header differences remain, and responsive/runtime-network review is incomplete. |
