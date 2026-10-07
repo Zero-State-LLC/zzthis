@@ -68,6 +68,9 @@ function collectPaths(content) {
 }
 
 function checkRootPaths(file, content) {
+  // A Workers deployment is served from its origin root. GitHub Pages uses
+  // /zzthis/ instead, so enforce the prefix only when one is configured.
+  if (BASE === "/") return;
   for (const path of collectPaths(content)) {
     if (path.startsWith("/") && !path.startsWith(BASE)) {
       report(file, `root path without base: ${path}`);

@@ -25,8 +25,8 @@ The current architecture remains:
 |---|---|---|
 | Home “Why zz markers matter” visual treatment | DEFER | Intent is compatible, but exact component/style change should land only with verified current design mapping. Architecture already defines the markers normatively in spec 004. |
 | “zz- In any language -zz” treatment | ADAPT/DEFER | Compatible as marketing language, but v1 capture remains ASCII/English and other scripts are v2. Do not imply v1 multilingual recognition. |
-| Field logistics image reorder | DEFER | Do not guess image-ID-to-caption mapping. Apply after exact asset mapping is verified. |
-| Parcel pack-and-ship first | DEFER | Same asset-order verification requirement. |
+| Field logistics image reorder | ADOPT VIA #113 | The approved image/content changes from merged PR #113 are now in `main`; retain that upstream mapping rather than restoring the older branch order. |
+| Parcel pack-and-ship first | ADOPT VIA #113 | The merged main branch now carries the approved postal/parcel image order, including the three-letter postage asset. |
 | Five application directions | ADAPT | B5 labels field/enterprise (B7), postal/parcel (B8), community/free uses (B9), semantic/profile concepts (B10), and ledger/agent/blockchain integrations (B16) as queued or shadow explorations. None becomes v1 implementation authority from website copy. |
 | Home use-case cards (logistics, postal, community, agents, blockchain, macros) | ADAPT | Each card now carries its roadmap status. Carrier/postage, voice recognition, ledger/blockchain, agent authority, and macro execution are not presented as available v1 integrations. |
 | “AI is new UI / connector / flattens stack” | ADAPT | Site describes AI as a possible interface/connector and labels AI-assisted workflows as future exploration, while denying semantic/resolution authority. |
@@ -34,17 +34,17 @@ The current architecture remains:
 | Private versioned dictionaries | SHADOW via B10 | Downstream authorized semantic dictionaries only; not OCR vocabulary or Contract-1 behavior. |
 | Recognition separate from interpretation | ADOPT | Matches current architecture. |
 | Signed resolution receipts | DEFER | Do not imply a shipped receipt contract until the relevant resolver/contract work defines it. |
-| Applications title/caption changes | DEFER | Exact approved strings are not fully recoverable from the summary source. |
+| Applications title/caption changes | ADOPT VIA #113 | Keep the approved copy and image updates merged by PR #113; do not revert them while preserving PR #91's roadmap qualification. |
 | Super-identifier image sizing | DEFER | Requires visual/component verification. |
-| Three-letter postage image | DEFER | Asset is not present/verified on current main. |
+| Three-letter postage image | ADOPT VIA #113 | `public/images/applications/postage-three-letters.webp` is present from merged PR #113. |
 | “Current prototypes and explorations” | ADOPT | Applied. |
 | zzThing concept showcase | ADOPT | Applied as concept showcase language. |
 | zzThat working prototype / separate consumer direction | ADAPT | Applied without claiming store/web releases are already shipped. |
-| zzThat logo | DEFER | Later preference is lowercase inline beside zzthat.com, but exact approved asset is not present/verified on main. |
-| Founder bio ending replacement | DEFER | Exact approved replacement text is not available in the reconciliation source; existing bio retained rather than invented. |
+| zzThat logo | ADOPT VIA #113 | Main now includes and uses the approved camelcase wordmark asset; a lowercase variant is also present. Keep the exact inline treatment aligned with the merged design rather than reviving the old deferral. |
+| Founder bio ending replacement | ADOPT VIA #113 | Retain the founder biography ending merged by PR #113. |
 | Advisor order Daniel, Adam, Patrick, Arshi | ADOPT | Applied. |
-| Remove Ridham | ADOPT | Removed from rendered roster. Physical image deletion can follow once branch asset inventory is verified. |
-| Adam replacement bio/headshot | DEFER | Exact approved replacement copy/asset unavailable; existing Adam bio retained and no headshot invented. |
+| Remove Ridham | ADOPT VIA #113 | Removed from the rendered roster and the obsolete headshot asset was removed by merged PR #113. |
+| Adam replacement bio/headshot | ADOPT VIA #113 | Retain the approved biography and `public/images/people/adam-fry.webp` headshot merged by PR #113. Adam's profile link remains open under #114 pending the supplied URL. |
 | Hacker Dojo paragraph | ADOPT | Current paragraph already matches the compatible intent; retained. |
 | Location Silicon Valley + NYC | ADOPT | Applied. |
 | Third-party names/logos/artwork disclaimer | ADOPT | Applied site-wide in footer note. |
@@ -55,6 +55,10 @@ The current architecture remains:
 | No deploy/DNS/spend | ADOPT | This branch changes repository content only. |
 | Later lowercase zzthat inline-logo preference | ADOPT AS TARGET / DEFER ASSET | Governs the eventual asset treatment when the approved logo is available. |
 
+## Follow-ups after merged PR #113
+
+Issue [#114](https://github.com/Zero-State-LLC/zzthis/issues/114) remains open for the About framed-print photo, the carrier-logo image, and Adam Fry's profile link once supplied. These are intentionally not represented as completed by this reconciliation.
+
 ## Verification log — 2026-10-07
 
 - An isolated public Cloudflare Worker Preview was built from site commit `03934b0f480331879e83275fad1e829920443bc1` at <https://pr-91-zzthis-site-staging.zer0state-noema.workers.dev/>. The preview requires Astro's base path to be `/`; GitHub Pages continues to use `/zzthis/`.
@@ -64,6 +68,7 @@ The current architecture remains:
 - The prior site commit `33e3f3cf9bf780d92d162d49f0029fdeb149ca0a` had green GitHub CI, site typecheck/test, and security checks. GitHub showed no checks for `03934b0f480331879e83275fad1e829920443bc1` at the time of this review.
 - Clef visual comparisons leaned healthy for most pairs, but had low or inconclusive confidence on several; they are not sign-off. PR #89 remains draft/unmerged, so the architecture-claim audit is still pending.
 - This was an isolated PR Worker Preview only. The protected/main-only marketing staging workflow, production Worker, DNS, and production controls were not changed.
+- After reconciling the PR branch with merged main (`e4e344b`, PR #113), the local lint, typecheck, site build, Worker dry run, and all root/core/web/API tests passed (218 + 235 + 78 + 330 = 861 tests). Wrangler emitted a local log-file permission warning during API lint/build/tests, but each command exited successfully. The public Worker Preview still serves the earlier `03934b0` build; this reconciled tree has not yet been redeployed or visually reverified.
 
 ## Acceptance
 

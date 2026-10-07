@@ -13,7 +13,28 @@ export interface Prototype {
   name: string;
   href: string;
   text: string;
+  logo?: { src: string; width: number; height: number; alt: string };
 }
+
+// [MICHAEL 2026-10-06 change list] A small zzThat wordmark under zzthat.com on
+// About only. Two capitalization variants exist (GPT-Astra assets, orange zz
+// #FF5500, deep teal #0B7480). Pick the primary here until Michael and Danny
+// finalize capitalization; show only one at a time.
+const zzthatLogos = {
+  camelcase: {
+    src: "images/logos/zzthat-camelcase.webp",
+    width: 382,
+    height: 96,
+    alt: "zzThat",
+  },
+  lowercase: {
+    src: "images/logos/zzthat-lowercase.webp",
+    width: 355,
+    height: 96,
+    alt: "zzThat",
+  },
+} as const;
+export const zzthatLogoVariant: keyof typeof zzthatLogos = "camelcase";
 
 export const aboutPage = {
   title: "About zzThis",
@@ -36,8 +57,10 @@ export const aboutPage = {
 export const hackerDojo = {
   heading: "Hacker Dojo",
   subtitle: "Innovation community and advisory network",
+  // [MICHAEL 2026-10-03 v1.0 change list] One paragraph. The logo stays in the data and is not shown.
+  // [MICHAEL 2026-10-06 change list] Paragraph replaced as given.
   paragraphs: [
-    "Many of us are at Hacker Dojo, a top coworking, maker, and networking space and community in the heart of Silicon Valley, minutes from the headquarters of Google, NVIDIA, Apple, and more. Every day brings direct participation in, and access to, the latest ideas in problem solving, innovation, and creativity, along with cutting-edge work and trends, a deep and broad knowledge base, news, and resources. Its several hundred members cover the full range of skills, from software, hardware, and robotics to physical AI, IoT, security, and design.",
+    "Many of us are at Hacker Dojo, a premier coworking, maker, and networking community in the heart of Silicon Valley, minutes from the headquarters of Google, NVIDIA, Apple, Meta, NASA Ames, Stanford, SRI International, and many more. Every day brings direct discussions with, and participation in, the latest ideas, backed by a deep and broad knowledge, professional, and experience base. We get cutting-edge developments and information, news, and trends for problem solving and opportunities, innovation and creativity, and resources. Its several hundred members cover the full range of skills: blockchain, crypto, and decentralized and distributed systems; software, hardware, devices, IoT, physical AI, and robotics; AI agents and local (on-device) AI; cybersecurity and cryptography; networking and infrastructure; UX and UI design.",
   ],
   logo: {
     src: "images/logos/hacker-dojo.webp",
@@ -57,5 +80,6 @@ export const prototypes: readonly Prototype[] = [
     name: "zzthat.com",
     href: "https://zzthat.com",
     text: "Working scanner/creator prototype and separate consumer product direction; web, Android, and iOS releases are planned.",
+    logo: zzthatLogos[zzthatLogoVariant],
   },
 ];

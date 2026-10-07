@@ -107,6 +107,7 @@ a.pill {
 .explore li {
   display: grid;
   gap: var(--space-3xs);
+  align-content: start;
   padding-block: var(--space-sm);
   border-bottom: var(--rule-hair) solid var(--color-rule);
 }
@@ -121,6 +122,17 @@ a.pill {
 .explore p {
   font-size: var(--text-sm);
   color: var(--color-ink-2);
+}
+
+/* [MICHAEL 2026-10-06 change list] Small zzThat wordmark under zzthat.com.
+   Keep the aspect ratio; no background, outline, or shadow. */
+.explore__logo {
+  display: block;
+  width: auto;
+  height: 1.5rem;
+  max-width: 100%;
+  object-fit: contain;
+  margin-block: var(--space-3xs);
 }
 
 @media (min-width: 48rem) {

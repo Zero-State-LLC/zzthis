@@ -26,6 +26,31 @@ GitHub's built-in Repository field shows which repo an item comes from. There is
 
 Ready, In progress, In review, and Done are set on the board by hand.
 
-## On the board
+## Board truth and maintenance
 
-These items are on the board: zzThis issues #6, #7, #8, #10, #11, #13, #14, #33, #34, #35, #57, #58, #60, #61, #62, #63, #64, #65, #66, and #67; zzThis pull request #59; zzThat pull request #31.
+Do not keep a hand-maintained exhaustive item list in this file. The GitHub Project is the live inventory; static enumerations became stale during the V1 build.
+
+Repository issue/PR state is the minimum source of truth:
+- closed issue/merged PR -> candidate for **Done**;
+- open PR -> **In review**;
+- accepted, buildable issue with no active PR -> **Ready**;
+- active implementation -> **In progress**;
+- research/deferred/not-ready -> **Backlog**.
+
+Project field changes are manual unless the board workflow explicitly automates them.
+
+## Current convergence map (2026-10-07)
+
+| Item | Intended board status | Reason |
+|---|---|---|
+| #13, #14, #60–#67 | Done | reconciled to implementation evidence and closed |
+| #81 | Backlog | CANON-SHADOW semantic-profile specification track |
+| PR #82 | In review | semantic-profile spec assimilation |
+| #83 | Backlog | SPECULATIVE ZK research |
+| PR #84 | In review after reconciliation | S1 research PR depends on semantic parent/rebase |
+| PR #85 | In review | completeness audit and convergence repair stream |
+| #86 production readiness evidence | Ready after #85 merge | numeric RTO/RPO/SLO, restore evidence, observability, key lifecycle and deploy approval remain |
+| #87 contract-2/semantic domain gate | Backlog | required before #81 can leave CANON-SHADOW |
+| #93 B4 Cloudflare runtime | In progress | isolated staging D1, R2, Durable Object, marketing Worker, and API Worker are deployed; API contract discovery, API Worker rollback, a D1-only restore drill, private R2 30-day `reads/` lifecycle configuration, bounded discovery rate-limit check, staging token-secret rotation, marketing Worker rollback, and one zero-error staging retention Cron execution are verified with public feature flags disabled. Six-route 390×844 visual comparison is Clef-equivalent against the currently served Pages baseline; bounded initial-load Browser Run inventories found no external origins. Staging HSTS now matches Pages on all six required routes (Worker version `dd1abc3c-0052-4170-baff-91a5f25d04ce`, workflow 37585374449). These checks do not cover the post-#91 accepted baseline or full interactive network behavior. `/robots.txt` is a known Cloudflare-generated staging-host difference. R2 expiry behavior, measured recovery objectives, secret recovery, DO recovery, spend/alert thresholds, final-baseline site parity, and production approval remain open |
+
+When repo state and Project status disagree, fix the Project field rather than changing repo truth to match the board.

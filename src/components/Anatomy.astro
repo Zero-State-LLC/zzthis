@@ -46,11 +46,14 @@ const specimen = specimenParts
   </dl>
   <div class="why">
     <div class="why__text">
-      <h3>{whyMarkers.heading}</h3>
+      <h3 class="why__heading">{whyMarkers.heading}</h3>
       <p>{whyMarkers.text}</p>
     </div>
     <div class="langs">
-      <h3>{languagesHeading}</h3>
+      <h3 class="langs__heading">
+        <span class="langs__mark">zz</span>- {languagesHeading} -
+        <span class="langs__mark">zz</span>
+      </h3>
       <ul class="langs__list">
         {languageExamples.map((example) => (
           <li>

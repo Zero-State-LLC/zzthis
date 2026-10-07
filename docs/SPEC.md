@@ -61,7 +61,7 @@ This spec covers three deliverables and one proposal:
 - zzThis has no validated codebook and no controlled comparisons yet [PRODUCT]. Recognition, resolver security, and human-factors performance are untested [PRODUCT].
 - No performance figure appears on the site or in this repo until it is measured (Q7, Q24).
 - The site makes no claim of pilots, customers, endorsement, or government adoption. The footer shows the words "Patent pending" at Michael's direction [MICHAEL 2026-10-02]; the site makes no other patent claim (Q9 RESOLVED).
-- The xTech panel images are concept renderings [ASSETS]. The handwritten photos are real photos of Michael's handwritten codes [ASSETS].
+- The xTech panel images are concept renderings [ASSETS]. The site footer also states that third-party names, logos, and artwork shown belong to their respective owners and appear for illustration only; no affiliation is implied [MICHAEL 2026-10-06]. The handwritten photos are real photos of Michael's handwritten codes [ASSETS].
 
 ## 2. Product spec
 
@@ -424,7 +424,7 @@ The controlled swipe row uses CSS scroll snap and a visible peek of the next car
 
 - Concept labels [MICHAEL 2026-10-02] (Q17 RESOLVED): a standalone AI-render panel carries the tag "Concept illustration" (the Home hero image b, each Home application card, and single-panel sections on `/applications`). A grouped gallery carries one visible label above its panels: on Home, above the core workflow steps, the Field logistics row, and the From photo to action group. `/how-it-works` and `/applications` keep one page label under the H1, which covers their galleries. Captions name the actual workflow.
 - Label copy: standalone tag "Concept illustration" [MICHAEL 2026-10-02]. Group label (INFERRED): "Concept illustrations. These panels show intended use, not a deployed system." Page label (INFERRED): "Concept renderings. The panel images on this page show intended use, not a deployed system." All three live in `src/content/labels.ts`; replace the INFERRED wording if Daniel supplies exact text.
-- The second label appears on the About prototype links. Copy (INFERRED): "Both sites are concept-stage explorations."
+- The second label appears on the About prototype links. Copy: "zzThing is a concept showcase; zzThat is a working prototype, launching soon." [MICHAEL 2026-10-06]
 - `/demo` uses its own "Demo · demo data" label instead (Section 4).
 
 **About layout** [WIRE]
@@ -432,14 +432,14 @@ The controlled swipe row uses CSS scroll snap and a visible peek of the next car
 | Order | Phone | ≥ 900 px |
 |---|---|---|
 | 1 | H1 and intro | H1 and intro (1.618) beside the contact card (1) |
-| 2 | Current explorations, stacked | zzthing.com and zzthat.com, 2 across |
+| 2 | Current prototypes and explorations, stacked | zzthing.com and zzthat.com, 2 across |
 | 3 | Founder card: headshot or initials | Headshot or initials (1) beside the bio (1.618) |
 | 4 | Hacker Dojo: eyebrow, H2, subtitle, logo, two paragraphs | Same block; logo about 96 px square [MICHAEL 2026-10-02] |
-| 5 | Advisors, one stacked card each [WIRE]. Headshot where one was supplied, otherwise initials | 3 across: Patrick Muggler, Arshi Chadha, Ridham Bhagat; then Daniel Meyer, Adam Fry [MICHAEL 2026-10-02] |
+| 5 | Advisors, one stacked card each [WIRE]. Headshot where one was supplied, otherwise initials | Daniel Meyer, Adam Fry, Patrick Muggler, Arshi Chadha [MICHAEL 2026-10-06] |
 | 6 | Codes written by hand, four real photos, 2×2 | 2×2 [MICHAEL 2026-10-02] (Q42 RESOLVED) |
 | 7 | Location, then Next action | Location and Next action, 2 across [WIRE] |
 
-The 2026-10-02 brief and wireframes add Adam Fry and drop the Future space card. Michael's later 2026-10-02 answers remove Jim White from the advisors [MICHAEL 2026-10-02]. Headshots ship for Michael Chung, Patrick Muggler, Arshi Chadha, and Ridham Bhagat. Daniel Meyer and Adam Fry stay on initials. The implementer does not scrape LinkedIn [MICHAEL 2026-10-02] (Q6, Q46 RESOLVED).
+The 2026-10-02 brief and wireframes add Adam Fry and drop the Future space card. Michael's later 2026-10-02 answers remove Jim White from the advisors [MICHAEL 2026-10-02]. Headshots ship for Michael Chung, Patrick Muggler, Arshi Chadha, and Adam Fry. Daniel Meyer stays on initials. Michael's 2026-10-06 change list moves Daniel and Adam to the first two advisor places and supplies Adam's headshot; Ridham Bhagat is removed from the site (approved by Danny 2026-10-07) [MICHAEL 2026-10-06]. The implementer does not scrape LinkedIn [MICHAEL 2026-10-02] (Q6, Q46 RESOLVED).
 
 **Overrides to H.1–H.3**
 
@@ -777,15 +777,15 @@ The layout follows Section 3.1a.
 | H1 | About zzThis | [WIRE] |
 | Intro | "A code a person can write anywhere, linked to a digital record and the next work." | [MICHAEL 2026-10-02] wireframes |
 | Contact card | "1@1000x10.com. Invite collaboration and test partners." | [WIRE] |
-| H2 Current explorations | zzthing.com: "Broader showcase and label mockups." zzthat.com: "Scanner/creator prototype; planned free web, Android, and iOS app." [MICHAEL 2026-10-02] Concept label 2 (Section 3.1a) | [WIRE] [BRIEF] |
+| H2 Current prototypes and explorations | zzthing.com: "Broader showcase and label mockups." zzthat.com: a small zzThat wordmark (`logos/zzthat-camelcase.webp`; lowercase variant kept, one shown at a time), then "Scanner and creator prototype, launching as a free web, Android, and iOS app. zzThat will be our separate consumer product and brand, for people to create and use zz-codes for their personal uses." Label: "zzThing is a concept showcase; zzThat is a working prototype, launching soon." | [MICHAEL 2026-10-06] |
 | H2 Founder | Michael Chung, "Founder, business-model architect, and project lead" [MICHAEL 2026-10-03 v1.0 change list]. Bio, word for word (supersedes the Q43 bio): "I “invent” business models. If you've ever paid at the DMV with a card or used Gmail's inbox tabs, thank me. ;) In 1992–93, I pitched New York City and initiated a pilot for possibly the world's first electronic card payments by the municipal agencies for motor-vehicle fines and fees. In 1995, the NYC DMV began accepting cards, and in 1996, the first E-ZPass tolling began in New York State. In 2002, my patent application was published for sorting tagged emails into their dedicated tabs (Priority, Ads, Bills, etc.) and was cited by 158 patent applications, majority by leading tech and Fortune companies. Gmail did their tabs in 2013. My business experience includes 25 years in real estate, including federal GSA RFPs (I was awarded two office space lease-contracts, one an over $9 million 10-year fixed), and other small businesses: eateries, supermarkets, merchant credit cards, finance, and direct marketing. For the past 13 years I've been in Silicon Valley's tech startup space, with 10+ years in and around blockchain and the last 3+ years in AI. A driver of my business models is the discovery and the purposeful enabling unity of the deterministic blockchain with the probabilistic AI to target today's great problematic gaps and solve to the emerging next-phase civilizational opportunities." Headshot: `images/people/michael-chung.webp`. LinkedIn: https://www.linkedin.com/in/unitynow | [MICHAEL 2026-10-02] (Q43 RESOLVED); placement [OPERATOR 2026-10-02] (Q24) |
 | H2 Hacker Dojo | Subtitle: "Innovation community and advisory network." Logo removed from the page [MICHAEL 2026-10-03 v1.0 change list]. One paragraph, verbatim: "Many of us are at Hacker Dojo, a top coworking, maker, and networking space and community in the heart of Silicon Valley, minutes from the headquarters of Google, NVIDIA, Apple, and more. Every day brings direct participation in, and access to, the latest ideas in problem solving, innovation, and creativity, along with cutting-edge work and trends, a deep and broad knowledge base, news, and resources. Its several hundred members cover the full range of skills, from software, hardware, and robotics to physical AI, IoT, security, and design." | [MICHAEL 2026-10-03 v1.0 change list] (Q44 subtitle kept; Q45 logo no longer shown on the page) |
-| H2 Advisors | Cards: Patrick Muggler, "Connected logistics and IoT"; Arshi Chadha, "AI security"; Ridham Bhagat, "Cybersecurity, cryptography and research methods"; Daniel Meyer, "Full-stack development"; Adam Fry, "AI agents, infrastructure and deployment". Bios for Patrick, Arshi, and Daniel are verbatim from the brief; Ridham and Adam bios are verbatim from Michael's later 2026-10-02 answers (`src/content/people.ts`). Headshots for Patrick, Arshi, and Ridham (Q46 RESOLVED). Daniel Meyer and Adam Fry keep initials. | [MICHAEL 2026-10-02] |
+| H2 Advisors | Cards, in order: Daniel Meyer, "Full-stack development"; Adam Fry, "AI agents, infrastructure and deployment"; Patrick Muggler, "Connected logistics and IoT"; Arshi Chadha, "AI security". Bios for Patrick, Arshi, and Daniel are verbatim from the brief; Adam's bio is as updated 2026-10-06 (`src/content/people.ts`). Headshots for Patrick, Arshi, and Adam (Q46). Daniel Meyer keeps initials. Ridham Bhagat removed (Danny approved 2026-10-07). | [MICHAEL 2026-10-06] |
 | H2 Codes written by hand | Four real photos in a 2×2 (Section 3.8): hw-agent-notes, hw-usps-tally, hw-mark-on-object, and hw-dog-collar-tag, including the two capital-ZZ photos (Q42 RESOLVED). zz-hackerdojo-zz, zz-helloworld-zz, and zz-roto-zz are removed. Label: "Real photos of handwritten codes." | [MICHAEL 2026-10-02]; label INFERRED |
-| Location | "Mountain View / Santa Clara area; Hacker Dojo work base." Unchanged. | [WIRE] [BRIEF] |
+| Location | "Silicon Valley (Mountain View / Santa Clara; Hacker Dojo) and New York City." [MICHAEL 2026-10-06] | [WIRE] [BRIEF] |
 | Next action | "Discuss a pilot, test cohort or collaboration." → mailto | [WIRE] |
 
-**Advisor card (INFERRED).** Each card shows a square photo (`object-fit: cover`, alt is the person's name) when a headshot was supplied, and otherwise initials in IBM Plex Mono at 42 px inside a 1:1 tile. Then the name as H3, the role line, the bio where supplied, and a LinkedIn link where a URL was supplied [MICHAEL 2026-10-02] (Q46 RESOLVED): Michael Chung, Patrick Muggler, Arshi Chadha, and Ridham Bhagat have headshots. Daniel Meyer and Adam Fry have no URL and no headshot yet (Q10, Q12).
+**Advisor card (INFERRED).** Each card shows a square photo (`object-fit: cover`, alt is the person's name) when a headshot was supplied, and otherwise initials in IBM Plex Mono at 42 px inside a 1:1 tile. Then the name as H3, the role line, the bio where supplied, and a LinkedIn link where a URL was supplied [MICHAEL 2026-10-02] (Q46 RESOLVED): Michael Chung, Patrick Muggler, Arshi Chadha, and Adam Fry have headshots. Daniel Meyer has no URL and no headshot yet; Adam Fry has no URL yet (Q10, Q12) [MICHAEL 2026-10-06].
 
 ### 3.6 Contact (`/contact`)
 
@@ -874,7 +874,10 @@ All panel images have status `concept` [ASSETS]. Captions follow the [BRIEF] sce
 | headshot | people/michael-chung.webp | Michael Chung | 440 by 440. [MICHAEL 2026-10-02] (Q46 RESOLVED) | /about, founder and advisor headshot. Source: Michael's OneDrive share, 2026-10-02 (`zz mix of hand drawn zzcodes/` and `zz logos, other assets/`) |
 | headshot | people/patrick-muggler.webp | Patrick Muggler | 300 by 300. [MICHAEL 2026-10-02] (Q46 RESOLVED) | /about, advisor headshot. Source: Michael's OneDrive share, 2026-10-02 (`zz mix of hand drawn zzcodes/` and `zz logos, other assets/`) |
 | headshot | people/arshi-chadha.webp | Arshi Chadha | 440 by 440. [MICHAEL 2026-10-02] (Q46 RESOLVED) | /about, advisor headshot. Source: Michael's OneDrive share, 2026-10-02 (`zz mix of hand drawn zzcodes/` and `zz logos, other assets/`) |
-| headshot | people/ridham-bhagat.webp | Ridham Bhagat | 440 by 440. [MICHAEL 2026-10-02] (Q46 RESOLVED) | /about, advisor headshot. Source: Michael's OneDrive share, 2026-10-02 (`zz mix of hand drawn zzcodes/` and `zz logos, other assets/`) |
+| headshot | people/adam-fry.webp | Adam Fry | 440 by 440. [MICHAEL 2026-10-06] | /about, advisor headshot. Source: Michael's 2026-10-06 change list |
+| removed | people/ridham-bhagat.webp | Ridham Bhagat | Removed from the site [MICHAEL 2026-10-06], approved by Danny 2026-10-07 | none |
+| image | applications/postage-three-letters.webp | Three envelopes with handwritten postage codes | 712 by 530. Concept. [MICHAEL 2026-10-06] | /applications, beside the super-identifier image |
+| logos | logos/zzthat-camelcase.webp, logos/zzthat-lowercase.webp | "zzThat" | 382 by 96 and 355 by 96; one variant shown at a time (camel case for now) [MICHAEL 2026-10-06] | /about, under zzthat.com |
 | logo | logos/hacker-dojo.webp | Hacker Dojo logo | About 96 px square on the page. [MICHAEL 2026-10-02] (Q45 RESOLVED) | /about Hacker Dojo. Source: Michael's OneDrive share, 2026-10-02 (`zz mix of hand drawn zzcodes/` and `zz logos, other assets/`) |
 | logos | logos/zzthis-logo-on-light.webp, …-on-dark.webp | "zzThis" | - | Header, swapped by theme |
 
@@ -1108,8 +1111,8 @@ package-lock.json
 6. The Home section order matches Section 3.1b (direction B v1.0). Field logistics and From photo to action remain the largest image bands on Home.
 7. Panel placement matches Section 3.8. j, k, and l render as an ordered list labeled 01 to 03.
 8. Concept labels follow Section 3.1a [MICHAEL 2026-10-02]: standalone panels carry "Concept illustration", each grouped gallery has one label above it, and the About prototype block has one. `/zzthis/demo` shows the "Demo · demo data" badge on every step, A0–A7 and B0–B4 [MICHAEL 2026-10-03 #54].
-9. The advisor list is Patrick Muggler, Arshi Chadha, Ridham Bhagat, Daniel Meyer, and Adam Fry [MICHAEL 2026-10-02]. Every page footer shows "Patent pending".
-10. Founder and advisor cards show a supplied headshot where one exists (Michael, Patrick, Arshi, Ridham) and initials otherwise [MICHAEL 2026-10-02] (Q46).
+9. The advisor list is Daniel Meyer, Adam Fry, Patrick Muggler, and Arshi Chadha [MICHAEL 2026-10-06]. Every page footer shows "Patent pending".
+10. Founder and advisor cards show a supplied headshot where one exists (Michael, Patrick, Arshi, Adam) and initials otherwise [MICHAEL 2026-10-06] (Q46).
 11. Flow A reaches A7 with the keyboard alone. A7 states that nothing was submitted.
 12. Flow B produces each outcome for the test inputs in Section 4.4.
 13. The demo makes no `getUserMedia`, `fetch`, or storage calls. A grep check runs in CI.

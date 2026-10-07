@@ -43,7 +43,7 @@ export const applications: readonly Application[] = [
     pageExtra:
       "Structured profiles and private dictionaries are B10 shadow exploration for v2 / Contract 2. If advanced, they would assign authorized, versioned meanings only after recognition and canonicalization; the camera reader does not decide them.",
     homeImages: ["j"],
-    pageImages: ["a", "alt-b", "c", "d", "e", "f", "j", "k", "l", "m", "n"],
+    pageImages: ["a", "c", "alt-b", "d", "e", "f", "j", "k", "l", "m", "n"],
     homeWideOnly: true,
   },
   {
@@ -53,15 +53,20 @@ export const applications: readonly Application[] = [
       "Exploration: postal/parcel integration is queued in B8 for v1.x; no carrier service is claimed.",
     story:
       "A future postal/parcel workflow could use a written reference and help prepare items before a parcel code is chosen.",
-    homeImages: ["g", "o"],
-    pageImages: ["g", "o"],
+    homeImages: ["o", "g"],
+    pageImages: ["o", "g"],
     homeWideOnly: false,
     pageGalleries: [
       {
+        // [MICHAEL 2026-10-06 change list] Same size as the two photos above,
+        // with the three-letter postage image added beside it.
         label: "standalone",
         columns: "2",
         frame: "268 / 200",
-        items: [{ image: "app-super-identifier" }],
+        items: [
+          { image: "app-super-identifier" },
+          { image: "app-postage-letters" },
+        ],
         closing: [
           "By appending a single 'super identifier' to legacy systems, we create a unified data node system to give current analog logistics the new digital-smart AI solutions and network. In the above, in theory, a FedEx overnight shipper can only put the zz-Code ID on the package and its deliverer in the fulfillment chain in anonymous, until the final touch with the receiver.",
         ],
@@ -202,6 +207,7 @@ export const applicationsHome = {
 
 export const applicationsPage = {
   title: "Applications",
+  // [MICHAEL 2026-10-06 change list] Lead with the kinds of use, then the AI principles.
   intro:
     "These are product directions, not a list of shipped v1 integrations: field/enterprise (B7), postal/parcel (B8), community/free uses (B9), AI-assisted inventory (B7), and agent/ledger/blockchain integrations (B16). AI may be an interface or connector, not the authority that defines or resolves a zz code.",
 };

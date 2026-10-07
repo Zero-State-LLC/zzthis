@@ -53,7 +53,7 @@ export const fieldLogistics = {
   heading: "Field logistics",
   intro:
     "Hand-mark mixed items at the point of work; link the mark to a record.",
-  images: ["a", "alt-b", "c"] satisfies ImageId[],
+  images: ["a", "c", "alt-b"] satisfies ImageId[],
   regionLabel: "Field logistics examples",
 };
 

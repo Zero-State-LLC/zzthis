@@ -71,7 +71,7 @@ Acceptance: `/contact`, the Home contact action, the About contact card, and the
 | FR-006 | No rendered em dash, with no exceptions. The hero H1 uses a spaced hyphen: "readable-writable - and smart." (Q47, Q62). | [MICHAEL 2026-10-02]; [DANNY 2026-10-03, revised: "Fix the em dashes"] |
 | FR-007 | No research target or unmeasured performance figures, and no claims of pilots, customers, endorsement, or adoption, appear on any page. | [MICHAEL 2026-10-02] [PRODUCT] |
 | FR-008 | Standalone AI-render panels carry "Concept illustration". Each grouped gallery carries one label above its panels. Captions name the workflow. | [MICHAEL 2026-10-02] |
-| FR-009 | Founder and advisor cards show a supplied headshot where one exists (Michael, Patrick, Arshi, Ridham) and initials otherwise (Q46). No LinkedIn scraping. | [MICHAEL 2026-10-02] [WIRE] |
+| FR-009 | Founder and advisor cards show a supplied headshot where one exists (Michael, Patrick, Arshi, Adam) and initials otherwise (Q46). No LinkedIn scraping. Ridham Bhagat removed from the site (Danny approved 2026-10-07). | [MICHAEL 2026-10-06] [WIRE] |
 | FR-010 | `/technology` is not built and nothing links to it until it has Michael's draft explanation plus a supporting example. | [MICHAEL 2026-10-02] |
 | FR-011 | The demo is scripted: no recognition, no backend, no camera, microphone, network calls, or storage. Every step shows "Demo · demo data". User-facing labels say demo instead of mock. | [OPERATOR 2026-10-01]; override [MICHAEL 2026-10-03 #54] [DANNY 2026-10-04] |
 | FR-012 | The demo is fully usable by keyboard. Drag is never required. Reduced motion removes transitions. Without JavaScript, a static list of steps appears. | INFERRED (`docs/SPEC.md` Section 4.5) |
@@ -80,7 +80,7 @@ Acceptance: `/contact`, the Home contact action, the About contact card, and the
 | FR-020 | The Home console uses the v1 grammar in `src/lib/grammar.ts` (T029) and `src/lib/resolver.ts`, against the existing mock records. A miss never suggests another code (FR-013). A letter outside A–Z shows the H.1c coming-later note, not an error, even when the grammar would report `unsupported-script`. Camera and voice on Home are simulated and do not call `getUserMedia`, the network, or storage. | [DANNY 2026-10-03]; issue #12 |
 | FR-021 | Header, footer, theme toggle, and color and type tokens use the direction B system on every page. How it works, `/demo`, `/contact`, and the 404 keep their current content. | [JEV 2026-10-03] |
 | FR-015 | Light and dark themes both meet text contrast of at least 4.5:1. | `docs/SPEC.md` Section 8, item 16 |
-| FR-016 | When the free zzThat app launches, the main navigation gains a prominent "Try zzThat" action that links to zzthat.com. | [MICHAEL 2026-10-02]; launch trigger OPEN (Q39) |
+| FR-016 | At the first public release on both iOS and Android stores, the main navigation gains a prominent "Try zzThat" action linking to the zzThat section of the marketing page with both store badges and the web-client link. | Q39 RESOLVED [DELEGATED 2026-10-04, #74] |
 | FR-017 | Site copy (text, headings, captions, titles) writes every zz code in lowercase and never writes a standalone capital "ZZ". Photos and renders may show a capital ZZ mark or uppercase letters inside a code; alt text describes them in words or quotes the code as shown. | [MICHAEL 2026-10-02] |
 | FR-018 | After T029, Flow B parses input with the v1 grammar (`docs/SPEC.md` Section 2.2a) and maps each result to B1, B3, B4, or the new B5 bare-mark state, using the lines in `docs/SPEC.md` Section 4.4. It still never reveals other codes (FR-013). | [MICHAEL 2026-10-02 #33] [MICHAEL 2026-10-02 #34]; wording INFERRED |
 | FR-019 | Images we generate follow the Q48 display rule: no capital-letter zz mark, on its own or in a code; AI renders that break it are regenerated. Real photos are never AI-edited and keep what they show; the three real photos with a capital-letter zz stay. | [MICHAEL 2026-10-02 #33]; [MICHAEL 2026-10-03 #39] (Q53) |
@@ -111,7 +111,7 @@ Real recognition, a real resolver, accounts, forms or email backends, analytics,
 | ID | Question | Default |
 |---|---|---|
 | Q10 (part) | Daniel Meyer's profile URL and project accomplishments | Role and bio only |
-| Q12 (part) | Adam Fry's profile URL and photo | Specialty and bio supplied [MICHAEL 2026-10-02] |
+| Q12 (part) | Adam Fry's profile URL | Specialty, bio, and photo supplied [MICHAEL 2026-10-06] |
 | Q20 | Flow B behavior on a miss | PARTLY RESOLVED: context dependent [MICHAEL 2026-10-02]; the public demo stays "No match" (FR-013). Policy details: Q40 |
 | Q39 | What event or date counts as the zzThat app launch for FR-016? | None chosen |
 | Q21 | Which handling verbs does the demo show? The brief lists pack, ship, return, repair, and dispose [BRIEF]; the 2026-10-02 wireframe shows Pack, Ship, Turn In, Dispose; the demo uses Pack, Return, Repair, Dispose (OBSERVED). | Keep the demo as built |

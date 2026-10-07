@@ -15,6 +15,21 @@ export const appImages = {
     status: "concept",
     sourceTag: "MICHAEL",
   },
+  "app-postage-letters": {
+    id: "app-postage-letters",
+    src: "images/applications/postage-three-letters.webp",
+    width: 712,
+    height: 530,
+    title: "Handwritten postage codes",
+    shortCopy: "Handwritten postage codes",
+    alt: "Three envelopes. One shows a long code, PAC-987-654-3210-RSR. One has zz-USPS-123456789-UK in the stamp area. One has zz-hat-more-921 handwritten above the address.",
+    caption:
+      "Three letters, three ways a zz-code could serve as postage (concept).",
+    focal: { x: 0.5, y: 0.5 },
+    destination: ["applications"],
+    status: "concept",
+    sourceTag: "MICHAEL",
+  },
   "app-delivery-overview": {
     id: "app-delivery-overview",
     src: "images/applications/delivery-overview.webp",

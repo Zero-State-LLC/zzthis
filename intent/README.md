@@ -2,7 +2,9 @@
 
 **Kind:** process. Not a specification. Not implementation authority.
 
-Non-trivial features start here. Copy [`_TEMPLATE.md`](_TEMPLATE.md) to a
+Substantive incoming product ideas are triaged first with [`_PRODUCT-INPUT-TEMPLATE.md`](_PRODUCT-INPUT-TEMPLATE.md) under `specs/SCOPE-GOVERNANCE.md`. Only an ASSIMILATE item inside an ACTIVE bundle, or a newly promoted bundle, proceeds to feature intent.
+
+Non-trivial authorized features start here. Copy [`_TEMPLATE.md`](_TEMPLATE.md) to a
 dated file (`YYYY-MM-DD-short-slug.md`). Fill every section. Label claims
 `[verified: …]` or `[assumed: …]`.
 

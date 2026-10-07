@@ -18,9 +18,11 @@ export interface Origin {
   text: string;
 }
 
+// [MICHAEL 2026-10-03 v1.0 change list] The founder title and bio supersede the Q43 lines.
+// [MICHAEL 2026-10-06 change list] The last two sentences of the bio replaced as given.
 export const founderOrigin: Origin = {
   heading: "Founder origin",
-  text: "I “invent” business models. If you've ever paid at the DMV with a card or used Gmail's inbox tabs, thank me. ;) In 1992–93, I pitched New York City and initiated a pilot for possibly the world's first electronic card payments by the municipal agencies for motor-vehicle fines and fees. In 1995, the NYC DMV began accepting cards, and in 1996, the first E-ZPass tolling began in New York State. In 2002, my patent application was published for sorting tagged emails into their dedicated tabs (Priority, Ads, Bills, etc.) and was cited by 158 patent applications, majority by leading tech and Fortune companies. Gmail did their tabs in 2013. My business experience includes 25 years in real estate, including federal GSA RFPs (I was awarded two office space lease-contracts, one an over $9 million 10-year fixed), and other small businesses: eateries, supermarkets, merchant credit cards, finance, and direct marketing. For the past 13 years I've been in Silicon Valley's tech startup space, with 10+ years in and around blockchain and the last 3+ years in AI. A driver of my business models is the discovery and the purposeful enabling unity of the deterministic blockchain with the probabilistic AI to target today's great problematic gaps and solve to the emerging next-phase civilizational opportunities.",
+  text: "I “invent” business models. If you've ever paid at the DMV with a card or used Gmail's inbox tabs, thank me. ;) In 1992–93, I pitched New York City and initiated a pilot for possibly the world's first electronic card payments by the municipal agencies for motor-vehicle fines and fees. In 1995, the NYC DMV began accepting cards, and in 1996, the first E-ZPass tolling began in New York State. In 2002, my patent application was published for sorting tagged emails into their dedicated tabs (Priority, Ads, Bills, etc.) and was cited by 158 patent applications, majority by leading tech and Fortune companies. Gmail did their tabs in 2013. My business experience includes 25 years in real estate, including federal GSA RFPs (I was awarded two office space lease-contracts, one an over $9 million 10-year fixed), and other small businesses: eateries, supermarkets, merchant credit cards, finance, and direct marketing. For the past 13 years I've been in Silicon Valley's tech startup space full time: since 2013 in and around blockchain, and since 2023 in AI, averaging 10 to 20 prompts a day across 2 to 5 AIs. A driver of my business models is the discovery and purposeful enabling of the unity of deterministic blockchain with probabilistic AI, to target today's great problematic gaps and to solve for the emerging next-phase civilizational opportunities.",
 };
 
 export const founder: Founder = {
@@ -33,8 +35,15 @@ export const founder: Founder = {
 };
 
 // 2026-10-06 website reconciliation: Michael's advisor roster/order is adopted
-// where source data is complete. Adam's requested replacement headshot/bio remain
-// deferred until the exact approved asset/copy is available; do not invent them.
+// while the approved Adam headshot and bio now present on main are retained.
+// Q6, Q10, Q12, Q16, Q46 [MICHAEL 2026-10-02]: headshots where supplied.
+// Daniel Meyer keeps initials. [MICHAEL 2026-10-06 change list] Daniel and
+// Adam move to the first two places; Adam's photo and bio are updated.
+// Ridham Bhagat is removed from the site.
+// Earlier: Profile links only where a URL
+// was supplied. The 2026-10-02 brief and wireframes drop the Future space
+// card. Michael's later 2026-10-02 answers remove Jim White and update
+// Ridham and Adam.
 export const advisors: readonly Person[] = [
   {
     name: "Daniel Meyer",
@@ -45,8 +54,13 @@ export const advisors: readonly Person[] = [
   {
     name: "Adam Fry",
     initials: "AF",
+    photo: {
+      src: "images/people/adam-fry.webp",
+      width: 440,
+      height: 440,
+    },
     role: "AI agents, infrastructure and deployment",
-    bio: "Adam Fry will contribute AI-agent, infrastructure, and deployment expertise based on more than 20 years supporting mission-critical hospital, government, and enterprise systems and developing local AI-agent systems focused on data ownership, auditability, verification, and reliability.",
+    bio: "Adam Fry has AI-agent, infrastructure, and deployment expertise based on more than 20 years supporting mission-critical hospital, government, and enterprise systems and developing local AI-agent systems focused on data ownership, auditability, verification, and reliability.",
   },
   {
     name: "Patrick Muggler",

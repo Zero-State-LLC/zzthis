@@ -7,7 +7,7 @@ Checked 2026-10-04. Capture is not built.
 - [x] Spec has a `## Workflows` section.
 - [x] Camera, typing, and voice are named. Voice is out of the first zzThat release (their ZQ10).
 - [x] Decision bands and the human confirm step are stated.
-- [x] Q18 and Q37 stay open.
+- [x] Q18 is resolved to on-device/no-cloud v1 and refined by the fiducial-first qualification work. Q37 prototype thresholds are parameters; final release thresholds are evidence-gated by ZZ-OCR-QUAL-001.
 - [ ] No recognizer is implemented.
 
 ## Consistency
