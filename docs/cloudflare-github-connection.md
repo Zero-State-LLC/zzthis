@@ -1,6 +1,6 @@
 # Cloudflare connection through GitHub Actions
 
-Bundle: B4. This documents the GitHub Actions deployment path; Cloudflare MCP/OAuth is also connected for read-only inventory and authorized resource operations.
+Bundle: B4. This documents the GitHub Actions deployment path.
 
 ## Current scope
 
