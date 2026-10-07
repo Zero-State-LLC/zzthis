@@ -59,8 +59,13 @@ npm run typecheck   # astro check and tsc --noEmit
 npm run test        # Vitest; root coverage gates src/lib and demoMachine.ts; zz-core, web, and API workspaces gate their configured src/**/*.ts scopes
 npm run build       # build to dist/ and run scripts/check-dist.mjs
 npm run preview     # serve dist/ locally
-npm run dev:api     # start the local /v1 API Worker that the web client calls
-npm run e2e -w apps/web   # Playwright end-to-end tests against that local Worker
+```
+
+The end-to-end workflow starts its own fresh API Worker. Do not start `npm run dev:api` before running it; that command is for manual API development.
+
+```sh
+npx playwright install chromium
+npm run e2e -w apps/web
 ```
 
 ### Base path
