@@ -10,6 +10,8 @@ These rules make the qualification harness deterministic. They do not set releas
 4. A predicted pair is correct only when its matched opening and closing endpoints share the same ground-truth pair_id. Otherwise it is a false pair.
 5. Multi-code images are scored per ground-truth pair. Every `ground_truth_codes` entry is keyed by `pair_id` and carries the literal payload used for CER/part scoring plus the canonical code when valid. Merging two codes into one ROI is not correct.
 
+The reusable implementation primitive in `scripts/ocr-qualification-matching.mjs` computes normalized rectangle IoU and role-constrained maximum-weight one-to-one fiducial assignment. It does not itself score samples, infer pair IDs, compute release gates, or establish qualification completeness. Its tests cover greedy-assignment counterexamples, threshold boundaries, role mismatches, and invalid normalized geometry.
+
 ## ROI and rectification
 
 Where ROI ground truth exists, report polygon localization IoU/error before rectification and rectification success separately from payload OCR errors. Match predicted and ground-truth ROIs by fiducial `pair_id`; assignments are one-to-one. If a manifest case requires ROI truth and it is absent, the manifest is invalid. If a prediction or metric is unavailable, record the explicit null/not-measured reason; do not silently omit the metric.
