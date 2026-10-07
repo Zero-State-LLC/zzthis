@@ -100,7 +100,7 @@ export const advisors: readonly Person[] = [
       width: 400,
       height: 400,
     },
-    role: "Data science and evaluation",
+    role: "Data scientist and computational social scientist",
     profileUrl: "https://www.linkedin.com/in/ofyalcin/",
     bio: "Omer is a data scientist and computational social scientist with a Ph.D. in Political Science and Social Data Analytics and more than 8 years of experience in Python, R, and SQL, spanning machine learning, NLP, causal inference, and network analysis. He teaches graduate courses in data science, machine learning, and statistics at UMass Amherst, and his research has appeared in ICWSM, EMNLP Findings, and the Journal of Quantitative Description. He advises zzThis on data analysis, model evaluation, and test design.",
   },
