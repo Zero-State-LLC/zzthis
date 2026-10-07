@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import {
   matchFiducials,
   normalizedBoxIoU,
+  scoreFiducialPairs,
 } from "../scripts/ocr-qualification-matching.mjs";
 
 const box = (x: number, width = 0.2) => ({
@@ -71,5 +72,94 @@ describe("OCR qualification fiducial matching", () => {
     expect(() => normalizedBoxIoU(box(0.9, 0.2), box(0.1))).toThrow(
       "invalid_normalized_box",
     );
+  });
+
+  it("rejects crossed pairing even when every endpoint individually matches", () => {
+    const predictions = [
+      { ...fiducial("opening", 0.1), pair_id: "pred-cross" },
+      { ...fiducial("closing", 0.7), pair_id: "pred-cross" },
+      { ...fiducial("opening", 0.1), pair_id: "pred-cross-2" },
+      { ...fiducial("closing", 0.7), pair_id: "pred-cross-2" },
+    ];
+    const truths = [
+      { ...fiducial("opening", 0.1), pair_id: "truth-a" },
+      { ...fiducial("closing", 0.7), pair_id: "truth-a" },
+      { ...fiducial("opening", 0.1), pair_id: "truth-b" },
+      { ...fiducial("closing", 0.7), pair_id: "truth-b" },
+    ];
+    const result = scoreFiducialPairs(predictions, truths, [
+      { prediction_index: 0, truth_index: 0 },
+      { prediction_index: 1, truth_index: 3 },
+      { prediction_index: 2, truth_index: 2 },
+      { prediction_index: 3, truth_index: 1 },
+    ]);
+
+    expect(result.correct_pairs).toEqual([]);
+    expect(result.false_pairs).toEqual([
+      {
+        predicted_pair_id: "pred-cross",
+        prediction_indices: [0, 1],
+        matched_truth_pair_ids: ["truth-a", "truth-b"],
+      },
+      {
+        predicted_pair_id: "pred-cross-2",
+        prediction_indices: [2, 3],
+        matched_truth_pair_ids: ["truth-b", "truth-a"],
+      },
+    ]);
+    expect(result.complete_truth_pair_ids).toEqual(["truth-a", "truth-b"]);
+    expect(result.detected_complete_truth_pair_ids).toEqual([
+      "truth-a",
+      "truth-b",
+    ]);
+    expect(result.missed_truth_pair_ids).toEqual([]);
+    expect(result.correctly_linked_truth_pair_ids).toEqual([]);
+  });
+
+  it("does not count endpoint detection as a correctly linked pair", () => {
+    const predictions = [
+      { ...fiducial("opening", 0.1), pair_id: "pred-open" },
+      { ...fiducial("closing", 0.7), pair_id: "pred-close" },
+    ];
+    const truths = [
+      { ...fiducial("opening", 0.1), pair_id: "truth-a" },
+      { ...fiducial("closing", 0.7), pair_id: "truth-a" },
+    ];
+    const result = scoreFiducialPairs(predictions, truths, [
+      { prediction_index: 0, truth_index: 0 },
+      { prediction_index: 1, truth_index: 1 },
+    ]);
+    expect(result.detected_complete_truth_pair_ids).toEqual(["truth-a"]);
+    expect(result.correctly_linked_truth_pair_ids).toEqual([]);
+    expect(result.false_pairs).toEqual([
+      {
+        predicted_pair_id: "pred-open",
+        prediction_indices: [0],
+        matched_truth_pair_ids: ["truth-a"],
+      },
+      {
+        predicted_pair_id: "pred-close",
+        prediction_indices: [1],
+        matched_truth_pair_ids: ["truth-a"],
+      },
+    ]);
+  });
+
+  it("rejects duplicate match assignments and duplicate truth endpoints", () => {
+    const predictions = [{ ...fiducial("opening", 0.1), pair_id: "p" }];
+    const truths = [{ ...fiducial("opening", 0.1), pair_id: "t" }];
+    expect(() =>
+      scoreFiducialPairs(predictions, truths, [
+        { prediction_index: 0, truth_index: 0 },
+        { prediction_index: 0, truth_index: 0 },
+      ]),
+    ).toThrow("invalid_fiducial_match_assignment");
+    expect(() =>
+      scoreFiducialPairs(
+        predictions,
+        [truths[0]!, truths[0]!],
+        [{ prediction_index: 0, truth_index: 0 }],
+      ),
+    ).toThrow("duplicate_truth_pair_endpoint");
   });
 });

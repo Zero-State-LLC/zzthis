@@ -153,3 +153,126 @@ export function matchFiducials(predictions, truths, threshold) {
       .filter((index) => !matchedTruths.has(index)),
   };
 }
+
+/**
+ * Reconcile endpoint matches with predicted pair IDs without using payload text.
+ * A predicted pair is correct only if exactly one opening and closing endpoint
+ * both matched to the same ground-truth pair.
+ */
+export function scoreFiducialPairs(predictions, truths, matches) {
+  if (!Array.isArray(predictions) || !Array.isArray(truths) || !Array.isArray(matches)) {
+    throw new TypeError("fiducial_pair_inputs_required");
+  }
+
+  const predictionToTruth = new Map();
+  const truthToPrediction = new Map();
+  for (const match of matches) {
+    const { prediction_index: predictionIndex, truth_index: truthIndex } = match;
+    if (
+      !Number.isInteger(predictionIndex) ||
+      predictionIndex < 0 ||
+      predictionIndex >= predictions.length ||
+      !Number.isInteger(truthIndex) ||
+      truthIndex < 0 ||
+      truthIndex >= truths.length ||
+      predictionToTruth.has(predictionIndex) ||
+      truthToPrediction.has(truthIndex)
+    ) {
+      throw new TypeError("invalid_fiducial_match_assignment");
+    }
+    predictionToTruth.set(predictionIndex, truthIndex);
+    truthToPrediction.set(truthIndex, predictionIndex);
+  }
+
+  const truthPairs = new Map();
+  for (const [index, truth] of truths.entries()) {
+    if (typeof truth.pair_id !== "string" || truth.pair_id.length === 0) {
+      throw new TypeError(`invalid_truth_pair_id:${index}`);
+    }
+    const pair = truthPairs.get(truth.pair_id) ?? {};
+    if (pair[truth.role] !== undefined) {
+      throw new TypeError(`duplicate_truth_pair_endpoint:${truth.pair_id}:${truth.role}`);
+    }
+    pair[truth.role] = index;
+    truthPairs.set(truth.pair_id, pair);
+  }
+
+  const predictedPairs = new Map();
+  for (const [index, prediction] of predictions.entries()) {
+    if (prediction.pair_id === null || prediction.pair_id === undefined) continue;
+    if (typeof prediction.pair_id !== "string" || prediction.pair_id.length === 0) {
+      throw new TypeError(`invalid_prediction_pair_id:${index}`);
+    }
+    const pair = predictedPairs.get(prediction.pair_id) ?? {
+      opening: [],
+      closing: [],
+    };
+    if (!Array.isArray(pair[prediction.role])) {
+      throw new TypeError(`invalid_prediction_role:${index}`);
+    }
+    pair[prediction.role].push(index);
+    predictedPairs.set(prediction.pair_id, pair);
+  }
+
+  const correctPairs = [];
+  const falsePairs = [];
+  for (const [predictedPairId, pair] of predictedPairs) {
+    const openingIndex = pair.opening.length === 1 ? pair.opening[0] : null;
+    const closingIndex = pair.closing.length === 1 ? pair.closing[0] : null;
+    const openingTruthIndex = openingIndex === null
+      ? undefined
+      : predictionToTruth.get(openingIndex);
+    const closingTruthIndex = closingIndex === null
+      ? undefined
+      : predictionToTruth.get(closingIndex);
+    const openingTruth = openingTruthIndex === undefined
+      ? undefined
+      : truths[openingTruthIndex];
+    const closingTruth = closingTruthIndex === undefined
+      ? undefined
+      : truths[closingTruthIndex];
+    const correct =
+      openingTruth?.role === "opening" &&
+      closingTruth?.role === "closing" &&
+      openingTruth.pair_id === closingTruth.pair_id;
+
+    if (correct) {
+      correctPairs.push({
+        predicted_pair_id: predictedPairId,
+        truth_pair_id: openingTruth.pair_id,
+        opening_prediction_index: openingIndex,
+        closing_prediction_index: closingIndex,
+      });
+    } else {
+      falsePairs.push({
+        predicted_pair_id: predictedPairId,
+        prediction_indices: [...pair.opening, ...pair.closing],
+        matched_truth_pair_ids: [openingTruth?.pair_id, closingTruth?.pair_id]
+          .filter((pairId) => pairId !== undefined),
+      });
+    }
+  }
+
+  const completeTruthPairIds = [...truthPairs]
+    .filter(([, pair]) => pair.opening !== undefined && pair.closing !== undefined)
+    .map(([pairId]) => pairId)
+    .sort();
+  const detectedCompleteTruthPairIds = completeTruthPairIds.filter((pairId) => {
+    const pair = truthPairs.get(pairId);
+    return truthToPrediction.has(pair.opening) && truthToPrediction.has(pair.closing);
+  });
+  const correctlyLinkedTruthPairIds = correctPairs
+    .map((pair) => pair.truth_pair_id)
+    .sort();
+
+  return {
+    correct_pairs: correctPairs,
+    false_pairs: falsePairs,
+    complete_truth_pair_ids: completeTruthPairIds,
+    detected_complete_truth_pair_ids: detectedCompleteTruthPairIds,
+    missed_truth_pair_ids: completeTruthPairIds.filter(
+      (pairId) => !detectedCompleteTruthPairIds.includes(pairId),
+    ),
+    correctly_linked_truth_pair_ids: correctlyLinkedTruthPairIds,
+  };
+}
