@@ -2,15 +2,20 @@
   "schema_version": 1,
   "qualification_id": "ZZ-OCR-QUAL-001",
   "manifest_sha256": "a4de21e6a6c7ec8d5bbfbeac428f1e54403ee2e0667b9dd904d0e3d9a3e154b9",
+  "candidate_id": "synthetic-fixture-ios-001",
+  "candidate_bundle_sha256": "e15f2d43e240da58c6a03743fc563f43ac355a448c81685a995e8b0fff502c5b",
   "adapter": {
-    "commit": "fixture-0000000",
+    "commit": "1111111111111111111111111111111111111111",
     "platform": "ios",
     "os_version": "fixture",
     "device_class": "fixture",
-    "engine_id": "fixture-engine",
-    "engine_version": "1.0.0",
-    "config_sha256": "0000000000000000000000000000000000000000000000000000000000000000",
-    "preprocessing_sha256": "0000000000000000000000000000000000000000000000000000000000000000"
+    "engine_id": "synthetic-fixture",
+    "engine_version": "0.0.0-fixture",
+    "artifact_sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+    "config_sha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+    "preprocessing_sha256": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+    "confidence_mapping_sha256": "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+    "device_matrix_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
   },
   "results": [
     {

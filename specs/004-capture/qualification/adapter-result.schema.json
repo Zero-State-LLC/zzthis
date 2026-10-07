@@ -8,6 +8,8 @@
     "schema_version",
     "qualification_id",
     "manifest_sha256",
+    "candidate_id",
+    "candidate_bundle_sha256",
     "adapter",
     "results"
   ],
@@ -15,6 +17,8 @@
     "schema_version": { "const": 1 },
     "qualification_id": { "const": "ZZ-OCR-QUAL-001" },
     "manifest_sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+    "candidate_id": { "type": "string", "minLength": 1 },
+    "candidate_bundle_sha256": { "$ref": "#/$defs/sha256" },
     "adapter": {
       "type": "object",
       "additionalProperties": false,
@@ -25,8 +29,11 @@
         "device_class",
         "engine_id",
         "engine_version",
+        "artifact_sha256",
         "config_sha256",
-        "preprocessing_sha256"
+        "preprocessing_sha256",
+        "confidence_mapping_sha256",
+        "device_matrix_sha256"
       ],
       "properties": {
         "commit": { "type": "string", "pattern": "^[a-f0-9]{40}$" },
@@ -35,11 +42,14 @@
         "device_class": { "type": "string", "minLength": 1 },
         "engine_id": { "type": "string", "minLength": 1 },
         "engine_version": { "type": "string", "minLength": 1 },
+        "artifact_sha256": { "$ref": "#/$defs/sha256" },
         "config_sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
         "preprocessing_sha256": {
           "type": "string",
           "pattern": "^[a-f0-9]{64}$"
-        }
+        },
+        "confidence_mapping_sha256": { "$ref": "#/$defs/sha256" },
+        "device_matrix_sha256": { "$ref": "#/$defs/sha256" }
       }
     },
     "results": {
@@ -49,6 +59,7 @@
     }
   },
   "$defs": {
+    "sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
     "point": {
       "type": "object",
       "additionalProperties": false,
