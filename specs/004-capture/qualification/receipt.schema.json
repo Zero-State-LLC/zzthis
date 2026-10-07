@@ -112,24 +112,63 @@
       "additionalProperties": false,
       "required": [
         "frozen_at_utc",
-        "final_split_manifest_sha256",
-        "config_sha256",
+        "corpus_manifest_sha256",
+        "gate_config_sha256",
         "required_buckets",
         "thresholds",
         "gate_results"
       ],
       "properties": {
         "frozen_at_utc": { "type": "string", "format": "date-time" },
-        "final_split_manifest_sha256": {
+        "corpus_manifest_sha256": {
           "type": "string",
           "pattern": "^[a-f0-9]{64}$"
         },
-        "config_sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+        "gate_config_sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
         "required_buckets": {
           "type": "array",
-          "minItems": 1,
-          "uniqueItems": true,
-          "items": { "type": "string", "minLength": 1 }
+          "minItems": 23,
+          "maxItems": 23,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "bucket_id",
+              "minimum_sample_count",
+              "observed_sample_count"
+            ],
+            "properties": {
+              "bucket_id": {
+                "enum": [
+                  "handwriting",
+                  "print",
+                  "low-contrast",
+                  "glare",
+                  "blur",
+                  "motion-blur",
+                  "perspective",
+                  "rotation",
+                  "distance",
+                  "wrapped",
+                  "multi-code",
+                  "partial-fiducial",
+                  "false-zz",
+                  "ambiguous-pairing",
+                  "unequal-fiducial-size",
+                  "curved-surface",
+                  "running-text",
+                  "confusable-character",
+                  "near-word",
+                  "invalid-reserved-character",
+                  "no-code",
+                  "handle",
+                  "field-code-part"
+                ]
+              },
+              "minimum_sample_count": { "type": "integer", "minimum": 1 },
+              "observed_sample_count": { "type": "integer", "minimum": 0 }
+            }
+          }
         },
         "thresholds": {
           "type": "object",

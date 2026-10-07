@@ -163,6 +163,7 @@
       "additionalProperties": false,
       "required": [
         "sample_id",
+        "split",
         "input_image_sha256",
         "elapsed_ms",
         "fiducials",
@@ -174,6 +175,7 @@
       ],
       "properties": {
         "sample_id": { "type": "string", "pattern": "^[A-Za-z0-9._-]+$" },
+        "split": { "enum": ["tuning", "final"] },
         "input_image_sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
         "elapsed_ms": { "type": "number", "minimum": 0 },
         "fiducials": {

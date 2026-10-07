@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "qualification_id": "ZZ-OCR-QUAL-001",
-  "manifest_sha256": "4ea5c9a931fe41cdc6469c5cc93328553fc4a2633df22f3ee44d85c349f8b318",
+  "manifest_sha256": "a4de21e6a6c7ec8d5bbfbeac428f1e54403ee2e0667b9dd904d0e3d9a3e154b9",
   "adapter": {
     "commit": "fixture-0000000",
     "platform": "ios",
@@ -15,6 +15,7 @@
   "results": [
     {
       "sample_id": "synthetic-one-code",
+      "split": "tuning",
       "input_image_sha256": "0000000000000000000000000000000000000000000000000000000000000000",
       "elapsed_ms": 12.5,
       "fiducials": [
@@ -68,6 +69,7 @@
     },
     {
       "sample_id": "synthetic-missing-close",
+      "split": "final",
       "input_image_sha256": "1111111111111111111111111111111111111111111111111111111111111111",
       "elapsed_ms": 8,
       "fiducials": [

@@ -2,7 +2,7 @@
 
 Status: normative qualification protocol. No engine is promoted by this document alone.
 Parent: [spec 004](spec.md) · [plan](plan.md) · [tasks](tasks.md)
-Machine contracts: [manifest schema](qualification/manifest.schema.json) · [adapter-result schema](qualification/adapter-result.schema.json) · [receipt schema](qualification/receipt.schema.json) · [scoring rules](qualification/scoring.md) · [fixture manifest](qualification/fixture-manifest.json) · [fixture adapter results](qualification/fixture-adapter-results.json)
+Machine contracts: [corpus manifest schema](qualification/manifest.schema.json) · [adapter-result schema](qualification/adapter-result.schema.json) · [frozen gate-config schema](qualification/gate-config.schema.json) · [receipt schema](qualification/receipt.schema.json) · [scoring rules](qualification/scoring.md) · [fixture manifest](qualification/fixture-manifest.json) · [fixture adapter results](qualification/fixture-adapter-results.json) · [fixture gate config](qualification/fixture-gate-config.json)
 
 ## Purpose
 
@@ -16,19 +16,20 @@ The recognizer may emit text, confidence when meaningful, geometry, and provenan
 
 The qualification corpus is private. The repository stores only a manifest schema, synthetic/non-sensitive fixtures, aggregate results, and hashes needed for reproducibility. Raw private photographs never enter Git, pull-request attachments, Actions artifacts, logs, crash reports, analytics, or model-training sets.
 
-Each sample is validated by `qualification/manifest.schema.json`. Each sample has:
+One corpus manifest contains both tuning and final samples. Each sample is validated by `qualification/manifest.schema.json` and identifies its split. This whole-corpus form lets the validator check writer isolation across both splits before accepting final results. Each sample has:
 
 | Field | Rule |
 |---|---|
 | sample_id | Opaque stable identifier with no person name |
+| split | `tuning` or `final`; the corpus manifest contains both values |
 | asset_sha256 | Hash of the exact image bytes |
 | consent_class | team-made, synthetic, or separately-approved |
 | writer_group | Pseudonymous writer group used for split isolation |
 | device_class | Device/camera class, not a personal device identifier |
-| ground_truth | Expected literal/canonical result kept with the private corpus |
+| ground_truth_codes | Per-candidate `pair_id`, literal payload without boundary markers, canonical code when valid, and kind; partial/invalid candidates retain literal text with a null canonical code |
 | case_kind | valid-word, field, handle, partial, bare, invalid, multi-code, or no-code |
 | stress_tags | Zero or more controlled stress buckets |
-| fiducial_truth | Expected opening/closing endpoint boxes or `none`; pair membership for multi-code images |
+| fiducials | Expected opening/closing endpoint boxes or `none`; pair membership for multi-code images |
 | roi_truth | Expected payload ROI polygon for each complete visual code, keyed by the ground-truth fiducial `pair_id`; required for complete visual cases |
 | expected_band_constraints | Allowed product states when the sample is intentionally ambiguous |
 | notes | Non-identifying qualification notes only |
@@ -36,18 +37,19 @@ Each sample is validated by `qualification/manifest.schema.json`. Each sample ha
 ### Split rules
 
 1. Split by writer group, not by image, so one writer cannot leak into both tuning and final qualification.
-2. Freeze the final qualification split before comparing candidate engines.
-3. Do not tune thresholds, preprocessing, prompts, or decoder rules on the final split.
-4. Any post-freeze change to an adapter, model/version, preprocessing, decoder, wordlist, check-word implementation, or band mapping invalidates that engine receipt and requires a new run.
-5. Synthetic images can broaden stress coverage but cannot be the only evidence for handwriting promotion.
+2. Freeze the whole corpus manifest and its hash before comparing candidate engines.
+3. Freeze a separate gate-config file, bound to that exact manifest hash, before evaluating the final split. It sets minimum sample counts for each split, minimum counts for each canonical required stress bucket, and numeric release thresholds. Its bytes and timestamp are recorded in the receipt.
+4. Do not tune thresholds, preprocessing, prompts, or decoder rules on the final split.
+5. Any post-freeze change to the manifest, gate config, adapter, model/version, preprocessing, decoder, wordlist, check-word implementation, or band mapping invalidates that engine receipt and requires a new run.
+6. Synthetic images can broaden stress coverage but cannot be the only evidence for handwriting promotion.
 
 ## Stress matrix
 
-The final set covers terminal-fiducial localization and pairing plus ordinary handwriting and print, low contrast, glare, blur, motion blur, perspective, rotation, distance, two-line/wrapped codes, multiple codes, partial/occluded fiducials, false `zz` marks in surrounding text, ambiguous endpoint pairing, unequal endpoint size, curved/wrapped surfaces, running text, confusable characters, near-word cases, invalid/reserved characters, no-code images, handles, and field-code parts. Record bucket counts in the receipt. A missing required bucket makes the run incomplete, not passing.
+The final set covers terminal-fiducial localization and pairing plus ordinary handwriting and print, low contrast, glare, blur, motion blur, perspective, rotation, distance, two-line/wrapped codes, multiple codes, partial/occluded fiducials, false `zz` marks in surrounding text, ambiguous endpoint pairing, unequal endpoint size, curved/wrapped surfaces, running text, confusable characters, near-word cases, invalid/reserved characters, no-code images, handles, and field-code parts. `manifest.schema.json` defines canonical stress tags; `clean` and `single-code` are descriptive coverage tags, not stress requirements. `gate-config.schema.json` requires every canonical stress bucket and freezes a positive minimum sample count for each before the final split; the receipt records each minimum and observed count. A missing or under-count bucket makes the run incomplete, not passing.
 
 ## Adapter input and output
 
-Input is one still image plus immutable adapter configuration. Camera qualification measures two separable stages: (A) terminal-`zz` fiducial detection/pairing and ROI localization/rectification, then (B) payload recognition and shared decoding. Native platform types are serialized at the harness boundary using [adapter-result.schema.json](qualification/adapter-result.schema.json); [fixture-adapter-results.json](qualification/fixture-adapter-results.json) demonstrates the wire shape. Each result binds to `sample_id` and the manifest's image hash. The manifest hash must match exactly, and the result set must contain each manifest sample exactly once; missing, duplicate, extra, or hash-mismatched results make the run INCOMPLETE. Coordinates are normalized to the original image after orientation normalization, with origin at top-left. The adapter emits evidence only; product state and decoded codes are outputs of the shared local decoder, not adapter-owned policy.
+Input is one still image plus immutable adapter configuration. Camera qualification measures two separable stages: (A) terminal-`zz` fiducial detection/pairing and ROI localization/rectification, then (B) payload recognition and shared decoding. Native platform types are serialized at the harness boundary using [adapter-result.schema.json](qualification/adapter-result.schema.json); [fixture-adapter-results.json](qualification/fixture-adapter-results.json) demonstrates the wire shape. Each result binds to `sample_id`, its tuning/final split, and the manifest's image hash. The whole-manifest hash must match exactly, and the result set must contain each manifest sample exactly once; missing, duplicate, extra, split-mismatched, or hash-mismatched results make the run INCOMPLETE. Coordinates are normalized to the original image after orientation normalization, with origin at top-left. The adapter emits evidence only; product state and decoded codes are outputs of the shared local decoder, not adapter-owned policy.
 
 The adapter-result contract must record:
 
@@ -127,7 +129,7 @@ A False Accept is always counted even if the wrong record does not exist on the 
 
 ## Promotion rule
 
-The final numerical release gates are frozen in the qualification receipt before the final split is run. They may be derived from pilot/tuning evidence but may not be relaxed after seeing final results.
+The final numerical release gates are frozen in a separate `gate-config.json` validated by `gate-config.schema.json`, then hashed into the receipt. The config binds to the exact frozen corpus manifest, and its freeze time must precede final-split execution. It includes thresholds, minimum tuning/final sample counts, and minimum counts for every required bucket. Gates may be derived from pilot/tuning evidence but may not be relaxed after seeing final results. A post-result edit requires a new config hash and a new candidate run; backdating the timestamp does not satisfy the harness check.
 
 An engine is ineligible if:
 
@@ -144,18 +146,18 @@ If no engine qualifies, v1 camera recognition does not ship as an Accept-capable
 
 ## Receipt
 
-Each run produces a machine-readable receipt validated by `qualification/receipt.schema.json` and a short Markdown report. Metric computation follows `qualification/scoring.md`. Schema validity alone does not make a run pass: the qualification validator also applies the cross-field, arithmetic, sample-coverage, and gate-consistency checks in scoring.md. The receipt contains:
+Each run produces a machine-readable receipt validated by `qualification/receipt.schema.json` and a short Markdown report. Metric computation follows `qualification/scoring.md`. Schema validity alone does not make a run pass: the qualification validator also applies the cross-field, arithmetic, writer-isolation, sample-coverage, and gate-consistency checks in scoring.md. The receipt contains:
 
 - qualification id and UTC timestamp;
-- corpus-manifest hash and sample counts by split/bucket;
+- whole-corpus manifest hash and sample counts by split/bucket;
 - adapter commit, engine/model/runtime version, platform/OS/device class;
 - preprocessing and band-mapping configuration hashes;
 - zz decoder/spec 003 vector version, wordlist version, and check-word implementation version;
 - all required aggregate metrics and per-bucket metrics, including fiducial localization/pairing and payload metrics;
-- frozen release thresholds and a result for every required release gate;
+- frozen gate-config hash, freeze timestamp, required bucket minima and observed counts, thresholds, and a result for every required release gate;
 - every False Accept/false-valid case by sample_id with disposition;
 - dependency/license/security-review disposition;
-- PASS, FAIL, INCOMPLETE, or NO_PROMOTION. PASS is valid only for a final-split run with complete sample/bucket coverage, all mandatory metrics, all required gates passing, and no undispositioned False Accept or false-valid case;
+- PASS, FAIL, INCOMPLETE, or NO_PROMOTION. PASS is valid only for a final-split run with writer-isolated splits, complete sample/bucket coverage, all mandatory metrics, all required gates passing, and no undispositioned False Accept or false-valid case;
 - promoted engine, or NO_PROMOTION;
 - approver and linked pull request.
 

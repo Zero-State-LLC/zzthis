@@ -8,7 +8,7 @@ These rules make the qualification harness deterministic. They do not set releas
 2. A predicted fiducial matches a ground-truth fiducial only when roles match and IoU is at least the threshold frozen in run configuration before the final split.
 3. Matching is one-to-one. Choose the assignment that maximizes total IoU. An unmatched prediction is a false finder. An unmatched truth endpoint is a missed endpoint.
 4. A predicted pair is correct only when its matched opening and closing endpoints share the same ground-truth pair_id. Otherwise it is a false pair.
-5. Multi-code images are scored per ground-truth pair. Merging two codes into one ROI is not correct.
+5. Multi-code images are scored per ground-truth pair. Every `ground_truth_codes` entry is keyed by `pair_id` and carries the literal payload used for CER/part scoring plus the canonical code when valid. Merging two codes into one ROI is not correct.
 
 ## ROI and rectification
 
@@ -17,8 +17,8 @@ Where ROI ground truth exists, report polygon localization IoU/error before rect
 ## Text and code scoring
 
 1. Preserve raw recognizer text for CER and part scoring.
-2. Exact-code accuracy compares the final canonical code with ground truth.
-3. CER uses Levenshtein edit distance over expected versus observed payload text, excluding the two structural boundary markers. Record the metric normalization in run configuration.
+2. Exact-code accuracy compares each decoded code with the canonical truth having the same `pair_id`; an unkeyed or cross-paired comparison is invalid.
+3. CER uses Levenshtein edit distance between each candidate's original recognizer text and the `literal_payload` for the same `pair_id`, excluding the two structural boundary markers. Partial and invalid cases retain literal payload truth even when `canonical_code` is null. Record the metric normalization in the frozen gate config.
 4. Count false-valid decode when the final decoded code is valid but differs from ground truth.
 5. Count False Accept whenever product state is Accept and the selected canonical code is not ground truth, or the sample has no valid ground-truth code.
 6. Multiple candidates are not an error by themselves when the product requires a person to pick. Score them against expected band constraints and pair accuracy.
@@ -33,15 +33,16 @@ Compute overall rates from overall numerators and denominators. Do not average b
 
 The validator applies these checks in addition to JSON Schema:
 
-1. The adapter-result `manifest_sha256` equals the exact manifest byte hash. Every manifest `sample_id` appears exactly once in results, no other sample appears, and each result's image hash equals that manifest entry.
-2. Each `roi_truth.pair_id` maps to a complete ground-truth opening/closing fiducial pair in that sample. Polygon points and boxes remain within the normalized image; the scorer rejects geometry extending outside the image.
-3. `split_counts`, aggregate sample counts, and per-bucket counts reconcile to the manifest and result set. Every required final bucket is present; missing coverage is INCOMPLETE.
-4. For every rate, numerator and denominator match the counted observations; rate is numerator / denominator, or null only when denominator is zero. Count fields equal the corresponding case lists. Band counts sum to sample count.
-5. Every False Accept and false-valid case is listed by `sample_id` with expected/observed values and a non-empty reviewer disposition. No undispositioned case is allowed in PASS.
-6. The frozen release-gate configuration hash and final-split manifest hash match the run inputs. The gate freeze timestamp precedes final-split execution. Every required gate has exactly one result and its observed value/comparator/threshold recompute to the recorded result.
-7. PASS is valid only for a non-empty final split, complete schema-valid evidence, full required-bucket coverage, passing release gates, zero False Accepts, and approved dependency/license, privacy, security, and qualification reviews. The approver, promoted engine, and linked PR must be present. Otherwise the only valid disposition is FAIL, INCOMPLETE, or NO_PROMOTION, with no promoted engine.
-8. Results are evaluated offline. The validator must not resolve codes over the network or use server state to alter any metric.
+1. The gate config's `manifest_sha256` and adapter-result `manifest_sha256` equal the exact whole-corpus manifest byte hash. Every manifest `sample_id` appears exactly once in results, no other sample appears, each result's split equals its manifest split, and each result's image hash equals that manifest entry.
+2. The set of `writer_group` values in tuning is disjoint from the set in final. Any overlap invalidates the corpus and makes the run INCOMPLETE.
+3. Every ground-truth code entry has a unique `pair_id` within its sample. Complete truth pairs map to exactly one opening and closing fiducial. Each `roi_truth.pair_id` maps to a complete ground-truth fiducial pair, and each complete visual pair has exactly one ROI truth. Polygon points and boxes remain within the normalized image; the scorer rejects geometry extending outside the image.
+4. `split_counts`, aggregate sample counts, and per-bucket counts reconcile to the manifest and result set. Each split meets `minimum_samples_by_split`. The frozen gate config must require every canonical stress bucket, each with a positive minimum count, and the observed final count for each required bucket must meet that minimum. Missing or under-count coverage is INCOMPLETE.
+5. For every rate, numerator and denominator match the counted observations; rate is numerator / denominator, or null only when denominator is zero. Count fields equal the corresponding case lists. Band counts sum to sample count.
+6. Every False Accept and false-valid case is listed by `sample_id` with expected/observed values and a non-empty reviewer disposition. No undispositioned case is allowed in PASS.
+7. `release_gates.gate_config_sha256` and both receipt manifest hashes match the exact frozen inputs. `frozen_at_utc` precedes final-split execution; the final split is not evaluated before the freeze. Every required gate has exactly one result and its observed value/comparator/threshold recompute to the recorded result.
+8. PASS is valid only for a non-empty final split, disjoint writer groups, complete schema-valid evidence, all required bucket minima met, passing release gates, zero False Accepts, and approved dependency/license, privacy, security, and qualification reviews. The approver, promoted engine, and linked PR must be present. Otherwise the only valid disposition is FAIL, INCOMPLETE, or NO_PROMOTION, with no promoted engine.
+9. Results are evaluated offline. The validator must not resolve codes over the network or use server state to alter any metric.
 
 ## Final split discipline
 
-Evaluate the final split once per frozen adapter/configuration candidate. A code or configuration change after viewing final results creates a new candidate and receipt. Previous receipts remain immutable evidence.
+Evaluate the final split once per frozen adapter/gate-config candidate. A corpus, gate config, code, or configuration change after viewing final results creates a new candidate and receipt. Previous receipts remain immutable evidence.

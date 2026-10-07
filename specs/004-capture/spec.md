@@ -92,7 +92,7 @@ Handles and field codes never reach Accept without a person confirming them (FR-
 
 ## Success criteria
 
-Product-level qualification is defined by [ZZ-OCR-QUAL-001](qualification.md). The protocol defines the corpus, safety metrics, evidence receipt, promotion/no-promotion outcome, change control, and rollback rule. Generic OCR benchmark claims are not acceptance evidence. Numerical release gates are frozen from tuning evidence before the final split is run; they are not invented here and cannot be relaxed after final results are seen.
+Product-level qualification is defined by [ZZ-OCR-QUAL-001](qualification.md). The protocol defines the corpus, safety metrics, evidence receipt, promotion/no-promotion outcome, change control, and rollback rule. Generic OCR benchmark claims are not acceptance evidence. A separate gate-config input is frozen from tuning evidence and hashed before the final split is run; its thresholds and required bucket counts cannot be changed after final results are seen.
 
 ## Out of scope
 

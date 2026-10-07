@@ -1,0 +1,42 @@
+{
+  "schema_version": 1,
+  "qualification_id": "ZZ-OCR-QUAL-001",
+  "manifest_sha256": "a4de21e6a6c7ec8d5bbfbeac428f1e54403ee2e0667b9dd904d0e3d9a3e154b9",
+  "frozen_at_utc": "2026-10-06T00:00:00Z",
+  "minimum_samples_by_split": { "tuning": 1, "final": 1 },
+  "required_buckets": [
+    { "bucket_id": "handwriting", "minimum_sample_count": 1 },
+    { "bucket_id": "print", "minimum_sample_count": 1 },
+    { "bucket_id": "low-contrast", "minimum_sample_count": 1 },
+    { "bucket_id": "glare", "minimum_sample_count": 1 },
+    { "bucket_id": "blur", "minimum_sample_count": 1 },
+    { "bucket_id": "motion-blur", "minimum_sample_count": 1 },
+    { "bucket_id": "perspective", "minimum_sample_count": 1 },
+    { "bucket_id": "rotation", "minimum_sample_count": 1 },
+    { "bucket_id": "distance", "minimum_sample_count": 1 },
+    { "bucket_id": "wrapped", "minimum_sample_count": 1 },
+    { "bucket_id": "multi-code", "minimum_sample_count": 1 },
+    { "bucket_id": "partial-fiducial", "minimum_sample_count": 1 },
+    { "bucket_id": "false-zz", "minimum_sample_count": 1 },
+    { "bucket_id": "ambiguous-pairing", "minimum_sample_count": 1 },
+    { "bucket_id": "unequal-fiducial-size", "minimum_sample_count": 1 },
+    { "bucket_id": "curved-surface", "minimum_sample_count": 1 },
+    { "bucket_id": "running-text", "minimum_sample_count": 1 },
+    { "bucket_id": "confusable-character", "minimum_sample_count": 1 },
+    { "bucket_id": "near-word", "minimum_sample_count": 1 },
+    { "bucket_id": "invalid-reserved-character", "minimum_sample_count": 1 },
+    { "bucket_id": "no-code", "minimum_sample_count": 1 },
+    { "bucket_id": "handle", "minimum_sample_count": 1 },
+    { "bucket_id": "field-code-part", "minimum_sample_count": 1 }
+  ],
+  "thresholds": {
+    "max_false_accept_count": 0,
+    "max_false_valid_decode_rate": 0,
+    "min_endpoint_recall": 1,
+    "min_pair_accuracy": 1,
+    "min_exact_code_accuracy": 1,
+    "max_character_error_rate": 0,
+    "min_rectification_success_rate": 1,
+    "max_p95_latency_ms": 1000
+  }
+}
