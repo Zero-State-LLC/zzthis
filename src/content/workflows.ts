@@ -15,7 +15,7 @@ export interface TitledImage {
 export const coreIdentity = {
   heading: "How it works",
   intro:
-    "Core identity: MARK a lowercase zz code → READ it by camera or manual entry → LINK it to a record → REPORT the words by voice where useful.",
+    "Core identity: MARK a lowercase zz code → READ it by camera or manual entry → LINK it to a record → REPORT it in a voice handoff to another person if useful.",
   steps: [
     {
       numeral: "01",
@@ -38,7 +38,7 @@ export const coreIdentity = {
     {
       numeral: "04",
       title: "Report",
-      text: "Say the code words if a voice handoff is useful.",
+      text: "Say the code words to another person if a voice handoff is useful; software voice recognition is not part of v1.",
       image: "f",
     },
   ] satisfies WorkflowStep[],
@@ -60,7 +60,7 @@ export const fieldLogistics = {
 export const photoToAction = {
   heading: "From photo to action",
   intro:
-    "A second layer after the handwritten code: see an item, identify it, choose its next task.",
+    "Future exploration (B7, queued): a second layer after the handwritten code could identify an item and suggest its next task.",
   sequenceLabel: "From photo to action, three steps",
   sequence: [
     { numeral: "01", title: "Photograph", image: "j" },
@@ -72,7 +72,7 @@ export const photoToAction = {
     { title: "Touch first", image: "n" },
   ] satisfies TitledImage[],
   workflow:
-    "AI-assisted work: PHOTOGRAPH one or more items → CONFIRM the proposed identification → choose a handling or inventory action by touch or voice → REVIEW the prepared record or form.",
+    "Future concept, not v1: PHOTOGRAPH one or more items → CONFIRM the proposed identification → choose a handling or inventory action by touch → REVIEW the prepared record or form.",
 };
 
 export const howItWorksPage = {
@@ -90,7 +90,7 @@ export const howItWorksPage = {
     heading: "When a reading is uncertain",
     text: "If the endpoints or words are uncertain, the design asks for confirmation, another view, or manual entry. It does not guess a missing endpoint or another live code.",
   },
-  aiHeading: "AI-assisted work",
+  aiHeading: "AI-assisted work: future exploration",
   publicRecord: {
     heading: "The code is public; the record is protected",
     text: "The visible words are a public identifier, not a password or private key. Payment and authorization remain in signed backend records.",

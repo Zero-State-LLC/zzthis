@@ -23,6 +23,7 @@ export interface ApplicationGallery {
 export interface Application {
   id: ApplicationId;
   title: string;
+  status: string;
   story: string;
   pageExtra?: string;
   homeImages: readonly ImageId[];
@@ -35,10 +36,12 @@ export const applications: readonly Application[] = [
   {
     id: "field",
     title: "Field logistics",
+    status:
+      "Exploration: field/enterprise workflows are queued in B7 for v1.x, not shipped v1 capabilities.",
     story:
-      "Hand-mark bags, crates, pallets, and mixed goods; read or relay a code; connect it to existing identifiers. Then photograph loose items, prepare a turn-in, compare inventory, and use touch-first actions.",
+      "A future field workflow could use handwritten codes on bags, crates, pallets, and mixed goods to help connect items to existing identifiers and prepare inventory work.",
     pageExtra:
-      "Planned structured profiles can assign versioned roles to code positions, such as purpose, place or target, and state. Those meanings belong to authorized semantic profiles and private dictionaries after recognition and canonicalization; the camera reader does not decide them.",
+      "Structured profiles and private dictionaries are B10 shadow exploration for v2 / Contract 2. If advanced, they would assign authorized, versioned meanings only after recognition and canonicalization; the camera reader does not decide them.",
     homeImages: ["j"],
     pageImages: ["a", "alt-b", "c", "d", "e", "f", "j", "k", "l", "m", "n"],
     homeWideOnly: true,
@@ -46,8 +49,10 @@ export const applications: readonly Application[] = [
   {
     id: "parcel",
     title: "Postal and parcel",
+    status:
+      "Exploration: postal/parcel integration is queued in B8 for v1.x; no carrier service is claimed.",
     story:
-      "Write a reference directly on a parcel; photograph loose items and receive packing guidance before choosing a parcel code.",
+      "A future postal/parcel workflow could use a written reference and help prepare items before a parcel code is chosen.",
     homeImages: ["g", "o"],
     pageImages: ["g", "o"],
     homeWideOnly: false,
@@ -102,8 +107,9 @@ export const applications: readonly Application[] = [
   {
     id: "community",
     title: "Everyday and community",
+    status: "Exploration: free/community use cases are queued in B9 for v1.x.",
     story:
-      "A handwritten code on a lost-cat flyer or other public surface can lead to a useful page.",
+      "A future community use could place a handwritten code on a lost-pet flyer or other public surface and link it to a useful page.",
     homeImages: ["h"],
     pageImages: ["h"],
     homeWideOnly: false,
@@ -168,10 +174,12 @@ export const applications: readonly Application[] = [
   {
     id: "aliases",
     title: "Digital aliases",
+    status:
+      "Exploration: agent/ledger/blockchain integrations are shadowed in B16 for v2+.",
     story:
-      "A short human-readable code can stand in for a long machine address used by software agents.",
+      "A future integration could map a short human-readable code to a longer machine address used by software agents.",
     pageExtra:
-      "Blockchain and agent integrations are exploration paths, not requirements of the v1 resolver.",
+      "These optional integrations are not v1 resolver capabilities or dependencies.",
     homeImages: ["i"],
     pageImages: ["i"],
     homeWideOnly: false,
@@ -195,5 +203,5 @@ export const applicationsHome = {
 export const applicationsPage = {
   title: "Applications",
   intro:
-    "Five directions share the same human-readable identifier: field logistics, enterprise and postal workflows, free consumer uses, blockchain aliases, and AI-assisted work. AI is a user interface and connector across these workflows, not the authority that defines or resolves a zz code.",
+    "These are product directions, not a list of shipped v1 integrations: field/enterprise (B7), postal/parcel (B8), community/free uses (B9), AI-assisted inventory (B7), and agent/ledger/blockchain integrations (B16). AI may be an interface or connector, not the authority that defines or resolves a zz code.",
 };

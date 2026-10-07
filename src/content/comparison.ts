@@ -56,8 +56,8 @@ export const comparisonColumns: readonly ComparisonColumn[] = [
     accent: true,
     cells: {
       create: "Write, draw, print, or display: words, numbers, or symbols",
-      read: "Person, camera, voice, typing, or within text",
-      connects: "Thing to its record, next action, and authorized macros",
+      read: "Person, camera, typing, or within text",
+      connects: "Physical thing to its authorized digital record",
       remember: "Yes (2 to 4 words, or short words and numbers)",
     },
   },

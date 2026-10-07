@@ -27,8 +27,9 @@ The current architecture remains:
 | “zz- In any language -zz” treatment | ADAPT/DEFER | Compatible as marketing language, but v1 capture remains ASCII/English and other scripts are v2. Do not imply v1 multilingual recognition. |
 | Field logistics image reorder | DEFER | Do not guess image-ID-to-caption mapping. Apply after exact asset mapping is verified. |
 | Parcel pack-and-ship first | DEFER | Same asset-order verification requirement. |
-| Five application directions | ADAPT | B5 may describe them. Field/enterprise maps to B7, postal to B8, community to B9, semantic/profile concepts to B10, and ledger/agent/blockchain integrations to B16. None becomes v1 implementation authority from website copy. |
-| “AI is new UI / connector / flattens stack” | ADAPT | Site now describes AI as UI/connector, while explicitly denying semantic/resolution authority. |
+| Five application directions | ADAPT | B5 labels field/enterprise (B7), postal/parcel (B8), community/free uses (B9), semantic/profile concepts (B10), and ledger/agent/blockchain integrations (B16) as queued or shadow explorations. None becomes v1 implementation authority from website copy. |
+| Home use-case cards (logistics, postal, community, agents, blockchain, macros) | ADAPT | Each card now carries its roadmap status. Carrier/postage, voice recognition, ledger/blockchain, agent authority, and macro execution are not presented as available v1 integrations. |
+| “AI is new UI / connector / flattens stack” | ADAPT | Site describes AI as a possible interface/connector and labels AI-assisted workflows as future exploration, while denying semantic/resolution authority. |
 | X1/X2/X3 structured profile | SHADOW via B10 | Site may describe it as planned exploration. #87/#81 remain authoritative; no Contract-1/v1 semantic change. |
 | Private versioned dictionaries | SHADOW via B10 | Downstream authorized semantic dictionaries only; not OCR vocabulary or Contract-1 behavior. |
 | Recognition separate from interpretation | ADOPT | Matches current architecture. |

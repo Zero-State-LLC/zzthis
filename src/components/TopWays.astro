@@ -15,6 +15,7 @@ import { topWays } from "../content/uses";
                 {item.numeral}
               </span>
               <h4>{item.title}</h4>
+              <p class="top-ways__status">{item.status}</p>
               <ul class="top-ways__codes">
                 {item.codes.map((code) => (
                   <li>
@@ -72,6 +73,13 @@ import { topWays } from "../content/uses";
     background: var(--accent);
   }
 
+  .top-ways__status {
+    margin: 0;
+    color: var(--text-muted);
+    font-size: var(--fs-label);
+    font-weight: 600;
+  }
+
   .top-ways__codes {
     list-style: none;
     display: flex;
@@ -83,7 +91,7 @@ import { topWays } from "../content/uses";
     overflow-wrap: anywhere;
   }
 
-  .top-ways__body p {
+  .top-ways__body > p:not(.top-ways__status) {
     margin-block-start: auto;
   }
 
