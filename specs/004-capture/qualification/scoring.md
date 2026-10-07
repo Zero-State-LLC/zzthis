@@ -14,7 +14,7 @@ Endpoint precision is matched endpoints / predicted endpoints; endpoint recall i
 
 The reusable implementation primitives in `scripts/ocr-qualification-matching.mjs` compute normalized rectangle IoU, role-constrained maximum-weight one-to-one fiducial assignment, and reconciliation of predicted endpoint pair IDs against those assignments. Pair reconciliation keeps complete endpoint detection separate from correct pairing and marks crossed or malformed predicted groups as false pairs. These helpers do not yet score sample-level payload outcomes, compute release gates, write receipts, or establish qualification completeness. Tests cover greedy-assignment counterexamples, threshold boundaries, role mismatches, crossed pairings, and invalid assignments/geometry.
 
-`scripts/ocr-qualification-fiducial-scoring.mjs` converts these assignments into endpoint precision/recall, false-finder and missed-endpoint counts, complete-pair detection, pair accuracy, and false-pair counts/rates using the denominators above. It does not include ROI localization or rectification metrics.
+`scripts/ocr-qualification-fiducial-scoring.mjs` converts these assignments into endpoint precision/recall, false-finder and missed-endpoint counts, complete-pair detection, pair accuracy, and false-pair counts/rates using the denominators above. `scripts/ocr-qualification-roi-latency.mjs` scores convex normalized ROI polygons by pair ID, gives missing truth-pair predictions IoU 0, and computes rectification success separately. It also computes the conventional median and nearest-rank p95 from sample `elapsed_ms`. These are per-group primitives, not complete aggregate metrics, receipts, or gates.
 
 `scripts/ocr-qualification-text-scoring.mjs` provides the next isolated scoring primitive. It accepts only correctly linked pair IDs, keeps candidate engine order and uses top-1, computes exact-code accuracy for valid canonical truth, aggregates NFC-normalized Unicode code-point Levenshtein edits against literal payload truth, and counts false-valid observations only when top-1 replay is a different check-word-valid plain code. Missing or unpaired hypotheses contribute an empty CER prediction and an incorrect exact-code observation; they remain in the false-valid denominator with no false-valid numerator. This helper is not yet aggregated across device/split/bucket groups or wired to release gates and receipt validation.
 
@@ -23,6 +23,8 @@ The reusable implementation primitives in `scripts/ocr-qualification-matching.mj
 ## ROI and rectification
 
 Where ROI ground truth exists, report polygon localization IoU/error before rectification and rectification success separately from payload OCR errors. Match predicted and ground-truth ROIs by fiducial `pair_id`; assignments are one-to-one. If a manifest case requires ROI truth and it is absent, the manifest is invalid. If a prediction or metric is unavailable, record the explicit null/not-measured reason; do not silently omit the metric.
+
+ROI polygons must be simple, convex, consistently ordered polygons in normalized `[0,1]` image coordinates; unsupported or degenerate geometry invalidates scoring rather than being approximated. For each device/split set, mean ROI IoU is over all ground-truth ROI pairs; a missing prediction contributes IoU 0, while predictions without truth do not enter this denominator. Rectification success is successful truth-paired predictions / truth ROI count; a missing prediction is a failure. If any matched prediction lacks an explicit `rectification_succeeded` boolean, the rectification rate for that set is null and its pair IDs are recorded as not measured. No-truth sets report null ROI and rectification metrics.
 
 ## Text and code scoring
 
@@ -40,6 +42,8 @@ Where ROI ground truth exists, report polygon localization IoU/error before rect
 Report separate `tuning` and `final` metric sets. Each set reports overall and per-stress-bucket: numerator, denominator, and rate for every rate metric; endpoint precision/recall; complete-pair detection; pair accuracy; false finders/pairs; exact-code and part/word accuracy; CER; false-valid and False Accept; band distribution; median and p95 latency. The receipt also reports the complete metric set separately for every device-matrix entry and split, so no device's failure can be hidden by aggregate results. Never merge or average split metrics. Release-gate observations, False Accept/false-valid dispositions, and pass/fail decisions are computed from the final split only; tuning metrics are descriptive and cannot contribute to release gates.
 
 The `p95-latency-ms` gate's observed value is the maximum per-entry final-split p95 across the entire frozen device matrix. Every entry must have a measured final p95 and each must be at or below `max_p95_latency_ms`; an aggregate or bucket p95 cannot mask a slow device entry.
+
+Latency uses the adapter's non-negative per-sample `elapsed_ms`. `p50` is the conventional median (mean of the middle pair for even counts); `p95` uses nearest rank at sorted index `ceil(0.95 * n) - 1`. Empty latency groups are not measured and cannot satisfy the p95 gate.
 
 Compute overall rates from overall numerators and denominators. Do not average bucket percentages.
 
