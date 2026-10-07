@@ -1,6 +1,6 @@
 # Marketing site Cloudflare cutover runbook
 
-Bundle: B4/B5. Status: draft staging runbook. No production DNS change is authorized by this file.
+Bundle: B4/B5. Status: marketing staging smoke check passed; route-parity and rollback evidence remain. No production DNS change is authorized by this file.
 
 ## Build and parity
 
@@ -10,6 +10,13 @@ Bundle: B4/B5. Status: draft staging runbook. No production DNS change is author
 4. Deploy to a non-production workers.dev/staging route only after operator authorization.
 5. Compare every required route, asset, responsive layout, canonical URL, sitemap/robots behavior, CSP/security headers, and no-runtime-third-party-request invariant with the accepted GitHub Pages build.
 6. Record git SHA and Worker version/deployment id.
+
+## Recorded staging checkpoint (2026-10-07)
+
+- Source: `b2350d47b67bcb4e5d1a8ed19354d92d3840596c`; [GitHub Actions run 37550094879](https://github.com/Zero-State-LLC/zzthis/actions/runs/37550094879).
+- Worker: `zzthis-site-staging`; version `8da9a4ff-2e80-46c3-aec2-76c08edd5191`; workers.dev URL only.
+- Basic behavior: root returned HTTP 200 and an unknown route returned HTTP 404.
+- Still required: explicit route/asset/header comparison against the accepted GitHub Pages surface and a recorded Worker-version rollback rehearsal. Neither is a production cutover.
 
 ## Cutover prerequisites
 
