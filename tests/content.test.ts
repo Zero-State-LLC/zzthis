@@ -168,7 +168,7 @@ describe("workflows (spec 3.2 H.4 to H.6)", () => {
       coreIdentity.steps.map((step) => `${step.title}: ${step.text}`),
     ).toEqual([
       "Mark: Write the code on tape, a crate, or a pallet.",
-      "Read: Camera or manual entry.",
+      "Read: For camera reading, find the two zz endpoints first, then read the words between them. Manual entry uses the same code grammar.",
       "Link: Connect to an existing record and photo.",
       "Report: Say the code words if a voice handoff is useful.",
     ]);
@@ -278,9 +278,7 @@ describe("navigation and people", () => {
     expect(byName("Arshi Chadha")?.photo?.src).toBe(
       "images/people/arshi-chadha.webp",
     );
-    expect(byName("Ridham Bhagat")?.photo?.src).toBe(
-      "images/people/ridham-bhagat.webp",
-    );
+    expect(byName("Ridham Bhagat")?.photo).toBeUndefined();
     expect(byName("Daniel Meyer")?.photo).toBeUndefined();
     expect(byName("Adam Fry")?.photo).toBeUndefined();
     expect(footerNotice).toBe("Patent pending");
