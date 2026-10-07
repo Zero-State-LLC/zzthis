@@ -10,7 +10,7 @@ Status: staging evidence recorded 2026-10-07; production identifiers/credentials
 | local | Durable Object | ZZ_LIMITER / Limiter | existing |
 | staging | API Worker | zzthis-api-staging | configuration and least-privilege CI permission still required; not deployed |
 | staging | D1 | ZZ_DB / zzthis-staging (`b2f73070-69a2-4066-9e7e-963f8e1b0b06`) | created and health-checked 2026-10-07; not yet bound to the API Worker |
-| staging | R2 | ZZ_PHOTOS / zzthis-photos-staging | create only if required by remote staging tests; no camera scans |
+| staging | R2 | ZZ_PHOTOS / zzthis-photos-staging | created 2026-10-07; no photo reads or API binding enabled |
 | staging | Durable Object | ZZ_LIMITER / Limiter | to create with Worker |
 | staging | marketing Worker | zzthis-site-staging | deployed and smoke-checked; no custom domain/route |
 | production | API Worker | zzthis-api | human-gated |
@@ -33,6 +33,7 @@ Staging uses distinct D1/R2 state and secrets. No preview/staging Worker may bin
 - Preview URL: `https://zzthis-site-staging.zer0state-noema.workers.dev`.
 - Smoke check: `/` returned HTTP 200 with the expected HTML; an unknown route returned HTTP 404. The Worker has no configured custom route.
 - D1 check: `SELECT 1 AS staging_health` succeeded against `zzthis-staging` (`b2f73070-69a2-4066-9e7e-963f8e1b0b06`) on 2026-10-07.
+- R2 check: `zzthis-photos-staging` was created 2026-10-07 with Standard storage, default jurisdiction, and WNAM location; it contains no application data.
 - No production Worker, D1, R2, DNS, or custom-domain configuration was created or changed in this staging milestone.
 
 ## Remote-resource creation gate
