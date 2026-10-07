@@ -2,7 +2,9 @@
 # (spec 005 FR-029, plan.md Repo layout).
 #
 # Base/local contract. Remote staging/production resource identifiers are operator-managed and must be supplied through an approved environment-specific configuration before deploy. Do not replace placeholders on a feature branch with production ids. Local runs/tests use local state only.
-name = "zzthis-api"
+# The default config is local-only; remote environments use explicit configs.
+# Keep this name distinct from the human-gated production Worker `zzthis-api`.
+name = "zzthis-api-local"
 main = "src/index.ts"
 compatibility_date = "2026-08-15"
 compatibility_flags = ["nodejs_compat"]
