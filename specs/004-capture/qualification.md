@@ -40,14 +40,20 @@ One corpus manifest contains both tuning and final samples. Each sample is valid
 2. Freeze the whole corpus manifest and its hash before comparing candidate engines.
 3. Freeze a separate gate-config file, bound to that exact manifest hash, before evaluating the final split. It sets minimum sample counts for each split, minimum counts for each canonical required stress bucket, numeric release thresholds, fiducial IoU threshold, and CER normalization.
 4. Freeze one `device-matrix.json` conforming to `device-matrix.schema.json`, with pseudonymous matrix-entry IDs, exact OS versions/device classes, and a positive minimum sample count per entry. Freeze one `candidate-bundle.json` conforming to `candidate-bundle.schema.json`; its `device_matrix_sha256` is SHA-256 of the matrix's RFC 8785 JCS canonical bytes. The bundle identifies the exact adapter artifact, engine/runtime, platform, preprocessing and confidence mapping, plus decoder commit, wordlist, check-word implementation, vectors, and band mapping. Its own identity is SHA-256 over its JCS canonical bytes. Obtain the signed pre-run attestation defined by `pre-run-attestation.schema.json`; it binds that bundle hash and the exact manifest and gate-config hashes, and must be published with an independently verifiable timestamp before final evaluation. Caller-entered `frozen_at_utc` values are not accepted.
-5. The trusted evaluation runner emits a signed execution attestation bound to the same candidate-bundle hash, pre-run attestation, exact device-matrix hash, and exact adapter-results hash. Every sample result identifies a matrix entry and repeats its OS/device class; the validator checks those values against the frozen matrix and enforces its per-entry sample minimum. The verifier checks both attestations against trust roots configured independently of the candidate and confirms evaluation started after the pre-run publication time. The receipt's adapter/decoder identities and device-coverage rows must reconcile to the sealed bundle/matrix. Any missing or mismatched identity, or unverifiable attestation, forces INCOMPLETE, never PASS.
+5. The trusted evaluation workflow must verify successful pre-run publication before starting the final evaluation process; it emits an unsigned execution-attestation JSON payload bound to the same candidate-bundle hash, pre-run attestation, exact device-matrix hash, exact adapter-results hash, and UTC start/finish claims. The allowlisted workflow itself captures start immediately before and finish immediately after the evaluation process, using its trusted runner clock; it accepts no caller-provided timestamps. Sign the exact JCS bytes as a detached Sigstore Cosign blob and retain the standard Sigstore bundle as a separate artifact. Every sample result identifies a matrix entry and repeats its OS/device class; the validator checks those values against the frozen matrix and enforces its per-entry sample minimum. The verifier checks both bundles under the trust and identity policy below and confirms the signed start claim follows the verified pre-run Rekor timestamp. The receipt's adapter/decoder identities and device-coverage rows must reconcile to the sealed bundle/matrix. Any missing or mismatched identity, or unverifiable signature bundle, forces INCOMPLETE, never PASS.
 6. Do not tune thresholds, preprocessing, prompts, or decoder rules on the final split.
 7. Any post-freeze change to the manifest, gate config, adapter, model/version, preprocessing, decoder, wordlist, check-word implementation, or band mapping invalidates that engine receipt and requires a new run.
 8. Synthetic images can broaden stress coverage but cannot be the only evidence for handwriting promotion.
 
-The trusted issuer, timestamp/publication mechanism, signature format, and independently pinned verifier trust root remain an OPEN implementation prerequisite. Do not invent a signing service or key policy in the harness. Until an owner-approved trust root exists, the harness may report descriptive results but cannot issue PASS or promote an engine.
+### Attestation signing and publication policy
 
-For interoperable signature input, canonicalize the attestation JSON with the [JSON Canonicalization Scheme (RFC 8785)](https://www.rfc-editor.org/rfc/rfc8785.html), excluding only the `signature` property. Timestamp/publication verification must use a verifier policy and trust root pinned before the candidate run; a URI or self-reported timestamp by itself is insufficient. An RFC 3161 timestamp token is a possible mechanism, not an adopted dependency or trust policy.
+**Decision:** sign each complete, unsigned attestation payload with Sigstore Cosign keyless blob signing. Canonicalize the entire payload with the [JSON Canonicalization Scheme (RFC 8785)](https://www.rfc-editor.org/rfc/rfc8785.html); the detached signature and standard Sigstore bundle are separate files and are not fields in the signed JSON. Retain the bundle bytes alongside the evidence packet and record their exact SHA-256 hashes and references in the receipt.
+
+- Verification uses the Sigstore public-good instance and its TUF-managed trust root, bootstrapped from verifier software/policy independent of candidate inputs. The verifier policy itself is pinned from protected `main` before a run; it must allowlist the exact GitHub Actions OIDC issuer (`https://token.actions.githubusercontent.com`) and the qualification workflow identity on protected `refs/heads/main`. A broad repository-only identity is insufficient. If the exact workflow identity or trust policy is absent, the run is INCOMPLETE.
+- Require a valid signature, identity/issuer match, Rekor signed entry timestamp, and inclusion proof for each attestation. The pre-run bundle's verified Rekor integrated time is the publication/freeze time. The trusted workflow must gate final-process start on pre-run publication, record start/finish from its runner clock rather than inputs, and bind those claims in the execution payload; `started_at_utc` must be later than the pre-run Rekor time, and the execution bundle timestamp must be no earlier than signed `finished_at_utc`. Keep both bundles for offline verification. A caller-supplied time or URI alone is never evidence.
+- RFC 3161 timestamp authority tokens are not required for this v1 qualification policy. If a legal or external assurance requirement later calls for an independent TSA, that is a separate trust-policy change.
+
+Sigstore's documented flow uses short-lived identity-bound certificates and a transparency log; bundles carry material needed to verify the artifact and log evidence after signing. See [Sigstore signing overview](https://docs.sigstore.dev/cosign/signing/overview/), [bundle format](https://docs.sigstore.dev/about/bundle/), and [security model](https://docs.sigstore.dev/about/security/).
 
 ## Stress matrix
 
@@ -114,7 +120,7 @@ For every engine and stress bucket report:
 - false Accept count and rate;
 - no-code false-positive count;
 - wrapped-code and multi-code behavior;
-- median and p95 adapter latency on each representative device class;
+- median and p95 adapter latency for every frozen device-matrix entry, separately for tuning and final;
 - package/download-size delta and peak runtime memory where measurable;
 - crash/exception count.
 
@@ -149,7 +155,7 @@ An engine is ineligible if:
 5. it leaks raw images, canonical codes, tokens, or private corpus data into logs/telemetry;
 6. a required stress bucket or representative platform is missing.
 
-Among eligible engines, choose the engine with the safer false-valid/false-Accept profile first, then usability (clarify/retry/abstain burden), latency, footprint, and operational complexity. Generic OCR benchmark scores are supporting context only.
+Among eligible engines, choose the engine with the safer false-valid/false-Accept profile first, then usability (clarify/retry/abstain burden), latency, footprint, and operational complexity. The final p95 latency gate is the maximum of each frozen matrix entry's final-split p95; every entry must meet the frozen threshold, so aggregate performance cannot hide a slow device class. Generic OCR benchmark scores are supporting context only.
 
 If no engine qualifies, v1 camera recognition does not ship as an Accept-capable path. Typed entry remains available. Do not lower decoder or privacy requirements to create a winner.
 
@@ -160,12 +166,12 @@ Each run produces a machine-readable receipt validated by `qualification/receipt
 - qualification id, candidate id, and UTC timestamp;
 - whole-corpus manifest hash and sample counts by split/bucket;
 - sealed candidate-bundle hash and adapter artifact/commit, engine/model/runtime version, platform, and device-matrix hash;
-- one device-coverage row per frozen matrix entry with OS version, device class, and required/observed sample counts;
+- one device-coverage row per frozen matrix entry with OS version, device class, required/observed sample counts, and complete tuning/final metric sets (including per-entry p50/p95 latency);
 - preprocessing and band-mapping configuration hashes;
 - zz decoder/spec 003 vector version, wordlist version, and check-word implementation version;
 - separate tuning/final aggregate metrics and per-split bucket metrics, including fiducial localization/pairing and payload metrics; release gates use final-only metrics;
-- pre-run and execution attestation references and hashes, the bound gate-config hash, trusted freeze timestamp, required bucket minima and observed counts, frozen IoU/CER parameters, all thresholds, and a result for every required final-only release gate;
-- every False Accept/false-valid case by sample_id with disposition;
+- pre-run and execution attestation references/hashes plus separate Sigstore bundle references/hashes, the bound gate-config hash, verified pre-run Rekor freeze timestamp, required bucket minima and observed counts, frozen IoU/CER parameters, all thresholds, and a result for every required final-only release gate;
+- every False Accept/false-valid case keyed by device-matrix entry, sample, and pair (pair may be null only for sample-level/no-code False Accepts), with expected/observed values and disposition;
 - dependency/license/security-review disposition;
 - PASS, FAIL, INCOMPLETE, or NO_PROMOTION. PASS is valid only for a final-split run with writer-isolated splits, complete sample/bucket coverage, all mandatory metrics, all required gates passing, and no undispositioned False Accept or false-valid case;
 - promoted engine, or NO_PROMOTION;

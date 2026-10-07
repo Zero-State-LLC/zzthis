@@ -15,8 +15,12 @@
     "candidate_bundle_sha256",
     "pre_run_attestation_sha256",
     "pre_run_attestation_ref",
+    "pre_run_sigstore_bundle_sha256",
+    "pre_run_sigstore_bundle_ref",
     "execution_attestation_sha256",
     "execution_attestation_ref",
+    "execution_sigstore_bundle_sha256",
+    "execution_sigstore_bundle_ref",
     "split_counts",
     "adapter",
     "device_coverage",
@@ -51,11 +55,21 @@
       "pattern": "^[a-f0-9]{64}$"
     },
     "pre_run_attestation_ref": { "type": "string", "format": "uri" },
+    "pre_run_sigstore_bundle_sha256": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "pre_run_sigstore_bundle_ref": { "type": "string", "format": "uri" },
     "execution_attestation_sha256": {
       "type": "string",
       "pattern": "^[a-f0-9]{64}$"
     },
     "execution_attestation_ref": { "type": "string", "format": "uri" },
+    "execution_sigstore_bundle_sha256": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "execution_sigstore_bundle_ref": { "type": "string", "format": "uri" },
     "split_counts": {
       "type": "object",
       "additionalProperties": false,
@@ -116,7 +130,8 @@
           "os_version",
           "device_class",
           "minimum_sample_count",
-          "observed_sample_count"
+          "observed_sample_count",
+          "metrics_by_split"
         ],
         "properties": {
           "device_matrix_entry_id": {
@@ -126,7 +141,16 @@
           "os_version": { "type": "string", "minLength": 1 },
           "device_class": { "type": "string", "minLength": 1 },
           "minimum_sample_count": { "type": "integer", "minimum": 1 },
-          "observed_sample_count": { "type": "integer", "minimum": 0 }
+          "observed_sample_count": { "type": "integer", "minimum": 0 },
+          "metrics_by_split": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["tuning", "final"],
+            "properties": {
+              "tuning": { "$ref": "#/$defs/metricSet" },
+              "final": { "$ref": "#/$defs/metricSet" }
+            }
+          }
         }
       }
     },
@@ -416,11 +440,11 @@
     },
     "false_accepts": {
       "type": "array",
-      "items": { "$ref": "#/$defs/caseDisposition" }
+      "items": { "$ref": "#/$defs/falseAcceptDisposition" }
     },
     "false_valid_cases": {
       "type": "array",
-      "items": { "$ref": "#/$defs/caseDisposition" }
+      "items": { "$ref": "#/$defs/falseValidDisposition" }
     },
     "reviews": {
       "type": "object",
@@ -633,19 +657,37 @@
       "type": "object",
       "additionalProperties": false,
       "required": [
+        "device_matrix_entry_id",
         "sample_id",
+        "pair_id",
         "expected_codes",
         "observed_codes",
         "disposition",
         "reviewer"
       ],
       "properties": {
+        "device_matrix_entry_id": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9._-]+$"
+        },
         "sample_id": { "type": "string", "minLength": 1 },
+        "pair_id": { "type": ["string", "null"], "minLength": 1 },
         "expected_codes": { "type": "array", "items": { "type": "string" } },
         "observed_codes": { "type": "array", "items": { "type": "string" } },
         "disposition": { "type": "string", "minLength": 1 },
         "reviewer": { "type": "string", "minLength": 1 }
       }
+    },
+    "falseAcceptDisposition": { "$ref": "#/$defs/caseDisposition" },
+    "falseValidDisposition": {
+      "allOf": [
+        { "$ref": "#/$defs/caseDisposition" },
+        {
+          "properties": {
+            "pair_id": { "type": "string", "minLength": 1 }
+          }
+        }
+      ]
     },
     "reviewDisposition": {
       "type": "object",

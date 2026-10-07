@@ -16,12 +16,7 @@
     "device_matrix_sha256",
     "adapter_results_sha256",
     "started_at_utc",
-    "finished_at_utc",
-    "issuer_id",
-    "key_id",
-    "publication_ref",
-    "signature_algorithm",
-    "signature"
+    "finished_at_utc"
   ],
   "properties": {
     "schema_version": { "const": 1 },
@@ -41,11 +36,6 @@
     "device_matrix_sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
     "adapter_results_sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
     "started_at_utc": { "type": "string", "format": "date-time" },
-    "finished_at_utc": { "type": "string", "format": "date-time" },
-    "issuer_id": { "type": "string", "minLength": 1 },
-    "key_id": { "type": "string", "minLength": 1 },
-    "publication_ref": { "type": "string", "format": "uri" },
-    "signature_algorithm": { "type": "string", "minLength": 1 },
-    "signature": { "type": "string", "minLength": 1 }
+    "finished_at_utc": { "type": "string", "format": "date-time" }
   }
 }
