@@ -6,7 +6,7 @@ Bundle: B4. This documents the GitHub Actions deployment path.
 
 The manual `Cloudflare marketing staging` workflow builds and verifies the repository, then deploys only `zzthis-site-staging` using `wrangler.site.toml`. It runs only on `main`, uses the `cloudflare-staging` GitHub environment, and never deploys on a push or pull request. Cloudflare credentials enter only the deployment step. The lockfile supplies Wrangler through the API workspace; the workflow uses npm exec in that workspace.
 
-The first deployment established Cloudflare access and a marketing preview on 2026-10-07. The subsequent manual API workflow deployed an isolated staging API Worker with staging D1, R2, and Durable Object bindings. It did not provision OAuth clients, a production Worker, DNS, or a custom domain. The API currently remains fail-closed at its readiness guard, so this is deployment evidence rather than API verification. The current `/zzthis/` build is preserved until the cutover runbook changes it.
+The first deployment established Cloudflare access and a marketing preview on 2026-10-07. The subsequent manual API workflow deployed an isolated staging API Worker with staging D1, R2, and Durable Object bindings. A corrected staging data-key secret was promoted and the contract-level discovery endpoint returned HTTP 200. It did not provision OAuth clients, a production Worker, DNS, or a custom domain. The current `/zzthis/` build is preserved until the cutover runbook changes it.
 
 ### Observed marketing staging deployment
 
@@ -31,7 +31,7 @@ Do not paste the token into chat, issues, pull requests, repository files, or wo
 
 ## API staging next
 
-The manual `Cloudflare API staging` workflow now deploys only `zzthis-api-staging` after validation and applies migrations only to `zzthis-staging`. Its deployment token is restricted to the selected account with Workers Scripts and D1 edit access. Runtime secrets are stored only in Cloudflare. Do not reuse local placeholder identifiers or bind any production state. Keep the API's developer sign-in disabled on a public staging endpoint unless a separate access boundary is established and approved. Never generate replacement application keys on every deploy. Resolve the recorded `not-ready` response before treating the API as staging-verified.
+The manual `Cloudflare API staging` workflow now deploys only `zzthis-api-staging` after validation and applies migrations only to `zzthis-staging`. Its deployment token is restricted to the selected account with Workers Scripts and D1 edit access. Runtime secrets are stored only in Cloudflare. Do not reuse local placeholder identifiers or bind any production state. Keep the API's developer sign-in disabled on a public staging endpoint unless a separate access boundary is established and approved. Never generate replacement application keys on every deploy. The readiness gate is resolved; broader authenticated and state-changing API verification remains pending.
 
 ## Sources
 
