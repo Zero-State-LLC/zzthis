@@ -127,12 +127,17 @@ a.pill {
 /* [MICHAEL 2026-10-06 change list] Small zzThat wordmark under zzthat.com.
    Keep the aspect ratio; no background, outline, or shadow. */
 .explore__logo {
-  display: block;
   width: auto;
   height: 1.5rem;
   max-width: 100%;
   object-fit: contain;
   margin-block: var(--space-3xs);
+}
+
+/* Block layout only for single logos; a light/dark pair takes its display
+   from the .only-light / .only-dark theme helpers in b-base.css. */
+.explore__logo:not(.only-light) {
+  display: block;
 }
 
 @media (min-width: 48rem) {

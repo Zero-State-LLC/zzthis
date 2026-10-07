@@ -37,9 +37,23 @@ const handwritten = [
       {prototypes.map((site) => (
         <li>
           <a href={site.href}>{site.name}</a>
+          {site.logo?.srcLight && (
+            <img
+              class="explore__logo only-light"
+              src={url(site.logo.srcLight)}
+              width={site.logo.width}
+              height={site.logo.height}
+              alt={site.logo.alt}
+              loading="lazy"
+              decoding="async"
+            />
+          )}
           {site.logo && (
             <img
-              class="explore__logo"
+              class:list={[
+                "explore__logo",
+                { "only-dark": site.logo.srcLight !== undefined },
+              ]}
               src={url(site.logo.src)}
               width={site.logo.width}
               height={site.logo.height}

@@ -13,7 +13,14 @@ export interface Prototype {
   name: string;
   href: string;
   text: string;
-  logo?: { src: string; width: number; height: number; alt: string };
+  logo?: {
+    src: string;
+    /** Optional light-theme version; `src` is then the dark-theme version. */
+    srcLight?: string;
+    width: number;
+    height: number;
+    alt: string;
+  };
 }
 
 // [MICHAEL 2026-10-06 change list] A small zzThat wordmark under zzthat.com on
@@ -43,8 +50,9 @@ export const aboutPage = {
   contactCardHeading: "Contact",
   contactCardText: "Invite collaboration and test partners.",
   explorationsHeading: "Current prototypes and explorations",
+  // [MICHAEL 2026-10-07] zzthing.com is replaced by zzthis.com.
   prototypeLabel:
-    "zzThing is a concept showcase; zzThat is a working prototype, launching soon.",
+    "zzThis is for commercial and government use; zzThat is our free consumer app, launching soon.",
   handwrittenHeading: "Codes written by hand",
   handwrittenLabel: "Real photos of handwritten codes.",
   locationHeading: "Location",
@@ -72,10 +80,19 @@ export const hackerDojo = {
 };
 
 export const prototypes: readonly Prototype[] = [
+  // [MICHAEL 2026-10-07] zzthis.com replaces zzthing.com, with its wordmark:
+  // white "this" on the dark theme, dark ink on the light theme.
   {
-    name: "zzthing.com",
-    href: "https://zzthing.com",
-    text: "Broader showcase and label mockups.",
+    name: "zzthis.com",
+    href: "https://zzthis.com",
+    logo: {
+      src: "images/logos/zzthis-dark.webp",
+      srcLight: "images/logos/zzthis-light.webp",
+      width: 333,
+      height: 96,
+      alt: "zzThis",
+    },
+    text: "For commercial use: businesses, enterprises, governments, and defense. Logistics, inventory, and postal workflows, built secure and compliant.",
   },
   {
     name: "zzthat.com",
