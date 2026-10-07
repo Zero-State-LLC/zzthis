@@ -16,6 +16,10 @@ export interface QualificationReport {
       pre_run: "NOT_PERFORMED" | "VERIFIED" | "FAILED";
       execution: "NOT_PERFORMED" | "VERIFIED" | "FAILED";
     };
+    sigstore_integrated_time_utc: {
+      pre_run: string | null;
+      execution: string | null;
+    };
     decoder_replay: "NOT_PERFORMED" | "EXECUTED_UNPINNED" | "EXECUTED_PINNED";
     decoder_identity: "VERIFIED" | "MISMATCH" | "UNAVAILABLE";
     scoring_and_receipt: "NOT_PERFORMED";
@@ -63,8 +67,16 @@ export function inspectQualification(
     policyPresent?: boolean;
     policyError?: string;
     sigstoreVerifications?: {
-      preRun?: { verified: boolean; reason?: string };
-      execution?: { verified: boolean; reason?: string };
+      preRun?: {
+        verified: boolean;
+        reason?: string;
+        integrated_time_utc?: string;
+      };
+      execution?: {
+        verified: boolean;
+        reason?: string;
+        integrated_time_utc?: string;
+      };
     };
     rawInputBytes?: Record<string, Uint8Array>;
     decoderIdentity?: DecoderIdentity;

@@ -10,6 +10,7 @@ import {
 } from "./ocr-decoder-identity.mjs";
 import { replayDecoderEvidence } from "./ocr-qualification-decoder-replay.mjs";
 import { summarizeSigstoreVerifications } from "./ocr-qualification-verification-summary.mjs";
+import { validateTrustedAttestationTimeline } from "./ocr-qualification-trusted-time.mjs";
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const QUALIFICATION_DIR = path.join(ROOT, "specs/004-capture/qualification");
@@ -431,6 +432,12 @@ export function inspectQualification(
   if (policyError) reasonCodes.push(policyError);
   const sigstoreSummary = summarizeSigstoreVerifications(sigstoreVerifications);
   reasonCodes.push(...sigstoreSummary.reasons);
+  reasonCodes.push(
+    ...validateTrustedAttestationTimeline(
+      documents.executionAttestation,
+      sigstoreVerifications,
+    ),
+  );
   if (!decoderReplay.performed) {
     reasonCodes.push(decoderReplay.reason);
   } else {
@@ -454,6 +461,10 @@ export function inspectQualification(
       sigstore_attestations: {
         pre_run: sigstoreSummary.preRun,
         execution: sigstoreSummary.execution,
+      },
+      sigstore_integrated_time_utc: {
+        pre_run: sigstoreSummary.preRunIntegratedTime,
+        execution: sigstoreSummary.executionIntegratedTime,
       },
       decoder_replay: !decoderReplay.performed
         ? "NOT_PERFORMED"

@@ -4,6 +4,8 @@ export function summarizeSigstoreVerifications(verifications) {
       status: "NOT_PERFORMED",
       preRun: "NOT_PERFORMED",
       execution: "NOT_PERFORMED",
+      preRunIntegratedTime: null,
+      executionIntegratedTime: null,
       reasons: ["sigstore_bundle_verification_not_performed"],
     };
   }
@@ -32,6 +34,12 @@ export function summarizeSigstoreVerifications(verifications) {
           : "FAILED",
     preRun: preRunVerified ? "VERIFIED" : "FAILED",
     execution: executionVerified ? "VERIFIED" : "FAILED",
+    preRunIntegratedTime: preRunVerified
+      ? (verifications.preRun.integrated_time_utc ?? null)
+      : null,
+    executionIntegratedTime: executionVerified
+      ? (verifications.execution.integrated_time_utc ?? null)
+      : null,
     reasons,
   };
 }

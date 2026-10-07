@@ -207,8 +207,14 @@ describe("OCR qualification preflight", () => {
     const report = inspectQualification(inputs, {
       policyPresent: true,
       sigstoreVerifications: {
-        preRun: { verified: true },
-        execution: { verified: true },
+        preRun: {
+          verified: true,
+          integrated_time_utc: "2026-10-07T11:59:00.000Z",
+        },
+        execution: {
+          verified: true,
+          integrated_time_utc: "2026-10-07T12:02:00.000Z",
+        },
       },
       rawInputBytes: inputs.rawInputBytes,
     });
@@ -218,12 +224,64 @@ describe("OCR qualification preflight", () => {
       pre_run: "VERIFIED",
       execution: "VERIFIED",
     });
+    expect(report.checks.sigstore_integrated_time_utc).toEqual({
+      pre_run: "2026-10-07T11:59:00.000Z",
+      execution: "2026-10-07T12:02:00.000Z",
+    });
     expect(report.reason_codes).toContain(
       "protected_verifier_policy_protection_unverified",
     );
     expect(report.status).toBe("INCOMPLETE");
     expect(report.disposition).toBe("NO_PROMOTION");
     expect(report.promotion_eligible).toBe(false);
+  });
+
+  it("rejects backdated run start and execution publication timestamps", async () => {
+    const inputs = await completeSyntheticInputs();
+    const report = inspectQualification(inputs, {
+      policyPresent: true,
+      sigstoreVerifications: {
+        preRun: {
+          verified: true,
+          integrated_time_utc: "2026-10-07T12:00:30.000Z",
+        },
+        execution: {
+          verified: true,
+          integrated_time_utc: "2026-10-07T12:00:45.000Z",
+        },
+      },
+      rawInputBytes: inputs.rawInputBytes,
+    });
+
+    expect(report.reason_codes).toContain(
+      "execution_started_not_after_prerun_publication",
+    );
+    expect(report.reason_codes).toContain("execution_published_before_finish");
+    expect(report.status).toBe("INCOMPLETE");
+    expect(report.promotion_eligible).toBe(false);
+  });
+
+  it("does not evaluate caller timestamps when either signature is unverified", async () => {
+    const inputs = await completeSyntheticInputs();
+    const report = inspectQualification(inputs, {
+      policyPresent: true,
+      sigstoreVerifications: {
+        preRun: {
+          verified: true,
+          integrated_time_utc: "2026-10-07T12:00:30.000Z",
+        },
+        execution: { verified: false, reason: "signature_invalid" },
+      },
+      rawInputBytes: inputs.rawInputBytes,
+    });
+
+    expect(report.reason_codes).not.toContain(
+      "execution_started_not_after_prerun_publication",
+    );
+    expect(report.reason_codes).not.toContain(
+      "execution_published_before_finish",
+    );
+    expect(report.status).toBe("INCOMPLETE");
   });
 
   it("replays valid manifest truth through the shared parser and check word", async () => {
