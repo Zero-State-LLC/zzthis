@@ -4,7 +4,17 @@
   "title": "ZZ-OCR-QUAL-001 qualification receipt",
   "type": "object",
   "additionalProperties": false,
-  "required": ["schema_version", "qualification_id", "run_id", "timestamp_utc", "manifest_sha256", "adapter", "decoder", "metrics", "disposition"],
+  "required": [
+    "schema_version",
+    "qualification_id",
+    "run_id",
+    "timestamp_utc",
+    "manifest_sha256",
+    "adapter",
+    "decoder",
+    "metrics",
+    "disposition"
+  ],
   "properties": {
     "schema_version": { "const": 1 },
     "qualification_id": { "const": "ZZ-OCR-QUAL-001" },
@@ -12,8 +22,17 @@
     "timestamp_utc": { "type": "string", "format": "date-time" },
     "manifest_sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
     "adapter": {
-      "type": "object", "additionalProperties": false,
-      "required": ["commit", "platform", "os_version", "device_class", "engine_id", "engine_version", "config_sha256"],
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "commit",
+        "platform",
+        "os_version",
+        "device_class",
+        "engine_id",
+        "engine_version",
+        "config_sha256"
+      ],
       "properties": {
         "commit": { "type": "string", "minLength": 7 },
         "platform": { "enum": ["ios", "android"] },
@@ -25,7 +44,8 @@
       }
     },
     "decoder": {
-      "type": "object", "additionalProperties": false,
+      "type": "object",
+      "additionalProperties": false,
       "required": ["vectors_sha256", "wordlist_version", "checkword_version"],
       "properties": {
         "vectors_sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
@@ -34,8 +54,15 @@
       }
     },
     "metrics": {
-      "type": "object", "additionalProperties": true,
-      "required": ["sample_count", "false_accept_count", "false_valid_decode_count", "false_finder_count", "false_pair_count"],
+      "type": "object",
+      "additionalProperties": true,
+      "required": [
+        "sample_count",
+        "false_accept_count",
+        "false_valid_decode_count",
+        "false_finder_count",
+        "false_pair_count"
+      ],
       "properties": {
         "sample_count": { "type": "integer", "minimum": 1 },
         "false_accept_count": { "type": "integer", "minimum": 0 },
@@ -44,7 +71,17 @@
         "false_pair_count": { "type": "integer", "minimum": 0 }
       }
     },
-    "false_accepts": { "type": "array", "items": { "type": "object", "required": ["sample_id", "disposition"], "properties": { "sample_id": { "type": "string" }, "disposition": { "type": "string" } } },
+    "false_accepts": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["sample_id", "disposition"],
+        "properties": {
+          "sample_id": { "type": "string" },
+          "disposition": { "type": "string" }
+        }
+      }
+    },
     "reviews": { "type": "object", "additionalProperties": true },
     "disposition": { "enum": ["PASS", "FAIL", "INCOMPLETE", "NO_PROMOTION"] },
     "promoted_engine": { "type": ["string", "null"] },
