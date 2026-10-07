@@ -27,7 +27,8 @@ const { topWays } = usesModule;
 const { demoTitle } = demoModule;
 const { technologyDraft } = technologyModule;
 const { conceptLabels } = labelsModule;
-const { coreIdentity, fieldLogistics, photoToAction } = workflowsModule;
+const { coreIdentity, fieldLogistics, howItWorksPage, photoToAction } =
+  workflowsModule;
 
 const modules: readonly unknown[] = [
   anatomyModule,
@@ -160,6 +161,14 @@ describe("comparison (spec 3.2 H.3)", () => {
 });
 
 describe("workflows (spec 3.2 H.4 to H.6)", () => {
+  it("keeps voice recognition out of the current reading paths", () => {
+    expect(howItWorksPage.readWays.heading).toBe("Two ways to read a code");
+    expect(howItWorksPage.readWays.methods).toEqual(["Camera", "Typing"]);
+    expect(howItWorksPage.readWays.line).toContain(
+      "Voice recognition is planned for a future release; it is not part of v1.",
+    );
+  });
+
   it("matches the core workflow", () => {
     expect(coreIdentity.intro).toBe(
       "Core identity: MARK a lowercase zz code → READ it by camera or manual entry → LINK it to a record → REPORT the words by voice where useful.",

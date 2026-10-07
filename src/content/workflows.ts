@@ -81,9 +81,9 @@ export const howItWorksPage = {
     "Two connected workflows: one code for identity, and AI for the work that follows.",
   coreHeading: "Core identity",
   readWays: {
-    heading: "Three ways to read a code",
-    methods: ["Camera", "Typing", "Voice"],
-    line: "Camera reading uses the two zz endpoints to frame the code before reading the words between them. Manual entry uses the same code grammar. Voice remains a later input path.",
+    heading: "Two ways to read a code",
+    methods: ["Camera", "Typing"],
+    line: "Camera reading uses the two zz endpoints to frame the code before reading the words between them. Manual entry uses the same code grammar. Voice recognition is planned for a future release; it is not part of v1.",
     images: ["d", "f"] satisfies ImageId[],
   },
   uncertain: {
