@@ -45,7 +45,7 @@ zzThis is a **prototype**.
 - The code library ([`packages/zz-core`](packages/zz-core/)), the `/v1` API server ([`workers/api`](workers/api/)), and the web client ([`apps/web`](apps/web/)) are implemented in this repository and pass their tests ([spec 005](specs/005-v1-api/spec.md)). The API and web client are deployed only to isolated staging; production deployment remains gated by the operator requirements in [`AGENTS.md`](AGENTS.md).
 - The demo uses scripted demo data only. It runs no recognition, makes no network requests, uses no camera or microphone, and stores nothing.
 - Images labeled "Concept illustration" are AI renderings, not photos of a working system.
-- Capture by camera, typing, or voice ([spec 004](specs/004-capture/spec.md)) is not built, and the on-device reader is off in v1. No accuracy or performance result is claimed.
+- Camera and voice recognition ([spec 004](specs/004-capture/spec.md)) are not built, and the on-device reader is off in v1. Typed lookup is available in the web client. No recognition accuracy or performance result is claimed.
 
 ## Quick start
 
@@ -202,11 +202,12 @@ Track work on the live [zzThis + zzThat board](https://github.com/orgs/Zero-Stat
 - [ ] xTechSearch: confirm eligibility and registrations, decide by Oct 12 ([#11](https://github.com/Zero-State-LLC/zzthis/issues/11))
 - [ ] xTechSearch submission prep ([#8](https://github.com/Zero-State-LLC/zzthis/issues/8))
 
-### Phase 3: Product prototype (implemented in this repo; deployment pending)
+### Phase 3: Product prototype (implemented in this repo; isolated staging deployed, production gated)
 
 - [x] Wordlist pipeline and check-word library ([#14](https://github.com/Zero-State-LLC/zzthis/issues/14), [`packages/zz-core`](packages/zz-core/))
 - [x] Minimal exact-match resolver ([#13](https://github.com/Zero-State-LLC/zzthis/issues/13), [`workers/api`](workers/api/))
-- [ ] Capture by camera, typing, or voice; recognition approach still open
+- [x] Typed lookup in the web client (spec 005 US6)
+- [ ] Camera and voice recognition (spec 004); on-device camera reader is off in v1
 - [x] `/v1` API ([spec 005](specs/005-v1-api/spec.md)): contract shell ([#60](https://github.com/Zero-State-LLC/zzthis/issues/60)), data model ([#61](https://github.com/Zero-State-LLC/zzthis/issues/61)), sign-in ([#62](https://github.com/Zero-State-LLC/zzthis/issues/62)), mint and re-roll ([#63](https://github.com/Zero-State-LLC/zzthis/issues/63)), resolve and owner records ([#64](https://github.com/Zero-State-LLC/zzthis/issues/64)), retry photo ([#65](https://github.com/Zero-State-LLC/zzthis/issues/65)), rate limits ([#66](https://github.com/Zero-State-LLC/zzthis/issues/66))
 - [x] Later web client in this repo, thin client of `/v1` ([#67](https://github.com/Zero-State-LLC/zzthis/issues/67), [`apps/web`](apps/web/), spec 005 US6)
 - [ ] zzThat phone apps, specified in that repo, consume this API and [`design/`](design/README.md)
