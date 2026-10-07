@@ -147,7 +147,7 @@ Older names such as `--surface` and `--text` point at these tokens. The full set
 
 ## Architecture
 
-The marketing site and the demo are static and call no API. The server and the code library for the topology below are now implemented in this repository ([spec 005](specs/005-v1-api/spec.md)); only the deploy is pending. The design is copied from [`docs/SPEC.md` Section 10.1](docs/SPEC.md#101-topology): one central server owns codes, records, grants, and the audit log; every app is an API client; revocation, single use, expiry, and rate limits are enforced on the server. The HTTP contract for that server is [`specs/005-v1-api`](specs/005-v1-api/spec.md). The server chooses the words, including for free public codes.
+The marketing site and the demo are static and call no API. The server and the code library for the topology below are now implemented in this repository ([spec 005](specs/005-v1-api/spec.md)). The API and web client are deployed only in isolated staging; production deployment remains gated. The design is copied from [`docs/SPEC.md` Section 10.1](docs/SPEC.md#101-topology): one central server owns codes, records, grants, and the audit log; every app is an API client; revocation, single use, expiry, and rate limits are enforced on the server. The HTTP contract for that server is [`specs/005-v1-api`](specs/005-v1-api/spec.md). The server chooses the words, including for free public codes.
 
 ```mermaid
 flowchart LR
