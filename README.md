@@ -56,7 +56,7 @@ npm ci              # install exact versions from package-lock.json
 npm run dev         # start the dev server at http://localhost:4321/zzthis/
 npm run lint        # ESLint and Prettier check
 npm run typecheck   # astro check and tsc --noEmit
-npm run test        # Vitest; root coverage gates src/lib and the demo state machine, while workspace tests cover their configured TypeScript scopes
+npm run test        # Vitest; root coverage gates src/lib and demoMachine.ts; zz-core, web, and API workspaces gate their configured src/**/*.ts scopes
 npm run build       # build to dist/ and run scripts/check-dist.mjs
 npm run preview     # serve dist/ locally
 npm run dev:api     # start the local /v1 API Worker that the web client calls
