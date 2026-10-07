@@ -24,7 +24,7 @@ Workflows for every implementing task: anti-slop-code, production-systems, googl
 ## Phase 4: US3, About (P2)
 
 - [x] T008 Founder origin, advisor cards with bios and supplied links (PR #16).
-- [ ] T009 [P] Add Daniel Meyer's profile URL and accomplishments, and Adam Fry's link and photo, when supplied (Q10, Q12). Adam's specialty and bio, Ridham's updated role and bio, and Jim White's removal are done. Blocked on Michael.
+- [ ] T009 [P] Add Daniel Meyer's profile URL and accomplishments, and Adam Fry's link, when supplied (Q10, Q12). Adam's specialty, bio, and photo, Jim White's removal, and Ridham Bhagat's removal (2026-10-06, Danny approved 2026-10-07) are done. Blocked on Michael.
 
 ## Phase 5: US4, Demo (P2)
 
