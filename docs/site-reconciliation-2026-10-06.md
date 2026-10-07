@@ -55,6 +55,16 @@ The current architecture remains:
 | No deploy/DNS/spend | ADOPT | This branch changes repository content only. |
 | Later lowercase zzthat inline-logo preference | ADOPT AS TARGET / DEFER ASSET | Governs the eventual asset treatment when the approved logo is available. |
 
+## Verification log — 2026-10-07
+
+- An isolated public Cloudflare Worker Preview was built from site commit `03934b0f480331879e83275fad1e829920443bc1` at <https://pr-91-zzthis-site-staging.zer0state-noema.workers.dev/>. The preview requires Astro's base path to be `/`; GitHub Pages continues to use `/zzthis/`.
+- Browser review confirmed that `/`, `/about/`, `/applications/`, `/contact/`, `/demo/`, and `/how-it-works/` load from the Worker root. Each route exposes the expected footer navigation and contact link. Lazy-loaded How it works panels appeared after scrolling.
+- The home demo's typing lookup returns its demo record and states that it made no network request. Manual visual review found no obvious broken imagery; this was not a complete network trace or asset-by-asset audit.
+- Local lint, typecheck, root/site builds, 218 root tests, and 78 site tests passed. `zz-core` passed 234/235 (one property test hit its 30-second timeout); API passed 326/330 (four audit/rate-limit tests hit their 5-second timeouts).
+- The prior site commit `33e3f3cf9bf780d92d162d49f0029fdeb149ca0a` had green GitHub CI, site typecheck/test, and security checks. GitHub showed no checks for `03934b0f480331879e83275fad1e829920443bc1` at the time of this review.
+- Clef visual comparisons leaned healthy for most pairs, but had low or inconclusive confidence on several; they are not sign-off. PR #89 remains draft/unmerged, so the architecture-claim audit is still pending.
+- This was an isolated PR Worker Preview only. The protected/main-only marketing staging workflow, production Worker, DNS, and production controls were not changed.
+
 ## Acceptance
 
 Before merge:
