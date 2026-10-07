@@ -2,26 +2,51 @@
 
 Status: staging evidence recorded 2026-10-07; production identifiers/credentials are not stored here. Bundle: B4.
 
-| Environment | Resource | Binding/name | State |
-|---|---|---|---|
-| local | API Worker | wrangler local | existing |
-| local | D1 | ZZ_DB local simulation | existing |
-| local | R2 | ZZ_PHOTOS local simulation | existing; photo reads disabled |
-| local | Durable Object | ZZ_LIMITER / Limiter | existing |
-| staging | API Worker | zzthis-api-staging | deployed and API-contract smoke-checked 2026-10-07; public feature flags remain safely disabled |
-| staging | D1 | ZZ_DB / zzthis-staging (`b2f73070-69a2-4066-9e7e-963f8e1b0b06`) | created, health-checked, and bound only to the staging API Worker |
-| staging | R2 | ZZ_PHOTOS / zzthis-photos-staging | created and bound only to the staging API Worker; photo reads remain disabled |
-| staging | Durable Object | ZZ_LIMITER / Limiter | created with the staging API Worker |
-| staging | Cron Trigger | `zzthis-api-staging` / `17 3 * * *` UTC | configured; one scheduled retention/retry execution verified without errors on 2026-10-07 |
-| staging | marketing Worker | zzthis-site-staging | deployed and smoke-checked; no custom domain/route |
-| production | API Worker | zzthis-api | human-gated |
-| production | D1 | ZZ_DB / zzthis | human-gated |
-| production | R2 | ZZ_PHOTOS / zzthis-photos | human-gated; authorized object classes only |
-| production | marketing Worker | final name/domain TBD at cutover | human-gated |
+| Environment | Resource | Binding/name | State | Owner |
+|---|---|---|---|---|
+| local | API Worker | wrangler local | existing; local simulation only | zzThis developers |
+| local | D1 | ZZ_DB local simulation | existing | zzThis developers |
+| local | R2 | ZZ_PHOTOS local simulation | existing; photo reads disabled | zzThis developers |
+| local | Durable Object | ZZ_LIMITER / Limiter | existing local simulation | zzThis developers |
+| staging | API Worker | zzthis-api-staging | deployed and API-contract smoke-checked; isolated bindings; workers.dev and preview subdomains enabled | Cloudflare operator (resource/access); API service maintainer (code/config) |
+| staging | D1 | ZZ_DB / zzthis-staging | created, health-checked, and bound only to the staging API Worker | Cloudflare operator (resource); API service maintainer (schema/data use) |
+| staging | R2 | ZZ_PHOTOS / zzthis-photos-staging | created and bound only to the staging API Worker; photo reads remain disabled | Cloudflare operator (resource); API service maintainer (data use) |
+| staging | Durable Object | ZZ_LIMITER / `zzthis-api-staging_Limiter` (`Limiter`) | created with the staging API Worker | Cloudflare operator (resource); API service maintainer (class/behavior) |
+| staging | Cron Trigger | `zzthis-api-staging` / `17 3 * * *` UTC | configured; one scheduled retention/retry execution verified without errors | Cloudflare operator (trigger); API service maintainer (handler) |
+| staging | marketing Worker | zzthis-site-staging | deployed and smoke-checked; workers.dev and preview subdomains enabled; no custom domain/route | Cloudflare operator (resource/access); site service maintainer (assets/config) |
+| production | API Worker | zzthis-api | not present in the account inventory; human-gated | Operator approval required before creation/assignment |
+| production | D1 | ZZ_DB / zzthis | not present in the account inventory; human-gated | Operator approval required before creation/assignment |
+| production | R2 | ZZ_PHOTOS / zzthis-photos | not present in the account inventory; human-gated | Operator approval required before creation/assignment |
+| production | marketing Worker | final name/domain TBD at cutover | not present in the account inventory; human-gated | Operator approval required before creation/assignment |
 
 ## Secrets
 
-Record names and owners after staging setup, never values. Use Worker secret storage, not wrangler vars or repository files.
+The Cloudflare account operator owns secret values, access, and rotation. The API service maintainer owns the application binding/use. Verified on `zzthis-api-staging`: `ZZ_TOKEN_SECRET`, `ZZ_DATA_KEY`, and `ZZ_RECORD_SIGNING_KEY`. Names only; values are never recorded here. Use Worker secret storage, not Wrangler vars or repository files.
+
+## Staging binding ownership
+
+Read-only Cloudflare API inventory verified on 2026-10-07. “API maintainer” and “site maintainer” are service roles; the Cloudflare operator controls account-level provisioning, access, and remote resource lifecycle.
+
+| Worker | Binding/config | Type | Target or current setting | Owner |
+|---|---|---|---|---|
+| `zzthis-api-staging` | `ASSETS` | Static assets | API/web-client asset bundle | API service maintainer |
+| `zzthis-api-staging` | `ZZ_BLOCKLIST` | Plain-text setting | Empty | API service maintainer |
+| `zzthis-api-staging` | `ZZ_CONTRACT` | Plain-text setting | `1` | API service maintainer |
+| `zzthis-api-staging` | `ZZ_DATA_KEY` | Secret binding | Value held only in Cloudflare | Cloudflare operator (value/access); API service maintainer (use) |
+| `zzthis-api-staging` | `ZZ_DB` | D1 binding | `zzthis-staging` | API service maintainer |
+| `zzthis-api-staging` | `ZZ_DEV_AUTH` | Plain-text setting | `false` | API service maintainer |
+| `zzthis-api-staging` | `ZZ_ENV` | Plain-text setting | `staging` | API service maintainer |
+| `zzthis-api-staging` | `ZZ_FREE_PUBLIC` | Plain-text setting | `false` | API service maintainer |
+| `zzthis-api-staging` | `ZZ_LIMITER` | Durable Object binding | `zzthis-api-staging_Limiter` / class `Limiter` | API service maintainer |
+| `zzthis-api-staging` | `ZZ_MINT_ENABLED` | Plain-text setting | `false` | API service maintainer |
+| `zzthis-api-staging` | `ZZ_PHOTO_READS` | Plain-text setting | `false` | API service maintainer |
+| `zzthis-api-staging` | `ZZ_PHOTOS` | R2 binding | `zzthis-photos-staging` | API service maintainer |
+| `zzthis-api-staging` | `ZZ_RECORD_SIGNING_KEY` | Secret binding | Value held only in Cloudflare | Cloudflare operator (value/access); API service maintainer (use) |
+| `zzthis-api-staging` | `ZZ_RECORD_SIGNING_KEY_ID` | Plain-text setting | `staging-2026-10-07` | API service maintainer |
+| `zzthis-api-staging` | `ZZ_TOKEN_SECRET` | Secret binding | Value held only in Cloudflare | Cloudflare operator (value/access); API service maintainer (use) |
+| `zzthis-api-staging` | `ZZ_WORDLIST_VERSION` | Plain-text setting | `fixture-7` | API service maintainer |
+| `zzthis-site-staging` | Static assets | Asset configuration | Marketing build; no script bindings | Site service maintainer |
+| `zzthis-api-staging` | Cron Trigger | Scheduled event | `17 3 * * *` UTC | Cloudflare operator (trigger); API service maintainer (handler) |
 
 ## Isolation
 
