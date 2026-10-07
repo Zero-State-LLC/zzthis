@@ -91,6 +91,18 @@ describe("OCR qualification ROI and latency scoring", () => {
       ),
     ).toThrow(/convex/);
     expect(() =>
+      polygonIoU(
+        [
+          { x: 0.5, y: 0 },
+          { x: 0.8, y: 0.8 },
+          { x: 0, y: 0.3 },
+          { x: 1, y: 0.3 },
+          { x: 0.2, y: 0.8 },
+        ],
+        square(0, 0, 0.5, 0.5),
+      ),
+    ).toThrow(/self-intersections/);
+    expect(() =>
       scoreRoiAndLatency({ roiTruth: [], rois: [], elapsedMs: [-1] }),
     ).toThrow(/non-negative/);
   });
