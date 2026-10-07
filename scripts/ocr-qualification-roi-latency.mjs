@@ -12,6 +12,28 @@ function polygonArea(points) {
   return Math.abs(sum) / 2;
 }
 
+function segmentsIntersect(a, b, c, d) {
+  const orient = (p, q, r) => cross(p, q, r);
+  const onSegment = (p, q, r) =>
+    Math.min(p.x, r.x) <= q.x + 1e-12 &&
+    q.x <= Math.max(p.x, r.x) + 1e-12 &&
+    Math.min(p.y, r.y) <= q.y + 1e-12 &&
+    q.y <= Math.max(p.y, r.y) + 1e-12;
+  const abC = orient(a, b, c);
+  const abD = orient(a, b, d);
+  const cdA = orient(c, d, a);
+  const cdB = orient(c, d, b);
+  if (Math.sign(abC) !== Math.sign(abD) && Math.sign(cdA) !== Math.sign(cdB)) {
+    return true;
+  }
+  return (
+    (Math.abs(abC) <= 1e-12 && onSegment(a, c, b)) ||
+    (Math.abs(abD) <= 1e-12 && onSegment(a, d, b)) ||
+    (Math.abs(cdA) <= 1e-12 && onSegment(c, a, d)) ||
+    (Math.abs(cdB) <= 1e-12 && onSegment(c, b, d))
+  );
+}
+
 function validateConvexPolygon(points, label) {
   if (!Array.isArray(points) || points.length < 3) {
     throw new TypeError(`${label} must contain at least three points`);
@@ -45,6 +67,20 @@ function validateConvexPolygon(points, label) {
       );
     }
     direction = nextDirection;
+  }
+  for (let i = 0; i < points.length; i += 1) {
+    const nextI = (i + 1) % points.length;
+    for (let j = i + 1; j < points.length; j += 1) {
+      const nextJ = (j + 1) % points.length;
+      if (i === j || nextI === j || nextJ === i) continue;
+      if (
+        segmentsIntersect(points[i], points[nextI], points[j], points[nextJ])
+      ) {
+        throw new TypeError(
+          `${label} must be a simple polygon without self-intersections`,
+        );
+      }
+    }
   }
   if (direction === 0 || polygonArea(points) <= Number.EPSILON) {
     throw new TypeError(`${label} must have positive area`);
