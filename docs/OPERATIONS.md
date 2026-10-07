@@ -23,7 +23,7 @@ Until measured:
 
 No document may claim an end-to-end backup/recovery guarantee before a restore test demonstrates it. Cloudflare platform capability is evidence for the mechanism, not evidence for zzThis recovery time.
 
-Staging evidence: on 2026-10-07, `zzthis-staging` was restored in place to a D1 Time Travel bookmark taken immediately before a disposable marker was created. The marker was absent after restore, core application tables were present, and the staging API discovery endpoint passed its contract check. This is a D1-only staging drill, not a production recovery objective or an end-to-end restore test.
+Staging evidence: on 2026-10-07, `zzthis-staging` was restored in place to a D1 Time Travel bookmark taken immediately before a disposable marker was created. A repeated controlled drill confirmed all application-table counts were zero before and after. The restore request returned in 1.287 seconds and the first verification query completed 0.448 seconds later (1.735 seconds request-to-verified-query); the probe table was absent after restore. This is a measured staging D1 restore interval, not an incident-to-service RTO, production recovery objective, or product RPO.
 
 ## Backup and restore
 
@@ -107,9 +107,9 @@ Production authorization requires: numeric SLO posture, RTO/RPO, successful rest
 | Recovery objectives | Product RTO/RPO remain open. Staging D1 restore passed; end-to-end D1/R2/DO/configuration/secret recovery is not proven. |
 | API and limiter | Contract discovery returned 200; bounded discovery limit check returned 60 × 200 then 429. Other route limits and broader API behavior remain to be verified. |
 | Retention/retry schedule | Staging API Cron Trigger `17 3 * * *` UTC ran at 2026-10-07 03:17:58 UTC; its count-only report showed zero work and zero logged errors. This verifies one scheduled execution, not nonzero cleanup behavior. Production schedule remains human-gated. |
-| R2 data lifecycle | Private staging bucket has the 30-day `reads/` expiration rule and zero objects; actual expiry has not been exercised. |
+| R2 data lifecycle | Staging API is bound to the private `zzthis-photos-staging` bucket; public r2.dev and custom domains are disabled, no CORS policy exists, and `ZZ_PHOTO_READS=false`. The enabled 30-day `reads/` expiration rule is configured, but no objects exist and actual expiry has not been exercised. |
 | Durable Object recovery | Limiter is non-authoritative; no namespace recovery drill is recorded. |
-| Site parity and rollback | Six required routes and 137 local assets passed HTTP checks; titles/H1s match and CSS/JS assets match after base-path normalization; a staging marketing Worker version rollback rehearsal passed. `/robots.txt` and security-header differences remain, and mobile/desktop visual plus browser runtime-network review is incomplete. |
+| Site parity and rollback | Six required routes and 137 local assets passed HTTP checks; titles/H1s match and CSS/JS assets match after base-path normalization; a staging marketing Worker version rollback rehearsal passed. `/robots.txt` and security-header differences remain, and mobile/desktop visual plus browser runtime-network review is incomplete. Site-content PR #91 remains open and its latest test run has two content assertion failures, so the final accepted Pages baseline is still pending. |
 | Observability and privacy | Staging invocation logs are disabled while persisted application logs remain enabled. Production redaction/retention/alerting review is open. |
 | Secret/key lifecycle | Staging token-secret replacement passed with no staged accounts/sessions and API readiness remained 200. Production ownership, cadence, recovery, and emergency rotation procedure remain open. |
 | Incident readiness | Contacts, escalation path, and measured incident restoration exercise remain open. |
