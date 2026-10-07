@@ -16,6 +16,7 @@ Michael sent a short change list on 2026-10-07 ("zzthis ws modification asks", v
 - Home: the language heading reads "zz- In - any - language -zz", with dashes between the words.
 - About: the zzThat wordmark uses the lowercase "zzthat" variant, from Michael's supplied logo file.
 - About: the founder bio and the Hacker Dojo paragraph are replaced with Michael's text as given.
+- About: Omer F. Yalcin is added as the fifth advisor, with his headshot and LinkedIn link. The bio is condensed from his LinkedIn profile; the role line and the closing "advises zzThis on" sentence are drafted for Michael to confirm.
 
 ## Constraints
 
@@ -24,4 +25,4 @@ Michael sent a short change list on 2026-10-07 ("zzthis ws modification asks", v
 
 ## Affected users / systems
 
-`src/content/anatomy.ts`, `src/components/Anatomy.astro`, `src/styles/b-console.css`, `src/content/contact.ts`, `src/content/people.ts`, `public/images/logos/zzthat-lowercase.webp`.
+`src/content/anatomy.ts`, `src/components/Anatomy.astro`, `src/styles/b-console.css`, `src/content/contact.ts`, `src/content/people.ts`, `public/images/logos/zzthat-lowercase.webp`, `public/images/people/omer-yalcin.webp`, `tests/content.test.ts`.

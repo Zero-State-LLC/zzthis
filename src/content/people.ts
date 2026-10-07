@@ -45,6 +45,7 @@ export const founder: Founder = {
 // Daniel Meyer keeps initials. [MICHAEL 2026-10-06 change list] Daniel and
 // Adam move to the first two places; Adam's photo and bio are updated.
 // Ridham Bhagat is removed from the site.
+// [MICHAEL 2026-10-07] Omer F. Yalcin added as an advisor, with photo.
 // Earlier: Profile links only where a URL
 // was supplied. The 2026-10-02 brief and wireframes drop the Future space
 // card. Michael's later 2026-10-02 answers remove Jim White and update
@@ -90,6 +91,18 @@ export const advisors: readonly Person[] = [
     role: "AI security",
     profileUrl: "https://www.linkedin.com/in/arshichadha/",
     bio: "Arshi is a security engineer at Zscaler and a co-lead of the OWASP Top 10 for LLM Applications work. She earned a master’s degree in information security at Carnegie Mellon and advises zzThis on AI and application security.",
+  },
+  {
+    name: "Omer F. Yalcin",
+    initials: "OY",
+    photo: {
+      src: "images/people/omer-yalcin.webp",
+      width: 400,
+      height: 400,
+    },
+    role: "Data science and evaluation",
+    profileUrl: "https://www.linkedin.com/in/ofyalcin/",
+    bio: "Omer is a data scientist and computational social scientist with a Ph.D. in Political Science and Social Data Analytics and more than 8 years of experience in Python, R, and SQL, spanning machine learning, NLP, causal inference, and network analysis. He teaches graduate courses in data science, machine learning, and statistics at UMass Amherst, and his research has appeared in ICWSM, EMNLP Findings, and the Journal of Quantitative Description. He advises zzThis on data analysis, model evaluation, and test design.",
   },
 ];
 
