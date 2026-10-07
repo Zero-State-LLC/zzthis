@@ -41,7 +41,7 @@ const handwritten = [
             <img
               class="explore__logo only-light"
               src={url(site.logo.srcLight)}
-              width={site.logo.width}
+              width={site.logo.widthLight ?? site.logo.width}
               height={site.logo.height}
               alt={site.logo.alt}
               loading="lazy"

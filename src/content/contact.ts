@@ -17,6 +17,8 @@ export interface Prototype {
     src: string;
     /** Optional light-theme version; `src` is then the dark-theme version. */
     srcLight?: string;
+    /** Width of the light-theme version, when it differs. */
+    widthLight?: number;
     width: number;
     height: number;
     alt: string;
@@ -81,13 +83,15 @@ export const hackerDojo = {
 
 export const prototypes: readonly Prototype[] = [
   // [MICHAEL 2026-10-07] zzthis.com replaces zzthing.com, with its wordmark:
-  // white "this" on the dark theme, dark ink on the light theme.
+  // white "this" on the dark theme (the default); on the light theme, a black
+  // "this" on a minimal white badge (Michael's GPT-made file, 2026-10-07).
   {
     name: "zzthis.com",
     href: "https://zzthis.com",
     logo: {
       src: "images/logos/zzthis-dark.webp",
       srcLight: "images/logos/zzthis-light.webp",
+      widthLight: 372,
       width: 333,
       height: 96,
       alt: "zzThis",
