@@ -46,7 +46,7 @@ function usage() {
     ...REQUIRED_INPUTS.map((name) => `  --${ARGUMENT_NAMES[name]} <path>`),
     "  [--output <path>]",
     "",
-    "This preflight is evidence validation only. It always returns INCOMPLETE/NO_PROMOTION until pinned decoder identity, Sigstore verification, scoring, and receipt generation are complete.",
+    "This preflight is evidence validation only. It always returns INCOMPLETE/NO_PROMOTION until protected Sigstore verification, scoring, and receipt generation are complete.",
   ].join("\n");
 }
 

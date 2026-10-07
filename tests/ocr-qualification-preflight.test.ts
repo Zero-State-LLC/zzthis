@@ -6,6 +6,7 @@ import {
   canonicalSha256,
   exactSha256,
   inspectQualification,
+  verifyDecoderIdentity,
   type JsonObject,
 } from "../scripts/ocr-qualification-preflight.mjs";
 
@@ -178,7 +179,11 @@ describe("OCR qualification preflight", () => {
     );
     expect(report.reason_codes).toContain("final_bucket_minimum_not_met");
     expect(report.checks.decoder_replay).toBe("EXECUTED_UNPINNED");
-    expect(report.reason_codes).toContain("decoder_identity_unverified");
+    expect(report.checks.decoder_identity).toBe("MISMATCH");
+    expect(report.reason_codes).toContain("decoder_commit_mismatch");
+    expect(report.reason_codes).toContain(
+      "decoder_hash_mismatch:wordlist_sha256",
+    );
     expect(report.reason_codes).toContain("scoring_and_receipt_not_performed");
     expect(report.decoder_replay_summary).toMatchObject({
       candidate_count: 1,
@@ -202,6 +207,34 @@ describe("OCR qualification preflight", () => {
     expect(report.reason_codes).not.toContain(
       "valid_ground_truth_checkword_mismatch",
     );
+  });
+
+  it("verifies every declared decoder hash and requires a clean matching commit", () => {
+    const candidate = {
+      commit: "a".repeat(40),
+      wordlist_sha256: "b".repeat(64),
+      checkword_sha256: "c".repeat(64),
+      vectors_sha256: "d".repeat(64),
+      band_mapping_sha256: "e".repeat(64),
+    };
+    const runtimeIdentity = { available: true, clean: true, ...candidate };
+
+    expect(verifyDecoderIdentity(candidate, runtimeIdentity)).toEqual({
+      verified: true,
+      reasons: [],
+    });
+    expect(
+      verifyDecoderIdentity(candidate, { ...runtimeIdentity, clean: false }),
+    ).toEqual({
+      verified: false,
+      reasons: ["decoder_checkout_dirty"],
+    });
+    expect(
+      verifyDecoderIdentity(candidate, {
+        ...runtimeIdentity,
+        band_mapping_sha256: "f".repeat(64),
+      }).reasons,
+    ).toContain("decoder_hash_mismatch:band_mapping_sha256");
   });
 
   it("rejects a valid truth entry that disagrees with the shared decoder", async () => {

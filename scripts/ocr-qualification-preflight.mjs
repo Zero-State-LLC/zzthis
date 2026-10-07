@@ -4,11 +4,14 @@ import { fileURLToPath } from "node:url";
 import path from "node:path";
 import { Validator } from "@cfworker/json-schema";
 import canonicalize from "canonicalize";
+import {
+  readDecoderIdentity,
+  verifyDecoderIdentity,
+} from "./ocr-decoder-identity.mjs";
 import { replayDecoderEvidence } from "./ocr-qualification-decoder-replay.mjs";
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const QUALIFICATION_DIR = path.join(ROOT, "specs/004-capture/qualification");
-
 const DOCUMENTS = {
   manifest: "manifest.schema.json",
   deviceMatrix: "device-matrix.schema.json",
@@ -58,6 +61,8 @@ export function canonicalSha256(value) {
 export function exactSha256(bytes) {
   return sha256(bytes);
 }
+
+export { readDecoderIdentity, verifyDecoderIdentity };
 
 function validateSchema(name, value, errors) {
   const schemaPath = path.join(QUALIFICATION_DIR, DOCUMENTS[name]);
@@ -386,7 +391,11 @@ function runDecoderReplay(documents, schemaErrors) {
 
 export function inspectQualification(
   documents,
-  { policyPresent = false, rawInputBytes = {} } = {},
+  {
+    policyPresent = false,
+    rawInputBytes = {},
+    decoderIdentity = readDecoderIdentity(),
+  } = {},
 ) {
   const { errors, schemaErrors, hashes } = collectSchemasAndHashes(
     documents,
@@ -406,6 +415,13 @@ export function inspectQualification(
 
   const decoderReplay = runDecoderReplay(documents, schemaErrors);
   if (decoderReplay.performed) errors.push(...decoderReplay.errors);
+  const decoderIdentityCheck = verifyDecoderIdentity(
+    documents.candidateBundle?.decoder,
+    decoderIdentity,
+  );
+  if (!decoderIdentityCheck.verified) {
+    errors.push(...decoderIdentityCheck.reasons);
+  }
 
   const reasonCodes = [...new Set(errors)];
   if (!policyPresent) reasonCodes.push("protected_verifier_policy_missing");
@@ -413,7 +429,7 @@ export function inspectQualification(
   if (!decoderReplay.performed) {
     reasonCodes.push(decoderReplay.reason);
   } else {
-    reasonCodes.push("decoder_identity_unverified");
+    reasonCodes.push(...decoderIdentityCheck.reasons);
     reasonCodes.push("scoring_and_receipt_not_performed");
   }
 
@@ -430,9 +446,16 @@ export function inspectQualification(
         ? "PRESENT_UNVERIFIED"
         : "MISSING",
       sigstore_verification: "NOT_PERFORMED",
-      decoder_replay: decoderReplay.performed
-        ? "EXECUTED_UNPINNED"
-        : "NOT_PERFORMED",
+      decoder_replay: !decoderReplay.performed
+        ? "NOT_PERFORMED"
+        : decoderIdentityCheck.verified
+          ? "EXECUTED_PINNED"
+          : "EXECUTED_UNPINNED",
+      decoder_identity: !decoderIdentity.available
+        ? "UNAVAILABLE"
+        : decoderIdentityCheck.verified
+          ? "VERIFIED"
+          : "MISMATCH",
       scoring_and_receipt: "NOT_PERFORMED",
     },
     decoder_replay_summary: decoderReplay.summary ?? null,

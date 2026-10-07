@@ -11,7 +11,8 @@ export interface QualificationReport {
     structural_validation: "PASS" | "INCOMPLETE";
     protected_verifier_policy: "PRESENT_UNVERIFIED" | "MISSING";
     sigstore_verification: "NOT_PERFORMED";
-    decoder_replay: "NOT_PERFORMED" | "EXECUTED_UNPINNED";
+    decoder_replay: "NOT_PERFORMED" | "EXECUTED_UNPINNED" | "EXECUTED_PINNED";
+    decoder_identity: "VERIFIED" | "MISMATCH" | "UNAVAILABLE";
     scoring_and_receipt: "NOT_PERFORMED";
   };
   decoder_replay_summary: {
@@ -24,6 +25,10 @@ export interface QualificationReport {
       confirm: number;
       other: number;
     };
+    band_counts: {
+      tuning: Record<"accept" | "clarify" | "retry" | "abstain", number>;
+      final: Record<"accept" | "clarify" | "retry" | "abstain", number>;
+    };
     valid_truth_count: number;
   } | null;
   hashes: Record<string, string>;
@@ -32,10 +37,26 @@ export interface QualificationReport {
 
 export function canonicalSha256(value: unknown): string;
 export function exactSha256(bytes: Uint8Array): string;
+export interface DecoderIdentity {
+  available: boolean;
+  reason?: string;
+  commit?: string;
+  clean?: boolean;
+  wordlist_sha256?: string;
+  checkword_sha256?: string;
+  vectors_sha256?: string;
+  band_mapping_sha256?: string;
+}
+export function readDecoderIdentity(): DecoderIdentity;
+export function verifyDecoderIdentity(
+  candidateDecoder: JsonObject | undefined,
+  runtimeIdentity: DecoderIdentity,
+): { verified: boolean; reasons: string[] };
 export function inspectQualification(
   documents: object,
   options?: {
     policyPresent?: boolean;
     rawInputBytes?: Record<string, Uint8Array>;
+    decoderIdentity?: DecoderIdentity;
   },
 ): QualificationReport;
