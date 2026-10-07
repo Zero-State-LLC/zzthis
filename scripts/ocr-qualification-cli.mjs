@@ -6,6 +6,7 @@ import {
   inspectQualification,
   REQUIRED_INPUTS,
 } from "./ocr-qualification-preflight.mjs";
+import { verifyQualificationBundles } from "./ocr-qualification-sigstore-pair.mjs";
 
 async function readJson(filePath, name) {
   try {
@@ -46,7 +47,7 @@ function usage() {
     ...REQUIRED_INPUTS.map((name) => `  --${ARGUMENT_NAMES[name]} <path>`),
     "  [--output <path>]",
     "",
-    "This preflight is evidence validation only. It always returns INCOMPLETE/NO_PROMOTION until protected Sigstore verification, scoring, and receipt generation are complete.",
+    "This preflight also checks Sigstore bundles when Cosign is available. It always returns INCOMPLETE/NO_PROMOTION until policy protection, trusted workflow timing, scoring, and receipt generation are established.",
   ].join("\n");
 }
 
@@ -71,7 +72,9 @@ async function main() {
   for (const name of REQUIRED_INPUTS) {
     if (name === "preRunBundle" || name === "executionBundle") {
       try {
-        documents[name] = (await readJson(options[name], name)).value;
+        const input = await readJson(options[name], name);
+        documents[name] = input.value;
+        rawInputBytes[name] = input.bytes;
       } catch {
         reasonCodes.push(`sigstore_bundle_unreadable:${name}`);
       }
@@ -86,8 +89,16 @@ async function main() {
     }
   }
 
+  const sigstoreVerifications = await verifyQualificationBundles({
+    preRunAttestation: documents.preRunAttestation,
+    executionAttestation: documents.executionAttestation,
+    preRunBundle: rawInputBytes.preRunBundle,
+    executionBundle: rawInputBytes.executionBundle,
+  });
   const report = inspectQualification(documents, {
-    policyPresent: false,
+    policyPresent: sigstoreVerifications.policyPresent,
+    policyError: sigstoreVerifications.policyError,
+    sigstoreVerifications,
     rawInputBytes,
   });
   report.reason_codes = [...new Set([...reasonCodes, ...report.reason_codes])];

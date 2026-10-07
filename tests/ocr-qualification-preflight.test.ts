@@ -177,6 +177,11 @@ describe("OCR qualification preflight", () => {
     expect(report.reason_codes).toContain(
       "sigstore_bundle_verification_not_performed",
     );
+    expect(report.checks.sigstore_verification).toBe("NOT_PERFORMED");
+    expect(report.checks.sigstore_attestations).toEqual({
+      pre_run: "NOT_PERFORMED",
+      execution: "NOT_PERFORMED",
+    });
     expect(report.reason_codes).toContain("final_bucket_minimum_not_met");
     expect(report.checks.decoder_replay).toBe("EXECUTED_UNPINNED");
     expect(report.checks.decoder_identity).toBe("MISMATCH");
@@ -195,6 +200,30 @@ describe("OCR qualification preflight", () => {
         final: { accept: 0, clarify: 0, retry: 1, abstain: 0 },
       },
     });
+  });
+
+  it("keeps fully verified signatures unqualified until policy protection is proven", async () => {
+    const inputs = await completeSyntheticInputs();
+    const report = inspectQualification(inputs, {
+      policyPresent: true,
+      sigstoreVerifications: {
+        preRun: { verified: true },
+        execution: { verified: true },
+      },
+      rawInputBytes: inputs.rawInputBytes,
+    });
+
+    expect(report.checks.sigstore_verification).toBe("VERIFIED_UNQUALIFIED");
+    expect(report.checks.sigstore_attestations).toEqual({
+      pre_run: "VERIFIED",
+      execution: "VERIFIED",
+    });
+    expect(report.reason_codes).toContain(
+      "protected_verifier_policy_protection_unverified",
+    );
+    expect(report.status).toBe("INCOMPLETE");
+    expect(report.disposition).toBe("NO_PROMOTION");
+    expect(report.promotion_eligible).toBe(false);
   });
 
   it("replays valid manifest truth through the shared parser and check word", async () => {

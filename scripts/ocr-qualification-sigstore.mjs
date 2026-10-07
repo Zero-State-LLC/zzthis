@@ -99,11 +99,21 @@ function runCosign(executable, args, payloadBytes, environment) {
 export async function verifySigstoreAttestation({
   attestation,
   bundleBytes,
-  policy = loadVerifierPolicy(),
+  policy,
   cosignPath = "cosign",
   environment = process.env,
   run = runCosign,
 }) {
+  if (policy === undefined) {
+    try {
+      policy = loadVerifierPolicy();
+    } catch {
+      return {
+        verified: false,
+        reason: "protected_verifier_policy_unreadable",
+      };
+    }
+  }
   if (!validatePolicy(policy)) {
     return { verified: false, reason: "protected_verifier_policy_invalid" };
   }

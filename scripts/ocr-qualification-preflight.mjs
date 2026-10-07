@@ -9,6 +9,7 @@ import {
   verifyDecoderIdentity,
 } from "./ocr-decoder-identity.mjs";
 import { replayDecoderEvidence } from "./ocr-qualification-decoder-replay.mjs";
+import { summarizeSigstoreVerifications } from "./ocr-qualification-verification-summary.mjs";
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const QUALIFICATION_DIR = path.join(ROOT, "specs/004-capture/qualification");
@@ -393,6 +394,8 @@ export function inspectQualification(
   documents,
   {
     policyPresent = false,
+    policyError,
+    sigstoreVerifications,
     rawInputBytes = {},
     decoderIdentity = readDecoderIdentity(),
   } = {},
@@ -425,7 +428,9 @@ export function inspectQualification(
 
   const reasonCodes = [...new Set(errors)];
   if (!policyPresent) reasonCodes.push("protected_verifier_policy_missing");
-  reasonCodes.push("sigstore_bundle_verification_not_performed");
+  if (policyError) reasonCodes.push(policyError);
+  const sigstoreSummary = summarizeSigstoreVerifications(sigstoreVerifications);
+  reasonCodes.push(...sigstoreSummary.reasons);
   if (!decoderReplay.performed) {
     reasonCodes.push(decoderReplay.reason);
   } else {
@@ -445,7 +450,11 @@ export function inspectQualification(
       protected_verifier_policy: policyPresent
         ? "PRESENT_UNVERIFIED"
         : "MISSING",
-      sigstore_verification: "NOT_PERFORMED",
+      sigstore_verification: sigstoreSummary.status,
+      sigstore_attestations: {
+        pre_run: sigstoreSummary.preRun,
+        execution: sigstoreSummary.execution,
+      },
       decoder_replay: !decoderReplay.performed
         ? "NOT_PERFORMED"
         : decoderIdentityCheck.verified
