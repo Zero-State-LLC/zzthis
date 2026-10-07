@@ -1,12 +1,16 @@
 # Cloudflare connection through GitHub Actions
 
-Bundle: B4. This is the fallback when Cloudflare dashboard authentication in the agent browser or custom MCP installation is unavailable.
+Bundle: B4. This documents the GitHub Actions deployment path; Cloudflare MCP/OAuth is also connected for read-only inventory and authorized resource operations.
 
 ## Current scope
 
 The manual `Cloudflare marketing staging` workflow builds and verifies the repository, then deploys only `zzthis-site-staging` using `wrangler.site.toml`. It runs only on `main`, uses the `cloudflare-staging` GitHub environment, and never deploys on a push or pull request. Cloudflare credentials enter only the deployment step. The lockfile supplies Wrangler through the API workspace; the workflow uses npm exec in that workspace.
 
-This first deployment establishes Cloudflare access and a marketing preview. It does not provision the API, D1, R2, OAuth clients, signing keys, a production Worker, or DNS. Those remain the subsequent B4 staging tasks. The current `/zzthis/` build is preserved until the cutover runbook changes it.
+The first deployment established Cloudflare access and a marketing preview on 2026-10-07. It did not provision the API, R2, OAuth clients, signing keys, a production Worker, or DNS. A separate `zzthis-staging` D1 database was created and health-checked; it is not yet bound to an API Worker. Those remain the subsequent B4 staging tasks. The current `/zzthis/` build is preserved until the cutover runbook changes it.
+
+### Observed marketing staging deployment
+
+The manual workflow completed successfully as [run 37550094879](https://github.com/Zero-State-LLC/zzthis/actions/runs/37550094879) from source SHA `b2350d47b67bcb4e5d1a8ed19354d92d3840596c`. Wrangler deployed `zzthis-site-staging` version `8da9a4ff-2e80-46c3-aec2-76c08edd5191` at `https://zzthis-site-staging.zer0state-noema.workers.dev`. Direct smoke checks observed HTTP 200 for `/` and HTTP 404 for an unknown path. This is staging evidence only; it is neither route parity evidence nor production authorization.
 
 ## Operator connection
 
@@ -27,7 +31,7 @@ Do not paste the token into chat, issues, pull requests, repository files, or wo
 
 ## API staging next
 
-API provisioning requires separately prepared staging configuration and permissions for the resources actually used: D1, the existing limiter Durable Object, governed R2, runtime secrets, and the Cron job. Do not reuse local placeholder identifiers. Keep the API's developer sign-in disabled on a public staging endpoint unless a separate access boundary is established and approved. Never generate replacement application keys on every deploy.
+API provisioning requires separately prepared staging configuration and permissions for the resources actually used: the `zzthis-staging` D1 binding, the staging limiter Durable Object, governed R2 if remote photo-read testing is authorized, runtime secrets, and the Cron job. Do not reuse local placeholder identifiers or bind any production state. Keep the API's developer sign-in disabled on a public staging endpoint unless a separate access boundary is established and approved. Never generate replacement application keys on every deploy.
 
 ## Sources
 
