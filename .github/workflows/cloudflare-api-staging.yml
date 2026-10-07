@@ -46,6 +46,7 @@ jobs:
           set -euo pipefail
           test -n "$CLOUDFLARE_API_TOKEN" || { echo 'Missing staging CLOUDFLARE_API_TOKEN'; exit 1; }
           test -n "$CLOUDFLARE_ACCOUNT_ID" || { echo 'Missing staging CLOUDFLARE_ACCOUNT_ID'; exit 1; }
+          npm exec --workspace @zzthis/api -- wrangler d1 migrations apply zzthis-staging --remote --config wrangler.staging.toml
           npm exec --workspace @zzthis/api -- wrangler deploy --config wrangler.staging.toml
       - name: Record deployment source
         run: |
