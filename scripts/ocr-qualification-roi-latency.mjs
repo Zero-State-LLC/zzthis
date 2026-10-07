@@ -23,7 +23,7 @@ function segmentsIntersect(a, b, c, d) {
   const abD = orient(a, b, d);
   const cdA = orient(c, d, a);
   const cdB = orient(c, d, b);
-  if (Math.sign(abC) !== Math.sign(abD) && Math.sign(cdA) !== Math.sign(cdB)) {
+  if (abC * abD < -1e-12 && cdA * cdB < -1e-12) {
     return true;
   }
   return (
