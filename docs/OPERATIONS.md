@@ -29,6 +29,8 @@ Staging evidence: on 2026-10-07, `zzthis-staging` was restored in place to a D1 
 
 Production runbook must cover D1, R2, Durable Object state, configuration, and signing/secret material.
 
+The `ZZ_LIMITER` Durable Object is non-authoritative: it stores only the current rate-limit window and clears it when that window ends. Its recovery posture is to resume or recreate the limiter namespace; lost limiter state can only reset a transient rate-limit window. It does not recover or replace D1, R2, configuration, or secret material.
+
 Required evidence before production:
 1. documented backup/export mechanism and cadence;
 2. retention and encryption policy;
