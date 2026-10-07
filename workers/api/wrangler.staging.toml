@@ -1,0 +1,45 @@
+# Persistent staging-only API Worker. This configuration never references a
+# production resource; deploy it only through the manual staging workflow.
+name = "zzthis-api-staging"
+main = "src/index.ts"
+compatibility_date = "2026-08-15"
+compatibility_flags = ["nodejs_compat"]
+
+[assets]
+directory = "../../apps/web/dist"
+binding = "ASSETS"
+run_worker_first = true
+
+[[d1_databases]]
+binding = "ZZ_DB"
+database_name = "zzthis-staging"
+database_id = "b2f73070-69a2-4066-9e7e-963f8e1b0b06"
+migrations_dir = "migrations"
+
+[[r2_buckets]]
+binding = "ZZ_PHOTOS"
+bucket_name = "zzthis-photos-staging"
+
+[[durable_objects.bindings]]
+name = "ZZ_LIMITER"
+class_name = "Limiter"
+
+[[migrations]]
+tag = "v1"
+new_sqlite_classes = ["Limiter"]
+
+[triggers]
+crons = ["17 3 * * *"]
+
+# Safe, non-secret staging configuration. Runtime keys are Cloudflare Worker
+# secrets and are deliberately absent from this file.
+[vars]
+ZZ_ENV = "staging"
+ZZ_CONTRACT = "1"
+ZZ_FREE_PUBLIC = "false"
+ZZ_MINT_ENABLED = "false"
+ZZ_PHOTO_READS = "false"
+ZZ_DEV_AUTH = "false"
+ZZ_WORDLIST_VERSION = "fixture-7"
+ZZ_RECORD_SIGNING_KEY_ID = "staging-2026-10-07"
+ZZ_BLOCKLIST = ""

@@ -1,6 +1,6 @@
 # Requirements checklist: 005-v1-api
 
-Checked 2026-10-04 against this folder, after the deepening in [analysis 2026-10-04](../../analysis-2026-10-04.md). The server is not built.
+Checked 2026-10-05 against the current repository after the one-shot implementation stream. The V1 server/web implementation and tests are present on main; production deployment and external Cloudflare/OAuth resources remain human-gated.
 
 ## Completeness
 
@@ -17,10 +17,11 @@ Checked 2026-10-04 against this folder, after the deepening in [analysis 2026-10
 
 ## Not done
 
-- [ ] The build itself (tasks Group 0 to Group I).
+- [x] The implementation itself: tasks Group 0 through Group J are checked in `tasks.md`, with runtime files and tests present on main.
 - [x] Danny's yes on Q66 ([#68](https://github.com/Zero-State-LLC/zzthis/issues/68)): native Apple and Google sign-in, provider ID token with a server nonce [DANNY 2026-10-04].
 - [x] Danny's yes on Q67 to Q71, the spec 003 prototype defaults, and the spec 004 pipeline ([#74](https://github.com/Zero-State-LLC/zzthis/issues/74), 2026-10-04).
-- [ ] Danny's yes for Cloudflare and OAuth clients (T023).
+- [ ] Danny's explicit production setup/deploy approval for Cloudflare resources, OAuth clients, secrets, and deployment (T023). This remains a human gate and is not implied by implementation completion.
+- [ ] Production-readiness governance in `docs/OPERATIONS.md`, `docs/DATA-LIFECYCLE.md`, and `docs/THREAT-MODEL.md` has its evidence gates completed (numeric RTO/RPO/SLO posture, restore test, incident contacts, observability/redaction, key lifecycle).
 
 ## Consistency
 

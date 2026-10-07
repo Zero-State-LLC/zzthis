@@ -3,6 +3,10 @@
 Feature: [spec.md](spec.md) · Plan: [plan.md](plan.md) · Related issue: #13 (reads on the device; server-side OCR only for retries)
 Workflows for every implementing task: anti-slop-code, production-systems, google-developer-style. CI: `ci.yml`, `site-ci.yml`, `free-security-scan.yml`.
 
+
+## Status reconciliation
+
+This is the original capture decomposition. V1 boundaries and server/client integration were consolidated under spec 005/zzThat. Voice, trained-reader work, and the Option B benchmark remain deferred. Unchecked boxes are **not** a reliable current-status list. Use [TRACEABILITY](../TRACEABILITY.md) and current product specs before scheduling work.
 ## Phase 0: Decisions
 
 - [ ] T001 App scope and platform (Q33). Owner: Michael and Danny.

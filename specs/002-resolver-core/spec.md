@@ -1,7 +1,7 @@
 # Feature spec: resolver core
 
 Feature ID: 002-resolver-core
-Status: not built. Prototype requested in issue #13. Deepened 2026-10-03: canonical-form rules from the v1 grammar, handles, error states, and edge cases.
+Status: implemented/subsumed by spec 005 on main; production deployment remains gated. Originally requested in issue #13. Deepened 2026-10-03: canonical-form rules from the v1 grammar, handles, error states, and edge cases.
 Phase: specify (what and why). The how is in [plan.md](plan.md), which carries the architecture proposal from `docs/SPEC.md` Section 10.
 Constitution: [.specify/memory/constitution.md](../../.specify/memory/constitution.md).
 
@@ -9,7 +9,7 @@ The `/v1` wire contract is [spec 005](../005-v1-api/spec.md). This file stays th
 
 ## Why
 
-A zz code on paper is public. Anyone can copy it, photograph it, or guess at it. The value of zzThis depends on a resolver that turns a code into the right record for the right person, and nothing else [PRODUCT] [OPERATOR 2026-10-02]. No resolver exists yet; its security is untested [PRODUCT].
+A zz code on paper is public. Anyone can copy it, photograph it, or guess at it. The value of zzThis depends on a resolver that turns a code into the right record for the right person, and nothing else [PRODUCT] [OPERATOR 2026-10-02]. The original product source stated that no resolver existed and its security was untested [PRODUCT]. OBSERVED 2026-10-05: the V1 resolver implementation and automated tests now exist under spec 005; production behavior remains unvalidated until deployment/pilot evidence exists.
 
 ## Users
 
@@ -18,7 +18,7 @@ A zz code on paper is public. Anyone can copy it, photograph it, or guess at it.
 | Person holding a marked item | Read a code and see the record view they are allowed to see | [BRIEF] [OPERATOR 2026-10-02] |
 | Issuer (for example a supply clerk) | Issue a code, link it to a record, update the record, revoke the code | [PRODUCT] [OPERATOR 2026-10-02] |
 | Auditor | See who did what to a code or record, and when | [PRODUCT] |
-| Partner system | Resolve codes through an API | [OPERATOR 2026-10-02]; authentication OPEN (Q19) |
+| Partner system | Resolve codes through an API | [OPERATOR 2026-10-02]; Q19 RESOLVED 2026-10-04: no partner route in contract 1; v2 uses OAuth 2.0 client credentials, one client per partner |
 
 ## User stories
 
@@ -83,7 +83,7 @@ As a field user who wrote a code by hand with no device, I can link it to a reco
 | FR-014 | Input that fails the grammar gets a `malformed` response with the parser reason. The grammar is public, so the reason reveals nothing about live codes. Malformed calls count toward rate limits. | INFERRED |
 | FR-015 | A bare mark (`zz`) cannot be resolved by text in v1. It returns `unsupported` with reason `bare-mark-needs-context`. Matching a bare mark by photo, place, and time is a v2 candidate. | [MICHAEL 2026-10-02 #33] describes the matching; the v1 split is INFERRED |
 | FR-016 | Every code and handle belongs to a scope (v1 scopes: enterprise, logistics; free public and postal are v2). Handles are unique within their scope, compared in canonical (lowercase) form and on the G10 matching key. In v1, only the server issues a handle, to an authenticated owner; writing a handle on a thing does not claim it. Verifying that the owner really is the named brand comes later. | [MICHAEL 2026-10-03 #42] (Q56); v1 scope list INFERRED |
-| FR-017 | The canonical form of an active code is unique. Whether a retired code's words can be issued again stays OPEN (Q36); until it is answered, the prototype never reissues. | Q36; default INFERRED |
+| FR-017 | The canonical form of an active code is unique. Retired code words are never reissued. | Q36 RESOLVED [DELEGATED 2026-10-04, #74] |
 | FR-018 | No state change without its audit event: if signing or the audit write fails, the whole call fails and nothing is stored. | INFERRED from FR-002 and FR-003 |
 | FR-019 | Reserved handles. The server refuses to issue a reserved handle to a free user, comparing on the G10 matching key so `@adm1n` counts as `@admin`. Seed categories: system names (`admin`, `administrator`, `root`, `support`, `help`, `security`, `official`, `zz`, `zzthis`, `zzthat`, `zzthing`, `zerostate`); brand and trademark names (enterprise only, after verification); government and agency names (for example `usps`, `army`, `irs`); offensive terms (kept in a list outside the public repo). An issued handle has at least 3 characters after `@`. Premium pricing for short handles is v2. | [MICHAEL 2026-10-03 #47] (Q60); seed list and key check INFERRED |
 | FR-020 | A record marked private cannot be opened by a one-part code alone. A one-part code opens a private record only for a signed-in user with permission. One-part codes are fine for public records (signs, community posts). | INFERRED from [MICHAEL 2026-10-03 #46] (Q59) and the issue proposal |
