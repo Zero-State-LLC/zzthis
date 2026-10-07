@@ -42,7 +42,7 @@ This repository holds the marketing site and a scripted click-through demo, publ
 zzThis is a **prototype**.
 
 - The marketing site and the demo are live, and both are static: they call no API.
-- The code library ([`packages/zz-core`](packages/zz-core/)), the `/v1` API server ([`workers/api`](workers/api/)), and the web client ([`apps/web`](apps/web/)) are implemented in this repository and pass their tests ([spec 005](specs/005-v1-api/spec.md)). None of the three is deployed. Deployment waits on the operator gates in [`AGENTS.md`](AGENTS.md).
+- The code library ([`packages/zz-core`](packages/zz-core/)), the `/v1` API server ([`workers/api`](workers/api/)), and the web client ([`apps/web`](apps/web/)) are implemented in this repository and pass their tests ([spec 005](specs/005-v1-api/spec.md)). The API and web client are deployed only to isolated staging; production deployment remains gated by the operator requirements in [`AGENTS.md`](AGENTS.md).
 - The demo uses scripted demo data only. It runs no recognition, makes no network requests, uses no camera or microphone, and stores nothing.
 - Images labeled "Concept illustration" are AI renderings, not photos of a working system.
 - Capture by camera, typing, or voice ([spec 004](specs/004-capture/spec.md)) is not built, and the on-device reader is off in v1. No accuracy or performance result is claimed.
