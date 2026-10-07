@@ -8,19 +8,41 @@
     "schema_version",
     "qualification_id",
     "run_id",
-    "timestamp_utc",
+    "started_at_utc",
+    "finished_at_utc",
     "manifest_sha256",
+    "split_counts",
     "adapter",
     "decoder",
     "metrics",
-    "disposition"
+    "bucket_metrics",
+    "release_gates",
+    "false_accepts",
+    "false_valid_cases",
+    "reviews",
+    "report_sha256",
+    "disposition",
+    "promoted_engine",
+    "approver",
+    "pull_request",
+    "no_promotion_reason"
   ],
   "properties": {
     "schema_version": { "const": 1 },
     "qualification_id": { "const": "ZZ-OCR-QUAL-001" },
     "run_id": { "type": "string", "minLength": 1 },
-    "timestamp_utc": { "type": "string", "format": "date-time" },
+    "started_at_utc": { "type": "string", "format": "date-time" },
+    "finished_at_utc": { "type": "string", "format": "date-time" },
     "manifest_sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+    "split_counts": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["tuning", "final"],
+      "properties": {
+        "tuning": { "type": "integer", "minimum": 0 },
+        "final": { "type": "integer", "minimum": 0 }
+      }
+    },
     "adapter": {
       "type": "object",
       "additionalProperties": false,
@@ -31,61 +53,396 @@
         "device_class",
         "engine_id",
         "engine_version",
-        "config_sha256"
+        "config_sha256",
+        "preprocessing_sha256",
+        "adapter_results_sha256"
       ],
       "properties": {
         "commit": { "type": "string", "minLength": 7 },
         "platform": { "enum": ["ios", "android"] },
-        "os_version": { "type": "string" },
-        "device_class": { "type": "string" },
-        "engine_id": { "type": "string" },
-        "engine_version": { "type": "string" },
-        "config_sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" }
+        "os_version": { "type": "string", "minLength": 1 },
+        "device_class": { "type": "string", "minLength": 1 },
+        "engine_id": { "type": "string", "minLength": 1 },
+        "engine_version": { "type": "string", "minLength": 1 },
+        "config_sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+        "preprocessing_sha256": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        },
+        "adapter_results_sha256": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        }
       }
     },
     "decoder": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["vectors_sha256", "wordlist_version", "checkword_version"],
-      "properties": {
-        "vectors_sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
-        "wordlist_version": { "type": "string" },
-        "checkword_version": { "type": "string" }
-      }
-    },
-    "metrics": {
-      "type": "object",
-      "additionalProperties": true,
       "required": [
-        "sample_count",
-        "false_accept_count",
-        "false_valid_decode_count",
-        "false_finder_count",
-        "false_pair_count"
+        "commit",
+        "vectors_sha256",
+        "wordlist_version",
+        "checkword_version",
+        "band_mapping_sha256"
       ],
       "properties": {
-        "sample_count": { "type": "integer", "minimum": 1 },
-        "false_accept_count": { "type": "integer", "minimum": 0 },
-        "false_valid_decode_count": { "type": "integer", "minimum": 0 },
-        "false_finder_count": { "type": "integer", "minimum": 0 },
-        "false_pair_count": { "type": "integer", "minimum": 0 }
+        "commit": { "type": "string", "minLength": 7 },
+        "vectors_sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+        "wordlist_version": { "type": "string", "minLength": 1 },
+        "checkword_version": { "type": "string", "minLength": 1 },
+        "band_mapping_sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" }
+      }
+    },
+    "metrics": { "$ref": "#/$defs/metricSet" },
+    "bucket_metrics": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["bucket_id", "metrics"],
+        "properties": {
+          "bucket_id": { "type": "string", "minLength": 1 },
+          "metrics": { "$ref": "#/$defs/metricSet" }
+        }
+      }
+    },
+    "release_gates": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "frozen_at_utc",
+        "final_split_manifest_sha256",
+        "config_sha256",
+        "required_buckets",
+        "thresholds",
+        "gate_results"
+      ],
+      "properties": {
+        "frozen_at_utc": { "type": "string", "format": "date-time" },
+        "final_split_manifest_sha256": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        },
+        "config_sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+        "required_buckets": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": { "type": "string", "minLength": 1 }
+        },
+        "thresholds": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "max_false_accept_count",
+            "max_false_valid_decode_rate",
+            "min_endpoint_recall",
+            "min_pair_accuracy",
+            "min_exact_code_accuracy",
+            "max_character_error_rate",
+            "min_rectification_success_rate",
+            "max_p95_latency_ms"
+          ],
+          "properties": {
+            "max_false_accept_count": { "const": 0 },
+            "max_false_valid_decode_rate": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            },
+            "min_endpoint_recall": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            },
+            "min_pair_accuracy": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            },
+            "min_exact_code_accuracy": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            },
+            "max_character_error_rate": { "type": "number", "minimum": 0 },
+            "min_rectification_success_rate": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            },
+            "max_p95_latency_ms": { "type": "number", "exclusiveMinimum": 0 }
+          }
+        },
+        "gate_results": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "gate_id",
+              "observed",
+              "operator",
+              "threshold",
+              "result"
+            ],
+            "properties": {
+              "gate_id": { "type": "string", "minLength": 1 },
+              "observed": { "type": ["number", "null"] },
+              "operator": {
+                "enum": ["eq", "lte", "gte", "lt", "gt", "present"]
+              },
+              "threshold": { "type": ["number", "null"] },
+              "result": { "enum": ["pass", "fail", "not-applicable"] }
+            }
+          }
+        }
       }
     },
     "false_accepts": {
       "type": "array",
-      "items": {
-        "type": "object",
-        "required": ["sample_id", "disposition"],
-        "properties": {
-          "sample_id": { "type": "string" },
-          "disposition": { "type": "string" }
-        }
+      "items": { "$ref": "#/$defs/caseDisposition" }
+    },
+    "false_valid_cases": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/caseDisposition" }
+    },
+    "reviews": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "dependency_license",
+        "privacy",
+        "security",
+        "qualification"
+      ],
+      "properties": {
+        "dependency_license": { "$ref": "#/$defs/reviewDisposition" },
+        "privacy": { "$ref": "#/$defs/reviewDisposition" },
+        "security": { "$ref": "#/$defs/reviewDisposition" },
+        "qualification": { "$ref": "#/$defs/reviewDisposition" }
       }
     },
-    "reviews": { "type": "object", "additionalProperties": true },
+    "report_sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
     "disposition": { "enum": ["PASS", "FAIL", "INCOMPLETE", "NO_PROMOTION"] },
     "promoted_engine": { "type": ["string", "null"] },
     "approver": { "type": ["string", "null"] },
-    "pull_request": { "type": ["string", "null"] }
+    "pull_request": { "type": ["string", "null"] },
+    "no_promotion_reason": { "type": ["string", "null"] }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": { "disposition": { "const": "PASS" } },
+        "required": ["disposition"]
+      },
+      "then": {
+        "properties": {
+          "split_counts": {
+            "type": "object",
+            "properties": { "final": { "type": "integer", "minimum": 1 } }
+          },
+          "release_gates": {
+            "type": "object",
+            "properties": {
+              "gate_results": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": { "result": { "const": "pass" } }
+                }
+              }
+            }
+          },
+          "reviews": {
+            "type": "object",
+            "properties": {
+              "dependency_license": {
+                "type": "object",
+                "properties": { "status": { "const": "approved" } }
+              },
+              "privacy": {
+                "type": "object",
+                "properties": { "status": { "const": "approved" } }
+              },
+              "security": {
+                "type": "object",
+                "properties": { "status": { "const": "approved" } }
+              },
+              "qualification": {
+                "type": "object",
+                "properties": { "status": { "const": "approved" } }
+              }
+            }
+          }
+        },
+        "required": ["promoted_engine", "approver", "pull_request"],
+        "not": {
+          "anyOf": [
+            { "properties": { "promoted_engine": { "const": null } } },
+            { "properties": { "approver": { "const": null } } },
+            { "properties": { "pull_request": { "const": null } } }
+          ]
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": { "disposition": { "const": "NO_PROMOTION" } },
+        "required": ["disposition"]
+      },
+      "then": {
+        "properties": {
+          "promoted_engine": { "const": null },
+          "no_promotion_reason": { "type": "string", "minLength": 1 }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": { "disposition": { "enum": ["FAIL", "INCOMPLETE"] } },
+        "required": ["disposition"]
+      },
+      "then": { "properties": { "promoted_engine": { "const": null } } }
+    }
+  ],
+  "$defs": {
+    "rate": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["numerator", "denominator", "rate"],
+      "properties": {
+        "numerator": { "type": "integer", "minimum": 0 },
+        "denominator": { "type": "integer", "minimum": 0 },
+        "rate": { "type": ["number", "null"], "minimum": 0, "maximum": 1 }
+      }
+    },
+    "bandDistribution": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["accept", "clarify", "retry", "abstain"],
+      "properties": {
+        "accept": { "$ref": "#/$defs/rate" },
+        "clarify": { "$ref": "#/$defs/rate" },
+        "retry": { "$ref": "#/$defs/rate" },
+        "abstain": { "$ref": "#/$defs/rate" }
+      }
+    },
+    "metricSet": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "sample_count",
+        "endpoint_precision",
+        "endpoint_recall",
+        "complete_pair_rate",
+        "pair_accuracy",
+        "false_finder_count",
+        "false_finder_rate",
+        "missed_endpoint_count",
+        "false_pair_count",
+        "false_pair_rate",
+        "roi_mean_iou",
+        "rectification_success_rate",
+        "exact_code_accuracy",
+        "part_word_accuracy",
+        "character_error_rate",
+        "false_valid_decode_count",
+        "false_valid_decode_rate",
+        "false_accept_count",
+        "false_accept_rate",
+        "no_code_false_positive_count",
+        "no_code_false_positive_rate",
+        "wrapped_code_accuracy",
+        "multi_code_accuracy",
+        "band_distribution",
+        "latency_ms",
+        "package_size_delta_bytes",
+        "peak_runtime_memory_bytes",
+        "crash_count",
+        "exception_count"
+      ],
+      "properties": {
+        "sample_count": { "type": "integer", "minimum": 1 },
+        "endpoint_precision": { "$ref": "#/$defs/rate" },
+        "endpoint_recall": { "$ref": "#/$defs/rate" },
+        "complete_pair_rate": { "$ref": "#/$defs/rate" },
+        "pair_accuracy": { "$ref": "#/$defs/rate" },
+        "false_finder_count": { "type": "integer", "minimum": 0 },
+        "false_finder_rate": { "$ref": "#/$defs/rate" },
+        "missed_endpoint_count": { "type": "integer", "minimum": 0 },
+        "false_pair_count": { "type": "integer", "minimum": 0 },
+        "false_pair_rate": { "$ref": "#/$defs/rate" },
+        "roi_mean_iou": {
+          "type": ["number", "null"],
+          "minimum": 0,
+          "maximum": 1
+        },
+        "rectification_success_rate": { "$ref": "#/$defs/rate" },
+        "exact_code_accuracy": { "$ref": "#/$defs/rate" },
+        "part_word_accuracy": { "$ref": "#/$defs/rate" },
+        "character_error_rate": { "type": ["number", "null"], "minimum": 0 },
+        "false_valid_decode_count": { "type": "integer", "minimum": 0 },
+        "false_valid_decode_rate": { "$ref": "#/$defs/rate" },
+        "false_accept_count": { "type": "integer", "minimum": 0 },
+        "false_accept_rate": { "$ref": "#/$defs/rate" },
+        "no_code_false_positive_count": { "type": "integer", "minimum": 0 },
+        "no_code_false_positive_rate": { "$ref": "#/$defs/rate" },
+        "wrapped_code_accuracy": { "$ref": "#/$defs/rate" },
+        "multi_code_accuracy": { "$ref": "#/$defs/rate" },
+        "band_distribution": { "$ref": "#/$defs/bandDistribution" },
+        "latency_ms": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["p50", "p95"],
+          "properties": {
+            "p50": { "type": "number", "minimum": 0 },
+            "p95": { "type": "number", "minimum": 0 }
+          }
+        },
+        "package_size_delta_bytes": { "type": ["integer", "null"] },
+        "peak_runtime_memory_bytes": {
+          "type": ["integer", "null"],
+          "minimum": 0
+        },
+        "crash_count": { "type": "integer", "minimum": 0 },
+        "exception_count": { "type": "integer", "minimum": 0 },
+        "not_measured_reasons": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": { "type": "string", "minLength": 1 }
+        }
+      }
+    },
+    "caseDisposition": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "sample_id",
+        "expected_codes",
+        "observed_codes",
+        "disposition",
+        "reviewer"
+      ],
+      "properties": {
+        "sample_id": { "type": "string", "minLength": 1 },
+        "expected_codes": { "type": "array", "items": { "type": "string" } },
+        "observed_codes": { "type": "array", "items": { "type": "string" } },
+        "disposition": { "type": "string", "minLength": 1 },
+        "reviewer": { "type": "string", "minLength": 1 }
+      }
+    },
+    "reviewDisposition": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status", "reviewer", "evidence_ref"],
+      "properties": {
+        "status": { "enum": ["approved", "blocked", "not-applicable"] },
+        "reviewer": { "type": "string", "minLength": 1 },
+        "evidence_ref": { "type": "string", "minLength": 1 }
+      }
+    }
   }
 }

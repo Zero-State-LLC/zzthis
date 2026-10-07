@@ -27,6 +27,20 @@
         "height": { "type": "number", "exclusiveMinimum": 0, "maximum": 1 }
       }
     },
+    "point": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["x", "y"],
+      "properties": {
+        "x": { "type": "number", "minimum": 0, "maximum": 1 },
+        "y": { "type": "number", "minimum": 0, "maximum": 1 }
+      }
+    },
+    "polygon": {
+      "type": "array",
+      "minItems": 3,
+      "items": { "$ref": "#/$defs/point" }
+    },
     "fiducial": {
       "type": "object",
       "additionalProperties": false,
@@ -35,6 +49,15 @@
         "pair_id": { "type": "string", "minLength": 1 },
         "role": { "enum": ["opening", "closing"] },
         "box": { "$ref": "#/$defs/box" }
+      }
+    },
+    "roiTruth": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["pair_id", "polygon"],
+      "properties": {
+        "pair_id": { "type": "string", "minLength": 1 },
+        "polygon": { "$ref": "#/$defs/polygon" }
       }
     },
     "sample": {
@@ -49,7 +72,8 @@
         "case_kind",
         "stress_tags",
         "ground_truth_codes",
-        "fiducials"
+        "fiducials",
+        "roi_truth"
       ],
       "properties": {
         "sample_id": { "type": "string", "pattern": "^[A-Za-z0-9._-]+$" },
@@ -85,13 +109,32 @@
           "type": "array",
           "items": { "$ref": "#/$defs/fiducial" }
         },
+        "roi_truth": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/roiTruth" }
+        },
         "expected_band_constraints": {
           "type": "array",
           "uniqueItems": true,
           "items": { "enum": ["accept", "clarify", "retry", "abstain"] }
         },
         "notes": { "type": "string" }
-      }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "case_kind": {
+                "enum": ["valid-word", "field", "handle", "multi-code"]
+              }
+            },
+            "required": ["case_kind"]
+          },
+          "then": {
+            "properties": { "roi_truth": { "type": "array", "minItems": 1 } }
+          }
+        }
+      ]
     }
   }
 }

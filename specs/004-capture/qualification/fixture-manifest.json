@@ -24,6 +24,17 @@
           "box": { "x": 0.85, "y": 0.4, "width": 0.1, "height": 0.2 }
         }
       ],
+      "roi_truth": [
+        {
+          "pair_id": "p1",
+          "polygon": [
+            { "x": 0.18, "y": 0.35 },
+            { "x": 0.72, "y": 0.35 },
+            { "x": 0.72, "y": 0.65 },
+            { "x": 0.18, "y": 0.65 }
+          ]
+        }
+      ],
       "expected_band_constraints": ["accept", "clarify"]
     },
     {
@@ -42,6 +53,7 @@
           "box": { "x": 0.05, "y": 0.4, "width": 0.1, "height": 0.2 }
         }
       ],
+      "roi_truth": [],
       "expected_band_constraints": ["retry"]
     }
   ]

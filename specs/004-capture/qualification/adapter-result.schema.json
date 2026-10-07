@@ -1,0 +1,204 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://zer0state.com/schemas/zz-ocr-qual-adapter-result-v1.json",
+  "title": "ZZ-OCR-QUAL-001 serialized adapter results",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "qualification_id",
+    "manifest_sha256",
+    "adapter",
+    "results"
+  ],
+  "properties": {
+    "schema_version": { "const": 1 },
+    "qualification_id": { "const": "ZZ-OCR-QUAL-001" },
+    "manifest_sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+    "adapter": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "commit",
+        "platform",
+        "os_version",
+        "device_class",
+        "engine_id",
+        "engine_version",
+        "config_sha256",
+        "preprocessing_sha256"
+      ],
+      "properties": {
+        "commit": { "type": "string", "minLength": 7 },
+        "platform": { "enum": ["ios", "android"] },
+        "os_version": { "type": "string", "minLength": 1 },
+        "device_class": { "type": "string", "minLength": 1 },
+        "engine_id": { "type": "string", "minLength": 1 },
+        "engine_version": { "type": "string", "minLength": 1 },
+        "config_sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+        "preprocessing_sha256": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        }
+      }
+    },
+    "results": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/sampleResult" }
+    }
+  },
+  "$defs": {
+    "point": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["x", "y"],
+      "properties": {
+        "x": { "type": "number", "minimum": 0, "maximum": 1 },
+        "y": { "type": "number", "minimum": 0, "maximum": 1 }
+      }
+    },
+    "polygon": {
+      "type": "array",
+      "minItems": 3,
+      "items": { "$ref": "#/$defs/point" }
+    },
+    "box": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["x", "y", "width", "height"],
+      "properties": {
+        "x": { "type": "number", "minimum": 0, "maximum": 1 },
+        "y": { "type": "number", "minimum": 0, "maximum": 1 },
+        "width": { "type": "number", "exclusiveMinimum": 0, "maximum": 1 },
+        "height": { "type": "number", "exclusiveMinimum": 0, "maximum": 1 }
+      }
+    },
+    "fiducialDetection": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["detection_id", "role", "box"],
+      "properties": {
+        "detection_id": { "type": "string", "minLength": 1 },
+        "role": { "enum": ["opening", "closing", "unknown"] },
+        "pair_id": { "type": ["string", "null"] },
+        "score": { "type": "number", "minimum": 0, "maximum": 1 },
+        "box": { "$ref": "#/$defs/box" }
+      }
+    },
+    "roiDetection": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["pair_id", "polygon"],
+      "properties": {
+        "pair_id": { "type": "string", "minLength": 1 },
+        "polygon": { "$ref": "#/$defs/polygon" },
+        "orientation_degrees": {
+          "type": "number",
+          "minimum": -360,
+          "maximum": 360
+        },
+        "rectification_transform": {
+          "type": "array",
+          "minItems": 9,
+          "maxItems": 9,
+          "items": { "type": "number" }
+        },
+        "rectification_succeeded": { "type": "boolean" }
+      }
+    },
+    "textCandidate": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "candidate_id",
+        "raw_text",
+        "confidence_status",
+        "confidence",
+        "regions"
+      ],
+      "properties": {
+        "candidate_id": { "type": "string", "minLength": 1 },
+        "pair_id": { "type": ["string", "null"] },
+        "raw_text": { "type": "string" },
+        "confidence_status": { "enum": ["available", "not-available"] },
+        "confidence": {
+          "type": ["number", "null"],
+          "minimum": 0,
+          "maximum": 1
+        },
+        "regions": { "type": "array", "items": { "$ref": "#/$defs/box" } }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": { "confidence_status": { "const": "available" } },
+            "required": ["confidence_status"]
+          },
+          "then": {
+            "properties": {
+              "confidence": { "type": "number", "minimum": 0, "maximum": 1 }
+            }
+          },
+          "else": { "properties": { "confidence": { "const": null } } }
+        }
+      ]
+    },
+    "decodedCode": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["pair_id", "canonical_code", "candidate_ids"],
+      "properties": {
+        "pair_id": { "type": ["string", "null"] },
+        "canonical_code": { "type": "string", "minLength": 1 },
+        "candidate_ids": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": { "type": "string", "minLength": 1 }
+        }
+      }
+    },
+    "sampleResult": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "sample_id",
+        "input_image_sha256",
+        "elapsed_ms",
+        "fiducials",
+        "rois",
+        "candidates",
+        "decoded_codes",
+        "product_state",
+        "reason_codes"
+      ],
+      "properties": {
+        "sample_id": { "type": "string", "pattern": "^[A-Za-z0-9._-]+$" },
+        "input_image_sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+        "elapsed_ms": { "type": "number", "minimum": 0 },
+        "fiducials": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/fiducialDetection" }
+        },
+        "rois": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/roiDetection" }
+        },
+        "candidates": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/textCandidate" }
+        },
+        "decoded_codes": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/decodedCode" }
+        },
+        "product_state": { "enum": ["accept", "clarify", "retry", "abstain"] },
+        "reason_codes": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": { "type": "string", "minLength": 1 }
+        }
+      }
+    }
+  }
+}

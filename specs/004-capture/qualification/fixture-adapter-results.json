@@ -1,0 +1,88 @@
+{
+  "schema_version": 1,
+  "qualification_id": "ZZ-OCR-QUAL-001",
+  "manifest_sha256": "4ea5c9a931fe41cdc6469c5cc93328553fc4a2633df22f3ee44d85c349f8b318",
+  "adapter": {
+    "commit": "fixture-0000000",
+    "platform": "ios",
+    "os_version": "fixture",
+    "device_class": "fixture",
+    "engine_id": "fixture-engine",
+    "engine_version": "1.0.0",
+    "config_sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+    "preprocessing_sha256": "0000000000000000000000000000000000000000000000000000000000000000"
+  },
+  "results": [
+    {
+      "sample_id": "synthetic-one-code",
+      "input_image_sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+      "elapsed_ms": 12.5,
+      "fiducials": [
+        {
+          "detection_id": "d-open-1",
+          "role": "opening",
+          "pair_id": "predicted-1",
+          "score": 0.99,
+          "box": { "x": 0.05, "y": 0.4, "width": 0.1, "height": 0.2 }
+        },
+        {
+          "detection_id": "d-close-1",
+          "role": "closing",
+          "pair_id": "predicted-1",
+          "score": 0.98,
+          "box": { "x": 0.85, "y": 0.4, "width": 0.1, "height": 0.2 }
+        }
+      ],
+      "rois": [
+        {
+          "pair_id": "predicted-1",
+          "polygon": [
+            { "x": 0.18, "y": 0.35 },
+            { "x": 0.72, "y": 0.35 },
+            { "x": 0.72, "y": 0.65 },
+            { "x": 0.18, "y": 0.65 }
+          ],
+          "orientation_degrees": 0,
+          "rectification_succeeded": true
+        }
+      ],
+      "candidates": [
+        {
+          "candidate_id": "text-1",
+          "pair_id": "predicted-1",
+          "raw_text": "copper lantern sky",
+          "confidence_status": "available",
+          "confidence": 0.95,
+          "regions": [{ "x": 0.2, "y": 0.4, "width": 0.5, "height": 0.1 }]
+        }
+      ],
+      "decoded_codes": [
+        {
+          "pair_id": "predicted-1",
+          "canonical_code": "zz-copper-lantern-sky-zz",
+          "candidate_ids": ["text-1"]
+        }
+      ],
+      "product_state": "accept",
+      "reason_codes": []
+    },
+    {
+      "sample_id": "synthetic-missing-close",
+      "input_image_sha256": "1111111111111111111111111111111111111111111111111111111111111111",
+      "elapsed_ms": 8,
+      "fiducials": [
+        {
+          "detection_id": "d-open-2",
+          "role": "opening",
+          "pair_id": null,
+          "box": { "x": 0.05, "y": 0.4, "width": 0.1, "height": 0.2 }
+        }
+      ],
+      "rois": [],
+      "candidates": [],
+      "decoded_codes": [],
+      "product_state": "retry",
+      "reason_codes": ["missing-closing-fiducial"]
+    }
+  ]
+}

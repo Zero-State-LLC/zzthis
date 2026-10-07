@@ -1,6 +1,6 @@
 # Requirements checklist: 004-capture
 
-Checked 2026-10-06. Capture is not built. Recognition architecture refined by the accepted 2026-10-06 v1 recognizer-qualification intent.
+Checked 2026-10-07. Capture is not built. Recognition architecture refined by the accepted 2026-10-06 v1 recognizer-qualification intent.
 
 ## Completeness
 
@@ -11,6 +11,9 @@ Checked 2026-10-06. Capture is not built. Recognition architecture refined by th
 - [x] Apple Vision is the iOS baseline.
 - [x] Android ML Kit and PP-OCR are qualification candidates, not simultaneous product authorities.
 - [x] ZZ-OCR-QUAL-001 names the shared corpus and required product metrics.
+- [x] The manifest schema carries polygon ROI truth for complete visual codes, keyed by ground-truth fiducial pair.
+- [x] Serialized adapter results have a strict machine schema and fixture bound to manifest/sample hashes.
+- [x] The receipt schema requires aggregate and per-bucket metrics, frozen thresholds, explicit gate outcomes, review evidence, and case dispositions; PASS is conditional on final-split gates.
 - [x] False-valid-decode behavior is explicitly measured and is the primary safety metric for engine promotion.
 - [x] Qwen/VLM and custom zz recognizers are deferred to v2.
 - [ ] No recognizer is implemented or qualified yet.

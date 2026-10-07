@@ -2,7 +2,7 @@
 
 Status: normative qualification protocol. No engine is promoted by this document alone.
 Parent: [spec 004](spec.md) · [plan](plan.md) · [tasks](tasks.md)
-Machine contracts: [manifest schema](qualification/manifest.schema.json) · [receipt schema](qualification/receipt.schema.json) · [scoring rules](qualification/scoring.md) · [fixture manifest](qualification/fixture-manifest.json)
+Machine contracts: [manifest schema](qualification/manifest.schema.json) · [adapter-result schema](qualification/adapter-result.schema.json) · [receipt schema](qualification/receipt.schema.json) · [scoring rules](qualification/scoring.md) · [fixture manifest](qualification/fixture-manifest.json) · [fixture adapter results](qualification/fixture-adapter-results.json)
 
 ## Purpose
 
@@ -29,7 +29,7 @@ Each sample is validated by `qualification/manifest.schema.json`. Each sample ha
 | case_kind | valid-word, field, handle, partial, bare, invalid, multi-code, or no-code |
 | stress_tags | Zero or more controlled stress buckets |
 | fiducial_truth | Expected opening/closing endpoint boxes or `none`; pair membership for multi-code images |
-| roi_truth | Expected payload ROI/polygon when a complete visual code exists |
+| roi_truth | Expected payload ROI polygon for each complete visual code, keyed by the ground-truth fiducial `pair_id`; required for complete visual cases |
 | expected_band_constraints | Allowed product states when the sample is intentionally ambiguous |
 | notes | Non-identifying qualification notes only |
 
@@ -47,9 +47,9 @@ The final set covers terminal-fiducial localization and pairing plus ordinary ha
 
 ## Adapter input and output
 
-Input is one still image plus immutable adapter configuration. Camera qualification measures two separable stages: (A) terminal-`zz` fiducial detection/pairing and ROI localization/rectification, then (B) payload recognition and shared decoding. Output is `RecognitionResult` as defined in plan.md.
+Input is one still image plus immutable adapter configuration. Camera qualification measures two separable stages: (A) terminal-`zz` fiducial detection/pairing and ROI localization/rectification, then (B) payload recognition and shared decoding. Native platform types are serialized at the harness boundary using [adapter-result.schema.json](qualification/adapter-result.schema.json); [fixture-adapter-results.json](qualification/fixture-adapter-results.json) demonstrates the wire shape. Each result binds to `sample_id` and the manifest's image hash. The manifest hash must match exactly, and the result set must contain each manifest sample exactly once; missing, duplicate, extra, or hash-mismatched results make the run INCOMPLETE. Coordinates are normalized to the original image after orientation normalization, with origin at top-left. The adapter emits evidence only; product state and decoded codes are outputs of the shared local decoder, not adapter-owned policy.
 
-The adapter must record:
+The adapter-result contract must record:
 
 - engine id and exact engine/model/runtime version;
 - platform and OS version;
@@ -144,7 +144,7 @@ If no engine qualifies, v1 camera recognition does not ship as an Accept-capable
 
 ## Receipt
 
-Each run produces a machine-readable receipt validated by `qualification/receipt.schema.json` and a short Markdown report. Metric computation follows `qualification/scoring.md`. The receipt contains:
+Each run produces a machine-readable receipt validated by `qualification/receipt.schema.json` and a short Markdown report. Metric computation follows `qualification/scoring.md`. Schema validity alone does not make a run pass: the qualification validator also applies the cross-field, arithmetic, sample-coverage, and gate-consistency checks in scoring.md. The receipt contains:
 
 - qualification id and UTC timestamp;
 - corpus-manifest hash and sample counts by split/bucket;
@@ -152,9 +152,10 @@ Each run produces a machine-readable receipt validated by `qualification/receipt
 - preprocessing and band-mapping configuration hashes;
 - zz decoder/spec 003 vector version, wordlist version, and check-word implementation version;
 - all required aggregate metrics and per-bucket metrics, including fiducial localization/pairing and payload metrics;
+- frozen release thresholds and a result for every required release gate;
 - every False Accept/false-valid case by sample_id with disposition;
 - dependency/license/security-review disposition;
-- PASS, FAIL, or INCOMPLETE;
+- PASS, FAIL, INCOMPLETE, or NO_PROMOTION. PASS is valid only for a final-split run with complete sample/bucket coverage, all mandatory metrics, all required gates passing, and no undispositioned False Accept or false-valid case;
 - promoted engine, or NO_PROMOTION;
 - approver and linked pull request.
 
