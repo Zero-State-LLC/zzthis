@@ -31,7 +31,11 @@ export interface QualificationReport {
 }
 
 export function canonicalSha256(value: unknown): string;
+export function exactSha256(bytes: Uint8Array): string;
 export function inspectQualification(
   documents: object,
-  options?: { policyPresent?: boolean },
+  options?: {
+    policyPresent?: boolean;
+    rawInputBytes?: Record<string, Uint8Array>;
+  },
 ): QualificationReport;

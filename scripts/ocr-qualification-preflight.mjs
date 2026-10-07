@@ -55,6 +55,10 @@ export function canonicalSha256(value) {
   return sha256(Buffer.from(canonical, "utf8"));
 }
 
+export function exactSha256(bytes) {
+  return sha256(bytes);
+}
+
 function validateSchema(name, value, errors) {
   const schemaPath = path.join(QUALIFICATION_DIR, DOCUMENTS[name]);
   const schema = JSON.parse(requireText(schemaPath));
@@ -305,7 +309,7 @@ function validateRelationships(documents, hashes, errors) {
   }
 }
 
-function collectSchemasAndHashes(documents) {
+function collectSchemasAndHashes(documents, rawInputBytes) {
   const errors = [];
   const schemaErrors = [];
   const hashes = {};
@@ -317,31 +321,39 @@ function collectSchemasAndHashes(documents) {
       continue;
     }
     validateSchema(name, value, schemaErrors);
-    if (
-      name !== "adapterResults" &&
-      name !== "executionAttestation" &&
-      name !== "preRunAttestation"
-    ) {
+    if (name === "deviceMatrix" || name === "candidateBundle") {
       try {
         hashes[name] = canonicalSha256(value);
       } catch {
         errors.push(`canonical_hash_failed:${name}`);
       }
+    } else if (name === "manifest" || name === "gateConfig") {
+      const bytes = rawInputBytes[name];
+      if (bytes === undefined) {
+        errors.push(`exact_bytes_missing:${name}`);
+      } else {
+        hashes[name] = exactSha256(bytes);
+      }
     }
   }
   errors.push(...schemaErrors);
 
-  for (const name of [
-    "preRunAttestation",
-    "executionAttestation",
-    "adapterResults",
-  ]) {
+  for (const name of ["preRunAttestation", "executionAttestation"]) {
     if (documents[name] !== undefined) {
       try {
         hashes[name] = canonicalSha256(documents[name]);
       } catch {
         errors.push(`canonical_hash_failed:${name}`);
       }
+    }
+  }
+
+  if (documents.adapterResults !== undefined) {
+    const bytes = rawInputBytes.adapterResults;
+    if (bytes === undefined) {
+      errors.push("exact_bytes_missing:adapterResults");
+    } else {
+      hashes.adapterResults = exactSha256(bytes);
     }
   }
 
@@ -366,9 +378,12 @@ function runDecoderReplay(documents, schemaErrors) {
 
 export function inspectQualification(
   documents,
-  { policyPresent = false } = {},
+  { policyPresent = false, rawInputBytes = {} } = {},
 ) {
-  const { errors, schemaErrors, hashes } = collectSchemasAndHashes(documents);
+  const { errors, schemaErrors, hashes } = collectSchemasAndHashes(
+    documents,
+    rawInputBytes,
+  );
 
   if (errors.length === 0) {
     validateRelationships(documents, hashes, errors);

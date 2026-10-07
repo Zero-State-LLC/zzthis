@@ -9,7 +9,8 @@ import {
 
 async function readJson(filePath, name) {
   try {
-    return JSON.parse(await readFile(filePath, "utf8"));
+    const bytes = await readFile(filePath);
+    return { bytes, value: JSON.parse(bytes.toString("utf8")) };
   } catch {
     throw new Error(`invalid_json:${name}`);
   }
@@ -65,24 +66,30 @@ async function main() {
   }
 
   const documents = {};
+  const rawInputBytes = {};
   const reasonCodes = [];
   for (const name of REQUIRED_INPUTS) {
     if (name === "preRunBundle" || name === "executionBundle") {
       try {
-        documents[name] = await readJson(options[name], name);
+        documents[name] = (await readJson(options[name], name)).value;
       } catch {
         reasonCodes.push(`sigstore_bundle_unreadable:${name}`);
       }
       continue;
     }
     try {
-      documents[name] = await readJson(options[name], name);
+      const input = await readJson(options[name], name);
+      documents[name] = input.value;
+      rawInputBytes[name] = input.bytes;
     } catch {
       reasonCodes.push(`invalid_json:${name}`);
     }
   }
 
-  const report = inspectQualification(documents, { policyPresent: false });
+  const report = inspectQualification(documents, {
+    policyPresent: false,
+    rawInputBytes,
+  });
   report.reason_codes = [...new Set([...reasonCodes, ...report.reason_codes])];
 
   if (options.output) {
