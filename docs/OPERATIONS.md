@@ -108,7 +108,7 @@ Production authorization requires: numeric SLO posture, RTO/RPO, successful rest
 | API and limiter | Contract discovery returned 200; bounded discovery limit check returned 60 × 200 then 429. Other route limits and broader API behavior remain to be verified. |
 | R2 data lifecycle | Private staging bucket has the 30-day `reads/` expiration rule and zero objects; actual expiry has not been exercised. |
 | Durable Object recovery | Limiter is non-authoritative; no namespace recovery drill is recorded. |
-| Site parity and rollback | Six required routes and 137 local assets passed HTTP checks; robots/security-header differences remain, responsive/runtime-network review is incomplete, and marketing Worker rollback lacks a previous version. |
+| Site parity and rollback | Six required routes and 137 local assets passed HTTP checks; a staging marketing Worker version rollback rehearsal passed with post-rollback 200/404 smoke checks. Robots/security-header differences remain, and responsive/runtime-network review is incomplete. |
 | Observability and privacy | Staging invocation logs are disabled while persisted application logs remain enabled. Production redaction/retention/alerting review is open. |
 | Secret/key lifecycle | Staging token-secret replacement passed with no staged accounts/sessions and API readiness remained 200. Production ownership, cadence, recovery, and emergency rotation procedure remain open. |
 | Incident readiness | Contacts, escalation path, and measured incident restoration exercise remain open. |
