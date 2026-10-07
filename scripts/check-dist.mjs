@@ -2,7 +2,7 @@ import { readdirSync, readFileSync, statSync, existsSync } from "node:fs";
 import { join, relative } from "node:path";
 
 const DIST = "dist";
-const BASE = "/zzthis/";
+const BASE = process.env.ASTRO_BASE ?? "/zzthis/";
 const MAX_FILE = 2 * 1024 * 1024;
 const MAX_TOTAL = 20 * 1024 * 1024;
 const REQUIRED = [
