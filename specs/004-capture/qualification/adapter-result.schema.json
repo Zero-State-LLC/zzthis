@@ -29,7 +29,7 @@
         "preprocessing_sha256"
       ],
       "properties": {
-        "commit": { "type": "string", "minLength": 7 },
+        "commit": { "type": "string", "pattern": "^[a-f0-9]{40}$" },
         "platform": { "enum": ["ios", "android"] },
         "os_version": { "type": "string", "minLength": 1 },
         "device_class": { "type": "string", "minLength": 1 },
@@ -172,6 +172,7 @@
         },
         "candidates": {
           "type": "array",
+          "description": "Text hypotheses in original engine order. The harness and consumer must not reorder by confidence or decoded outcome.",
           "items": { "$ref": "#/$defs/textCandidate" }
         },
         "reason_codes": {

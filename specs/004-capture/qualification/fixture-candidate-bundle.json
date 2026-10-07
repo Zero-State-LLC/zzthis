@@ -1,0 +1,25 @@
+{
+  "schema_version": 1,
+  "qualification_id": "ZZ-OCR-QUAL-001",
+  "candidate_id": "synthetic-fixture-ios-001",
+  "platform": "ios",
+  "device_matrix_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+  "adapter": {
+    "commit": "1111111111111111111111111111111111111111",
+    "artifact_sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+    "engine_id": "synthetic-fixture",
+    "engine_version": "0.0.0-fixture",
+    "config_sha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+    "preprocessing_sha256": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+    "confidence_mapping_sha256": "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"
+  },
+  "decoder": {
+    "commit": "2222222222222222222222222222222222222222",
+    "wordlist_version": "synthetic-fixture",
+    "wordlist_sha256": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+    "checkword_version": "synthetic-fixture",
+    "checkword_sha256": "abababababababababababababababababababababababababababababababab",
+    "vectors_sha256": "cdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcd",
+    "band_mapping_sha256": "efefefefefefefefefefefefefefefefefefefefefefefefefefefefefefefef"
+  }
+}

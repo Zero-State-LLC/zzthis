@@ -8,6 +8,7 @@
     "schema_version",
     "qualification_id",
     "manifest_sha256",
+    "required_gate_ids",
     "minimum_samples_by_split",
     "required_buckets",
     "thresholds"
@@ -16,6 +17,18 @@
     "schema_version": { "const": 1 },
     "qualification_id": { "const": "ZZ-OCR-QUAL-001" },
     "manifest_sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+    "required_gate_ids": {
+      "const": [
+        "false-accept-count",
+        "false-valid-decode-rate",
+        "endpoint-recall",
+        "pair-accuracy",
+        "exact-code-accuracy",
+        "character-error-rate",
+        "rectification-success-rate",
+        "p95-latency-ms"
+      ]
+    },
     "minimum_samples_by_split": {
       "type": "object",
       "additionalProperties": false,

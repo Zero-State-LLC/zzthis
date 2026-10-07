@@ -10,8 +10,7 @@
     "candidate_id",
     "manifest_sha256",
     "gate_config_sha256",
-    "adapter_candidate_sha256",
-    "decoder_commit",
+    "candidate_bundle_sha256",
     "issued_at_utc",
     "issuer_id",
     "key_id",
@@ -25,11 +24,10 @@
     "candidate_id": { "type": "string", "minLength": 1 },
     "manifest_sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
     "gate_config_sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
-    "adapter_candidate_sha256": {
+    "candidate_bundle_sha256": {
       "type": "string",
       "pattern": "^[a-f0-9]{64}$"
     },
-    "decoder_commit": { "type": "string", "minLength": 7 },
     "issued_at_utc": { "type": "string", "format": "date-time" },
     "issuer_id": { "type": "string", "minLength": 1 },
     "key_id": { "type": "string", "minLength": 1 },

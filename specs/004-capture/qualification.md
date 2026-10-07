@@ -2,7 +2,7 @@
 
 Status: normative qualification protocol. No engine is promoted by this document alone.
 Parent: [spec 004](spec.md) · [plan](plan.md) · [tasks](tasks.md)
-Machine contracts: [corpus manifest schema](qualification/manifest.schema.json) · [adapter-result schema](qualification/adapter-result.schema.json) · [frozen gate-config schema](qualification/gate-config.schema.json) · [pre-run attestation schema](qualification/pre-run-attestation.schema.json) · [execution attestation schema](qualification/execution-attestation.schema.json) · [receipt schema](qualification/receipt.schema.json) · [scoring rules](qualification/scoring.md) · synthetic fixtures in `qualification/`
+Machine contracts: [corpus manifest schema](qualification/manifest.schema.json) · [adapter-result schema](qualification/adapter-result.schema.json) · [sealed candidate-bundle schema](qualification/candidate-bundle.schema.json) · [frozen gate-config schema](qualification/gate-config.schema.json) · [pre-run attestation schema](qualification/pre-run-attestation.schema.json) · [execution attestation schema](qualification/execution-attestation.schema.json) · [receipt schema](qualification/receipt.schema.json) · [scoring rules](qualification/scoring.md) · synthetic fixtures in `qualification/`
 
 ## Purpose
 
@@ -39,8 +39,8 @@ One corpus manifest contains both tuning and final samples. Each sample is valid
 1. Split by writer group, not by image, so one writer cannot leak into both tuning and final qualification.
 2. Freeze the whole corpus manifest and its hash before comparing candidate engines.
 3. Freeze a separate gate-config file, bound to that exact manifest hash, before evaluating the final split. It sets minimum sample counts for each split, minimum counts for each canonical required stress bucket, numeric release thresholds, fiducial IoU threshold, and CER normalization.
-4. Obtain the signed pre-run attestation defined by `pre-run-attestation.schema.json`. It binds the exact manifest, gate config, adapter candidate, and decoder commit and must be published with an independently verifiable timestamp before final evaluation. Caller-entered `frozen_at_utc` values are not accepted.
-5. The trusted evaluation runner emits a signed execution attestation bound to the pre-run attestation and exact adapter-results hash. The verifier checks both attestations against trust roots configured independently of the candidate and confirms evaluation started after the pre-run publication time. Missing/unverifiable attestations force INCOMPLETE, never PASS.
+4. Freeze one `candidate-bundle.json` conforming to `candidate-bundle.schema.json`. It identifies the exact adapter artifact, engine/runtime, platform, device matrix, preprocessing and confidence mapping, plus decoder commit, wordlist, check-word implementation, vectors, and band mapping. Its identity is SHA-256 over the RFC 8785 JCS canonical bytes. Obtain the signed pre-run attestation defined by `pre-run-attestation.schema.json`; it binds that bundle hash and the exact manifest and gate-config hashes, and must be published with an independently verifiable timestamp before final evaluation. Caller-entered `frozen_at_utc` values are not accepted.
+5. The trusted evaluation runner emits a signed execution attestation bound to the same candidate-bundle hash, pre-run attestation, and exact adapter-results hash. The verifier checks both attestations against trust roots configured independently of the candidate and confirms evaluation started after the pre-run publication time. The receipt's adapter/decoder identities must equal the sealed bundle field-for-field. Any missing or mismatched identity, or unverifiable attestation, forces INCOMPLETE, never PASS.
 6. Do not tune thresholds, preprocessing, prompts, or decoder rules on the final split.
 7. Any post-freeze change to the manifest, gate config, adapter, model/version, preprocessing, decoder, wordlist, check-word implementation, or band mapping invalidates that engine receipt and requires a new run.
 8. Synthetic images can broaden stress coverage but cannot be the only evidence for handwriting promotion.
@@ -68,6 +68,8 @@ The adapter-result contract must record:
 - confidence semantics, including "not available";
 - geometry/line provenance when exposed;
 - elapsed recognition time measured by the harness.
+
+When an adapter emits multiple text hypotheses for one ROI, `candidates` preserves the engine's original result order; the harness must not reorder by confidence or decoder outcome. For a pair with more than one hypothesis, the product outcome is `CLARIFY` and presents the hypotheses in that preserved order; it never silently selects a decoder-valid or ground-truth-matching candidate. Zero hypotheses follow the configured retry/abstain policy. Qualification's primary OCR accuracy uses the first engine-ordered hypothesis (top-1); all-hypothesis coverage may be reported descriptively but is not a release gate. Ground truth is used only for scoring, never to select a candidate or determine runtime behavior.
 
 No network access is allowed during a v1 qualification read or decoder replay. Verification of detached pre-run/execution attestations is a separate offline validation step using trust roots pinned before the candidate run.
 
@@ -135,7 +137,7 @@ A False Accept is always counted even if the wrong record does not exist on the 
 
 ## Promotion rule
 
-The final numerical release gates are frozen in a separate `gate-config.json` validated by `gate-config.schema.json`, then bound by a signed pre-run attestation before final-split execution. It includes thresholds, the fiducial IoU threshold, CER normalization, minimum tuning/final sample counts, and minimum counts for every required bucket. Gates may be derived from pilot/tuning evidence but may not be relaxed after seeing final results. A post-result edit requires a new config hash, a new pre-run attestation, and a new candidate run; a caller-supplied or backdated timestamp is not evidence.
+The final numerical release gates are frozen in a separate `gate-config.json` validated by `gate-config.schema.json`, then bound by a signed pre-run attestation before final-split execution. It includes the exact required gate-id set, thresholds, the fiducial IoU threshold, CER normalization, minimum tuning/final sample counts, and minimum counts for every required bucket. The receipt has exactly one final-split result for each required gate id and no others. Gates may be derived from pilot/tuning evidence but may not be relaxed after seeing final results. A post-result edit requires a new config hash, a new pre-run attestation, and a new candidate run; a caller-supplied or backdated timestamp is not evidence.
 
 An engine is ineligible if:
 
@@ -152,11 +154,11 @@ If no engine qualifies, v1 camera recognition does not ship as an Accept-capable
 
 ## Receipt
 
-Each run produces a machine-readable receipt validated by `qualification/receipt.schema.json` and a short Markdown report. Metric computation follows `qualification/scoring.md`. Schema validity alone does not make a run pass: the qualification validator verifies signed pre-run and execution attestations, then applies cross-field, arithmetic, writer-isolation, sample-coverage, and gate-consistency checks. The receipt contains:
+Each run produces a machine-readable receipt validated by `qualification/receipt.schema.json` and a short Markdown report. Metric computation follows `qualification/scoring.md`. Schema validity alone does not make a run pass: the qualification validator verifies the canonical candidate-bundle hash, signed pre-run and execution attestations, and exact receipt-to-bundle identity equality, then applies cross-field, arithmetic, writer-isolation, sample-coverage, and gate-consistency checks. The receipt contains:
 
 - qualification id and UTC timestamp;
 - whole-corpus manifest hash and sample counts by split/bucket;
-- adapter commit, engine/model/runtime version, platform/OS/device class;
+- sealed candidate-bundle hash and adapter artifact/commit, engine/model/runtime version, platform/OS/device class, device-matrix hash;
 - preprocessing and band-mapping configuration hashes;
 - zz decoder/spec 003 vector version, wordlist version, and check-word implementation version;
 - separate tuning/final aggregate metrics and per-split bucket metrics, including fiducial localization/pairing and payload metrics; release gates use final-only metrics;
