@@ -2,10 +2,11 @@
 
 export const whyMarkers = {
   heading: "Why the zz markers matter",
-  text: "The zz markers are to zzThis what the start and stop bars are to a barcode, or the three corner squares to a QR code: a fixed frame that tells people and machines exactly where a code begins and ends. Two lowercase letters, recognizable almost anywhere, in any handwriting.",
+  text: "The zz markers are to zzThis what the start and stop bars are to a barcode, or the three corner squares to a QR code: a fixed frame that tells people and machines exactly where a code begins and ends. Two “zz” letters or “marks”, recognizable almost anywhere, in any handwriting.",
 };
 
-export const languagesHeading = "In any language";
+// [MICHAEL 2026-10-07 change list] Dashes between the words.
+export const languagesHeading = "In - any - language";
 
 export interface LanguageExample {
   name: string;

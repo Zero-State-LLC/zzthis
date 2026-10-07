@@ -29,12 +29,12 @@ const zzthatLogos = {
   },
   lowercase: {
     src: "images/logos/zzthat-lowercase.webp",
-    width: 355,
+    width: 356,
     height: 96,
     alt: "zzThat",
   },
 } as const;
-export const zzthatLogoVariant: keyof typeof zzthatLogos = "camelcase";
+export const zzthatLogoVariant: keyof typeof zzthatLogos = "lowercase";
 
 export const aboutPage = {
   title: "About zzThis",
@@ -59,8 +59,9 @@ export const hackerDojo = {
   subtitle: "Innovation community and advisory network",
   // [MICHAEL 2026-10-03 v1.0 change list] One paragraph. The logo stays in the data and is not shown.
   // [MICHAEL 2026-10-06 change list] Paragraph replaced as given.
+  // [MICHAEL 2026-10-07 change list] Paragraph replaced again as given.
   paragraphs: [
-    "Many of us are at Hacker Dojo, a premier coworking, maker, and networking community in the heart of Silicon Valley, minutes from the headquarters of Google, NVIDIA, Apple, Meta, NASA Ames, Stanford, SRI International, and many more. Every day brings direct discussions with, and participation in, the latest ideas, backed by a deep and broad knowledge, professional, and experience base. We get cutting-edge developments and information, news, and trends for problem solving and opportunities, innovation and creativity, and resources. Its several hundred members cover the full range of skills: blockchain, crypto, and decentralized and distributed systems; software, hardware, devices, IoT, physical AI, and robotics; AI agents and local (on-device) AI; cybersecurity and cryptography; networking and infrastructure; UX and UI design.",
+    "Many of us are at Hacker Dojo, a premier coworking, maker, and networking community in the heart of Silicon Valley, minutes from the headquarters of Google, NVIDIA, Apple, Meta, NASA Ames, Stanford, SRI International, and many more – where every day brings direct discussions with, and participation in, the latest ideas and experience of deep and broad knowledge base and professional expertise – and “live” the cutting-edge developments and information, news, and breaking trends for problem solving and opportunities, innovation and creativity, and resources; its several hundred members cover a full range of skills: blockchain, crypto, and decentralized and distributed systems; software, hardware, devices, IoT, physical AI, and robotics; AI agents and local (on-device) AI; cybersecurity and cryptography; networking and infrastructure; UX and UI design.",
   ],
   logo: {
     src: "images/logos/hacker-dojo.webp",
