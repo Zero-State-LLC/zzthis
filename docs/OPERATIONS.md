@@ -109,7 +109,7 @@ Production authorization requires: numeric SLO posture, RTO/RPO, successful rest
 | Retention/retry schedule | Staging API Cron Trigger `17 3 * * *` UTC ran at 2026-10-07 03:17:58 UTC; its count-only report showed zero work and zero logged errors. This verifies one scheduled execution, not nonzero cleanup behavior. Production schedule remains human-gated. |
 | R2 data lifecycle | Private staging bucket has the 30-day `reads/` expiration rule and zero objects; actual expiry has not been exercised. |
 | Durable Object recovery | Limiter is non-authoritative; no namespace recovery drill is recorded. |
-| Site parity and rollback | Six required routes and 137 local assets passed HTTP checks; a staging marketing Worker version rollback rehearsal passed with post-rollback 200/404 smoke checks. Robots/security-header differences remain, and responsive/runtime-network review is incomplete. |
+| Site parity and rollback | Six required routes and 137 local assets passed HTTP checks; titles/H1s match and CSS/JS assets match after base-path normalization; a staging marketing Worker version rollback rehearsal passed. `/robots.txt` and security-header differences remain, and mobile/desktop visual plus browser runtime-network review is incomplete. |
 | Observability and privacy | Staging invocation logs are disabled while persisted application logs remain enabled. Production redaction/retention/alerting review is open. |
 | Secret/key lifecycle | Staging token-secret replacement passed with no staged accounts/sessions and API readiness remained 200. Production ownership, cadence, recovery, and emergency rotation procedure remain open. |
 | Incident readiness | Contacts, escalation path, and measured incident restoration exercise remain open. |
