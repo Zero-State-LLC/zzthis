@@ -15,6 +15,10 @@ This qualification-gated task list supersedes the earlier capture decomposition.
 
 - [ ] T003A Add one documented local command for the harness (target: `npm run qual:ocr`) that accepts whole-corpus manifest, device matrix, sealed candidate bundle, gate-config, pre-run attestation and its Sigstore bundle, execution attestation and its Sigstore bundle, adapter-result, and output paths. The protected workflow must verify pre-run Rekor inclusion/timestamp before starting final-split evaluation; it captures start and finish from its trusted runner clock, not caller input. The execution attestation binds the same bundle, pre-run attestation, matrix, resulting evidence hash, and captured times. Do not upload corpus images, per-sample private corpus data, or adapter outputs; hash-only publication metadata may be published through the protected workflow. If the required verifier policy, identity allowlist, or trust material is absent, output INCOMPLETE/NO_PROMOTION only.
 
+### Current implementation status (2026-10-07)
+
+The isolated implementation branch contains only a local preflight for T003/T003A: it validates the manifest, device matrix, adapter-result, candidate bundle, gate-config, and attestation JSON schemas; recomputes RFC 8785 JCS hashes; checks cross-document identities, writer split isolation, final bucket minima, and exact per-device/sample coverage. The `npm run qual:ocr` command requires both attestation bundles but does not verify them. It has no protected verifier policy, trusted workflow clock, decoder replay, metric/scoring implementation, or receipt writer, and therefore always emits `INCOMPLETE` / `NO_PROMOTION`. This slice is not completion evidence for T003/T003A and cannot authorize camera Accept or promotion.
+
 ## Phase 1: Shared decoder path
 
 - [ ] T004 Snap-to-wordlist, near-word handling, and check-word verification remain shared with spec 003. Every camera reading passes through the same grammar/vectors; recognizers cannot query live codes or resolver records.

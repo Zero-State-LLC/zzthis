@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "qualification_id": "ZZ-OCR-QUAL-001",
-  "manifest_sha256": "a4de21e6a6c7ec8d5bbfbeac428f1e54403ee2e0667b9dd904d0e3d9a3e154b9",
+  "manifest_sha256": "a8cb271b84dec17ccd4330dc08dd715d9bba5d2025c0435853a5af3cf59a86f4",
   "required_gate_ids": [
     "false-accept-count",
     "false-valid-decode-rate",

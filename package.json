@@ -22,6 +22,7 @@
     "test": "vitest run --coverage && npm run test --workspaces --if-present",
     "design:build": "node scripts/build-design-tokens.mjs",
     "design:check": "node scripts/check-design-tokens.mjs",
+    "qual:ocr": "node scripts/ocr-qualification-preflight.mjs",
     "build": "node scripts/check-design-tokens.mjs && node scripts/build-fonts.mjs --check && astro build && node scripts/check-dist.mjs && npm run build --workspaces --if-present",
     "fonts:build": "node scripts/build-fonts.mjs",
     "fonts:check": "node scripts/build-fonts.mjs --check",
@@ -36,6 +37,7 @@
   },
   "devDependencies": {
     "@astrojs/check": "^0.9.10",
+    "@cfworker/json-schema": "4.1.1",
     "@eslint/js": "^10.0.1",
     "@ibm/plex-mono": "2.5.0",
     "@ibm/plex-sans": "1.1.0",
@@ -44,6 +46,7 @@
     "@vitest/coverage-v8": "^5.0.3",
     "ajv": "^8.20.0",
     "ajv-formats": "^3.0.1",
+    "canonicalize": "3.0.0",
     "eslint": "^10.11.0",
     "eslint-plugin-astro": "^3.2.1",
     "globals": "^17.13.0",
