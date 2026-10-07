@@ -51,6 +51,6 @@ Project field changes are manual unless the board workflow explicitly automates 
 | PR #85 | In review | completeness audit and convergence repair stream |
 | #86 production readiness evidence | Ready after #85 merge | numeric RTO/RPO/SLO, restore evidence, observability, key lifecycle and deploy approval remain |
 | #87 contract-2/semantic domain gate | Backlog | required before #81 can leave CANON-SHADOW |
-| #93 B4 Cloudflare runtime | In progress | isolated staging D1, R2, Durable Object, marketing Worker, and API Worker are deployed; the API contract discovery check passed with public feature flags disabled, while broader API verification, parity/rollback evidence, recovery evidence, and every production gate remain |
+| #93 B4 Cloudflare runtime | In progress | isolated staging D1, R2, Durable Object, marketing Worker, and API Worker are deployed; API contract discovery, Worker rollback, and a D1-only restore drill passed with public feature flags disabled. Broader API verification, R2/DO/configuration/secret recovery evidence, route parity, and every production gate remain |
 
 When repo state and Project status disagree, fix the Project field rather than changing repo truth to match the board.

@@ -23,6 +23,8 @@ Until measured:
 
 No document may claim an end-to-end backup/recovery guarantee before a restore test demonstrates it. Cloudflare platform capability is evidence for the mechanism, not evidence for zzThis recovery time.
 
+Staging evidence: on 2026-10-07, `zzthis-staging` was restored in place to a D1 Time Travel bookmark taken immediately before a disposable marker was created. The marker was absent after restore, core application tables were present, and the staging API discovery endpoint passed its contract check. This is a D1-only staging drill, not a production recovery objective or an end-to-end restore test.
+
 ## Backup and restore
 
 Production runbook must cover D1, R2, Durable Object state, configuration, and signing/secret material.
@@ -30,8 +32,8 @@ Production runbook must cover D1, R2, Durable Object state, configuration, and s
 Required evidence before production:
 1. documented backup/export mechanism and cadence;
 2. retention and encryption policy;
-3. restore procedure into a non-production environment;
-4. dated restore test with integrity checks;
+3. restore procedure into a non-production environment; the D1 staging path was exercised on 2026-10-07;
+4. dated restore test with integrity checks; D1-only staging evidence exists, while R2/DO/configuration/secret recovery remains open;
 5. owner for recurring restore tests;
 6. key/secret recovery and rotation procedure that does not put secrets in the repo.
 
