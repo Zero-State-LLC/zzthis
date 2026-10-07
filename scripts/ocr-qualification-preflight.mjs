@@ -432,12 +432,11 @@ export function inspectQualification(
   if (policyError) reasonCodes.push(policyError);
   const sigstoreSummary = summarizeSigstoreVerifications(sigstoreVerifications);
   reasonCodes.push(...sigstoreSummary.reasons);
-  reasonCodes.push(
-    ...validateTrustedAttestationTimeline(
-      documents.executionAttestation,
-      sigstoreVerifications,
-    ),
+  const trustedTimeValidation = validateTrustedAttestationTimeline(
+    documents.executionAttestation,
+    sigstoreVerifications,
   );
+  reasonCodes.push(...trustedTimeValidation.reasonCodes);
   if (!decoderReplay.performed) {
     reasonCodes.push(decoderReplay.reason);
   } else {
@@ -466,6 +465,7 @@ export function inspectQualification(
         pre_run: sigstoreSummary.preRunIntegratedTime,
         execution: sigstoreSummary.executionIntegratedTime,
       },
+      trusted_attestation_timeline: trustedTimeValidation.status,
       decoder_replay: !decoderReplay.performed
         ? "NOT_PERFORMED"
         : decoderIdentityCheck.verified

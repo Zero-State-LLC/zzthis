@@ -20,6 +20,7 @@ export interface QualificationReport {
       pre_run: string | null;
       execution: string | null;
     };
+    trusted_attestation_timeline: "NOT_PERFORMED" | "PASS" | "FAIL";
     decoder_replay: "NOT_PERFORMED" | "EXECUTED_UNPINNED" | "EXECUTED_PINNED";
     decoder_identity: "VERIFIED" | "MISMATCH" | "UNAVAILABLE";
     scoring_and_receipt: "NOT_PERFORMED";

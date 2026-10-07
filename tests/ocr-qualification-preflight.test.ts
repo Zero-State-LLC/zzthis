@@ -228,6 +228,7 @@ describe("OCR qualification preflight", () => {
       pre_run: "2026-10-07T11:59:00.000Z",
       execution: "2026-10-07T12:02:00.000Z",
     });
+    expect(report.checks.trusted_attestation_timeline).toBe("PASS");
     expect(report.reason_codes).toContain(
       "protected_verifier_policy_protection_unverified",
     );
@@ -257,6 +258,7 @@ describe("OCR qualification preflight", () => {
       "execution_started_not_after_prerun_publication",
     );
     expect(report.reason_codes).toContain("execution_published_before_finish");
+    expect(report.checks.trusted_attestation_timeline).toBe("FAIL");
     expect(report.status).toBe("INCOMPLETE");
     expect(report.promotion_eligible).toBe(false);
   });
@@ -281,6 +283,7 @@ describe("OCR qualification preflight", () => {
     expect(report.reason_codes).not.toContain(
       "execution_published_before_finish",
     );
+    expect(report.checks.trusted_attestation_timeline).toBe("NOT_PERFORMED");
     expect(report.status).toBe("INCOMPLETE");
   });
 

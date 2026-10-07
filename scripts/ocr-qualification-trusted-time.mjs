@@ -6,7 +6,7 @@ export function validateTrustedAttestationTimeline(
     verifications?.preRun?.verified !== true ||
     verifications?.execution?.verified !== true
   ) {
-    return [];
+    return { status: "NOT_PERFORMED", reasonCodes: [] };
   }
 
   const preRunPublication = Date.parse(
@@ -22,7 +22,10 @@ export function validateTrustedAttestationTimeline(
       Number.isFinite,
     )
   ) {
-    return ["trusted_attestation_timestamp_missing_or_invalid"];
+    return {
+      status: "FAIL",
+      reasonCodes: ["trusted_attestation_timestamp_missing_or_invalid"],
+    };
   }
 
   const errors = [];
@@ -35,5 +38,5 @@ export function validateTrustedAttestationTimeline(
   if (executionPublication < finishedAt) {
     errors.push("execution_published_before_finish");
   }
-  return errors;
+  return { status: errors.length === 0 ? "PASS" : "FAIL", reasonCodes: errors };
 }

@@ -10,4 +10,7 @@ export function validateTrustedAttestationTimeline(
       integrated_time_utc?: string;
     };
   },
-): string[];
+): {
+  status: "NOT_PERFORMED" | "PASS" | "FAIL";
+  reasonCodes: string[];
+};
