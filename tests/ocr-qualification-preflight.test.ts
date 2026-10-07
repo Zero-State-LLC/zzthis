@@ -185,6 +185,10 @@ describe("OCR qualification preflight", () => {
       parsed_candidate_count: 1,
       checkword_valid_candidate_count: 1,
       valid_truth_count: 1,
+      band_counts: {
+        tuning: { accept: 1, clarify: 0, retry: 0, abstain: 0 },
+        final: { accept: 0, clarify: 0, retry: 1, abstain: 0 },
+      },
     });
   });
 
@@ -250,6 +254,18 @@ describe("OCR qualification preflight", () => {
     expect(report.reason_codes).toContain(
       "adapter_identity_mismatch:engine_version",
     );
+    expect(report.promotion_eligible).toBe(false);
+  });
+
+  it("rejects inverted decision-band thresholds", async () => {
+    const inputs = await completeSyntheticInputs();
+    const thresholds = inputs.gateConfig.thresholds as JsonObject;
+    thresholds.accept_min_confidence = 0.4;
+    thresholds.retry_below_confidence = 0.5;
+    rebindManifest(inputs);
+
+    const report = inspect(inputs);
+    expect(report.reason_codes).toContain("decision_band_thresholds_invalid");
     expect(report.promotion_eligible).toBe(false);
   });
 });

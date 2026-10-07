@@ -208,6 +208,12 @@ function validateRelationships(documents, hashes, errors) {
     "gate_manifest_hash_mismatch",
     errors,
   );
+  if (
+    gateConfig.thresholds.retry_below_confidence >=
+    gateConfig.thresholds.accept_min_confidence
+  ) {
+    errors.push("decision_band_thresholds_invalid");
+  }
 
   for (const [name, document] of Object.entries({
     deviceMatrix,
@@ -365,7 +371,8 @@ function runDecoderReplay(documents, schemaErrors) {
     schemaErrors.length > 0 ||
     !documents.manifest ||
     !documents.adapterResults ||
-    !documents.candidateBundle
+    !documents.candidateBundle ||
+    !documents.gateConfig
   ) {
     return { performed: false, reason: "decoder_replay_inputs_invalid" };
   }
@@ -373,6 +380,7 @@ function runDecoderReplay(documents, schemaErrors) {
     documents.manifest,
     documents.adapterResults,
     documents.candidateBundle,
+    documents.gateConfig,
   );
 }
 

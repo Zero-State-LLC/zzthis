@@ -66,7 +66,7 @@ Acceptance: v1 never uploads the raw photo for recognition. A server/VLM hard-ca
 
 ## Decision bands and error states
 
-Thresholds stay OPEN (Q37). The triggers below say which band applies; they set no numbers.
+Q37 is resolved for the prototype parameter values: camera Accept starts at 0.80 confidence and Retry applies below 0.50. These remain parameters, not measured release criteria; a frozen qualification gate config records the values used for a run. The rules below define the mapping and precedence.
 
 | Band | Trigger | What the person sees |
 |---|---|---|
@@ -140,7 +140,7 @@ A stray `zz` in running text can still pair with a real marker. The person then 
 
 ### Prototype band values
 
-Thresholds stay parameters (Q37). These values let the apps ship. They are not measured results.
+Thresholds stay parameters (Q37). The prototype values below are defaults for implementation, not measured qualification results. Qualification freezes the values it evaluates in the gate config.
 
 | Band | Camera trigger | Typed trigger |
 |---|---|---|
@@ -173,7 +173,7 @@ The pre-build audit found that the scanner rules, read literally, could not pair
 | Q18 | Which recognition engine ships? | REFINED 2026-10-06: on-device and no-cloud remain locked. Apple Vision is the iOS baseline. Android ML Kit and PP-OCR are qualified under ZZ-OCR-QUAL-001 and the winner is pinned from evidence. Custom/VLM readers remain v2. |
 | Q33 | Scope of the zzThat app (web, Android, iOS) as a product: which features ship first? | RESOLVED [DELEGATED 2026-10-04, #74]: iOS and Android together with the zzThat spec 001 scope; the web client in spec 005 |
 | Q34 | Where the test set of real photos comes from, and consent for using them | RESOLVED [DELEGATED 2026-10-04, #74]: Team-made photos with written consent, no faces or personal data, kept private, used to measure only |
-| Q37 | Confidence thresholds for accept, clarify, retry, and abstain, and how read-back errors are measured | RESOLVED [DELEGATED 2026-10-04, #74]: Accept at 0.80, retry below 0.50, as parameters |
+| Q37 | Confidence thresholds for accept, clarify, retry, and abstain, and how read-back errors are measured | PARTIAL [DELEGATED 2026-10-04, #74]: Accept at 0.80 and Retry below 0.50 as parameters; read-back error measurement method remains OPEN |
 | Q38 | Where voice input is processed, and whether audio leaves the device | RESOLVED [DELEGATED 2026-10-04, #74]: No voice in v1; later, on the device only |
 | Q55 | How is a `zz` inside running text treated? (issue #41) | RESOLVED: box every candidate, the person picks (FR-013) |
 

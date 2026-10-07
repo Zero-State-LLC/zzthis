@@ -1,15 +1,50 @@
 import {
   classifyCode,
+  decideCaptureBand,
   isWordlistVersion,
   loadWordlist,
   parseCode,
   verifyCheckWord,
 } from "../packages/zz-core/src/index.ts";
 
+function captureIssueFor(row) {
+  const reasons = new Set(row.reason_codes);
+  if (reasons.has("bare-mark")) return "bare-mark";
+  if (
+    reasons.has("missing-opening-fiducial") ||
+    reasons.has("missing-closing-fiducial") ||
+    reasons.has("partial-fiducial")
+  ) {
+    return "missing-marker";
+  }
+  return null;
+}
+
+function sampleBand(row, wordlist, gateConfig) {
+  const candidate = row.candidates[0] ?? null;
+  return decideCaptureBand({
+    candidate: candidate
+      ? {
+          rawText: candidate.raw_text,
+          confidenceStatus: candidate.confidence_status,
+          confidence: candidate.confidence,
+        }
+      : null,
+    hypothesisCount: row.candidates.length,
+    captureIssue: captureIssueFor(row),
+    wordlist,
+    thresholds: {
+      acceptMinConfidence: gateConfig.thresholds.accept_min_confidence,
+      retryBelowConfidence: gateConfig.thresholds.retry_below_confidence,
+    },
+  }).band;
+}
+
 export function replayDecoderEvidence(
   manifest,
   adapterResults,
   candidateBundle,
+  gateConfig,
 ) {
   const wordlistVersion = candidateBundle?.decoder?.wordlist_version;
   if (!isWordlistVersion(wordlistVersion)) {
@@ -27,6 +62,10 @@ export function replayDecoderEvidence(
     parsed_candidate_count: 0,
     checkword_valid_candidate_count: 0,
     classification_counts: { word: 0, field: 0, confirm: 0, other: 0 },
+    band_counts: {
+      tuning: { accept: 0, clarify: 0, retry: 0, abstain: 0 },
+      final: { accept: 0, clarify: 0, retry: 0, abstain: 0 },
+    },
     valid_truth_count: 0,
   };
 
@@ -49,6 +88,9 @@ export function replayDecoderEvidence(
   }
 
   for (const row of adapterResults.results) {
+    const band = sampleBand(row, wordlist, gateConfig);
+    summary.band_counts[row.split][band] += 1;
+
     for (const candidate of row.candidates) {
       summary.candidate_count += 1;
       const parsed = parseCode(`zz-${candidate.raw_text}-zz`);

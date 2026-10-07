@@ -48,6 +48,8 @@
     "min_rectification_success_rate": 1,
     "max_p95_latency_ms": 1000,
     "fiducial_iou_threshold": 0.5,
-    "cer_normalization": "nfc-code-points-v1"
+    "cer_normalization": "nfc-code-points-v1",
+    "accept_min_confidence": 0.8,
+    "retry_below_confidence": 0.5
   }
 }

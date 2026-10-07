@@ -127,9 +127,13 @@
       "properties": {
         "candidate_id": { "type": "string", "minLength": 1 },
         "pair_id": { "type": ["string", "null"] },
-        "raw_text": { "type": "string" },
+        "raw_text": {
+          "description": "Payload text between the paired fiducials; the adapter does not include or infer the markers.",
+          "type": "string"
+        },
         "confidence_status": { "enum": ["available", "not-available"] },
         "confidence": {
+          "description": "Normalized conservative candidate confidence: the minimum meaningful confidence across all payload parts, including the check word. If the engine exposes line-level scores, parts inherit their line score before taking the minimum. If a meaningful score is unavailable, confidence_status is not-available and confidence is null; do not synthesize a score.",
           "type": ["number", "null"],
           "minimum": 0,
           "maximum": 1
