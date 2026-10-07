@@ -24,7 +24,7 @@ Topics: `human-readable-codes` `handwritten-codes` `logistics` `astro` `github-p
 
 zzThis is a human-readable, human-writable code that works alongside barcodes and QR codes. A person writes a code such as `zz-copper-lantern-sky-zz` on tape, a crate, a parcel, or a sign, links it to a digital record, and finds that record later.
 
-This repository holds the marketing site and a scripted click-through demo. It is a static [Astro](https://astro.build/) site published on GitHub Pages under `/zzthis/`.
+This repository holds the marketing site and a scripted click-through demo, published on GitHub Pages under `/zzthis/`. As separate npm workspaces it also holds the shared code library, the web client, and the `/v1` API server that the specs describe.
 
 ## Contents
 
@@ -41,10 +41,11 @@ This repository holds the marketing site and a scripted click-through demo. It i
 
 zzThis is a **prototype**.
 
-- The site and demo are live. The product behind them is not built.
+- The marketing site and the demo are live, and both are static: they call no API.
+- The code library ([`packages/zz-core`](packages/zz-core/)), the `/v1` API server ([`workers/api`](workers/api/)), and the web client ([`apps/web`](apps/web/)) are implemented in this repository and pass their tests ([spec 005](specs/005-v1-api/spec.md)). The API and web client are deployed only to isolated staging; production deployment remains gated by the operator requirements in [`AGENTS.md`](AGENTS.md).
 - The demo uses scripted demo data only. It runs no recognition, makes no network requests, uses no camera or microphone, and stores nothing.
 - Images labeled "Concept illustration" are AI renderings, not photos of a working system.
-- Handwriting recognition, the resolver, and the wordlist are untested. No accuracy or performance result is claimed.
+- Camera and voice recognition ([spec 004](specs/004-capture/spec.md)) are not built, and the on-device reader is off in v1. Typed lookup is available in the web client. No recognition accuracy or performance result is claimed.
 
 ## Quick start
 
@@ -55,9 +56,16 @@ npm ci              # install exact versions from package-lock.json
 npm run dev         # start the dev server at http://localhost:4321/zzthis/
 npm run lint        # ESLint and Prettier check
 npm run typecheck   # astro check and tsc --noEmit
-npm run test        # Vitest with enforced 100% coverage on src/lib and the demo state machine
+npm run test        # Vitest; root coverage gates src/lib and demoMachine.ts; zz-core, web, and API workspaces gate their configured src/**/*.ts scopes
 npm run build       # build to dist/ and run scripts/check-dist.mjs
 npm run preview     # serve dist/ locally
+```
+
+The end-to-end workflow starts its own fresh API Worker. Do not start `npm run dev:api` before running it; that command is for manual API development.
+
+```sh
+npx playwright install chromium
+npm run e2e -w apps/web
 ```
 
 ### Base path
@@ -116,10 +124,13 @@ Older names such as `--surface` and `--text` point at these tokens. The full set
 | [`src/pages/`](src/pages/) | One file per route (home, how it works, applications, demo, about, contact) plus `404.astro` |
 | [`src/components/`](src/components/) | Shared Astro components such as cards, header, footer, and the theme toggle |
 | [`src/content/`](src/content/) | All copy and image metadata as TypeScript; edit copy here, not in pages |
-| [`src/lib/`](src/lib/) | Code grammar, scripted demo resolver, image and URL helpers |
+| [`src/lib/`](src/lib/) | Scripted demo resolver, image and URL helpers. The code grammar is re-exported from [`packages/zz-core`](packages/zz-core/). |
 | [`src/demo/`](src/demo/) | Demo state machine and its browser island |
 | [`src/layouts/`](src/layouts/) | The base page layout |
 | [`src/styles/`](src/styles/) | Site styles. Tokens are extracted into [`design/`](design/README.md). |
+| [`packages/zz-core/`](packages/zz-core/) | The code grammar, wordlist, check word, issuer, and classifier, shared by the site, the web client, and the API |
+| [`apps/web/`](apps/web/) | The web client ([spec 005](specs/005-v1-api/spec.md) US6), a thin Astro client of `/v1` |
+| [`workers/api/`](workers/api/) | The `/v1` API server ([spec 005](specs/005-v1-api/spec.md)): Cloudflare Worker, Hono, D1, R2, and Durable Objects |
 | [`design/`](design/README.md) | Shared tokens, generated Swift and Kotlin, logo files, UX patterns. zzThat pins a copy. |
 | [`tests/`](tests/) | Vitest suites |
 | [`public/images/`](public/images/) | Optimized WebP images |
@@ -136,11 +147,12 @@ Older names such as `--surface` and `--text` point at these tokens. The full set
 | [`.github/workflows/site-ci.yml`](.github/workflows/site-ci.yml) | Typecheck and tests on pull requests |
 | [`.github/workflows/pages.yml`](.github/workflows/pages.yml) | Deploys to GitHub Pages after a push to `main` or a manual dispatch; pull requests never deploy |
 | [`.github/workflows/free-security-scan.yml`](.github/workflows/free-security-scan.yml) | Security scan |
+| [`.github/workflows/e2e.yml`](.github/workflows/e2e.yml) | Playwright end-to-end run, on demand or on a `run-e2e` label; not a required check |
 | [`.github/workflows/project-collaboration.yml`](.github/workflows/project-collaboration.yml) | Adds issues and PRs to the project board |
 
 ## Architecture
 
-The site and demo are static and call no API. The product architecture below is a **proposal, not built**. It is copied from [`docs/SPEC.md` Section 10.1](docs/SPEC.md#101-topology): one central server owns codes, records, grants, and the audit log; every app is an API client; revocation, single use, expiry, and rate limits are enforced on the server. The HTTP contract for that server is [`specs/005-v1-api`](specs/005-v1-api/spec.md). The server chooses the words, including for free public codes.
+The marketing site and the demo are static and call no API. The server and the code library for the topology below are now implemented in this repository ([spec 005](specs/005-v1-api/spec.md)). The API and web client are deployed only in isolated staging; production deployment remains gated. The design is copied from [`docs/SPEC.md` Section 10.1](docs/SPEC.md#101-topology): one central server owns codes, records, grants, and the audit log; every app is an API client; revocation, single use, expiry, and rate limits are enforced on the server. The HTTP contract for that server is [`specs/005-v1-api`](specs/005-v1-api/spec.md). The server chooses the words, including for free public codes.
 
 ```mermaid
 flowchart LR
@@ -195,13 +207,14 @@ Track work on the live [zzThis + zzThat board](https://github.com/orgs/Zero-Stat
 - [ ] xTechSearch: confirm eligibility and registrations, decide by Oct 12 ([#11](https://github.com/Zero-State-LLC/zzthis/issues/11))
 - [ ] xTechSearch submission prep ([#8](https://github.com/Zero-State-LLC/zzthis/issues/8))
 
-### Phase 3: Product prototype (not started)
+### Phase 3: Product prototype (implemented in this repo; isolated staging deployed, production gated)
 
-- [ ] Wordlist pipeline and check-word library ([#14](https://github.com/Zero-State-LLC/zzthis/issues/14))
-- [ ] Minimal exact-match resolver ([#13](https://github.com/Zero-State-LLC/zzthis/issues/13))
-- [ ] Capture by camera, typing, or voice; recognition approach still open
-- [ ] `/v1` API ([spec 005](specs/005-v1-api/spec.md)): contract shell ([#60](https://github.com/Zero-State-LLC/zzthis/issues/60)), data model ([#61](https://github.com/Zero-State-LLC/zzthis/issues/61)), sign-in ([#62](https://github.com/Zero-State-LLC/zzthis/issues/62)), mint and re-roll ([#63](https://github.com/Zero-State-LLC/zzthis/issues/63)), resolve and owner records ([#64](https://github.com/Zero-State-LLC/zzthis/issues/64)), retry photo ([#65](https://github.com/Zero-State-LLC/zzthis/issues/65)), rate limits ([#66](https://github.com/Zero-State-LLC/zzthis/issues/66))
-- [ ] Later web client in this repo, thin client of `/v1` ([#67](https://github.com/Zero-State-LLC/zzthis/issues/67), spec 005 US6)
+- [x] Wordlist pipeline and check-word library ([#14](https://github.com/Zero-State-LLC/zzthis/issues/14), [`packages/zz-core`](packages/zz-core/))
+- [x] Minimal exact-match resolver ([#13](https://github.com/Zero-State-LLC/zzthis/issues/13), [`workers/api`](workers/api/))
+- [x] Typed lookup in the web client (spec 005 US6)
+- [ ] Camera and voice recognition (spec 004); on-device camera reader is off in v1
+- [x] `/v1` API ([spec 005](specs/005-v1-api/spec.md)): contract shell ([#60](https://github.com/Zero-State-LLC/zzthis/issues/60)), data model ([#61](https://github.com/Zero-State-LLC/zzthis/issues/61)), sign-in ([#62](https://github.com/Zero-State-LLC/zzthis/issues/62)), mint and re-roll ([#63](https://github.com/Zero-State-LLC/zzthis/issues/63)), resolve and owner records ([#64](https://github.com/Zero-State-LLC/zzthis/issues/64)), retry photo ([#65](https://github.com/Zero-State-LLC/zzthis/issues/65)), rate limits ([#66](https://github.com/Zero-State-LLC/zzthis/issues/66))
+- [x] Later web client in this repo, thin client of `/v1` ([#67](https://github.com/Zero-State-LLC/zzthis/issues/67), [`apps/web`](apps/web/), spec 005 US6)
 - [ ] zzThat phone apps, specified in that repo, consume this API and [`design/`](design/README.md)
 
 v1 ends with the prototype above. Candidates for v2, such as any-language codes and a trained reader ([#35](https://github.com/Zero-State-LLC/zzthis/issues/35)), are listed in [SPEC Section 12](docs/SPEC.md).
