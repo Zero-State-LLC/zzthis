@@ -22,7 +22,7 @@
     "test": "vitest run --coverage && npm run test --workspaces --if-present",
     "design:build": "node scripts/build-design-tokens.mjs",
     "design:check": "node scripts/check-design-tokens.mjs",
-    "qual:ocr": "node scripts/ocr-qualification-preflight.mjs",
+    "qual:ocr": "node --experimental-strip-types scripts/ocr-qualification-cli.mjs",
     "build": "node scripts/check-design-tokens.mjs && node scripts/build-fonts.mjs --check && astro build && node scripts/check-dist.mjs && npm run build --workspaces --if-present",
     "fonts:build": "node scripts/build-fonts.mjs",
     "fonts:check": "node scripts/build-fonts.mjs --check",

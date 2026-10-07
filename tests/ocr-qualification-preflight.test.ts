@@ -39,6 +39,8 @@ async function completeSyntheticInputs(): Promise<SyntheticInputs> {
       ),
     ]);
 
+  (candidateBundle.decoder as JsonObject).wordlist_version = "fixture-7";
+
   const hashes = {
     manifest: canonicalSha256(manifest),
     deviceMatrix: canonicalSha256(deviceMatrix),
@@ -99,6 +101,39 @@ describe("OCR qualification preflight", () => {
       "sigstore_bundle_verification_not_performed",
     );
     expect(report.reason_codes).toContain("final_bucket_minimum_not_met");
+    expect(report.checks.decoder_replay).toBe("EXECUTED_UNPINNED");
+    expect(report.reason_codes).toContain("decoder_identity_unverified");
+    expect(report.reason_codes).toContain("scoring_and_receipt_not_performed");
+    expect(report.decoder_replay_summary).toMatchObject({
+      candidate_count: 1,
+      parsed_candidate_count: 1,
+      checkword_valid_candidate_count: 1,
+      valid_truth_count: 1,
+    });
+  });
+
+  it("replays valid manifest truth through the shared parser and check word", async () => {
+    const inputs = await completeSyntheticInputs();
+    const report = inspectQualification(inputs);
+
+    expect(report.reason_codes).not.toContain(
+      "valid_ground_truth_decoder_mismatch",
+    );
+    expect(report.reason_codes).not.toContain(
+      "valid_ground_truth_checkword_mismatch",
+    );
+  });
+
+  it("rejects a valid truth entry that disagrees with the shared decoder", async () => {
+    const inputs = await completeSyntheticInputs();
+    const firstSample = inputs.manifest.samples[0]!;
+    const truth = firstSample.ground_truth_codes as JsonObject[];
+    truth[0]!.canonical_code = "zz-copper-lantern-zz";
+
+    const report = inspectQualification(inputs);
+    expect(report.reason_codes).toContain(
+      "valid_ground_truth_decoder_mismatch",
+    );
   });
 
   it("detects corpus samples that leak across tuning and final splits", async () => {

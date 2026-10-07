@@ -1,9 +1,10 @@
 import { createHash } from "node:crypto";
-import { readFile, writeFile } from "node:fs/promises";
+import { readFile } from "node:fs/promises";
 import { fileURLToPath } from "node:url";
 import path from "node:path";
 import { Validator } from "@cfworker/json-schema";
 import canonicalize from "canonicalize";
+import { replayDecoderEvidence } from "./ocr-qualification-decoder-replay.mjs";
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const QUALIFICATION_DIR = path.join(ROOT, "specs/004-capture/qualification");
@@ -18,7 +19,7 @@ const DOCUMENTS = {
   executionAttestation: "execution-attestation.schema.json",
 };
 
-const REQUIRED_INPUTS = [
+export const REQUIRED_INPUTS = [
   "manifest",
   "deviceMatrix",
   "candidateBundle",
@@ -30,7 +31,7 @@ const REQUIRED_INPUTS = [
   "adapterResults",
 ];
 
-const ARGUMENT_NAMES = {
+export const ARGUMENT_NAMES = {
   manifest: "manifest",
   deviceMatrix: "device-matrix",
   candidateBundle: "candidate-bundle",
@@ -304,11 +305,9 @@ function validateRelationships(documents, hashes, errors) {
   }
 }
 
-export function inspectQualification(
-  documents,
-  { policyPresent = false } = {},
-) {
+function collectSchemasAndHashes(documents) {
   const errors = [];
+  const schemaErrors = [];
   const hashes = {};
 
   for (const name of Object.keys(DOCUMENTS)) {
@@ -317,7 +316,7 @@ export function inspectQualification(
       errors.push(`input_missing:${name}`);
       continue;
     }
-    validateSchema(name, value, errors);
+    validateSchema(name, value, schemaErrors);
     if (
       name !== "adapterResults" &&
       name !== "executionAttestation" &&
@@ -330,6 +329,7 @@ export function inspectQualification(
       }
     }
   }
+  errors.push(...schemaErrors);
 
   for (const name of [
     "preRunAttestation",
@@ -345,6 +345,31 @@ export function inspectQualification(
     }
   }
 
+  return { errors, schemaErrors, hashes };
+}
+
+function runDecoderReplay(documents, schemaErrors) {
+  if (
+    schemaErrors.length > 0 ||
+    !documents.manifest ||
+    !documents.adapterResults ||
+    !documents.candidateBundle
+  ) {
+    return { performed: false, reason: "decoder_replay_inputs_invalid" };
+  }
+  return replayDecoderEvidence(
+    documents.manifest,
+    documents.adapterResults,
+    documents.candidateBundle,
+  );
+}
+
+export function inspectQualification(
+  documents,
+  { policyPresent = false } = {},
+) {
+  const { errors, schemaErrors, hashes } = collectSchemasAndHashes(documents);
+
   if (errors.length === 0) {
     validateRelationships(documents, hashes, errors);
     checkCoverage(
@@ -356,10 +381,18 @@ export function inspectQualification(
     );
   }
 
+  const decoderReplay = runDecoderReplay(documents, schemaErrors);
+  if (decoderReplay.performed) errors.push(...decoderReplay.errors);
+
   const reasonCodes = [...new Set(errors)];
   if (!policyPresent) reasonCodes.push("protected_verifier_policy_missing");
   reasonCodes.push("sigstore_bundle_verification_not_performed");
-  reasonCodes.push("decoder_replay_and_scoring_not_performed");
+  if (!decoderReplay.performed) {
+    reasonCodes.push(decoderReplay.reason);
+  } else {
+    reasonCodes.push("decoder_identity_unverified");
+    reasonCodes.push("scoring_and_receipt_not_performed");
+  }
 
   return {
     schema_version: 1,
@@ -374,108 +407,13 @@ export function inspectQualification(
         ? "PRESENT_UNVERIFIED"
         : "MISSING",
       sigstore_verification: "NOT_PERFORMED",
-      decoder_replay: "NOT_PERFORMED",
+      decoder_replay: decoderReplay.performed
+        ? "EXECUTED_UNPINNED"
+        : "NOT_PERFORMED",
       scoring_and_receipt: "NOT_PERFORMED",
     },
+    decoder_replay_summary: decoderReplay.summary ?? null,
     hashes,
     reason_codes: reasonCodes,
   };
-}
-
-async function readJson(filePath, name) {
-  try {
-    return JSON.parse(await readFile(filePath, "utf8"));
-  } catch {
-    throw new Error(`invalid_json:${name}`);
-  }
-}
-
-function parseArgs(args) {
-  const options = {};
-  for (let index = 0; index < args.length; index += 1) {
-    const key = args[index];
-    if (key === "--help" || key === "-h") return { help: true };
-    if (!key?.startsWith("--") || index + 1 >= args.length) {
-      throw new Error("invalid_arguments");
-    }
-    const name = Object.keys(ARGUMENT_NAMES).find(
-      (inputName) => ARGUMENT_NAMES[inputName] === key.slice(2),
-    );
-    if (!name && key !== "--output") throw new Error("invalid_arguments");
-    const optionName = name ?? "output";
-    if (Object.hasOwn(options, optionName))
-      throw new Error("duplicate_argument");
-    options[optionName] = args[index + 1];
-    index += 1;
-  }
-  for (const name of REQUIRED_INPUTS) {
-    if (!options[name]) throw new Error(`argument_missing:${name}`);
-  }
-  return options;
-}
-
-function usage() {
-  return [
-    "Usage: npm run qual:ocr -- \\",
-    ...REQUIRED_INPUTS.map((name) => `  --${ARGUMENT_NAMES[name]} <path>`),
-    "  [--output <path>]",
-    "",
-    "This preflight is evidence validation only. It always returns INCOMPLETE/NO_PROMOTION until the protected Sigstore verifier, decoder replay, scoring, and receipt pipeline are implemented.",
-  ].join("\n");
-}
-
-async function main() {
-  let options;
-  try {
-    options = parseArgs(process.argv.slice(2));
-  } catch (error) {
-    process.stderr.write(`${error.message}\n${usage()}\n`);
-    process.exitCode = 2;
-    return;
-  }
-
-  if (options.help) {
-    process.stdout.write(`${usage()}\n`);
-    return;
-  }
-
-  const documents = {};
-  const reasonCodes = [];
-  for (const name of REQUIRED_INPUTS) {
-    if (name === "preRunBundle" || name === "executionBundle") {
-      try {
-        documents[name] = await readJson(options[name], name);
-      } catch {
-        reasonCodes.push(`sigstore_bundle_unreadable:${name}`);
-      }
-      continue;
-    }
-    try {
-      documents[name] = await readJson(options[name], name);
-    } catch {
-      reasonCodes.push(`invalid_json:${name}`);
-    }
-  }
-
-  const report = inspectQualification(documents, {
-    policyPresent: false,
-  });
-  report.reason_codes = [...new Set([...reasonCodes, ...report.reason_codes])];
-
-  if (options.output) {
-    await writeFile(options.output, `${JSON.stringify(report, null, 2)}\n`, {
-      encoding: "utf8",
-      mode: 0o600,
-    });
-  } else {
-    process.stdout.write(`${JSON.stringify(report, null, 2)}\n`);
-  }
-  process.exitCode = 2;
-}
-
-if (
-  process.argv[1] &&
-  path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)
-) {
-  await main();
 }
