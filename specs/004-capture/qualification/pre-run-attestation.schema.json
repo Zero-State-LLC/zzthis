@@ -1,0 +1,40 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://zer0state.com/schemas/zz-ocr-qual-pre-run-attestation-v1.json",
+  "title": "ZZ-OCR-QUAL-001 pre-run freeze attestation",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "qualification_id",
+    "candidate_id",
+    "manifest_sha256",
+    "gate_config_sha256",
+    "adapter_candidate_sha256",
+    "decoder_commit",
+    "issued_at_utc",
+    "issuer_id",
+    "key_id",
+    "publication_ref",
+    "signature_algorithm",
+    "signature"
+  ],
+  "properties": {
+    "schema_version": { "const": 1 },
+    "qualification_id": { "const": "ZZ-OCR-QUAL-001" },
+    "candidate_id": { "type": "string", "minLength": 1 },
+    "manifest_sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+    "gate_config_sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+    "adapter_candidate_sha256": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "decoder_commit": { "type": "string", "minLength": 7 },
+    "issued_at_utc": { "type": "string", "format": "date-time" },
+    "issuer_id": { "type": "string", "minLength": 1 },
+    "key_id": { "type": "string", "minLength": 1 },
+    "publication_ref": { "type": "string", "format": "uri" },
+    "signature_algorithm": { "type": "string", "minLength": 1 },
+    "signature": { "type": "string", "minLength": 1 }
+  }
+}

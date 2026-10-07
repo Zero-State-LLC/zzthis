@@ -57,14 +57,6 @@
           "regions": [{ "x": 0.2, "y": 0.4, "width": 0.5, "height": 0.1 }]
         }
       ],
-      "decoded_codes": [
-        {
-          "pair_id": "predicted-1",
-          "canonical_code": "zz-copper-lantern-sky-zz",
-          "candidate_ids": ["text-1"]
-        }
-      ],
-      "product_state": "accept",
       "reason_codes": []
     },
     {
@@ -82,8 +74,6 @@
       ],
       "rois": [],
       "candidates": [],
-      "decoded_codes": [],
-      "product_state": "retry",
       "reason_codes": ["missing-closing-fiducial"]
     }
   ]

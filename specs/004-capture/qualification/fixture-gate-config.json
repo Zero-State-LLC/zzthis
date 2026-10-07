@@ -2,7 +2,6 @@
   "schema_version": 1,
   "qualification_id": "ZZ-OCR-QUAL-001",
   "manifest_sha256": "a4de21e6a6c7ec8d5bbfbeac428f1e54403ee2e0667b9dd904d0e3d9a3e154b9",
-  "frozen_at_utc": "2026-10-06T00:00:00Z",
   "minimum_samples_by_split": { "tuning": 1, "final": 1 },
   "required_buckets": [
     { "bucket_id": "handwriting", "minimum_sample_count": 1 },
@@ -37,6 +36,8 @@
     "min_exact_code_accuracy": 1,
     "max_character_error_rate": 0,
     "min_rectification_success_rate": 1,
-    "max_p95_latency_ms": 1000
+    "max_p95_latency_ms": 1000,
+    "fiducial_iou_threshold": 0.5,
+    "cer_normalization": "nfc-code-points-v1"
   }
 }

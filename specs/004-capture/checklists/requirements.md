@@ -13,7 +13,10 @@ Checked 2026-10-07. Capture is not built. Recognition architecture refined by th
 - [x] ZZ-OCR-QUAL-001 names the shared corpus and required product metrics.
 - [x] The manifest schema carries polygon ROI truth for complete visual codes, keyed by ground-truth fiducial pair.
 - [x] Serialized adapter results have a strict machine schema and fixture bound to manifest/sample hashes.
-- [x] The receipt schema requires aggregate and per-bucket metrics, frozen thresholds, explicit gate outcomes, review evidence, and case dispositions; PASS is conditional on final-split gates.
+- [x] The receipt schema separates tuning/final and per-split bucket metrics; release gates use final-only metrics.
+- [x] Frozen gate config binds fiducial IoU and exact CER normalization as well as release thresholds.
+- [x] Adapter evidence omits decoder-owned canonical codes and product states; validators replay the pinned shared decoder and verify ground truth.
+- [x] PASS requires independently verifiable pre-run and execution attestations; no caller-supplied timestamp can authorize promotion.
 - [x] False-valid-decode behavior is explicitly measured and is the primary safety metric for engine promotion.
 - [x] Qwen/VLM and custom zz recognizers are deferred to v2.
 - [ ] No recognizer is implemented or qualified yet.

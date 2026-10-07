@@ -8,7 +8,6 @@
     "schema_version",
     "qualification_id",
     "manifest_sha256",
-    "frozen_at_utc",
     "minimum_samples_by_split",
     "required_buckets",
     "thresholds"
@@ -17,7 +16,6 @@
     "schema_version": { "const": 1 },
     "qualification_id": { "const": "ZZ-OCR-QUAL-001" },
     "manifest_sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
-    "frozen_at_utc": { "type": "string", "format": "date-time" },
     "minimum_samples_by_split": {
       "type": "object",
       "additionalProperties": false,
@@ -44,7 +42,9 @@
         "min_exact_code_accuracy",
         "max_character_error_rate",
         "min_rectification_success_rate",
-        "max_p95_latency_ms"
+        "max_p95_latency_ms",
+        "fiducial_iou_threshold",
+        "cer_normalization"
       ],
       "properties": {
         "max_false_accept_count": { "const": 0 },
@@ -66,7 +66,13 @@
           "minimum": 0,
           "maximum": 1
         },
-        "max_p95_latency_ms": { "type": "number", "exclusiveMinimum": 0 }
+        "max_p95_latency_ms": { "type": "number", "exclusiveMinimum": 0 },
+        "fiducial_iou_threshold": {
+          "type": "number",
+          "exclusiveMinimum": 0,
+          "maximum": 1
+        },
+        "cer_normalization": { "const": "nfc-code-points-v1" }
       }
     }
   },

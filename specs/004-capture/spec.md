@@ -92,7 +92,7 @@ Handles and field codes never reach Accept without a person confirming them (FR-
 
 ## Success criteria
 
-Product-level qualification is defined by [ZZ-OCR-QUAL-001](qualification.md). The protocol defines the corpus, safety metrics, evidence receipt, promotion/no-promotion outcome, change control, and rollback rule. Generic OCR benchmark claims are not acceptance evidence. A separate gate-config input is frozen from tuning evidence and hashed before the final split is run; its thresholds and required bucket counts cannot be changed after final results are seen.
+Product-level qualification is defined by [ZZ-OCR-QUAL-001](qualification.md). The protocol defines the corpus, safety metrics, evidence receipt, promotion/no-promotion outcome, change control, and rollback rule. Generic OCR benchmark claims are not acceptance evidence. The gate config freezes scoring parameters (including fiducial IoU and CER normalization), thresholds, and required bucket counts. A signed, independently timestamped pre-run attestation binds the manifest, config, adapter candidate, and decoder before final execution; a second trusted execution attestation binds the run and results. Without an owner-approved trust root, a run cannot PASS or promote an engine.
 
 ## Out of scope
 

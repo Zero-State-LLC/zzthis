@@ -144,20 +144,6 @@
         }
       ]
     },
-    "decodedCode": {
-      "type": "object",
-      "additionalProperties": false,
-      "required": ["pair_id", "canonical_code", "candidate_ids"],
-      "properties": {
-        "pair_id": { "type": ["string", "null"] },
-        "canonical_code": { "type": "string", "minLength": 1 },
-        "candidate_ids": {
-          "type": "array",
-          "uniqueItems": true,
-          "items": { "type": "string", "minLength": 1 }
-        }
-      }
-    },
     "sampleResult": {
       "type": "object",
       "additionalProperties": false,
@@ -169,8 +155,6 @@
         "fiducials",
         "rois",
         "candidates",
-        "decoded_codes",
-        "product_state",
         "reason_codes"
       ],
       "properties": {
@@ -190,11 +174,6 @@
           "type": "array",
           "items": { "$ref": "#/$defs/textCandidate" }
         },
-        "decoded_codes": {
-          "type": "array",
-          "items": { "$ref": "#/$defs/decodedCode" }
-        },
-        "product_state": { "enum": ["accept", "clarify", "retry", "abstain"] },
         "reason_codes": {
           "type": "array",
           "uniqueItems": true,
