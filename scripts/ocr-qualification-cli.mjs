@@ -12,6 +12,37 @@ import {
 } from "./ocr-qualification-preflight.mjs";
 import { verifyQualificationBundles } from "./ocr-qualification-sigstore-pair.mjs";
 
+const OUTPUT_ARGUMENTS = {
+  "--output": "output",
+  "--markdown-report": "markdownReport",
+  "--receipt-output": "receiptOutput",
+  "--receipt-report": "receiptReport",
+};
+
+export function publicDiagnosticReport(report) {
+  const result = { ...report };
+  if (report.qualification_scoring) {
+    const scoring = report.qualification_scoring;
+    result.qualification_scoring = {
+      status: scoring.status,
+      qualification_id: scoring.qualification_id,
+      candidate_id: scoring.candidate_id,
+      metric_sets: scoring.metric_sets,
+      gate_evaluation: scoring.gate_evaluation,
+    };
+  }
+  const receipt = report.qualification_receipt;
+  result.qualification_receipt = receipt
+    ? {
+        status: receipt.validation.status,
+        report_sha256: receipt.receipt.report_sha256,
+        detail:
+          "Use --receipt-output or --receipt-report for the private artifact.",
+      }
+    : null;
+  return result;
+}
+
 async function readJson(filePath, name) {
   try {
     const bytes = await readFile(filePath);
@@ -32,11 +63,10 @@ function parseArgs(args) {
     const name = Object.keys(ARGUMENT_NAMES).find(
       (inputName) => ARGUMENT_NAMES[inputName] === key.slice(2),
     );
-    if (!name && key !== "--output" && key !== "--markdown-report") {
+    if (!name && !Object.hasOwn(OUTPUT_ARGUMENTS, key)) {
       throw new Error("invalid_arguments");
     }
-    const optionName =
-      name ?? (key === "--output" ? "output" : "markdownReport");
+    const optionName = name ?? OUTPUT_ARGUMENTS[key];
     if (Object.hasOwn(options, optionName))
       throw new Error("duplicate_argument");
     options[optionName] = args[index + 1];
@@ -52,9 +82,9 @@ function usage() {
   return [
     "Usage: npm run qual:ocr -- \\",
     ...REQUIRED_INPUTS.map((name) => `  --${ARGUMENT_NAMES[name]} <path>`),
-    "  [--output <path>] [--markdown-report <path>]",
+    "  [--output <path>] [--markdown-report <path>] [--receipt-output <path>] [--receipt-report <path>]",
     "",
-    "This preflight checks Sigstore bundles when Cosign is available and reports diagnostic final-split scores/gates only after structural validation and pinned decoder replay pass. It always returns INCOMPLETE/NO_PROMOTION until protected policy, trusted workflow timing, independent review, and receipt generation/validation are established.",
+    "This preflight checks Sigstore bundles when Cosign is available and reports diagnostic final-split scores/gates only after structural validation and pinned decoder replay pass. Any generated receipt is explicitly INCOMPLETE and non-authorizing; qualification stays INCOMPLETE/NO_PROMOTION until protected policy, trusted workflow timing, independent review, and private corpus/device evidence are established.",
   ].join("\n");
 }
 
@@ -119,13 +149,40 @@ async function main() {
     report.diagnostic_markdown_sha256 = sha256MarkdownReport(markdown);
   }
 
+  if (options.receiptOutput || options.receiptReport) {
+    const artifact = report.qualification_receipt;
+    if (!artifact) {
+      process.stderr.write("qualification_receipt_unavailable\n");
+    } else {
+      if (options.receiptOutput) {
+        await writeFile(
+          options.receiptOutput,
+          `${JSON.stringify(
+            { receipt: artifact.receipt, validation: artifact.validation },
+            null,
+            2,
+          )}\n`,
+          { encoding: "utf8", mode: 0o600 },
+        );
+      }
+      if (options.receiptReport) {
+        await writeFile(options.receiptReport, artifact.markdown, {
+          encoding: "utf8",
+          mode: 0o600,
+        });
+      }
+    }
+  }
+
   if (options.output) {
     await writeFile(options.output, `${JSON.stringify(report, null, 2)}\n`, {
       encoding: "utf8",
       mode: 0o600,
     });
   } else {
-    process.stdout.write(`${JSON.stringify(report, null, 2)}\n`);
+    process.stdout.write(
+      `${JSON.stringify(publicDiagnosticReport(report), null, 2)}\n`,
+    );
   }
   process.exitCode = 2;
 }

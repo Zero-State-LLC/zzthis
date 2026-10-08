@@ -49,6 +49,8 @@ export function buildQualificationReasonCodes({
   decoderReplay,
   decoderIdentityCheck,
   scoring,
+  receiptArtifact,
+  receiptAssemblyError,
 }) {
   const reasonCodes = [...new Set(errors)];
   if (!policyPresent) reasonCodes.push("protected_verifier_policy_missing");
@@ -65,10 +67,18 @@ export function buildQualificationReasonCodes({
   } else {
     reasonCodes.push(...decoderIdentityCheck.reasons);
     reasonCodes.push(
-      scoring.performed
-        ? "receipt_generation_not_performed"
-        : (scoring.reason ?? "scoring_and_receipt_not_performed"),
+      receiptArtifact
+        ? "incomplete_non_authorizing_receipt_generated"
+        : (receiptAssemblyError ??
+            (scoring.performed
+              ? "receipt_generation_not_performed"
+              : (scoring.reason ?? "scoring_and_receipt_not_performed"))),
     );
   }
   return { reasonCodes, sigstoreSummary, trustedTimeValidation };
+}
+
+export function scoringAndReceiptStatus(scoring, receiptArtifact) {
+  if (!scoring.performed) return "NOT_PERFORMED";
+  return receiptArtifact ? "INCOMPLETE_RECEIPT" : "SCORED_NO_RECEIPT";
 }

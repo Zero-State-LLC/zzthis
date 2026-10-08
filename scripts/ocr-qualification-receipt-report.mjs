@@ -139,11 +139,19 @@ export function buildQualificationReceiptArtifact(receiptDraft, frozenInputs) {
   const validation = validateQualificationReceipt(receipt, frozenInputs);
   if (
     validation.schemaValid !== true ||
-    !["SEMANTIC_CHECKS_PASS", "NO_PROMOTION", "FAIL"].includes(
+    !["SEMANTIC_CHECKS_PASS", "NO_PROMOTION", "FAIL", "INCOMPLETE"].includes(
       validation.status,
     )
   ) {
     throw new TypeError("qualification_receipt_validation_failed");
+  }
+  if (
+    validation.status === "INCOMPLETE" &&
+    receipt.disposition !== "INCOMPLETE"
+  ) {
+    throw new TypeError(
+      "qualification_receipt_incomplete_disposition_required",
+    );
   }
   if (
     sha256QualificationReceiptReport(

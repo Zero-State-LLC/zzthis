@@ -12,7 +12,9 @@ import {
   buildQualificationReasonCodes,
   runDecoderReplay,
   runScoring,
+  scoringAndReceiptStatus,
 } from "./ocr-qualification-preflight-stages.mjs";
+import { createIncompleteQualificationReceiptArtifact } from "./ocr-qualification-receipt-assembly.mjs";
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const QUALIFICATION_DIR = path.join(ROOT, "specs/004-capture/qualification");
@@ -372,6 +374,11 @@ function collectSchemasAndHashes(documents, rawInputBytes) {
     }
   }
 
+  for (const name of ["preRunBundle", "executionBundle"]) {
+    const bytes = rawInputBytes[name];
+    if (bytes !== undefined) hashes[name] = exactSha256(bytes);
+  }
+
   return { errors, schemaErrors, hashes };
 }
 
@@ -416,6 +423,14 @@ export function inspectQualification(
     decoderReplay,
     decoderIdentityCheck,
   );
+  const { receiptArtifact, receiptAssemblyError } =
+    createIncompleteQualificationReceiptArtifact({
+      documents,
+      hashes,
+      scoring,
+      sigstoreVerifications,
+      rawInputBytes,
+    });
 
   const { reasonCodes, sigstoreSummary, trustedTimeValidation } =
     buildQualificationReasonCodes({
@@ -427,6 +442,8 @@ export function inspectQualification(
       decoderReplay,
       decoderIdentityCheck,
       scoring,
+      receiptArtifact,
+      receiptAssemblyError,
     });
 
   return {
@@ -461,14 +478,13 @@ export function inspectQualification(
         : decoderIdentityCheck.verified
           ? "VERIFIED"
           : "MISMATCH",
-      scoring_and_receipt: scoring.performed
-        ? "SCORED_NO_RECEIPT"
-        : "NOT_PERFORMED",
+      scoring_and_receipt: scoringAndReceiptStatus(scoring, receiptArtifact),
     },
     decoder_replay_summary: decoderReplay.summary ?? null,
     qualification_scoring: scoring.performed
       ? { status: "DIAGNOSTIC_ONLY", ...scoring.result }
       : null,
+    qualification_receipt: receiptArtifact,
     hashes,
     reason_codes: reasonCodes,
   };

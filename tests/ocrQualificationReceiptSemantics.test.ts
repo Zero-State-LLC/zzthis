@@ -197,6 +197,8 @@ function buildInputs(): FixtureInputs {
     max_character_error_rate: 0,
     min_rectification_success_rate: 1,
     max_p95_latency_ms: 100,
+    accept_min_confidence: 0.8,
+    retry_below_confidence: 0.5,
   };
   const gateConfig = {
     required_gate_ids: [...gateIds],
@@ -511,7 +513,27 @@ describe("OCR qualification receipt semantic guard", () => {
     expect(artifact.validation.authorizesPromotion).toBe(false);
   });
 
-  it("does not render an incomplete receipt", () => {
+  it("renders a schema-valid incomplete receipt without authorizing promotion", () => {
+    const inputs = buildInputs();
+    inputs.receipt.disposition = "INCOMPLETE";
+    inputs.receipt.promoted_engine = null;
+    inputs.receipt.approver = null;
+    inputs.receipt.pull_request = null;
+    inputs.receipt.no_promotion_reason = "Qualification evidence is incomplete";
+    inputs.receipt.release_gates.frozen_at_utc = null as unknown as string;
+
+    const artifact = buildQualificationReceiptArtifact(inputs.receipt, {
+      gateConfig: inputs.gateConfig,
+      deviceMatrix: inputs.deviceMatrix,
+    });
+
+    expect(artifact.validation.status).toBe("INCOMPLETE");
+    expect(artifact.validation.authorizesPromotion).toBe(false);
+    expect(artifact.receipt.disposition).toBe("INCOMPLETE");
+    expect(artifact.markdown).toContain("Disposition: INCOMPLETE");
+  });
+
+  it("does not relabel a semantically incomplete receipt as PASS", () => {
     const inputs = buildInputs();
     inputs.receipt.device_coverage[1]!.metrics_by_split.final.latency_ms.p95 =
       null as unknown as number;
@@ -521,7 +543,7 @@ describe("OCR qualification receipt semantic guard", () => {
         gateConfig: inputs.gateConfig,
         deviceMatrix: inputs.deviceMatrix,
       }),
-    ).toThrow("qualification_receipt_validation_failed");
+    ).toThrow("qualification_receipt_incomplete_disposition_required");
   });
 
   it("never authorizes promotion, even when its semantic checks pass", () => {
