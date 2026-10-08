@@ -166,3 +166,11 @@ A sheet from the Resolve screen: `report.title`, four reasons (`report.reason_*`
 ### App icon
 
 There is no square mark yet. `brand/mark-zz-code.webp` is 480 by 160. Until Michael supplies a square icon, builds use a placeholder: that mark centered on the paper color. A store submission waits for the real icon.
+
+### Theme and brand parity
+
+Added 2026-10-07. Brand and UI stay consistent across the zzThis site, the web client, and the zzThat apps [DANNY 2026-10-07]. Source: Michael's 2026-10-07 changes (`intent/2026-10-07-michael-content-changes.md`) and `docs/SPEC.md` Section 5.5.
+
+- Every client starts in the dark theme by default and still offers light. The site starts dark on every page whatever the device setting, and its header toggle switches to light. The apps follow the same default instead of the system setting; the zzThat specs carry the app-side change.
+- Where a client shows the zzThat wordmark, it uses the lowercase "zzthat" variant (zzThis `public/images/logos/zzthat-lowercase.webp`). It is not in `brand/` yet; add it here before an app shows it.
+- Where a client shows the zzThis wordmark, it swaps by theme: `brand/zzthis-logo-on-dark.webp` (white "this") on dark, `brand/zzthis-logo-on-light.webp` (black "this") on light.

@@ -234,13 +234,15 @@ describe("navigation and people", () => {
     ]);
   });
 
-  it("lists the advisors in the 2026-10-06 order, all with initials", () => {
+  it("lists the advisors in the 2026-10-07 order, all with initials", () => {
     // [MICHAEL 2026-10-06 change list] Daniel and Adam move to first.
+    // [MICHAEL 2026-10-07] Omer F. Yalcin is added last.
     expect(advisors.map((person) => person.name)).toEqual([
       "Daniel Meyer",
       "Adam Fry",
       "Patrick Muggler",
       "Arshi Chadha",
+      "Omer F. Yalcin",
     ]);
     expect(advisors.every((person) => person.initials !== undefined)).toBe(
       true,

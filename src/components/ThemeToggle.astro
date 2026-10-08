@@ -11,6 +11,8 @@
     if (!(button instanceof HTMLButtonElement)) return;
     const root = document.documentElement;
     const media = matchMedia("(prefers-color-scheme: dark)");
+    // [MICHAEL 2026-10-07] Every page starts dark (data-theme="dark" on <html>).
+    // No storage (check-dist bans it), so the toggle applies to the current page.
     const isDark = () =>
       root.dataset.theme ? root.dataset.theme === "dark" : media.matches;
     const label = () => {

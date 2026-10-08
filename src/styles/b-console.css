@@ -450,8 +450,7 @@
 }
 
 /* [MICHAEL 2026-10-06 change list] Both headings use the specimen's type.
-   "Why the zz markers matter" is orange; the language heading is framed
-   by orange zz markers. */
+   [MICHAEL 2026-10-07 change list] Only the "zz" in each heading is orange. */
 .why__heading,
 .langs__heading {
   font-family: var(--font-mono);
@@ -462,7 +461,7 @@
   overflow-wrap: anywhere;
 }
 
-.why__heading,
+.why__mark,
 .langs__mark {
   color: var(--color-accent-ink);
 }
