@@ -170,7 +170,9 @@ describe("workflows (spec 3.2 H.4 to H.6)", () => {
 
   it("separates available typed lookup from planned recognition paths", () => {
     expect(howItWorksPage.intro).toContain("not v1 behavior");
-    expect(howItWorksPage.readWays.heading).toBe("Manual and planned camera reading");
+    expect(howItWorksPage.readWays.heading).toBe(
+      "Manual and planned camera reading",
+    );
     expect(howItWorksPage.readWays.methods).toEqual([
       "Manual entry (available)",
       "Camera recognition (planned)",
