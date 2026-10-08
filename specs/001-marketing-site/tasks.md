@@ -94,3 +94,10 @@ Intent: `intent/2026-10-07-michael-content-changes.md`. Copy and layout: `docs/S
 - [ ] T042 Replace Omer's bio and closing line with Michael's wording if he sends it (Q72, issue #116).
 - [ ] T043 `/demo` "Current prototypes": swap zzthing.com for zzthis.com only if Michael says so (Q73, issue #117).
 - [ ] T044 zzThat app parity (FR-022, `docs/SPEC.md` Section 5.5): the apps default to dark and use the lowercase zzThat wordmark wherever one appears. The change lands in the zzThat specs and apps, tracked on the zzThis + zzThat board.
+
+## Phase 13: Michael's 2026-10-08 header changes
+
+Intent: `intent/2026-10-08-michael-nav-demo.md`. Spec: `docs/SPEC.md` Sections 3.1, 5.2, and 5.5, acceptance item 3; FR-002; decision D-2026-10-08-01.
+
+- [x] T045 Top menu: Demo between Applications and About, the footer's order (`src/content/navigation.ts`, `NavKey` gains `demo`); `/demo` passes `current="demo"`; the content test checks the new order.
+- [x] T046 Header: menu links about 30% larger (`calc(var(--text-sm) * 1.3)`), header height unchanged at 64 px; `.nav__mark { flex-shrink: 0 }` so the logo never shrinks; full menu from 64rem, checked at 1024 px.
