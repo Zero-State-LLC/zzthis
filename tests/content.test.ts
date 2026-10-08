@@ -164,11 +164,12 @@ describe("comparison (spec 3.2 H.3)", () => {
 describe("workflows (spec 3.2 H.4 to H.6)", () => {
   it("explains the terminal zz marks as camera index marks", () => {
     expect(whyMarkers.text).toContain("planned on-device camera reader");
-    expect(whyMarkers.text).toContain("find the endpoints first");
+    expect(whyMarkers.text).toContain("bound the region to inspect");
     expect(whyMarkers.text).not.toContain("in any handwriting");
   });
 
-  it("keeps voice recognition out of the current reading paths", () => {
+  it("separates available typed lookup from planned recognition paths", () => {
+    expect(howItWorksPage.intro).toContain("not v1 behavior");
     expect(howItWorksPage.readWays.heading).toBe("Manual and planned camera reading");
     expect(howItWorksPage.readWays.methods).toEqual(["Manual entry (available)", "Camera recognition (planned)"]);
     expect(howItWorksPage.readWays.line).toContain(
