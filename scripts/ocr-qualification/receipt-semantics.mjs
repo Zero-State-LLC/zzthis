@@ -233,7 +233,11 @@ export function validateReceiptSemantics(
       authorizesPromotion: false,
     };
   }
-  if (gateFailures.length > 0 || receipt.false_accepts.length > 0) {
+  if (
+    gateFailures.length > 0 ||
+    receipt.false_accepts.length > 0 ||
+    receipt.false_valid_cases.length > 0
+  ) {
     return {
       status: "NO_PROMOTION",
       errors: [],

@@ -484,15 +484,48 @@ describe("OCR qualification receipt semantic guard", () => {
     expect(result.authorizesPromotion).toBe(false);
   });
 
-  it("rejects missing per-device final p95 latency", () => {
+  it("rejects schema-valid missing per-device final p95 latency", () => {
     const inputs = buildInputs();
-    inputs.receipt.device_coverage.splice(1, 1);
+    inputs.receipt.device_coverage[1]!.metrics_by_split.final.latency_ms.p95 =
+      null as unknown as number;
 
     const result = evaluate(inputs);
 
     expect(result.schemaValid).toBe(true);
     expect(result.status).toBe("INCOMPLETE");
-    expect(result.errors).toContain("missing device coverage: ios-legacy");
+    expect(result.errors).toContain(
+      "missing per-device final p95 latency: ios-legacy",
+    );
+    expect(result.authorizesPromotion).toBe(false);
+  });
+
+  it("does not promote a candidate with false-valid cases even when within a nonzero rate cap", () => {
+    const inputs = buildInputs();
+    inputs.gateConfig.thresholds.max_false_valid_decode_rate = 1;
+    inputs.receipt.release_gates.thresholds.max_false_valid_decode_rate = 1;
+    inputs.receipt.metrics_by_split.final.false_valid_decode_count = 1;
+    inputs.receipt.metrics_by_split.final.false_valid_decode_rate = rate(1);
+    inputs.receipt.false_valid_cases.push({
+      device_matrix_entry_id: "ios-current",
+      sample_id: "sample-1",
+      pair_id: "pair-1",
+      expected_codes: ["zz-copper-lantern-sky-zz"],
+      observed_codes: ["zz-copper-lantern-maple-zz"],
+      disposition: "reproduced wrong-valid decode",
+      reviewer: "fixture-reviewer",
+    });
+    const falseValidGate = inputs.receipt.release_gates.gate_results.find(
+      ({ gate_id }) => gate_id === "false-valid-decode-rate",
+    )!;
+    falseValidGate.threshold = 1;
+    falseValidGate.observed = 1;
+    falseValidGate.result = "pass";
+
+    const result = evaluate(inputs);
+
+    expect(result.schemaValid, result.errors.join("\n")).toBe(true);
+    expect(result.status).toBe("NO_PROMOTION");
+    expect(result.gateFailures).toEqual([]);
     expect(result.authorizesPromotion).toBe(false);
   });
 

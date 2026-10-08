@@ -635,8 +635,8 @@
           "additionalProperties": false,
           "required": ["p50", "p95"],
           "properties": {
-            "p50": { "type": "number", "minimum": 0 },
-            "p95": { "type": "number", "minimum": 0 }
+            "p50": { "type": ["number", "null"], "minimum": 0 },
+            "p95": { "type": ["number", "null"], "minimum": 0 }
           }
         },
         "package_size_delta_bytes": { "type": ["integer", "null"] },
