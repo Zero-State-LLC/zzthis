@@ -7,6 +7,11 @@ export interface ScoredTextSample {
     denominator: number;
     rate: number | null;
   };
+  part_word_accuracy: {
+    numerator: number;
+    denominator: number;
+    rate: number | null;
+  };
   character_error_rate: {
     edit_distance: number;
     reference_code_point_count: number;
@@ -29,6 +34,11 @@ export interface AggregatedTextMetrics {
   sample_count: number;
   observation_count: number;
   exact_code_accuracy: {
+    numerator: number;
+    denominator: number;
+    rate: number | null;
+  };
+  part_word_accuracy: {
     numerator: number;
     denominator: number;
     rate: number | null;

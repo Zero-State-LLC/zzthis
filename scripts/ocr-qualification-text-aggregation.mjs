@@ -10,6 +10,7 @@ function createAccumulator() {
     sampleIds: new Set(),
     observation_count: 0,
     exact_code_accuracy: { numerator: 0, denominator: 0, rate: null },
+    part_word_accuracy: { numerator: 0, denominator: 0, rate: null },
     character_error_rate: {
       edit_distance: 0,
       reference_code_point_count: 0,
@@ -22,7 +23,11 @@ function createAccumulator() {
 function applyObservation(accumulator, scored) {
   accumulator.sampleIds.add(scored.sample_id);
   accumulator.observation_count += 1;
-  for (const metricName of ["exact_code_accuracy", "false_valid_decode_rate"]) {
+  for (const metricName of [
+    "exact_code_accuracy",
+    "part_word_accuracy",
+    "false_valid_decode_rate",
+  ]) {
     const metric = scored[metricName];
     if (
       !metric ||
@@ -65,10 +70,15 @@ function finalize(accumulator) {
     sample_count: accumulator.sampleIds.size,
     observation_count: accumulator.observation_count,
     exact_code_accuracy: { ...accumulator.exact_code_accuracy },
+    part_word_accuracy: { ...accumulator.part_word_accuracy },
     character_error_rate: { ...accumulator.character_error_rate },
     false_valid_decode_rate: { ...accumulator.false_valid_decode_rate },
   };
-  for (const metricName of ["exact_code_accuracy", "false_valid_decode_rate"]) {
+  for (const metricName of [
+    "exact_code_accuracy",
+    "part_word_accuracy",
+    "false_valid_decode_rate",
+  ]) {
     const metric = result[metricName];
     metric.rate =
       metric.denominator === 0 ? null : metric.numerator / metric.denominator;
@@ -92,15 +102,7 @@ function sortedGroupRows(groups, keyNames) {
     }));
 }
 
-/**
- * Aggregate top-1 text observations without averaging pre-computed rates.
- * Overall split and bucket rates sum their numerators and denominators;
- * device-split rows remain separately visible.
- */
-export function aggregateTextScoring(scoredSamples, manifestSamples) {
-  if (!Array.isArray(scoredSamples) || !Array.isArray(manifestSamples)) {
-    throw new TypeError("text_aggregation_arrays_required");
-  }
+function indexManifestSamples(manifestSamples) {
   const metadataBySample = new Map();
   for (const sample of manifestSamples) {
     if (
@@ -115,45 +117,80 @@ export function aggregateTextScoring(scoredSamples, manifestSamples) {
     }
     metadataBySample.set(sample.sample_id, sample);
   }
+  return metadataBySample;
+}
+
+function validateScoredObservation(scored, metadataBySample) {
+  const metadata = metadataBySample.get(scored?.sample_id);
+  if (
+    !metadata ||
+    !["tuning", "final"].includes(scored.split) ||
+    metadata.split !== scored.split ||
+    typeof scored.device_matrix_entry_id !== "string" ||
+    scored.device_matrix_entry_id.length === 0
+  ) {
+    throw new TypeError("scored_observation_metadata_mismatch");
+  }
+  return metadata;
+}
+
+function accumulateScoredObservation(
+  scored,
+  metadata,
+  seenObservations,
+  bySplit,
+  byDeviceSplit,
+  bySplitBucket,
+) {
+  const observationKey = `${scored.device_matrix_entry_id}\u0000${scored.sample_id}`;
+  if (seenObservations.has(observationKey)) {
+    throw new TypeError("duplicate_device_sample_observation");
+  }
+  seenObservations.add(observationKey);
+
+  const splitAccumulator = bySplit.get(scored.split) ?? createAccumulator();
+  applyObservation(splitAccumulator, scored);
+  bySplit.set(scored.split, splitAccumulator);
+
+  const deviceKey = `${scored.device_matrix_entry_id}\u0000${scored.split}`;
+  const deviceAccumulator = byDeviceSplit.get(deviceKey) ?? createAccumulator();
+  applyObservation(deviceAccumulator, scored);
+  byDeviceSplit.set(deviceKey, deviceAccumulator);
+
+  for (const bucket of new Set(metadata.stress_tags)) {
+    const bucketKey = `${scored.split}\u0000${bucket}`;
+    const bucketAccumulator =
+      bySplitBucket.get(bucketKey) ?? createAccumulator();
+    applyObservation(bucketAccumulator, scored);
+    bySplitBucket.set(bucketKey, bucketAccumulator);
+  }
+}
+
+/**
+ * Aggregate top-1 text observations without averaging pre-computed rates.
+ * Overall split and bucket rates sum their numerators and denominators;
+ * device-split rows remain separately visible.
+ */
+export function aggregateTextScoring(scoredSamples, manifestSamples) {
+  if (!Array.isArray(scoredSamples) || !Array.isArray(manifestSamples)) {
+    throw new TypeError("text_aggregation_arrays_required");
+  }
+  const metadataBySample = indexManifestSamples(manifestSamples);
 
   const bySplit = new Map();
   const byDeviceSplit = new Map();
   const bySplitBucket = new Map();
   const seenObservations = new Set();
   for (const scored of scoredSamples) {
-    const metadata = metadataBySample.get(scored?.sample_id);
-    if (
-      !metadata ||
-      !["tuning", "final"].includes(scored.split) ||
-      metadata.split !== scored.split ||
-      typeof scored.device_matrix_entry_id !== "string" ||
-      scored.device_matrix_entry_id.length === 0
-    ) {
-      throw new TypeError("scored_observation_metadata_mismatch");
-    }
-    const observationKey = `${scored.device_matrix_entry_id}\u0000${scored.sample_id}`;
-    if (seenObservations.has(observationKey)) {
-      throw new TypeError("duplicate_device_sample_observation");
-    }
-    seenObservations.add(observationKey);
-
-    const splitAccumulator = bySplit.get(scored.split) ?? createAccumulator();
-    applyObservation(splitAccumulator, scored);
-    bySplit.set(scored.split, splitAccumulator);
-
-    const deviceKey = `${scored.device_matrix_entry_id}\u0000${scored.split}`;
-    const deviceAccumulator =
-      byDeviceSplit.get(deviceKey) ?? createAccumulator();
-    applyObservation(deviceAccumulator, scored);
-    byDeviceSplit.set(deviceKey, deviceAccumulator);
-
-    for (const bucket of new Set(metadata.stress_tags)) {
-      const bucketKey = `${scored.split}\u0000${bucket}`;
-      const bucketAccumulator =
-        bySplitBucket.get(bucketKey) ?? createAccumulator();
-      applyObservation(bucketAccumulator, scored);
-      bySplitBucket.set(bucketKey, bucketAccumulator);
-    }
+    const metadata = validateScoredObservation(scored, metadataBySample);
+    accumulateScoredObservation(
+      scored,
+      metadata,
+      seenObservations,
+      bySplit,
+      byDeviceSplit,
+      bySplitBucket,
+    );
   }
 
   return {

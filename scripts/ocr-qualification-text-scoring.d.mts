@@ -42,9 +42,19 @@ export function scorePayloadObservations(
     exact_code_correct: boolean | null;
     character_edit_distance: number;
     reference_code_point_count: number;
+    part_word_accuracy: {
+      numerator: number;
+      denominator: number;
+      rate: number | null;
+    };
     false_valid_decode: boolean | null;
   }>;
   exact_code_accuracy: {
+    numerator: number;
+    denominator: number;
+    rate: number | null;
+  };
+  part_word_accuracy: {
     numerator: number;
     denominator: number;
     rate: number | null;

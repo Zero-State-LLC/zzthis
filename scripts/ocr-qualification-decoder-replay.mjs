@@ -20,7 +20,7 @@ function captureIssueFor(row) {
   return null;
 }
 
-function sampleBand(row, wordlist, gateConfig) {
+export function scoreSampleBand(row, wordlist, gateConfig) {
   const candidate = row.candidates[0] ?? null;
   return decideCaptureBand({
     candidate: candidate
@@ -37,7 +37,7 @@ function sampleBand(row, wordlist, gateConfig) {
       acceptMinConfidence: gateConfig.thresholds.accept_min_confidence,
       retryBelowConfidence: gateConfig.thresholds.retry_below_confidence,
     },
-  }).band;
+  });
 }
 
 export function replayDecoderEvidence(
@@ -88,7 +88,7 @@ export function replayDecoderEvidence(
   }
 
   for (const row of adapterResults.results) {
-    const band = sampleBand(row, wordlist, gateConfig);
+    const band = scoreSampleBand(row, wordlist, gateConfig).band;
     summary.band_counts[row.split][band] += 1;
 
     for (const candidate of row.candidates) {

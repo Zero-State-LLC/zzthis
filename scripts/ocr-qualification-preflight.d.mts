@@ -23,7 +23,7 @@ export interface QualificationReport {
     trusted_attestation_timeline: "NOT_PERFORMED" | "PASS" | "FAIL";
     decoder_replay: "NOT_PERFORMED" | "EXECUTED_UNPINNED" | "EXECUTED_PINNED";
     decoder_identity: "VERIFIED" | "MISMATCH" | "UNAVAILABLE";
-    scoring_and_receipt: "NOT_PERFORMED";
+    scoring_and_receipt: "NOT_PERFORMED" | "SCORED_NO_RECEIPT";
   };
   decoder_replay_summary: {
     candidate_count: number;
@@ -41,6 +41,13 @@ export interface QualificationReport {
     };
     valid_truth_count: number;
   } | null;
+  qualification_scoring:
+    | (Record<string, unknown> & {
+        status: "DIAGNOSTIC_ONLY";
+        receipt_ready: false;
+        promotion_eligible: false;
+      })
+    | null;
   hashes: Record<string, string>;
   reason_codes: string[];
 }

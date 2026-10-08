@@ -35,10 +35,12 @@ describe("OCR qualification fiducial matching", () => {
     ];
     const result = matchFiducials(predictions, truths, 0.3);
 
-    expect(result.matches.map(({ prediction_index, truth_index }) => [
-      prediction_index,
-      truth_index,
-    ])).toEqual([
+    expect(
+      result.matches.map(({ prediction_index, truth_index }) => [
+        prediction_index,
+        truth_index,
+      ]),
+    ).toEqual([
       [0, 1],
       [1, 0],
     ]);
@@ -57,6 +59,27 @@ describe("OCR qualification fiducial matching", () => {
     ]);
     expect(result.unmatched_prediction_indices).toEqual([0]);
     expect(result.unmatched_truth_indices).toEqual([1]);
+  });
+
+  it("keeps unknown-role predictions as unmatched false-pair evidence", () => {
+    const predictions = [
+      { role: "unknown" as const, box: box(0.1), pair_id: "pred-unknown" },
+    ];
+    const truths = [
+      { ...fiducial("opening", 0.1), pair_id: "truth-1" },
+      { ...fiducial("closing", 0.7), pair_id: "truth-1" },
+    ];
+    const assignment = matchFiducials(predictions, truths, 0.5);
+    const scored = scoreFiducialPairs(predictions, truths, assignment.matches);
+
+    expect(assignment.unmatched_prediction_indices).toEqual([0]);
+    expect(scored.false_pairs).toEqual([
+      {
+        predicted_pair_id: "pred-unknown",
+        prediction_indices: [0],
+        matched_truth_pair_ids: [],
+      },
+    ]);
   });
 
   it("keeps an exact-threshold match and rejects invalid inputs", () => {

@@ -47,7 +47,7 @@ function usage() {
     ...REQUIRED_INPUTS.map((name) => `  --${ARGUMENT_NAMES[name]} <path>`),
     "  [--output <path>]",
     "",
-    "This preflight also checks Sigstore bundles when Cosign is available. It always returns INCOMPLETE/NO_PROMOTION until policy protection, trusted workflow timing, scoring, and receipt generation are established.",
+    "This preflight checks Sigstore bundles when Cosign is available and reports diagnostic final-split scores/gates only after structural validation and pinned decoder replay pass. It always returns INCOMPLETE/NO_PROMOTION until protected policy, trusted workflow timing, independent review, and receipt generation/validation are established.",
   ].join("\n");
 }
 

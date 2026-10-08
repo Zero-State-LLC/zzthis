@@ -11,13 +11,19 @@ export interface Fiducial {
   pair_id?: string | null;
 }
 
+export interface FiducialPrediction {
+  role: "opening" | "closing" | "unknown";
+  box: NormalizedBox;
+  pair_id?: string | null;
+}
+
 export function normalizedBoxIoU(
   left: NormalizedBox,
   right: NormalizedBox,
 ): number;
 
 export function matchFiducials(
-  predictions: Fiducial[],
+  predictions: FiducialPrediction[],
   truths: Fiducial[],
   threshold: number,
 ): {
@@ -31,9 +37,13 @@ export function matchFiducials(
 };
 
 export function scoreFiducialPairs(
-  predictions: Fiducial[],
+  predictions: FiducialPrediction[],
   truths: Fiducial[],
-  matches: Array<{ prediction_index: number; truth_index: number; iou?: number }>,
+  matches: Array<{
+    prediction_index: number;
+    truth_index: number;
+    iou?: number;
+  }>,
 ): {
   correct_pairs: Array<{
     predicted_pair_id: string;

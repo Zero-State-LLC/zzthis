@@ -8,9 +8,11 @@ import {
   readDecoderIdentity,
   verifyDecoderIdentity,
 } from "./ocr-decoder-identity.mjs";
-import { replayDecoderEvidence } from "./ocr-qualification-decoder-replay.mjs";
-import { summarizeSigstoreVerifications } from "./ocr-qualification-verification-summary.mjs";
-import { validateTrustedAttestationTimeline } from "./ocr-qualification-trusted-time.mjs";
+import {
+  buildQualificationReasonCodes,
+  runDecoderReplay,
+  runScoring,
+} from "./ocr-qualification-preflight-stages.mjs";
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const QUALIFICATION_DIR = path.join(ROOT, "specs/004-capture/qualification");
@@ -373,24 +375,6 @@ function collectSchemasAndHashes(documents, rawInputBytes) {
   return { errors, schemaErrors, hashes };
 }
 
-function runDecoderReplay(documents, schemaErrors) {
-  if (
-    schemaErrors.length > 0 ||
-    !documents.manifest ||
-    !documents.adapterResults ||
-    !documents.candidateBundle ||
-    !documents.gateConfig
-  ) {
-    return { performed: false, reason: "decoder_replay_inputs_invalid" };
-  }
-  return replayDecoderEvidence(
-    documents.manifest,
-    documents.adapterResults,
-    documents.candidateBundle,
-    documents.gateConfig,
-  );
-}
-
 export function inspectQualification(
   documents,
   {
@@ -426,23 +410,24 @@ export function inspectQualification(
   if (!decoderIdentityCheck.verified) {
     errors.push(...decoderIdentityCheck.reasons);
   }
-
-  const reasonCodes = [...new Set(errors)];
-  if (!policyPresent) reasonCodes.push("protected_verifier_policy_missing");
-  if (policyError) reasonCodes.push(policyError);
-  const sigstoreSummary = summarizeSigstoreVerifications(sigstoreVerifications);
-  reasonCodes.push(...sigstoreSummary.reasons);
-  const trustedTimeValidation = validateTrustedAttestationTimeline(
-    documents.executionAttestation,
-    sigstoreVerifications,
+  const scoring = runScoring(
+    documents,
+    errors,
+    decoderReplay,
+    decoderIdentityCheck,
   );
-  reasonCodes.push(...trustedTimeValidation.reasonCodes);
-  if (!decoderReplay.performed) {
-    reasonCodes.push(decoderReplay.reason);
-  } else {
-    reasonCodes.push(...decoderIdentityCheck.reasons);
-    reasonCodes.push("scoring_and_receipt_not_performed");
-  }
+
+  const { reasonCodes, sigstoreSummary, trustedTimeValidation } =
+    buildQualificationReasonCodes({
+      errors,
+      policyPresent,
+      policyError,
+      sigstoreVerifications,
+      executionAttestation: documents.executionAttestation,
+      decoderReplay,
+      decoderIdentityCheck,
+      scoring,
+    });
 
   return {
     schema_version: 1,
@@ -476,9 +461,14 @@ export function inspectQualification(
         : decoderIdentityCheck.verified
           ? "VERIFIED"
           : "MISMATCH",
-      scoring_and_receipt: "NOT_PERFORMED",
+      scoring_and_receipt: scoring.performed
+        ? "SCORED_NO_RECEIPT"
+        : "NOT_PERFORMED",
     },
     decoder_replay_summary: decoderReplay.summary ?? null,
+    qualification_scoring: scoring.performed
+      ? { status: "DIAGNOSTIC_ONLY", ...scoring.result }
+      : null,
     hashes,
     reason_codes: reasonCodes,
   };

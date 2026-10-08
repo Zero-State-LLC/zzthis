@@ -7,6 +7,7 @@ function scored(
   exact: [number, number],
   cer: [number, number],
   falseValid: [number, number],
+  partWord: [number, number] = exact,
 ) {
   return {
     sample_id,
@@ -16,6 +17,11 @@ function scored(
       numerator: exact[0],
       denominator: exact[1],
       rate: exact[1] === 0 ? null : exact[0] / exact[1],
+    },
+    part_word_accuracy: {
+      numerator: partWord[0],
+      denominator: partWord[1],
+      rate: partWord[1] === 0 ? null : partWord[0] / partWord[1],
     },
     character_error_rate: {
       edit_distance: cer[0],
@@ -34,8 +40,8 @@ describe("OCR qualification text aggregation", () => {
   it("sums numerators and denominators instead of averaging percentages", () => {
     const result = aggregateTextScoring(
       [
-        scored("s1", "device-a", [1, 1], [0, 10], [0, 1]),
-        scored("s2", "device-a", [0, 3], [3, 10], [1, 3]),
+        scored("s1", "device-a", [1, 1], [0, 10], [0, 1], [3, 3]),
+        scored("s2", "device-a", [0, 3], [3, 10], [1, 3], [2, 3]),
       ],
       [
         { sample_id: "s1", split: "final", stress_tags: ["clean"] },
@@ -52,6 +58,11 @@ describe("OCR qualification text aggregation", () => {
       numerator: 1,
       denominator: 4,
       rate: 0.25,
+    });
+    expect(result.by_split.final?.part_word_accuracy).toEqual({
+      numerator: 5,
+      denominator: 6,
+      rate: 5 / 6,
     });
     expect(result.by_split.final?.character_error_rate).toEqual({
       edit_distance: 3,

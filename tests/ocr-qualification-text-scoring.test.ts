@@ -56,6 +56,56 @@ describe("OCR qualification payload scoring", () => {
     expect(levenshteinDistance("kitten", "sitting")).toBe(3);
   });
 
+  it("scores ordered payload words with NFC but no case or punctuation correction", () => {
+    const partialMatch = input(["copper lantern stone"]);
+    const scoredPartial = scorePayloadObservations(
+      partialMatch.manifest,
+      partialMatch.adapter,
+      mapping(),
+      "fixture-7",
+    );
+    expect(scoredPartial.part_word_accuracy).toEqual({
+      numerator: 2,
+      denominator: 3,
+      rate: 2 / 3,
+    });
+
+    const caseMismatch = input(["Copper lantern sky"]);
+    const scoredCase = scorePayloadObservations(
+      caseMismatch.manifest,
+      caseMismatch.adapter,
+      mapping(),
+      "fixture-7",
+    );
+    expect(scoredCase.part_word_accuracy).toEqual({
+      numerator: 2,
+      denominator: 3,
+      rate: 2 / 3,
+    });
+
+    const inserted = input(["copper lantern sky extra"]);
+    const scoredInsertion = scorePayloadObservations(
+      inserted.manifest,
+      inserted.adapter,
+      mapping(),
+      "fixture-7",
+    );
+    expect(scoredInsertion.part_word_accuracy).toEqual({
+      numerator: 2,
+      denominator: 3,
+      rate: 2 / 3,
+    });
+
+    const normalized = input(["café noir"], { literal: "cafe\u0301 noir" });
+    const scoredNormalized = scorePayloadObservations(
+      normalized.manifest,
+      normalized.adapter,
+      mapping(),
+      "fixture-7",
+    );
+    expect(scoredNormalized.part_word_accuracy.rate).toBe(1);
+  });
+
   it("scores only the first engine-ordered hypothesis", () => {
     const values = input(["copper lantern sky", "copper maple sky"]);
     const scored = scorePayloadObservations(
