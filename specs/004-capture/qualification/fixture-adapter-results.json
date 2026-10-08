@@ -24,6 +24,8 @@
       "os_version": "fixture",
       "device_class": "simulator-fixture",
       "elapsed_ms": 12.5,
+      "runtime_outcome": "completed",
+      "runtime_memory_bytes": null,
       "fiducials": [
         {
           "detection_id": "d-open-1",
@@ -73,6 +75,8 @@
       "os_version": "fixture",
       "device_class": "simulator-fixture",
       "elapsed_ms": 8,
+      "runtime_outcome": "completed",
+      "runtime_memory_bytes": null,
       "fiducials": [
         {
           "detection_id": "d-open-2",

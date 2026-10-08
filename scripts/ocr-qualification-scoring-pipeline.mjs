@@ -10,6 +10,7 @@ import { scoreSampleBand } from "./ocr-qualification-decoder-replay.mjs";
 import { aggregateTextScoring } from "./ocr-qualification-text-aggregation.mjs";
 import { scorePayloadObservations } from "./ocr-qualification-text-scoring.mjs";
 import { evaluateQualificationGates } from "./ocr-qualification-gates.mjs";
+import { buildQualificationMetricSets } from "./ocr-qualification-metric-sets.mjs";
 
 const BANDS = ["accept", "clarify", "retry", "abstain"];
 
@@ -126,6 +127,15 @@ export function scoreQualificationObservations({
     deviceMatrix,
     gateConfig,
   });
+  const metricSets = buildQualificationMetricSets({
+    scoreRows,
+    manifestSamples: manifest.samples,
+    deviceMatrix,
+    aggregates,
+    falseAccepts,
+    falseValidCases,
+    noCodeFalsePositives,
+  });
 
   return {
     qualification_id: manifest.qualification_id,
@@ -134,6 +144,7 @@ export function scoreQualificationObservations({
     promotion_eligible: false,
     scored_observations: scoreRows,
     aggregates,
+    metric_sets: metricSets,
     gate_evaluation: gateEvaluation,
     false_accepts: falseAccepts,
     false_valid_cases: falseValidCases,
@@ -149,6 +160,7 @@ function scoreAdapterObservation(
   wordlist,
   gateConfig,
 ) {
+  validateRuntimeOutcome(row);
   const fiducial = scoreFiducialObservation(
     row.fiducials,
     sample.fiducials,
@@ -165,7 +177,10 @@ function scoreAdapterObservation(
     rois: row.rois,
     elapsedMs: [row.elapsed_ms],
   });
-  const band = scoreSampleBand(row, wordlist, gateConfig);
+  const band =
+    row.runtime_outcome === "completed"
+      ? scoreSampleBand(row, wordlist, gateConfig)
+      : null;
   return {
     fiducial,
     text,
@@ -174,10 +189,12 @@ function scoreAdapterObservation(
       sample_id: row.sample_id,
       device_matrix_entry_id: row.device_matrix_entry_id,
       split: row.split,
+      runtime_outcome: row.runtime_outcome,
+      runtime_memory_bytes: row.runtime_memory_bytes,
       fiducial,
       text,
       roi_latency: roiLatency,
-      band: { band: band.band, reason: band.reason },
+      band: band ? { band: band.band, reason: band.reason } : null,
     },
     falseAccepts: scoreFalseAccept(sample, row, band),
     noCodeFalsePositives: scoreNoCodeFalsePositive(sample, row, band),
@@ -189,11 +206,36 @@ function scoreAdapterObservation(
   };
 }
 
+function validateRuntimeOutcome(row) {
+  if (
+    !["completed", "crash", "exception"].includes(row.runtime_outcome) ||
+    (row.runtime_memory_bytes !== null &&
+      (!Number.isSafeInteger(row.runtime_memory_bytes) ||
+        row.runtime_memory_bytes < 0))
+  ) {
+    throw new TypeError("adapter_runtime_measurement_invalid");
+  }
+  if (
+    row.runtime_outcome !== "completed" &&
+    (row.fiducials.length > 0 ||
+      row.rois.length > 0 ||
+      row.candidates.length > 0)
+  ) {
+    throw new TypeError(
+      "failed_adapter_observation_contains_recognition_output",
+    );
+  }
+}
+
 function scoreFalseAccept(sample, row, band) {
   const validTruthCodes = sample.ground_truth_codes
     .filter((truth) => truth.kind === "valid")
     .map((truth) => truth.canonical_code);
-  if (band.band !== "accept" || validTruthCodes.includes(band.observedCode)) {
+  if (
+    band === null ||
+    band.band !== "accept" ||
+    validTruthCodes.includes(band.observedCode)
+  ) {
     return [];
   }
   return [
@@ -210,6 +252,7 @@ function scoreFalseAccept(sample, row, band) {
 
 function scoreNoCodeFalsePositive(sample, row, band) {
   if (
+    band === null ||
     (sample.case_kind !== "bare" && sample.case_kind !== "no-code") ||
     band.band !== "accept"
   ) {
@@ -226,6 +269,7 @@ function scoreNoCodeFalsePositive(sample, row, band) {
 
 function scoreBandConstraint(sample, row, band) {
   if (
+    band === null ||
     !Array.isArray(sample.expected_band_constraints) ||
     sample.expected_band_constraints.length === 0 ||
     sample.expected_band_constraints.includes(band.band)
@@ -296,6 +340,7 @@ function aggregateBands(scoreRows, manifestSamples) {
     by_split_bucket: new Map(),
   };
   for (const row of scoreRows) {
+    if (row.band === null) continue;
     addBand(groups.by_split, row.split, row.sample_id, row.band.band);
     addBand(
       groups.by_device_split,
