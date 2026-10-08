@@ -59,45 +59,45 @@ const REQUIRED_BUCKET_IDS = [
 const GATE_DEFINITIONS = {
   "false-accept-count": {
     operator: "lte",
-    thresholdKey: "max_false_accept_count",
+    thresholdName: "max_false_accept_count",
     read: (receipt) => receipt.metrics_by_split?.final?.false_accept_count,
   },
   "false-valid-decode-rate": {
     operator: "lte",
-    thresholdKey: "max_false_valid_decode_rate",
+    thresholdName: "max_false_valid_decode_rate",
     read: (receipt) =>
       receipt.metrics_by_split?.final?.false_valid_decode_rate?.rate,
   },
   "endpoint-recall": {
     operator: "gte",
-    thresholdKey: "min_endpoint_recall",
+    thresholdName: "min_endpoint_recall",
     read: (receipt) => receipt.metrics_by_split?.final?.endpoint_recall?.rate,
   },
   "pair-accuracy": {
     operator: "gte",
-    thresholdKey: "min_pair_accuracy",
+    thresholdName: "min_pair_accuracy",
     read: (receipt) => receipt.metrics_by_split?.final?.pair_accuracy?.rate,
   },
   "exact-code-accuracy": {
     operator: "gte",
-    thresholdKey: "min_exact_code_accuracy",
+    thresholdName: "min_exact_code_accuracy",
     read: (receipt) =>
       receipt.metrics_by_split?.final?.exact_code_accuracy?.rate,
   },
   "character-error-rate": {
     operator: "lte",
-    thresholdKey: "max_character_error_rate",
+    thresholdName: "max_character_error_rate",
     read: (receipt) => receipt.metrics_by_split?.final?.character_error_rate,
   },
   "rectification-success-rate": {
     operator: "gte",
-    thresholdKey: "min_rectification_success_rate",
+    thresholdName: "min_rectification_success_rate",
     read: (receipt) =>
       receipt.metrics_by_split?.final?.rectification_success_rate?.rate,
   },
   "p95-latency-ms": {
     operator: "lte",
-    thresholdKey: "max_p95_latency_ms",
+    thresholdName: "max_p95_latency_ms",
     read: (_receipt, _gateConfig, deviceMatrix, coverageById) => {
       const latencies = deviceMatrix.entries.map(
         ({ device_matrix_entry_id }) =>
@@ -428,7 +428,7 @@ function validateReleaseGates(
       continue;
     }
     const definition = GATE_DEFINITIONS[gateId];
-    const threshold = gateConfig.thresholds[definition.thresholdKey];
+    const threshold = gateConfig.thresholds[definition.thresholdName];
     const observed = definition.read(
       receipt,
       gateConfig,
