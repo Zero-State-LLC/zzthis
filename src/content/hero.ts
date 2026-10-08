@@ -25,13 +25,13 @@ export const hero: HeroContent = {
   // Q62 [DANNY 2026-10-03, revised]: v1.0 headline, spaced hyphen, no em dash.
   title:
     "Barcodes made things scannable. zzThis makes things readable-writable - and smart.",
-  subline: "Write a code on a thing; find its record by camera or typing.",
+  subline: "Write a code on a thing; type it to find its record.",
   paragraph: {
     before:
       "zzThis is a human-readable, human-writable code for the physical world. Write a ",
     code: "zz-code",
     after:
-      " on tape, a crate, a parcel, an envelope, or a sign, or embed it in text or program code. Link it to a digital record or its information hub, then explore finding it by camera or typing. This site demonstrates prototype flows; app releases are planned. Voice recognition is planned for a future release, not v1.",
+      " on tape, a crate, a parcel, an envelope, or a sign, or embed it in text or program code. The prototype supports typed lookup to a digital record. On-device camera recognition is planned for v1 but is not implemented in this build. Voice recognition is planned for a future release, not v1.",
   },
   imageCaption: "Word code on blue tape beside an obscured barcode.",
   actions: [
