@@ -513,7 +513,9 @@
                 "properties": { "status": { "const": "approved" } }
               }
             }
-          }
+          },
+          "false_accepts": { "maxItems": 0 },
+          "false_valid_cases": { "maxItems": 0 }
         },
         "required": ["promoted_engine", "approver", "pull_request"],
         "not": {
@@ -542,7 +544,12 @@
         "properties": { "disposition": { "enum": ["FAIL", "INCOMPLETE"] } },
         "required": ["disposition"]
       },
-      "then": { "properties": { "promoted_engine": { "const": null } } }
+      "then": {
+        "properties": {
+          "promoted_engine": { "const": null },
+          "no_promotion_reason": { "type": "string", "minLength": 1 }
+        }
+      }
     }
   ],
   "$defs": {

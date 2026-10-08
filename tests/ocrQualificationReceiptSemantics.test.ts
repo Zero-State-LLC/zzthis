@@ -1,6 +1,7 @@
 /* eslint-disable max-lines -- The schema-valid receipt fixture is kept beside its regression tests. */
 import { describe, expect, it } from "vitest";
 import { validateQualificationReceipt } from "../scripts/ocr-qualification/receipt-semantics.mjs";
+import { buildQualificationReceiptArtifact } from "../scripts/ocr-qualification-receipt-report.mjs";
 
 const bucketIds = [
   "handwriting",
@@ -408,6 +409,121 @@ function evaluate(inputs: ReturnType<typeof buildInputs>) {
 }
 
 describe("OCR qualification receipt semantic guard", () => {
+  it("hashes a privacy-minimized report from the validated receipt", () => {
+    const inputs = buildInputs();
+
+    const artifact = buildQualificationReceiptArtifact(inputs.receipt, {
+      gateConfig: inputs.gateConfig,
+      deviceMatrix: inputs.deviceMatrix,
+    });
+
+    expect(artifact.validation.status).toBe("SEMANTIC_CHECKS_PASS");
+    expect(artifact.validation.authorizesPromotion).toBe(false);
+    expect(artifact.receipt.report_sha256).toMatch(/^[a-f0-9]{64}$/);
+    expect(artifact.markdown).not.toContain("sample-1");
+    expect(artifact.markdown).not.toContain("zz-copper-lantern-sky-zz");
+    expect(artifact.markdown).toContain("Promotion authorized: no");
+  });
+
+  it("reports no-promotion without exposing false-case identities or codes", () => {
+    const inputs = buildInputs();
+    inputs.receipt.disposition = "NO_PROMOTION";
+    inputs.receipt.promoted_engine = null;
+    inputs.receipt.no_promotion_reason =
+      "A final false-valid case was observed";
+    inputs.gateConfig.thresholds.max_false_valid_decode_rate = 1;
+    inputs.receipt.release_gates.thresholds.max_false_valid_decode_rate = 1;
+    inputs.receipt.metrics_by_split.final.false_valid_decode_count = 1;
+    inputs.receipt.metrics_by_split.final.false_valid_decode_rate = rate(1);
+    inputs.receipt.false_valid_cases.push({
+      device_matrix_entry_id: "ios-current",
+      sample_id: "sample-1",
+      pair_id: "pair-1",
+      expected_codes: ["zz-copper-lantern-sky-zz"],
+      observed_codes: ["zz-copper-lantern-maple-zz"],
+      disposition: "reproduced wrong-valid decode",
+      reviewer: "fixture-reviewer",
+    });
+    const falseValidGate = inputs.receipt.release_gates.gate_results.find(
+      ({ gate_id }) => gate_id === "false-valid-decode-rate",
+    )!;
+    falseValidGate.threshold = 1;
+    falseValidGate.observed = 1;
+    falseValidGate.result = "pass";
+
+    const artifact = buildQualificationReceiptArtifact(inputs.receipt, {
+      gateConfig: inputs.gateConfig,
+      deviceMatrix: inputs.deviceMatrix,
+    });
+
+    expect(artifact.validation.status).toBe("NO_PROMOTION");
+    expect(artifact.validation.authorizesPromotion).toBe(false);
+    expect(artifact.markdown).toContain("False-valid cases: 1");
+    expect(artifact.markdown).not.toContain("sample-1");
+    expect(artifact.markdown).not.toContain("zz-copper-lantern-sky-zz");
+    expect(artifact.markdown).not.toContain("zz-copper-lantern-maple-zz");
+  });
+
+  it("validates and reports an explicitly withheld promotion disposition", () => {
+    const inputs = buildInputs();
+    inputs.receipt.disposition = "NO_PROMOTION";
+    inputs.receipt.promoted_engine = null;
+    inputs.receipt.no_promotion_reason =
+      "Release authorization has not been granted";
+    const privacyReview = inputs.receipt.reviews.privacy as Record<
+      string,
+      unknown
+    >;
+    privacyReview.status = "blocked";
+
+    const artifact = buildQualificationReceiptArtifact(inputs.receipt, {
+      gateConfig: inputs.gateConfig,
+      deviceMatrix: inputs.deviceMatrix,
+    });
+
+    expect(artifact.validation.status).toBe("NO_PROMOTION");
+    expect(artifact.validation.errors).toEqual([]);
+    expect(artifact.validation.authorizesPromotion).toBe(false);
+    expect(artifact.markdown).toContain("Disposition: NO_PROMOTION");
+    expect(artifact.receipt.report_sha256).toMatch(/^[a-f0-9]{64}$/);
+  });
+
+  it("validates a failed gate as FAIL without authorizing promotion", () => {
+    const inputs = buildInputs();
+    inputs.receipt.disposition = "FAIL";
+    inputs.receipt.promoted_engine = null;
+    inputs.receipt.no_promotion_reason = "Final p95 exceeded its threshold";
+    inputs.gateConfig.thresholds.max_p95_latency_ms = 11;
+    inputs.receipt.release_gates.thresholds.max_p95_latency_ms = 11;
+    const p95Gate = inputs.receipt.release_gates.gate_results.find(
+      ({ gate_id }) => gate_id === "p95-latency-ms",
+    )!;
+    p95Gate.threshold = 11;
+    p95Gate.result = "fail";
+
+    const artifact = buildQualificationReceiptArtifact(inputs.receipt, {
+      gateConfig: inputs.gateConfig,
+      deviceMatrix: inputs.deviceMatrix,
+    });
+
+    expect(artifact.validation.status).toBe("FAIL");
+    expect(artifact.validation.gateFailures).toContain("p95-latency-ms");
+    expect(artifact.validation.authorizesPromotion).toBe(false);
+  });
+
+  it("does not render an incomplete receipt", () => {
+    const inputs = buildInputs();
+    inputs.receipt.device_coverage[1]!.metrics_by_split.final.latency_ms.p95 =
+      null as unknown as number;
+
+    expect(() =>
+      buildQualificationReceiptArtifact(inputs.receipt, {
+        gateConfig: inputs.gateConfig,
+        deviceMatrix: inputs.deviceMatrix,
+      }),
+    ).toThrow("qualification_receipt_validation_failed");
+  });
+
   it("never authorizes promotion, even when its semantic checks pass", () => {
     const result = evaluate(buildInputs());
 
@@ -501,6 +617,10 @@ describe("OCR qualification receipt semantic guard", () => {
 
   it("does not promote a candidate with false-valid cases even when within a nonzero rate cap", () => {
     const inputs = buildInputs();
+    inputs.receipt.disposition = "NO_PROMOTION";
+    inputs.receipt.promoted_engine = null;
+    inputs.receipt.no_promotion_reason =
+      "A final false-valid case was observed";
     inputs.gateConfig.thresholds.max_false_valid_decode_rate = 1;
     inputs.receipt.release_gates.thresholds.max_false_valid_decode_rate = 1;
     inputs.receipt.metrics_by_split.final.false_valid_decode_count = 1;
@@ -529,10 +649,35 @@ describe("OCR qualification receipt semantic guard", () => {
     expect(result.authorizesPromotion).toBe(false);
   });
 
+  it("rejects PASS when any false-accept or false-valid case is listed", () => {
+    const inputs = buildInputs();
+    inputs.receipt.false_accepts.push({
+      device_matrix_entry_id: "ios-current",
+      sample_id: "sample-1",
+      pair_id: null,
+      expected_codes: ["zz-copper-lantern-sky-zz"],
+      observed_codes: ["zz-copper-lantern-maple-zz"],
+      disposition: "reproduced false accept",
+      reviewer: "fixture-reviewer",
+    });
+
+    const result = evaluate(inputs);
+
+    expect(result.schemaValid).toBe(false);
+    expect(result.status).toBe("INCOMPLETE");
+    expect(result.errors.join("\n")).toContain(
+      "must NOT have more than 0 items",
+    );
+    expect(result.authorizesPromotion).toBe(false);
+  });
+
   it.each(["false_accepts", "false_valid_cases"] as const)(
     "rejects an undispositioned %s case",
     (caseKey) => {
       const inputs = buildInputs();
+      inputs.receipt.disposition = "NO_PROMOTION";
+      inputs.receipt.promoted_engine = null;
+      inputs.receipt.no_promotion_reason = "Case review is incomplete";
       inputs.receipt[caseKey].push({
         device_matrix_entry_id: "ios-current",
         sample_id: "sample-1",
