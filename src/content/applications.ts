@@ -23,6 +23,7 @@ export interface ApplicationGallery {
 export interface Application {
   id: ApplicationId;
   title: string;
+  status: string;
   story: string;
   pageExtra?: string;
   homeImages: readonly ImageId[];
@@ -35,10 +36,12 @@ export const applications: readonly Application[] = [
   {
     id: "field",
     title: "Field logistics",
+    status:
+      "Exploration: field/enterprise workflows are queued in B7 for v1.x, not shipped v1 capabilities.",
     story:
-      "Hand-mark bags, crates, pallets, and mixed goods; read or relay a code; connect it to existing identifiers. Then photograph loose items, prepare a turn-in, compare inventory, and use touch-first actions.",
+      "A future field workflow could use handwritten codes on bags, crates, pallets, and mixed goods to help connect items to existing identifiers and prepare inventory work.",
     pageExtra:
-      "Under the hood, the mark stays simple while its meaning is controlled. In a planned structured profile, zz-X1-X2-X3-zz, the first word selects a schema that sets how the other two are read: X2 as a place or target, X3 as a state or discriminator. Each organization keeps its own versioned dictionary, so the same three words can mean electrical equipment, Building 4, inspection required to authorized users and nothing to anyone else. Recognition runs on the device first and is kept separate from interpretation, which the resolver grants only after authentication and authorization. Each resolution can return a signed receipt, and handoff events can be anchored to a distributed ledger for chain of custody. Merkle-committed dictionaries and zero-knowledge proofs are on the research roadmap.",
+      "Structured profiles and private dictionaries are B10 shadow exploration for v2 / Contract 2. If advanced, they would assign authorized, versioned meanings only after recognition and canonicalization; the camera reader does not decide them.",
     homeImages: ["j"],
     pageImages: ["a", "c", "alt-b", "d", "e", "f", "j", "k", "l", "m", "n"],
     homeWideOnly: true,
@@ -46,8 +49,10 @@ export const applications: readonly Application[] = [
   {
     id: "parcel",
     title: "Postal and parcel",
+    status:
+      "Exploration: postal/parcel integration is queued in B8 for v1.x; no carrier service is claimed.",
     story:
-      "Write a reference directly on a parcel; photograph loose items and receive packing guidance before choosing a parcel code.",
+      "A future postal/parcel workflow could use a written reference and help prepare items before a parcel code is chosen.",
     homeImages: ["o", "g"],
     pageImages: ["o", "g"],
     homeWideOnly: false,
@@ -107,8 +112,9 @@ export const applications: readonly Application[] = [
   {
     id: "community",
     title: "Everyday and community",
+    status: "Exploration: free/community use cases are queued in B9 for v1.x.",
     story:
-      "A handwritten code on a lost-cat flyer or other public surface can lead to a useful page.",
+      "A future community use could place a handwritten code on a lost-pet flyer or other public surface and link it to a useful page.",
     homeImages: ["h"],
     pageImages: ["h"],
     homeWideOnly: false,
@@ -173,9 +179,12 @@ export const applications: readonly Application[] = [
   {
     id: "aliases",
     title: "Digital aliases",
+    status:
+      "Exploration: agent/ledger/blockchain integrations are shadowed in B16 for v2+.",
     story:
-      "A short human-readable code can stand in for a long machine address used by software agents.",
-    pageExtra: "Deeper blockchain/AI architecture can grow into a later page.",
+      "A future integration could map a short human-readable code to a longer machine address used by software agents.",
+    pageExtra:
+      "These optional integrations are not v1 resolver capabilities or dependencies.",
     homeImages: ["i"],
     pageImages: ["i"],
     homeWideOnly: false,
@@ -200,5 +209,5 @@ export const applicationsPage = {
   title: "Applications",
   // [MICHAEL 2026-10-06 change list] Lead with the kinds of use, then the AI principles.
   intro:
-    "One writable code serves five kinds of use: field and enterprise logistics, postal and parcel, free everyday use with zzThat, digital aliases for blockchain addresses and AI agents, and AI-assisted work across all of them. Three AI principles guide the design. AI is the new UI: a photo, a few spoken words, or a tap replaces forms. AI is the new connector: agents link systems on the fly where a formal integration was once needed. AI flattens the stack: a phone and a marker can do work that once took printers, scanners, and back-office software.",
+    "These are product directions, not a list of shipped v1 integrations: field/enterprise (B7), postal/parcel (B8), community/free uses (B9), AI-assisted inventory (B7), and agent/ledger/blockchain integrations (B16). AI may be an interface or connector, not the authority that defines or resolves a zz code.",
 };

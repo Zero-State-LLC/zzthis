@@ -26,21 +26,17 @@ export const founderOrigin: Origin = {
   text: "I “invent” business models. If you've ever paid at the DMV with a card or used Gmail's inbox tabs, thank me. ;) In 1992–93, I pitched New York City and initiated a pilot for possibly the world's first electronic card payments by the municipal agencies for motor-vehicle fines and fees. In 1995, the NYC DMV began accepting cards, and in 1996, the first E-ZPass tolling began in New York State. In 2003, my patent application was published for sorting tagged emails into their dedicated tabs (Priority, Ads, Bills, etc.); the application was cited by 158 patent applications, majority by leading tech and Fortune companies. I filed the patent application in 2001, when I was barely tech- and email-literate. Gmail first did their tabs in 2013. My business experience includes 25 years in real estate, including federal GSA RFPs (I was awarded two office space lease-contracts, one for a fixed 10-year, nearly $10 million), and other small businesses: eateries, supermarkets, merchant credit cards, finance, and direct marketing. I am in the Silicon Valley's tech startup space “24/7”: since 2013 in and around blockchain, and since 2023 in AI, averaging some 10 to 20 prompts a day across 2 to 5 AIs. A driver of my business models is the discovery and purposeful enabling of the unity of deterministic blockchain with probabilistic AI to target today's great problematic gaps and to solve for the emerging next-phase civilizational opportunities.",
 };
 
-// Q24 [OPERATOR 2026-10-02]: the founder card shows Michael's founder origin
-// as his bio. The earlier bio came from a funding pitch and was removed.
 export const founder: Founder = {
   name: "Michael Chung",
   initials: "MC",
   role: "Founder, business-model architect, and project lead",
-  photo: {
-    src: "images/people/michael-chung.webp",
-    width: 440,
-    height: 440,
-  },
+  photo: { src: "images/people/michael-chung.webp", width: 440, height: 440 },
   bio: founderOrigin.text,
   profileUrl: "https://www.linkedin.com/in/unitynow",
 };
 
+// 2026-10-06 website reconciliation: Michael's advisor roster/order is adopted
+// while the approved Adam headshot and bio now present on main are retained.
 // Q6, Q10, Q12, Q16, Q46 [MICHAEL 2026-10-02]: headshots where supplied.
 // Daniel Meyer keeps initials. [MICHAEL 2026-10-06 change list] Daniel and
 // Adam move to the first two places; Adam's photo and bio are updated.
@@ -83,11 +79,7 @@ export const advisors: readonly Person[] = [
   {
     name: "Arshi Chadha",
     initials: "AC",
-    photo: {
-      src: "images/people/arshi-chadha.webp",
-      width: 440,
-      height: 440,
-    },
+    photo: { src: "images/people/arshi-chadha.webp", width: 440, height: 440 },
     role: "AI security",
     profileUrl: "https://www.linkedin.com/in/arshichadha/",
     bio: "Arshi is a security engineer at Zscaler and a co-lead of the OWASP Top 10 for LLM Applications work. She earned a master’s degree in information security at Carnegie Mellon and advises zzThis on AI and application security.",

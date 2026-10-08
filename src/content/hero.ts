@@ -25,14 +25,13 @@ export const hero: HeroContent = {
   // Q62 [DANNY 2026-10-03, revised]: v1.0 headline, spaced hyphen, no em dash.
   title:
     "Barcodes made things scannable. zzThis makes things readable-writable - and smart.",
-  subline:
-    "Write a code on a thing; find its record by camera, typing, or voice.",
+  subline: "Write a code on a thing; type it to find its record.",
   paragraph: {
     before:
       "zzThis is a human-readable, human-writable code for the physical world. Write a ",
     code: "zz-code",
     after:
-      " on tape, a crate, a parcel, an envelope, or a sign, or embed it in text or program code. Link it to a digital record or its information hub, then find it by camera, typing, or voice.",
+      " on tape, a crate, a parcel, an envelope, or a sign, or embed it in text or program code. The prototype supports typed lookup to a digital record. On-device camera recognition is planned for v1 but is not implemented in this build. Voice recognition is planned for a future release, not v1.",
   },
   imageCaption: "Word code on blue tape beside an obscured barcode.",
   actions: [
@@ -48,7 +47,7 @@ export const hero: HeroContent = {
 export const featured: TextBlock = {
   heading:
     "The shortest, smartest distance between a physical thing, its digital record, and the work that comes next.",
-  text: "A zz code gives people a way to create the mark themselves, wherever the work happens. AI can help identify what a camera sees, count what remains, suggest how an item should be handled, and prepare the next task. The same visible code connects the item, its history, and the people responsible for it. It bridges physical things and their digital control: the easiest, smartest way to identify, manage, and act on them. zzThis is designed AI-first, on the principle that AI is the new UI, and the great connector and leveler across big tech stacks.",
+  text: "A zz code gives people a way to create the mark themselves, wherever the work happens. Future AI-assisted workflows could help identify what a camera sees, count what remains, suggest how an item should be handled, and prepare the next task; those capabilities are explorations, not shipped v1 behavior. The same visible code connects the item, its history, and the people responsible for it. It bridges physical things and their digital control. AI may serve as an interface and connector, not as the authority that defines or resolves a zz code.",
 };
 
 export const aboutTeaser: LinkBlock = {

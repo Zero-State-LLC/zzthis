@@ -19,15 +19,17 @@ import * as workflowsModule from "../src/content/workflows";
 
 const { applications, applicationsPage } = applicationsModule;
 const { comparisonColumns, comparisonNote, comparisonRows } = comparisonModule;
+const { whyMarkers } = anatomyModule;
 const { featured, hero } = heroModule;
 const { images } = imagesModule;
-const { navItems, footerItems, footerNotice } = navigationModule;
+const { navItems, footerItems, footerNotice, footerNote } = navigationModule;
 const { advisors, founder, founderOrigin } = peopleModule;
 const { topWays } = usesModule;
 const { demoTitle } = demoModule;
 const { technologyDraft } = technologyModule;
 const { conceptLabels } = labelsModule;
-const { coreIdentity, fieldLogistics, photoToAction } = workflowsModule;
+const { coreIdentity, fieldLogistics, howItWorksPage, photoToAction } =
+  workflowsModule;
 
 const modules: readonly unknown[] = [
   anatomyModule,
@@ -68,11 +70,11 @@ describe("hero and featured statement (spec 3.2)", () => {
       "Barcodes made things scannable. zzThis makes things readable-writable - and smart.",
     );
     expect(hero.subline).toBe(
-      "Write a code on a thing; find its record by camera, typing, or voice.",
+      "Write a code on a thing; type it to find its record.",
     );
     const { before, code, after } = hero.paragraph;
     expect(before + code + after).toBe(
-      "zzThis is a human-readable, human-writable code for the physical world. Write a zz-code on tape, a crate, a parcel, an envelope, or a sign, or embed it in text or program code. Link it to a digital record or its information hub, then find it by camera, typing, or voice.",
+      "zzThis is a human-readable, human-writable code for the physical world. Write a zz-code on tape, a crate, a parcel, an envelope, or a sign, or embed it in text or program code. The prototype supports typed lookup to a digital record. On-device camera recognition is planned for v1 but is not implemented in this build. Voice recognition is planned for a future release, not v1.",
     );
     expect(code).toBe("zz-code");
     expect(hero.actions.map((action) => action.label)).toEqual([
@@ -86,7 +88,7 @@ describe("hero and featured statement (spec 3.2)", () => {
       "The shortest, smartest distance between a physical thing, its digital record, and the work that comes next.",
     );
     expect(featured.text).toBe(
-      "A zz code gives people a way to create the mark themselves, wherever the work happens. AI can help identify what a camera sees, count what remains, suggest how an item should be handled, and prepare the next task. The same visible code connects the item, its history, and the people responsible for it. It bridges physical things and their digital control: the easiest, smartest way to identify, manage, and act on them. zzThis is designed AI-first, on the principle that AI is the new UI, and the great connector and leveler across big tech stacks.",
+      "A zz code gives people a way to create the mark themselves, wherever the work happens. Future AI-assisted workflows could help identify what a camera sees, count what remains, suggest how an item should be handled, and prepare the next task; those capabilities are explorations, not shipped v1 behavior. The same visible code connects the item, its history, and the people responsible for it. It bridges physical things and their digital control. AI may serve as an interface and connector, not as the authority that defines or resolves a zz code.",
     );
   });
 });
@@ -144,8 +146,8 @@ describe("comparison (spec 3.2 H.3)", () => {
         accent: true,
         cells: {
           create: "Write, draw, print, or display: words, numbers, or symbols",
-          read: "Person, camera, voice, typing, or within text",
-          connects: "Thing to its record, next action, and authorized macros",
+          read: "Person or typing; on-device camera recognition planned for v1",
+          connects: "Physical thing to its authorized digital record",
           remember: "Yes (2 to 4 words, or short words and numbers)",
         },
       },
@@ -160,17 +162,40 @@ describe("comparison (spec 3.2 H.3)", () => {
 });
 
 describe("workflows (spec 3.2 H.4 to H.6)", () => {
+  it("explains the terminal zz marks as camera index marks", () => {
+    expect(whyMarkers.text).toContain("planned on-device camera reader");
+    expect(whyMarkers.text).toContain("bound the region to inspect");
+    expect(whyMarkers.text).not.toContain("in any handwriting");
+  });
+
+  it("separates available typed lookup from planned recognition paths", () => {
+    expect(howItWorksPage.intro).toContain("not v1 behavior");
+    expect(howItWorksPage.readWays.heading).toBe(
+      "Manual and planned camera reading",
+    );
+    expect(howItWorksPage.readWays.methods).toEqual([
+      "Manual entry (available)",
+      "Camera recognition (planned)",
+    ]);
+    expect(howItWorksPage.readWays.line).toContain(
+      "On-device camera recognition is planned for v1 but is not implemented yet.",
+    );
+    expect(howItWorksPage.readWays.line).toContain(
+      "Voice recognition is planned for a future release; it is not part of v1.",
+    );
+  });
+
   it("matches the core workflow", () => {
     expect(coreIdentity.intro).toBe(
-      "Core identity: MARK a lowercase zz code → READ it by camera or manual entry → LINK it to a record → REPORT the words by voice where useful.",
+      "Core identity: MARK a lowercase zz code → READ it by manual entry today; on-device camera recognition is planned for v1 → LINK it to a record → REPORT it in a voice handoff to another person if useful.",
     );
     expect(
       coreIdentity.steps.map((step) => `${step.title}: ${step.text}`),
     ).toEqual([
       "Mark: Write the code on tape, a crate, or a pallet.",
-      "Read: Camera or manual entry.",
+      "Read: Manual entry uses the same code grammar and is the available read path in this build. On-device camera recognition is planned for v1 but is not implemented yet.",
       "Link: Connect to an existing record and photo.",
-      "Report: Say the code words if a voice handoff is useful.",
+      "Report: Say the code words to another person if a voice handoff is useful; software voice recognition is not part of v1.",
     ]);
     expect(coreIdentity.closing).toBe(
       "For a field code made with no device, link and reconcile later.",
@@ -185,10 +210,10 @@ describe("workflows (spec 3.2 H.4 to H.6)", () => {
 
   it("matches photo to action", () => {
     expect(photoToAction.intro).toBe(
-      "A second layer after the handwritten code: see an item, identify it, choose its next task.",
+      "Future exploration (B7, queued): a second layer after the handwritten code could identify an item and suggest its next task.",
     );
     expect(photoToAction.workflow).toBe(
-      "AI-assisted work: PHOTOGRAPH one or more items → CONFIRM the proposed identification → choose a handling or inventory action by touch or voice → REVIEW the prepared record or form.",
+      "Future concept, not v1: PHOTOGRAPH one or more items → CONFIRM the proposed identification → choose a handling or inventory action by touch → REVIEW the prepared record or form.",
     );
     expect(
       photoToAction.sequence.map((step) => `${step.numeral} ${step.title}`),
@@ -199,28 +224,35 @@ describe("workflows (spec 3.2 H.4 to H.6)", () => {
 describe("applications (spec 3.2 H.7 and 3.4)", () => {
   it("matches the four category stories", () => {
     expect(story("field")).toBe(
-      "Hand-mark bags, crates, pallets, and mixed goods; read or relay a code; connect it to existing identifiers. Then photograph loose items, prepare a turn-in, compare inventory, and use touch-first actions.",
+      "A future field workflow could use handwritten codes on bags, crates, pallets, and mixed goods to help connect items to existing identifiers and prepare inventory work.",
     );
     expect(story("parcel")).toBe(
-      "Write a reference directly on a parcel; photograph loose items and receive packing guidance before choosing a parcel code.",
+      "A future postal/parcel workflow could use a written reference and help prepare items before a parcel code is chosen.",
     );
     expect(story("community")).toBe(
-      "A handwritten code on a lost-cat flyer or other public surface can lead to a useful page.",
+      "A future community use could place a handwritten code on a lost-pet flyer or other public surface and link it to a useful page.",
     );
     expect(story("aliases")).toBe(
-      "A short human-readable code can stand in for a long machine address used by software agents.",
+      "A future integration could map a short human-readable code to a longer machine address used by software agents.",
     );
   });
 
   it("matches the page intro and the aliases extra sentence", () => {
-    // [MICHAEL 2026-10-06 change list] The intro leads with the kinds of use.
-    expect(applicationsPage.intro).toMatch(
-      /^One writable code serves five kinds of use:/,
+    expect(applicationsPage.intro).toBe(
+      "These are product directions, not a list of shipped v1 integrations: field/enterprise (B7), postal/parcel (B8), community/free uses (B9), AI-assisted inventory (B7), and agent/ledger/blockchain integrations (B16). AI may be an interface or connector, not the authority that defines or resolves a zz code.",
     );
-    expect(applicationsPage.intro).toContain("AI is the new UI");
+    expect(applicationsPage.intro).not.toContain("AI is the new UI");
     expect(
       applications.find((entry) => entry.id === "aliases")?.pageExtra,
-    ).toBe("Deeper blockchain/AI architecture can grow into a later page.");
+    ).toBe(
+      "These optional integrations are not v1 resolver capabilities or dependencies.",
+    );
+    expect(applications.map((entry) => entry.status)).toEqual([
+      "Exploration: field/enterprise workflows are queued in B7 for v1.x, not shipped v1 capabilities.",
+      "Exploration: postal/parcel integration is queued in B8 for v1.x; no carrier service is claimed.",
+      "Exploration: free/community use cases are queued in B9 for v1.x.",
+      "Exploration: agent/ledger/blockchain integrations are shadowed in B16 for v2+.",
+    ]);
   });
 });
 
@@ -234,7 +266,7 @@ describe("navigation and people", () => {
     ]);
   });
 
-  it("lists the advisors in the 2026-10-07 order, all with initials", () => {
+  it("lists the reconciled 2026-10-07 advisor roster with retained approved assets", () => {
     // [MICHAEL 2026-10-06 change list] Daniel and Adam move to first.
     // [MICHAEL 2026-10-07] Omer F. Yalcin is added last.
     expect(advisors.map((person) => person.name)).toEqual([
@@ -283,10 +315,17 @@ describe("navigation and people", () => {
     expect(byName("Arshi Chadha")?.photo?.src).toBe(
       "images/people/arshi-chadha.webp",
     );
+    expect(byName("Ridham Bhagat")?.photo).toBeUndefined();
     expect(byName("Daniel Meyer")?.photo).toBeUndefined();
     // [MICHAEL 2026-10-06 change list] Adam now has a headshot.
     expect(byName("Adam Fry")?.photo?.src).toBe("images/people/adam-fry.webp");
     expect(footerNotice).toBe("Patent pending");
+    expect(footerNote).toContain(
+      "Third-party names, logos, trademarks, and artwork are shown for illustrative or referential purposes",
+    );
+    expect(footerNote).toContain(
+      "their appearance does not imply endorsement or affiliation.",
+    );
     expect(footerItems.map((item) => item.label)).toEqual([
       "How it works",
       "Applications",
@@ -304,7 +343,7 @@ describe("navigation and people", () => {
 
 describe("top ways (Home section 01)", () => {
   it("lists six items with numerals, titles, codes, and text", () => {
-    expect(topWays.heading).toBe("Top ways zzThis is used");
+    expect(topWays.heading).toBe("Potential use cases and explorations");
     expect(topWays.items.map((item) => item.numeral)).toEqual([
       "01",
       "02",
@@ -329,13 +368,21 @@ describe("top ways (Home section 01)", () => {
       ["zz-btc-harbor-violet-nine-zz", "zz-harbor-violet-nine-zz"],
       ["zz-fn-pay-agentsmith-zz", "zz-run-reorder-water-zz"],
     ]);
+    expect(topWays.items.map((item) => item.status)).toEqual([
+      "Exploration: field/enterprise workflows are queued in B7; carrier and ledger integrations are not v1 features.",
+      "Exploration: postal/parcel workflows are queued in B8; postage, carrier, routing, and tracking integrations are not v1 services.",
+      "Consumer/community uses are queued in B9. zzThat is a working prototype; Android, iOS, and web releases are planned, not shipped.",
+      "Exploration: agent/ledger integrations are shadowed in B16; no v1 agent identity or authorization integration.",
+      "Exploration: blockchain integration is shadowed in B16 for v2+; it is not a v1 dependency or capability.",
+      "Exploration: authorized actions/macros are shadowed in B14; code-triggered actions are not a v1 feature.",
+    ]);
     expect(topWays.items.map((item) => item.text)).toEqual([
-      "Easier handling: mark crates, bags, and parts, then read, link, and hand them off with a phone camera or a few spoken words. For shipping, including across borders, the zz-code can be the shipment's shared identity and hub, where customs, carriers, and payment services find the same information, and its ID on the shared ledger used by every service that handles the goods.",
-      "A handwritten zz-code can serve as proof of postage and a trackable reference: write it in the stamp corner of a letter or parcel, and it links to postage, routing, and tracking.",
-      "Free for everyone. Write a code on a lost-pet flyer, a moving box, a garage-sale item, or a note, and anyone can scan it, like a QR code you can write by hand. Endless imaginative uses. The zzThat app is coming to Android, iOS, and the web at zzthat.com.",
-      "AI agents need identities people can easily know and recognize by name, and enterprises need to name and brand their agents, on the everyday web as well as on blockchains. A zz-code gives an agent a short name people can write, say, and verify, linked to who runs it and what it is allowed to do.",
-      "Wallet, account, smart-contract, and agent addresses on networks such as Bitcoin and Ethereum are long strings of random characters. A zz-code is a readable alias for any of them: easier to write, say, and check on screen before you send.",
-      "A zz-code can also call a function: a short, human-writable command that asks a system to do something, such as reorder supplies, pay an agent, or open a work order. A macro runs only for an authenticated, authorized user who confirms it; the code itself carries no authority.",
+      "A future workflow could use a handwritten code to help identify and hand off items. The pictured shipping, customs, payment-service, and shared-ledger connections are concepts, not available integrations.",
+      "A future postal or parcel workflow could use a handwritten code as a reference. This concept is not proof of postage and does not provide routing or tracking.",
+      "Community examples include a lost-pet flyer, a moving box, or a garage-sale item. The zzThat scanner/creator is a working prototype; its consumer releases remain planned.",
+      "A future integration could give an agent a short, readable alias. Linking that alias to an operator or permissions is not a v1 capability.",
+      "A future integration could map a readable code to a wallet, account, smart-contract, or agent address. No blockchain alias integration is available in v1.",
+      "A future authorized-actions design could let a code refer to a command, subject to separate authentication, authorization, and confirmation. The code itself carries no authority, and v1 does not execute macros.",
     ]);
   });
 });

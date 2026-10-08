@@ -6,7 +6,7 @@ export const contactPage = {
   title: "Contact",
   text: "Discuss a pilot, field feedback, or collaboration.",
   location:
-    "Michael works from the Hacker Dojo area in Mountain View/Santa Clara.",
+    "Silicon Valley (Mountain View / Santa Clara; Hacker Dojo) and New York City.",
 };
 
 export interface Prototype {
@@ -54,7 +54,7 @@ export const aboutPage = {
   explorationsHeading: "Current prototypes and explorations",
   // [MICHAEL 2026-10-07] zzthing.com is replaced by zzthis.com.
   prototypeLabel:
-    "zzThis is for commercial and government use; zzThat is our free consumer app, launching soon.",
+    "zzThis is for commercial and government use; zzThat is our free consumer app, launching soon. These are prototypes and explorations; capabilities described as planned are not deployed features.",
   handwrittenHeading: "Codes written by hand",
   handwrittenLabel: "Real photos of handwritten codes.",
   locationHeading: "Location",
@@ -101,7 +101,7 @@ export const prototypes: readonly Prototype[] = [
   {
     name: "zzthat.com",
     href: "https://zzthat.com",
+    text: "Working scanner/creator prototype and separate consumer product direction; web, Android, and iOS releases are planned.",
     logo: zzthatLogos[zzthatLogoVariant],
-    text: "Scanner and creator prototype, launching as a free web, Android, and iOS app. zzThat will be our separate consumer product and brand, for people to create and use zz-codes for their personal uses.",
   },
 ];
