@@ -266,13 +266,15 @@ describe("navigation and people", () => {
     ]);
   });
 
-  it("lists the reconciled advisor roster with retained approved assets", () => {
+  it("lists the reconciled 2026-10-07 advisor roster with retained approved assets", () => {
     // [MICHAEL 2026-10-06 change list] Daniel and Adam move to first.
+    // [MICHAEL 2026-10-07] Omer F. Yalcin is added last.
     expect(advisors.map((person) => person.name)).toEqual([
       "Daniel Meyer",
       "Adam Fry",
       "Patrick Muggler",
       "Arshi Chadha",
+      "Omer F. Yalcin",
     ]);
     expect(advisors.every((person) => person.initials !== undefined)).toBe(
       true,
