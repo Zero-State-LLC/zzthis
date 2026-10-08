@@ -81,6 +81,16 @@ WebP, already in `public/images/`. Application images come from `zz - More Appli
 | public/images/handwritten/zz-helloworld-zz.webp | removed | Removed. No longer used. |
 | public/images/handwritten/zz-roto-zz.webp | removed | Removed. No longer used. |
 
+## Added 2026-10-07 (Michael's changes)
+
+Source: Michael's 2026-10-07 changes (`intent/2026-10-07-michael-content-changes.md`).
+
+| path | status | source | notes |
+|---|---|---|---|
+| public/images/people/omer-yalcin.webp | headshot | Michael's 2026-10-07 changes | Headshot, Omer F. Yalcin, 400 by 400. About advisor card. |
+| public/images/logos/zzthat-lowercase.webp | logo, replaced | Michael's 2026-10-07 lowercase "zzthat" logo file | 356 by 96. Now the zzThat wordmark shown on About under zzthat.com. The camel-case file stays, unused. |
+| public/images/logos/zzthis-logo-on-dark.webp, zzthis-logo-on-light.webp | logo, reused | existing header logos | Also shown on About under zzthis.com, swapped by theme (white "this" on dark, black "this" on light). |
+
 ## Wireframes
 
 docs/wireframes/wireframes-page-1..7.webp: Michael Chung's companion wireframes (zzThis Website Wireframes 2026-10-01). Pages 1-3 mobile Home (3 scroll segments), 4-5 desktop Home (2 segments), 6-7 About mobile and desktop. Reference only; do not ship them in the site.

@@ -127,8 +127,15 @@
   align-content: start;
 }
 
-.end__contact h2 {
+/* [MICHAEL 2026-10-07] "About and people" matches the "Contact" heading. */
+.end h2 {
   font-size: var(--text-section);
+}
+
+/* [MICHAEL 2026-10-07] The home contact email at about half its earlier size
+   (was clamp(1.4rem, 4.5vw, 2.6rem)); the floor stays readable on phones. */
+.end .mail {
+  font-size: clamp(1rem, 2.25vw, 1.3rem);
 }
 
 .app h3 a {
