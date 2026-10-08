@@ -101,3 +101,10 @@ Intent: `intent/2026-10-08-michael-nav-demo.md`. Spec: `docs/SPEC.md` Sections 3
 
 - [x] T045 Top menu: Demo between Applications and About, the footer's order (`src/content/navigation.ts`, `NavKey` gains `demo`); `/demo` passes `current="demo"`; the content test checks the new order.
 - [x] T046 Header: menu links about 30% larger (`calc(var(--text-sm) * 1.3)`), header height unchanged at 64 px; `.nav__mark { flex-shrink: 0 }` so the logo never shrinks; full menu from 64rem, checked at 1024 px.
+
+## Phase 14: zzthis.com cutover (issue #6)
+
+Decision D-2026-10-08-02 in `docs/SPEC.md`; Section 6, Hosting; acceptance item 28. Danny said yes on 2026-10-08.
+
+- [x] T047 Root base: `astro.config.mjs` sets `site` to `https://zzthis.com` and the default `base` to `/`, keeping the `ASTRO_BASE` override; `scripts/check-dist.mjs` defaults to `/` and fails on a leftover `/zzthis/` path or a `zero-state-llc.github.io` link; tests cover the config and both bases.
+- [ ] T048 Cutover: Michael's DNS records live and verified, Danny sets the Pages custom domain, the T047 PR merges right away, Enforce HTTPS once the certificate is issued, then check `https://zzthis.com`, the `www` redirect, and the `zero-state-llc.github.io/zzthis/` redirect. Owner: Danny.
