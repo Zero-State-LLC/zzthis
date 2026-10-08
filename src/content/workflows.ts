@@ -78,7 +78,7 @@ export const photoToAction = {
 export const howItWorksPage = {
   title: "How it works",
   intro:
-    "Two connected workflows: one code for identity, and AI for the work that follows.",
+    "One workflow for code identity; photo-based identification remains future exploration, not v1 behavior.",
   coreHeading: "Core identity",
   readWays: {
     heading: "Manual and planned camera reading",
