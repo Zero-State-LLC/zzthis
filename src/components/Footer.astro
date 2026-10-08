@@ -28,19 +28,21 @@ const glyphs: Record<SocialIcon, string> = {
     ))}
   </nav>
   <div class="colophon__social">
-    <ul class="social" aria-label="zzThis social links">
-      {zzthisSocial.map((link) => (
-        <li>
-          <a href={link.href} aria-label={link.label} title={link.label}>
-            <svg
-              viewBox="0 0 24 24"
-              aria-hidden="true"
-              set:html={glyphs[link.icon]}
-            />
-          </a>
-        </li>
-      ))}
-    </ul>
+    {zzthisSocial.length > 0 && (
+      <ul class="social" aria-label="zzThis social links">
+        {zzthisSocial.map((link) => (
+          <li>
+            <a href={link.href} aria-label={link.label} title={link.label}>
+              <svg
+                viewBox="0 0 24 24"
+                aria-hidden="true"
+                set:html={glyphs[link.icon]}
+              />
+            </a>
+          </li>
+        ))}
+      </ul>
+    )}
     {zzthatSocial.length > 0 && (
       <ul class="social social--zzthat" aria-label="zzThat social links">
         <li class="social__brand">

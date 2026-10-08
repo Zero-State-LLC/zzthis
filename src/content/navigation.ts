@@ -43,21 +43,26 @@ export interface SocialLink {
   icon: SocialIcon;
 }
 
-export const zzthisSocial: readonly SocialLink[] = [
-  { label: "zzThis on X", href: "https://x.com/zzthisapp", icon: "x" },
-];
+const shown = (links: readonly SocialLink[]): readonly SocialLink[] =>
+  links.filter((link) => link.href !== "");
 
-// Permanent invite link (never expires, no use limit) from the zzThat server.
+export const zzthisSocial: readonly SocialLink[] = shown([
+  { label: "zzThis on X", href: "https://x.com/zzthisapp", icon: "x" },
+]);
+
+// Invite link to the zzThat server, given as permanent (never expires, no use
+// limit). On 2026-10-08 Discord's invite API reported an expiry of 2026-11-07
+// (UTC), so confirm it is set to never expire (docs/SPEC.md D-2026-10-08-03).
 export const zzthatDiscordUrl = "https://discord.gg/sp7smSzq7";
 
-export const zzthatSocial: readonly SocialLink[] = [
+export const zzthatSocial: readonly SocialLink[] = shown([
   { label: "zzThat on Discord", href: zzthatDiscordUrl, icon: "discord" },
   {
     label: "zzThat on Instagram",
     href: "https://www.instagram.com/zzthatcom/",
     icon: "instagram",
   },
-].filter((link): link is SocialLink => link.href !== "");
+]);
 
 // Q9 [MICHAEL 2026-10-02]: the footer shows the full words.
 export const footerNotice = "Patent pending";

@@ -21,7 +21,8 @@ const { applications, applicationsPage } = applicationsModule;
 const { comparisonColumns, comparisonNote, comparisonRows } = comparisonModule;
 const { featured, hero } = heroModule;
 const { images } = imagesModule;
-const { navItems, footerItems, footerNotice } = navigationModule;
+const { navItems, footerItems, footerNotice, zzthisSocial, zzthatSocial } =
+  navigationModule;
 const { advisors, founder, founderOrigin } = peopleModule;
 const { topWays } = usesModule;
 const { demoTitle, demoPrototypeLinks } = demoModule;
@@ -269,6 +270,30 @@ describe("navigation and people", () => {
     expect(advisors.some((person) => person.name === "Omer F. Yalcin")).toBe(
       false,
     );
+  });
+
+  it("lists the footer social links with their owners", () => {
+    // [MICHAEL 2026-10-08] X belongs to zzThis; Discord and Instagram belong
+    // to zzThat and sit beside the zzthat wordmark.
+    expect(zzthisSocial).toEqual([
+      { label: "zzThis on X", href: "https://x.com/zzthisapp", icon: "x" },
+    ]);
+    expect(zzthatSocial).toEqual([
+      {
+        label: "zzThat on Discord",
+        href: "https://discord.gg/sp7smSzq7",
+        icon: "discord",
+      },
+      {
+        label: "zzThat on Instagram",
+        href: "https://www.instagram.com/zzthatcom/",
+        icon: "instagram",
+      },
+    ]);
+    for (const link of [...zzthisSocial, ...zzthatSocial]) {
+      expect(link.href.startsWith("https://")).toBe(true);
+      expect(link.label).not.toBe("");
+    }
   });
 
   it("applies Michael's 2026-10-02 answers", () => {

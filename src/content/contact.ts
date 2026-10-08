@@ -26,7 +26,8 @@ export interface Prototype {
 }
 
 // [MICHAEL 2026-10-06 change list] A small zzThat wordmark under zzthat.com on
-// About only. Two capitalization variants exist (GPT-Astra assets, orange zz
+// About. [MICHAEL 2026-10-08] The same wordmark also sits beside zzThat's
+// social icons in every page footer. Two capitalization variants exist (GPT-Astra assets, orange zz
 // #FF5500, deep teal #0B7480). Pick the primary here until Michael and Danny
 // finalize capitalization; show only one at a time.
 const zzthatLogos = {
