@@ -70,11 +70,11 @@ describe("hero and featured statement (spec 3.2)", () => {
       "Barcodes made things scannable. zzThis makes things readable-writable - and smart.",
     );
     expect(hero.subline).toBe(
-      "Write a code on a thing; find its record by camera or typing.",
+      "Write a code on a thing; type it to find its record.",
     );
     const { before, code, after } = hero.paragraph;
     expect(before + code + after).toBe(
-      "zzThis is a human-readable, human-writable code for the physical world. Write a zz-code on tape, a crate, a parcel, an envelope, or a sign, or embed it in text or program code. Link it to a digital record or its information hub, then explore finding it by camera or typing. This site demonstrates prototype flows; app releases are planned. Voice recognition is planned for a future release, not v1.",
+      "zzThis is a human-readable, human-writable code for the physical world. Write a zz-code on tape, a crate, a parcel, an envelope, or a sign, or embed it in text or program code. The prototype supports typed lookup to a digital record. On-device camera recognition is planned for v1 but is not implemented in this build. Voice recognition is planned for a future release, not v1.",
     );
     expect(code).toBe("zz-code");
     expect(hero.actions.map((action) => action.label)).toEqual([
@@ -146,7 +146,7 @@ describe("comparison (spec 3.2 H.3)", () => {
         accent: true,
         cells: {
           create: "Write, draw, print, or display: words, numbers, or symbols",
-          read: "Person, camera, typing, or within text",
+          read: "Person or typing; on-device camera recognition planned for v1",
           connects: "Physical thing to its authorized digital record",
           remember: "Yes (2 to 4 words, or short words and numbers)",
         },
@@ -163,14 +163,17 @@ describe("comparison (spec 3.2 H.3)", () => {
 
 describe("workflows (spec 3.2 H.4 to H.6)", () => {
   it("explains the terminal zz marks as camera index marks", () => {
-    expect(whyMarkers.text).toContain("index marks");
+    expect(whyMarkers.text).toContain("planned on-device camera reader");
     expect(whyMarkers.text).toContain("find the endpoints first");
     expect(whyMarkers.text).not.toContain("in any handwriting");
   });
 
   it("keeps voice recognition out of the current reading paths", () => {
-    expect(howItWorksPage.readWays.heading).toBe("Two ways to read a code");
-    expect(howItWorksPage.readWays.methods).toEqual(["Camera", "Typing"]);
+    expect(howItWorksPage.readWays.heading).toBe("Manual and planned camera reading");
+    expect(howItWorksPage.readWays.methods).toEqual(["Manual entry (available)", "Camera recognition (planned)"]);
+    expect(howItWorksPage.readWays.line).toContain(
+      "On-device camera recognition is planned for v1 but is not implemented yet.",
+    );
     expect(howItWorksPage.readWays.line).toContain(
       "Voice recognition is planned for a future release; it is not part of v1.",
     );
@@ -178,13 +181,13 @@ describe("workflows (spec 3.2 H.4 to H.6)", () => {
 
   it("matches the core workflow", () => {
     expect(coreIdentity.intro).toBe(
-      "Core identity: MARK a lowercase zz code → READ it by camera or manual entry → LINK it to a record → REPORT it in a voice handoff to another person if useful.",
+      "Core identity: MARK a lowercase zz code → READ it by manual entry today; on-device camera recognition is planned for v1 → LINK it to a record → REPORT it in a voice handoff to another person if useful.",
     );
     expect(
       coreIdentity.steps.map((step) => `${step.title}: ${step.text}`),
     ).toEqual([
       "Mark: Write the code on tape, a crate, or a pallet.",
-      "Read: For camera reading, find the two zz endpoints first, then read the words between them. Manual entry uses the same code grammar.",
+      "Read: Manual entry uses the same code grammar and is the available read path in this build. On-device camera recognition is planned for v1 but is not implemented yet.",
       "Link: Connect to an existing record and photo.",
       "Report: Say the code words to another person if a voice handoff is useful; software voice recognition is not part of v1.",
     ]);
