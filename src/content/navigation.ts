@@ -32,6 +32,33 @@ export const footerItems: readonly FooterItem[] = [
   { label: "Contact", path: "contact" },
 ];
 
+// [MICHAEL 2026-10-08] Small, discreet social icons in every page's footer.
+// X belongs to zzThis. Discord and Instagram belong to zzThat, so they sit
+// beside a small zzthat wordmark. A link left empty is not shown.
+export type SocialIcon = "x" | "discord" | "instagram";
+
+export interface SocialLink {
+  label: string;
+  href: string;
+  icon: SocialIcon;
+}
+
+export const zzthisSocial: readonly SocialLink[] = [
+  { label: "zzThis on X", href: "https://x.com/zzthisapp", icon: "x" },
+];
+
+// Permanent invite link (never expires, no use limit) from the zzThat server.
+export const zzthatDiscordUrl = "https://discord.gg/sp7smSzq7";
+
+export const zzthatSocial: readonly SocialLink[] = [
+  { label: "zzThat on Discord", href: zzthatDiscordUrl, icon: "discord" },
+  {
+    label: "zzThat on Instagram",
+    href: "https://www.instagram.com/zzthatcom/",
+    icon: "instagram",
+  },
+].filter((link): link is SocialLink => link.href !== "");
+
 // Q9 [MICHAEL 2026-10-02]: the footer shows the full words.
 export const footerNotice = "Patent pending";
 

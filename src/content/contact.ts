@@ -44,6 +44,7 @@ const zzthatLogos = {
   },
 } as const;
 export const zzthatLogoVariant: keyof typeof zzthatLogos = "lowercase";
+export const zzthatLogo = zzthatLogos[zzthatLogoVariant];
 
 export const aboutPage = {
   title: "About zzThis",
