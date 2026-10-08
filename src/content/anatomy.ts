@@ -2,7 +2,7 @@
 
 export const whyMarkers = {
   heading: "Why the zz markers matter",
-  text: "The two zz markers frame the code. For camera reading, they also act as index marks: find the endpoints first, then read the words between them. That gives the reader a bounded region to inspect while the words remain readable and writable by people.",
+  text: "The two zz markers frame the code. A planned on-device camera reader could use them as index marks to find the endpoints and bound the region to inspect. The words remain readable and writable by people.",
 };
 
 export const languagesHeading = "In any language";
