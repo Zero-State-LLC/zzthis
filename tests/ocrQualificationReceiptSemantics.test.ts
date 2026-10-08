@@ -2,6 +2,7 @@
 import { describe, expect, it } from "vitest";
 import { validateQualificationReceipt } from "../scripts/ocr-qualification/receipt-semantics.mjs";
 import { buildQualificationReceiptArtifact } from "../scripts/ocr-qualification-receipt-report.mjs";
+import { createIncompleteQualificationReceiptArtifact } from "../scripts/ocr-qualification-receipt-assembly.mjs";
 
 const bucketIds = [
   "handwriting",
@@ -411,6 +412,81 @@ function evaluate(inputs: ReturnType<typeof buildInputs>) {
 }
 
 describe("OCR qualification receipt semantic guard", () => {
+  it("assembles and semantically validates a non-authorizing preflight receipt", () => {
+    const inputs = buildInputs();
+    const receipt = inputs.receipt;
+    const hashes = {
+      manifest: receipt.manifest_sha256,
+      candidateBundle: receipt.candidate_bundle_sha256,
+      preRunAttestation: receipt.pre_run_attestation_sha256,
+      preRunBundle: receipt.pre_run_sigstore_bundle_sha256,
+      executionAttestation: receipt.execution_attestation_sha256,
+      executionBundle: receipt.execution_sigstore_bundle_sha256,
+      deviceMatrix: "6".repeat(64),
+      adapterResults: receipt.adapter.adapter_results_sha256 as string,
+      gateConfig: receipt.release_gates.gate_config_sha256,
+    };
+    const documents = {
+      manifest: {
+        qualification_id: receipt.qualification_id,
+        samples: [{ split: "tuning" }, { split: "final" }],
+      },
+      deviceMatrix: inputs.deviceMatrix,
+      candidateBundle: {
+        candidate_id: receipt.candidate_id,
+        platform: "ios",
+        adapter: {
+          commit: receipt.adapter.commit,
+          artifact_sha256: receipt.adapter.artifact_sha256,
+          engine_id: receipt.adapter.engine_id,
+          engine_version: receipt.adapter.engine_version,
+          config_sha256: receipt.adapter.config_sha256,
+          preprocessing_sha256: receipt.adapter.preprocessing_sha256,
+          confidence_mapping_sha256: receipt.adapter.confidence_mapping_sha256,
+        },
+        decoder: receipt.decoder,
+      },
+      gateConfig: {
+        ...inputs.gateConfig,
+        thresholds: receipt.release_gates.thresholds,
+      },
+      executionAttestation: {
+        run_id: receipt.run_id,
+        started_at_utc: receipt.started_at_utc,
+        finished_at_utc: receipt.finished_at_utc,
+      },
+    };
+    const scoring = {
+      metric_sets: {
+        metrics_by_split: receipt.metrics_by_split,
+        device_coverage: receipt.device_coverage,
+        bucket_metrics: receipt.bucket_metrics,
+      },
+      gate_evaluation: { gate_results: receipt.release_gates.gate_results },
+      false_accepts: [],
+      false_valid_cases: [],
+    };
+    const { receiptArtifact, receiptAssemblyError } =
+      createIncompleteQualificationReceiptArtifact({
+        documents,
+        hashes,
+        scoring: { performed: true, result: scoring },
+        sigstoreVerifications: { preRun: { verified: false } },
+        rawInputBytes: {
+          preRunBundle: Buffer.from("pre-run-bundle"),
+          executionBundle: Buffer.from("execution-bundle"),
+        },
+      });
+
+    expect(receiptAssemblyError).toBeNull();
+    expect(receiptArtifact?.validation.schemaValid).toBe(true);
+    expect(receiptArtifact?.validation.status).toBe("INCOMPLETE");
+    expect(receiptArtifact?.validation.authorizesPromotion).toBe(false);
+    expect(receiptArtifact?.receipt.disposition).toBe("INCOMPLETE");
+    expect(receiptArtifact?.receipt.release_gates.frozen_at_utc).toBeNull();
+    expect(receiptArtifact?.receipt.report_sha256).toMatch(/^[a-f0-9]{64}$/);
+  });
+
   it("hashes a privacy-minimized report from the validated receipt", () => {
     const inputs = buildInputs();
 
