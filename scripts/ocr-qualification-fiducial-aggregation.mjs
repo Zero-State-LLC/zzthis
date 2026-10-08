@@ -1,150 +1,191 @@
-const RATE_KEYS = [
-  "endpoint_precision",
-  "endpoint_recall",
-  "false_finder_rate",
-  "complete_pair_rate",
-  "pair_accuracy",
-  "false_pair_rate",
-];
-const COUNT_KEYS = [
-  "false_finder_count",
-  "missed_endpoint_count",
-  "false_pair_count",
-];
-
-function addSafe(target, key, value) {
-  if (
-    !Number.isSafeInteger(value) ||
-    value < 0 ||
-    !Number.isSafeInteger(target[key] + value)
-  ) {
+function addCount(target, key, value) {
+  if (!Number.isSafeInteger(value) || value < 0) {
     throw new TypeError(`invalid_fiducial_metric_count:${key}`);
   }
-  target[key] += value;
+  const total = target[key] + value;
+  if (!Number.isSafeInteger(total)) {
+    throw new TypeError(`invalid_fiducial_metric_count:${key}`);
+  }
+  target[key] = total;
+}
+
+function rateAccumulator() {
+  return { numerator: 0, denominator: 0 };
 }
 
 function createAccumulator() {
   return {
     sampleIds: new Set(),
-    ...Object.fromEntries(
-      RATE_KEYS.map((key) => [key, { numerator: 0, denominator: 0 }]),
-    ),
-    ...Object.fromEntries(COUNT_KEYS.map((key) => [key, 0])),
+    endpoint_precision: rateAccumulator(),
+    endpoint_recall: rateAccumulator(),
+    false_finder_count: 0,
+    false_finder_rate: rateAccumulator(),
+    missed_endpoint_count: 0,
+    complete_pair_rate: rateAccumulator(),
+    pair_accuracy: rateAccumulator(),
+    false_pair_count: 0,
+    false_pair_rate: rateAccumulator(),
   };
 }
 
-function addObservation(accumulator, row) {
-  accumulator.sampleIds.add(row.sample_id);
-  for (const key of RATE_KEYS) {
-    const metric = row[key];
-    if (
-      !metric ||
-      !Number.isSafeInteger(metric.numerator) ||
-      !Number.isSafeInteger(metric.denominator) ||
-      metric.numerator < 0 ||
-      metric.denominator < 0 ||
-      metric.numerator > metric.denominator
-    ) {
-      throw new TypeError(`invalid_fiducial_rate_metric:${key}`);
-    }
-    addSafe(accumulator[key], "numerator", metric.numerator);
-    addSafe(accumulator[key], "denominator", metric.denominator);
-  }
-  for (const key of COUNT_KEYS) addSafe(accumulator, key, row[key]);
+function addRate(target, key, metric) {
   if (
-    row.endpoint_precision.numerator !== row.endpoint_recall.numerator ||
-    row.false_finder_count !== row.false_finder_rate.numerator ||
-    row.false_finder_rate.denominator !== row.endpoint_precision.denominator ||
-    row.missed_endpoint_count !==
-      row.endpoint_recall.denominator - row.endpoint_recall.numerator ||
-    row.false_pair_count !== row.false_pair_rate.numerator ||
-    row.false_pair_rate.denominator !== row.pair_accuracy.denominator ||
-    row.false_pair_count !==
-      row.pair_accuracy.denominator - row.pair_accuracy.numerator
-  )
+    !metric ||
+    !Number.isSafeInteger(metric.numerator) ||
+    !Number.isSafeInteger(metric.denominator) ||
+    metric.numerator < 0 ||
+    metric.denominator < 0 ||
+    metric.numerator > metric.denominator
+  ) {
+    throw new TypeError(`invalid_fiducial_rate_metric:${key}`);
+  }
+  addCount(target[key], "numerator", metric.numerator);
+  addCount(target[key], "denominator", metric.denominator);
+}
+
+function applyObservation(accumulator, scored) {
+  accumulator.sampleIds.add(scored.sample_id);
+  addRate(accumulator, "endpoint_precision", scored.endpoint_precision);
+  addRate(accumulator, "endpoint_recall", scored.endpoint_recall);
+  addRate(accumulator, "false_finder_rate", scored.false_finder_rate);
+  addRate(accumulator, "complete_pair_rate", scored.complete_pair_rate);
+  addRate(accumulator, "pair_accuracy", scored.pair_accuracy);
+  addRate(accumulator, "false_pair_rate", scored.false_pair_rate);
+  addCount(accumulator, "false_finder_count", scored.false_finder_count);
+  addCount(accumulator, "missed_endpoint_count", scored.missed_endpoint_count);
+  addCount(accumulator, "false_pair_count", scored.false_pair_count);
+  if (
+    scored.endpoint_precision.numerator !== scored.endpoint_recall.numerator ||
+    scored.false_finder_count !== scored.false_finder_rate.numerator ||
+    scored.false_finder_rate.denominator !==
+      scored.endpoint_precision.denominator ||
+    scored.missed_endpoint_count !==
+      scored.endpoint_recall.denominator - scored.endpoint_recall.numerator ||
+    scored.false_pair_count !== scored.false_pair_rate.numerator ||
+    scored.false_pair_rate.denominator !== scored.pair_accuracy.denominator ||
+    scored.false_pair_count !==
+      scored.pair_accuracy.denominator - scored.pair_accuracy.numerator
+  ) {
     throw new TypeError("fiducial_observation_count_mismatch");
+  }
 }
 
 function finalize(accumulator) {
-  const result = { sample_count: accumulator.sampleIds.size };
-  for (const key of RATE_KEYS) {
-    const { numerator, denominator } = accumulator[key];
-    result[key] = {
-      numerator,
-      denominator,
-      rate: denominator === 0 ? null : numerator / denominator,
-    };
+  const result = {
+    sample_count: accumulator.sampleIds.size,
+    endpoint_precision: { ...accumulator.endpoint_precision },
+    endpoint_recall: { ...accumulator.endpoint_recall },
+    false_finder_count: accumulator.false_finder_count,
+    false_finder_rate: { ...accumulator.false_finder_rate },
+    missed_endpoint_count: accumulator.missed_endpoint_count,
+    complete_pair_rate: { ...accumulator.complete_pair_rate },
+    pair_accuracy: { ...accumulator.pair_accuracy },
+    false_pair_count: accumulator.false_pair_count,
+    false_pair_rate: { ...accumulator.false_pair_rate },
+  };
+  for (const key of [
+    "endpoint_precision",
+    "endpoint_recall",
+    "false_finder_rate",
+    "complete_pair_rate",
+    "pair_accuracy",
+    "false_pair_rate",
+  ]) {
+    const metric = result[key];
+    metric.rate =
+      metric.denominator === 0 ? null : metric.numerator / metric.denominator;
   }
-  for (const key of COUNT_KEYS) result[key] = accumulator[key];
   return result;
 }
 
-function sortedRows(groups, names) {
-  return [...groups.entries()]
-    .sort(([a], [b]) => a.localeCompare(b))
-    .map(([key, value]) => ({
-      ...Object.fromEntries(
-        names.map((name, index) => [name, key.split("\u0000")[index]]),
-      ),
-      metrics: finalize(value),
-    }));
-}
-
-/** Sum fiducial numerators/denominators by split, device/split, and bucket/split. */
-export function aggregateFiducialScoring(scoredRows, manifestSamples) {
-  if (!Array.isArray(scoredRows) || !Array.isArray(manifestSamples))
-    throw new TypeError("fiducial_aggregation_arrays_required");
-  const metadata = new Map();
-  for (const sample of manifestSamples) {
+function indexManifestSamples(samples) {
+  const byId = new Map();
+  for (const sample of samples) {
     if (
       !sample ||
       typeof sample.sample_id !== "string" ||
       !["tuning", "final"].includes(sample.split) ||
       !Array.isArray(sample.stress_tags) ||
-      metadata.has(sample.sample_id)
+      sample.stress_tags.some((tag) => typeof tag !== "string") ||
+      byId.has(sample.sample_id)
     ) {
       throw new TypeError("fiducial_manifest_sample_metadata_invalid");
     }
-    metadata.set(sample.sample_id, sample);
+    byId.set(sample.sample_id, sample);
   }
-  const bySplit = new Map();
-  const byDeviceSplit = new Map();
-  const bySplitBucket = new Map();
-  const seen = new Set();
-  const add = (groups, key, row) => {
-    const accumulator = groups.get(key) ?? createAccumulator();
-    addObservation(accumulator, row);
-    groups.set(key, accumulator);
+  return byId;
+}
+
+function addToGroup(groups, key, scored) {
+  const accumulator = groups.get(key) ?? createAccumulator();
+  applyObservation(accumulator, scored);
+  groups.set(key, accumulator);
+}
+
+function sortedRows(groups, keyNames) {
+  return [...groups.entries()]
+    .sort(([left], [right]) => left.localeCompare(right))
+    .map(([key, accumulator]) => ({
+      ...Object.fromEntries(
+        keyNames.map((name, index) => [name, key.split("\u0000")[index]]),
+      ),
+      metrics: finalize(accumulator),
+    }));
+}
+
+/** Aggregate per-sample fiducial metrics without averaging precomputed rates. */
+export function aggregateFiducialScoring(scoredSamples, manifestSamples) {
+  if (!Array.isArray(scoredSamples) || !Array.isArray(manifestSamples)) {
+    throw new TypeError("fiducial_aggregation_arrays_required");
+  }
+  const metadataBySample = indexManifestSamples(manifestSamples);
+  const groups = {
+    bySplit: new Map(),
+    byDeviceSplit: new Map(),
+    bySplitBucket: new Map(),
+    seenObservations: new Set(),
   };
-  for (const row of scoredRows) {
-    const sample = metadata.get(row?.sample_id);
+
+  for (const scored of scoredSamples) {
+    const metadata = metadataBySample.get(scored?.sample_id);
     if (
-      !sample ||
-      sample.split !== row.split ||
-      typeof row.device_matrix_entry_id !== "string" ||
-      !row.device_matrix_entry_id
+      !metadata ||
+      metadata.split !== scored.split ||
+      typeof scored.device_matrix_entry_id !== "string" ||
+      scored.device_matrix_entry_id.length === 0
     ) {
       throw new TypeError("fiducial_scored_observation_metadata_mismatch");
     }
-    const key = `${row.device_matrix_entry_id}\u0000${row.sample_id}`;
-    if (seen.has(key))
+    const observationKey = `${scored.device_matrix_entry_id}\u0000${scored.sample_id}`;
+    if (groups.seenObservations.has(observationKey)) {
       throw new TypeError("duplicate_fiducial_device_sample_observation");
-    seen.add(key);
-    add(bySplit, row.split, row);
-    add(byDeviceSplit, `${row.device_matrix_entry_id}\u0000${row.split}`, row);
-    for (const bucket of new Set(sample.stress_tags))
-      add(bySplitBucket, `${row.split}\u0000${bucket}`, row);
+    }
+    groups.seenObservations.add(observationKey);
+    addToGroup(groups.bySplit, scored.split, scored);
+    addToGroup(
+      groups.byDeviceSplit,
+      `${scored.device_matrix_entry_id}\u0000${scored.split}`,
+      scored,
+    );
+    for (const bucketId of new Set(metadata.stress_tags)) {
+      addToGroup(
+        groups.bySplitBucket,
+        `${scored.split}\u0000${bucketId}`,
+        scored,
+      );
+    }
   }
+
   return {
     by_split: Object.fromEntries(
-      [...bySplit.entries()]
-        .sort(([a], [b]) => a.localeCompare(b))
-        .map(([key, value]) => [key, finalize(value)]),
+      [...groups.bySplit.entries()]
+        .sort(([left], [right]) => left.localeCompare(right))
+        .map(([split, accumulator]) => [split, finalize(accumulator)]),
     ),
-    by_device_split: sortedRows(byDeviceSplit, [
+    by_device_split: sortedRows(groups.byDeviceSplit, [
       "device_matrix_entry_id",
       "split",
     ]),
-    by_split_bucket: sortedRows(bySplitBucket, ["split", "bucket_id"]),
+    by_split_bucket: sortedRows(groups.bySplitBucket, ["split", "bucket_id"]),
   };
 }

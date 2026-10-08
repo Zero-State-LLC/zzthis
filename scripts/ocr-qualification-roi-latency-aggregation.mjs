@@ -1,12 +1,12 @@
-function addSafe(target, key, value) {
-  if (
-    !Number.isSafeInteger(value) ||
-    value < 0 ||
-    !Number.isSafeInteger(target[key] + value)
-  ) {
+function addCount(target, key, value) {
+  if (!Number.isSafeInteger(value) || value < 0) {
     throw new TypeError(`invalid_roi_metric_count:${key}`);
   }
-  target[key] += value;
+  const total = target[key] + value;
+  if (!Number.isSafeInteger(total)) {
+    throw new TypeError(`invalid_roi_metric_count:${key}`);
+  }
+  target[key] = total;
 }
 
 function createAccumulator() {
@@ -21,44 +21,76 @@ function createAccumulator() {
   };
 }
 
-function addObservation(accumulator, row) {
+function validateScore(scored) {
   if (
-    !Number.isSafeInteger(row.roi_truth_count) ||
-    row.roi_truth_count < 0 ||
-    !Number.isSafeInteger(row.rectification_success_count) ||
-    row.rectification_success_count < 0 ||
-    row.rectification_success_count > row.roi_truth_count ||
-    !Array.isArray(row.elapsed_ms) ||
-    row.elapsed_ms.some((value) => !Number.isFinite(value) || value < 0) ||
-    (row.roi_truth_count > 0 &&
-      (!Number.isFinite(row.roi_mean_iou) ||
-        row.roi_mean_iou < 0 ||
-        row.roi_mean_iou > 1)) ||
-    (row.roi_truth_count === 0 && row.roi_mean_iou !== null) ||
-    (row.rectification_denominator !== null &&
-      (row.rectification_denominator !== row.roi_truth_count ||
-        row.rectification_success_count > row.rectification_denominator))
-  )
+    !Number.isSafeInteger(scored.roi_truth_count) ||
+    scored.roi_truth_count < 0 ||
+    !Number.isSafeInteger(scored.rectification_success_count) ||
+    scored.rectification_success_count < 0 ||
+    scored.rectification_success_count > scored.roi_truth_count ||
+    !Array.isArray(scored.elapsed_ms) ||
+    scored.elapsed_ms.some((value) => !Number.isFinite(value) || value < 0) ||
+    (scored.roi_truth_count > 0 &&
+      (!Number.isFinite(scored.roi_mean_iou) ||
+        scored.roi_mean_iou < 0 ||
+        scored.roi_mean_iou > 1)) ||
+    (scored.roi_truth_count === 0 && scored.roi_mean_iou !== null) ||
+    (scored.rectification_denominator !== null &&
+      (scored.rectification_denominator !== scored.roi_truth_count ||
+        scored.rectification_success_count > scored.rectification_denominator))
+  ) {
     throw new TypeError("roi_scored_observation_metrics_invalid");
-  accumulator.sampleIds.add(row.sample_id);
-  addSafe(accumulator, "roi_truth_count", row.roi_truth_count);
-  accumulator.roi_iou_sum += (row.roi_mean_iou ?? 0) * row.roi_truth_count;
-  if (!Number.isFinite(accumulator.roi_iou_sum))
+  }
+}
+
+function applyObservation(accumulator, scored) {
+  validateScore(scored);
+  accumulator.sampleIds.add(scored.sample_id);
+  addCount(accumulator, "roi_truth_count", scored.roi_truth_count);
+  accumulator.roi_iou_sum +=
+    (scored.roi_mean_iou ?? 0) * scored.roi_truth_count;
+  if (!Number.isFinite(accumulator.roi_iou_sum)) {
     throw new TypeError("invalid_roi_metric_sum:roi_iou_sum");
-  addSafe(
+  }
+  addCount(
     accumulator,
     "rectification_success_count",
-    row.rectification_success_count,
+    scored.rectification_success_count,
   );
-  if (row.rectification_denominator === null)
+  if (scored.rectification_denominator === null) {
     accumulator.rectification_measured = false;
-  else
-    addSafe(
+  } else {
+    addCount(
       accumulator,
       "rectification_denominator",
-      row.rectification_denominator,
+      scored.rectification_denominator,
     );
-  accumulator.elapsed_ms.push(...row.elapsed_ms);
+  }
+  accumulator.elapsed_ms.push(...scored.elapsed_ms);
+}
+
+function indexManifestSamples(samples) {
+  const byId = new Map();
+  for (const sample of samples) {
+    if (
+      !sample ||
+      typeof sample.sample_id !== "string" ||
+      !["tuning", "final"].includes(sample.split) ||
+      !Array.isArray(sample.stress_tags) ||
+      sample.stress_tags.some((tag) => typeof tag !== "string") ||
+      byId.has(sample.sample_id)
+    ) {
+      throw new TypeError("roi_manifest_sample_metadata_invalid");
+    }
+    byId.set(sample.sample_id, sample);
+  }
+  return byId;
+}
+
+function addToGroup(groups, key, scored) {
+  const accumulator = groups.get(key) ?? createAccumulator();
+  applyObservation(accumulator, scored);
+  groups.set(key, accumulator);
 }
 
 function percentileNearestRank(sorted, percentile) {
@@ -66,12 +98,24 @@ function percentileNearestRank(sorted, percentile) {
 }
 
 function finalize(accumulator) {
-  const sorted = [...accumulator.elapsed_ms].sort((a, b) => a - b);
-  const denominator =
+  const sortedLatency = [...accumulator.elapsed_ms].sort(
+    (left, right) => left - right,
+  );
+  const latency =
+    sortedLatency.length === 0
+      ? null
+      : {
+          p50:
+            sortedLatency.length % 2 === 1
+              ? sortedLatency[Math.floor(sortedLatency.length / 2)]
+              : (sortedLatency[sortedLatency.length / 2 - 1] +
+                  sortedLatency[sortedLatency.length / 2]) /
+                2,
+          p95: percentileNearestRank(sortedLatency, 0.95),
+        };
+  const rectificationMeasured =
     accumulator.rectification_measured &&
-    accumulator.rectification_denominator > 0
-      ? accumulator.rectification_denominator
-      : null;
+    accumulator.rectification_denominator > 0;
   return {
     sample_count: accumulator.sampleIds.size,
     roi_truth_count: accumulator.roi_truth_count,
@@ -80,92 +124,81 @@ function finalize(accumulator) {
         ? null
         : accumulator.roi_iou_sum / accumulator.roi_truth_count,
     rectification_success_count: accumulator.rectification_success_count,
-    rectification_denominator: denominator,
-    rectification_success_rate:
-      denominator === null
-        ? null
-        : accumulator.rectification_success_count / denominator,
-    latency_sample_count: sorted.length,
-    latency_ms:
-      sorted.length === 0
-        ? null
-        : {
-            p50:
-              sorted.length % 2 === 1
-                ? sorted[Math.floor(sorted.length / 2)]
-                : (sorted[sorted.length / 2 - 1] + sorted[sorted.length / 2]) /
-                  2,
-            p95: percentileNearestRank(sorted, 0.95),
-          },
+    rectification_denominator: rectificationMeasured
+      ? accumulator.rectification_denominator
+      : null,
+    rectification_success_rate: rectificationMeasured
+      ? accumulator.rectification_success_count /
+        accumulator.rectification_denominator
+      : null,
+    latency_sample_count: sortedLatency.length,
+    latency_ms: latency,
   };
 }
 
-function sortedRows(groups, names) {
+function sortedRows(groups, keyNames) {
   return [...groups.entries()]
-    .sort(([a], [b]) => a.localeCompare(b))
-    .map(([key, value]) => ({
+    .sort(([left], [right]) => left.localeCompare(right))
+    .map(([key, accumulator]) => ({
       ...Object.fromEntries(
-        names.map((name, index) => [name, key.split("\u0000")[index]]),
+        keyNames.map((name, index) => [name, key.split("\u0000")[index]]),
       ),
-      metrics: finalize(value),
+      metrics: finalize(accumulator),
     }));
 }
 
-/** Aggregate weighted ROI, rectification, and recomputed latency distributions. */
-export function aggregateRoiLatencyScoring(scoredRows, manifestSamples) {
-  if (!Array.isArray(scoredRows) || !Array.isArray(manifestSamples))
+/** Aggregate ROI, rectification, and latency metrics by split, device, and bucket. */
+export function aggregateRoiLatencyScoring(scoredSamples, manifestSamples) {
+  if (!Array.isArray(scoredSamples) || !Array.isArray(manifestSamples)) {
     throw new TypeError("roi_aggregation_arrays_required");
-  const metadata = new Map();
-  for (const sample of manifestSamples) {
-    if (
-      !sample ||
-      typeof sample.sample_id !== "string" ||
-      !["tuning", "final"].includes(sample.split) ||
-      !Array.isArray(sample.stress_tags) ||
-      metadata.has(sample.sample_id)
-    ) {
-      throw new TypeError("roi_manifest_sample_metadata_invalid");
-    }
-    metadata.set(sample.sample_id, sample);
   }
-  const bySplit = new Map();
-  const byDeviceSplit = new Map();
-  const bySplitBucket = new Map();
-  const seen = new Set();
-  const add = (groups, key, row) => {
-    const accumulator = groups.get(key) ?? createAccumulator();
-    addObservation(accumulator, row);
-    groups.set(key, accumulator);
+  const metadataBySample = indexManifestSamples(manifestSamples);
+  const groups = {
+    bySplit: new Map(),
+    byDeviceSplit: new Map(),
+    bySplitBucket: new Map(),
+    seenObservations: new Set(),
   };
-  for (const row of scoredRows) {
-    const sample = metadata.get(row?.sample_id);
+  for (const scored of scoredSamples) {
+    const metadata = metadataBySample.get(scored?.sample_id);
     if (
-      !sample ||
-      sample.split !== row.split ||
-      typeof row.device_matrix_entry_id !== "string" ||
-      !row.device_matrix_entry_id
+      !metadata ||
+      metadata.split !== scored.split ||
+      typeof scored.device_matrix_entry_id !== "string" ||
+      scored.device_matrix_entry_id.length === 0
     ) {
       throw new TypeError("roi_scored_observation_metadata_mismatch");
     }
-    const key = `${row.device_matrix_entry_id}\u0000${row.sample_id}`;
-    if (seen.has(key))
+    const observationKey = `${scored.device_matrix_entry_id}\u0000${scored.sample_id}`;
+    if (groups.seenObservations.has(observationKey)) {
       throw new TypeError("duplicate_roi_device_sample_observation");
-    seen.add(key);
-    add(bySplit, row.split, row);
-    add(byDeviceSplit, `${row.device_matrix_entry_id}\u0000${row.split}`, row);
-    for (const bucket of new Set(sample.stress_tags))
-      add(bySplitBucket, `${row.split}\u0000${bucket}`, row);
+    }
+    groups.seenObservations.add(observationKey);
+    addToGroup(groups.bySplit, scored.split, scored);
+    addToGroup(
+      groups.byDeviceSplit,
+      `${scored.device_matrix_entry_id}\u0000${scored.split}`,
+      scored,
+    );
+    for (const bucketId of new Set(metadata.stress_tags)) {
+      addToGroup(
+        groups.bySplitBucket,
+        `${scored.split}\u0000${bucketId}`,
+        scored,
+      );
+    }
   }
+
   return {
     by_split: Object.fromEntries(
-      [...bySplit.entries()]
-        .sort(([a], [b]) => a.localeCompare(b))
-        .map(([key, value]) => [key, finalize(value)]),
+      [...groups.bySplit.entries()]
+        .sort(([left], [right]) => left.localeCompare(right))
+        .map(([split, accumulator]) => [split, finalize(accumulator)]),
     ),
-    by_device_split: sortedRows(byDeviceSplit, [
+    by_device_split: sortedRows(groups.byDeviceSplit, [
       "device_matrix_entry_id",
       "split",
     ]),
-    by_split_bucket: sortedRows(bySplitBucket, ["split", "bucket_id"]),
+    by_split_bucket: sortedRows(groups.bySplitBucket, ["split", "bucket_id"]),
   };
 }

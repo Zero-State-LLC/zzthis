@@ -18,8 +18,10 @@ function codePoints(value) {
 }
 
 function payloadWords(value) {
-  const normalized = value.normalize("NFC");
-  return normalized.split(/\s+/u).filter((part) => part.length > 0);
+  return value
+    .normalize("NFC")
+    .split(/\s+/u)
+    .filter((part) => part.length > 0);
 }
 
 function sequenceEditDistance(left, right) {
@@ -48,9 +50,11 @@ function partWordAccuracy(reference, prediction) {
   if (referenceWords.length === 0) {
     return { numerator: 0, denominator: 0, rate: null };
   }
-  const predictionWords = payloadWords(prediction);
-  const editDistance = sequenceEditDistance(referenceWords, predictionWords);
-  const numerator = Math.max(0, referenceWords.length - editDistance);
+  const distance = sequenceEditDistance(
+    referenceWords,
+    payloadWords(prediction),
+  );
+  const numerator = Math.max(0, referenceWords.length - distance);
   return {
     numerator,
     denominator: referenceWords.length,
@@ -104,75 +108,6 @@ function decodeTop1(candidate, wordlist) {
   };
 }
 
-function validatePayloadInputs(
-  manifestSample,
-  adapterResult,
-  pairScoring,
-  wordlistVersion,
-) {
-  if (
-    !manifestSample ||
-    !adapterResult ||
-    manifestSample.sample_id !== adapterResult.sample_id ||
-    !Array.isArray(manifestSample.ground_truth_codes) ||
-    !Array.isArray(adapterResult.candidates) ||
-    !Array.isArray(pairScoring?.correct_pairs)
-  ) {
-    throw new TypeError("payload_scoring_inputs_invalid");
-  }
-  if (!isWordlistVersion(wordlistVersion)) {
-    throw new RangeError("decoder_wordlist_version_unavailable");
-  }
-  return loadWordlist(wordlistVersion);
-}
-
-function indexPredictedPairs(correctPairs) {
-  const predictedPairByTruth = new Map();
-  for (const pair of correctPairs) {
-    if (
-      typeof pair.truth_pair_id !== "string" ||
-      typeof pair.predicted_pair_id !== "string" ||
-      predictedPairByTruth.has(pair.truth_pair_id)
-    ) {
-      throw new TypeError("payload_pair_mapping_invalid");
-    }
-    predictedPairByTruth.set(pair.truth_pair_id, pair.predicted_pair_id);
-  }
-  return predictedPairByTruth;
-}
-
-function selectTopCandidate(truth, predictedPairByTruth, adapterResult) {
-  const predictedPairId = predictedPairByTruth.get(truth.pair_id);
-  const pairCandidates =
-    predictedPairId === undefined
-      ? []
-      : adapterResult.candidates.filter(
-          (candidate) => candidate.pair_id === predictedPairId,
-        );
-  return { pairCandidates, top1: pairCandidates[0] };
-}
-
-function scoreTruthObservation(truth, decoded) {
-  const referenceLength = codePoints(truth.literal_payload).length;
-  const distance = levenshteinDistance(decoded.rawText, truth.literal_payload);
-  const hasCanonicalTruth = typeof truth.canonical_code === "string";
-  const exactCorrect = hasCanonicalTruth
-    ? decoded.canonical === truth.canonical_code
-    : null;
-  const isFalseValid =
-    hasCanonicalTruth &&
-    decoded.falseValidEligible &&
-    decoded.canonical !== truth.canonical_code;
-  return {
-    referenceLength,
-    distance,
-    hasCanonicalTruth,
-    exactCorrect,
-    isFalseValid,
-    partWordAccuracy: partWordAccuracy(truth.literal_payload, decoded.rawText),
-  };
-}
-
 /**
  * Score top-1 payload outcomes after fiducial pairing has been reconciled.
  * Pair mappings, candidate order, and all truth comparisons stay local.
@@ -183,13 +118,13 @@ export function scorePayloadObservations(
   pairScoring,
   wordlistVersion,
 ) {
-  const wordlist = validatePayloadInputs(
-    manifestSample,
-    adapterResult,
-    pairScoring,
-    wordlistVersion,
-  );
-  const predictedPairByTruth = indexPredictedPairs(pairScoring.correct_pairs);
+  validatePayloadScoringInputs(manifestSample, adapterResult, pairScoring);
+  if (!isWordlistVersion(wordlistVersion)) {
+    throw new RangeError("decoder_wordlist_version_unavailable");
+  }
+  const wordlist = loadWordlist(wordlistVersion);
+  const predictedPairByTruth = indexCorrectPairs(pairScoring.correct_pairs);
+  const candidatesByPair = groupCandidates(adapterResult.candidates);
 
   let exactNumerator = 0;
   let exactDenominator = 0;
@@ -203,45 +138,34 @@ export function scorePayloadObservations(
   const falseValidCases = [];
 
   for (const truth of manifestSample.ground_truth_codes) {
-    const { pairCandidates, top1 } = selectTopCandidate(
+    const predictedPairId = predictedPairByTruth.get(truth.pair_id);
+    const score = scoreTruthObservation(
       truth,
-      predictedPairByTruth,
-      adapterResult,
+      candidatesByPair.get(predictedPairId) ?? [],
+      wordlist,
     );
-    // Filtering is stable; the adapter's original engine order defines top-1.
-    const decoded = decodeTop1(top1, wordlist);
-    const scored = scoreTruthObservation(truth, decoded);
-    editDistance += scored.distance;
-    referenceCodePointCount += scored.referenceLength;
-    partWordNumerator += scored.partWordAccuracy.numerator;
-    partWordDenominator += scored.partWordAccuracy.denominator;
-
-    if (scored.hasCanonicalTruth) {
+    editDistance += score.editDistance;
+    referenceCodePointCount += score.referenceCodePointCount;
+    partWordNumerator += score.partWordAccuracy.numerator;
+    partWordDenominator += score.partWordAccuracy.denominator;
+    observations.push(score.observation);
+    if (score.exactCorrect !== null) {
       exactDenominator += 1;
-      if (scored.exactCorrect) exactNumerator += 1;
+      if (score.exactCorrect) exactNumerator += 1;
+    }
+    if (score.falseValidDecode !== null) {
       falseValidDenominator += 1;
-      if (scored.isFalseValid) {
+      if (score.falseValidDecode) {
         falseValidNumerator += 1;
         falseValidCases.push({
           device_matrix_entry_id: adapterResult.device_matrix_entry_id,
           sample_id: manifestSample.sample_id,
           pair_id: truth.pair_id,
           expected_code: truth.canonical_code,
-          observed_code: decoded.canonical,
+          observed_code: score.observedCode,
         });
       }
     }
-
-    observations.push({
-      pair_id: truth.pair_id,
-      candidate_count: pairCandidates.length,
-      top1_candidate_id: top1?.candidate_id ?? null,
-      exact_code_correct: scored.exactCorrect,
-      character_edit_distance: scored.distance,
-      reference_code_point_count: scored.referenceLength,
-      part_word_accuracy: scored.partWordAccuracy,
-      false_valid_decode: scored.hasCanonicalTruth ? scored.isFalseValid : null,
-    });
   }
 
   return {
@@ -261,5 +185,85 @@ export function scorePayloadObservations(
     },
     false_valid_decode_rate: rate(falseValidNumerator, falseValidDenominator),
     false_valid_cases: falseValidCases,
+  };
+}
+
+function validatePayloadScoringInputs(
+  manifestSample,
+  adapterResult,
+  pairScoring,
+) {
+  if (
+    !manifestSample ||
+    !adapterResult ||
+    manifestSample.sample_id !== adapterResult.sample_id ||
+    !Array.isArray(manifestSample.ground_truth_codes) ||
+    !Array.isArray(adapterResult.candidates) ||
+    !Array.isArray(pairScoring?.correct_pairs)
+  ) {
+    throw new TypeError("payload_scoring_inputs_invalid");
+  }
+}
+
+function indexCorrectPairs(correctPairs) {
+  const predictedPairByTruth = new Map();
+  for (const pair of correctPairs) {
+    if (
+      typeof pair.truth_pair_id !== "string" ||
+      typeof pair.predicted_pair_id !== "string" ||
+      predictedPairByTruth.has(pair.truth_pair_id)
+    ) {
+      throw new TypeError("payload_pair_mapping_invalid");
+    }
+    predictedPairByTruth.set(pair.truth_pair_id, pair.predicted_pair_id);
+  }
+  return predictedPairByTruth;
+}
+
+function groupCandidates(candidates) {
+  const byPair = new Map();
+  for (const candidate of candidates) {
+    if (typeof candidate.pair_id !== "string") continue;
+    const group = byPair.get(candidate.pair_id) ?? [];
+    group.push(candidate);
+    byPair.set(candidate.pair_id, group);
+  }
+  return byPair;
+}
+
+function scoreTruthObservation(truth, candidates, wordlist) {
+  // Candidate arrays retain adapter order, so index zero is the gated top-1.
+  const top1 = candidates[0];
+  const decoded = decodeTop1(top1, wordlist);
+  const referenceLength = codePoints(truth.literal_payload).length;
+  const distance = levenshteinDistance(decoded.rawText, truth.literal_payload);
+  const partWordScore = partWordAccuracy(
+    truth.literal_payload,
+    decoded.rawText,
+  );
+  const hasCanonicalTruth = typeof truth.canonical_code === "string";
+  const exactCorrect = hasCanonicalTruth
+    ? decoded.canonical === truth.canonical_code
+    : null;
+  const falseValidDecode = hasCanonicalTruth
+    ? decoded.falseValidEligible && decoded.canonical !== truth.canonical_code
+    : null;
+  return {
+    editDistance: distance,
+    referenceCodePointCount: referenceLength,
+    exactCorrect,
+    falseValidDecode,
+    observedCode: decoded.canonical,
+    partWordAccuracy: partWordScore,
+    observation: {
+      pair_id: truth.pair_id,
+      candidate_count: candidates.length,
+      top1_candidate_id: top1?.candidate_id ?? null,
+      exact_code_correct: exactCorrect,
+      character_edit_distance: distance,
+      reference_code_point_count: referenceLength,
+      part_word_accuracy: partWordScore,
+      false_valid_decode: falseValidDecode,
+    },
   };
 }

@@ -1,43 +1,21 @@
 import type { Fiducial } from "./ocr-qualification-matching.mjs";
 
-export function scoreFiducialObservation(
-  predictions: Fiducial[],
-  truths: Fiducial[],
-  fiducialIouThreshold: number,
-): {
-  endpoint_precision: {
-    numerator: number;
-    denominator: number;
-    rate: number | null;
-  };
-  endpoint_recall: {
-    numerator: number;
-    denominator: number;
-    rate: number | null;
-  };
+export type RateMetric = {
+  numerator: number;
+  denominator: number;
+  rate: number | null;
+};
+
+export type FiducialObservationScore = {
+  endpoint_precision: RateMetric;
+  endpoint_recall: RateMetric;
   false_finder_count: number;
-  false_finder_rate: {
-    numerator: number;
-    denominator: number;
-    rate: number | null;
-  };
+  false_finder_rate: RateMetric;
   missed_endpoint_count: number;
-  complete_pair_rate: {
-    numerator: number;
-    denominator: number;
-    rate: number | null;
-  };
-  pair_accuracy: {
-    numerator: number;
-    denominator: number;
-    rate: number | null;
-  };
+  complete_pair_rate: RateMetric;
+  pair_accuracy: RateMetric;
   false_pair_count: number;
-  false_pair_rate: {
-    numerator: number;
-    denominator: number;
-    rate: number | null;
-  };
+  false_pair_rate: RateMetric;
   endpoint_matches: Array<{
     prediction_index: number;
     truth_index: number;
@@ -48,3 +26,9 @@ export function scoreFiducialObservation(
   complete_truth_pair_count: number;
   detected_complete_truth_pair_count: number;
 };
+
+export function scoreFiducialObservation(
+  predictions: Fiducial[],
+  truths: Fiducial[],
+  fiducialIouThreshold: number,
+): FiducialObservationScore;
