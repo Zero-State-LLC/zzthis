@@ -2,6 +2,10 @@ import { readFile, writeFile } from "node:fs/promises";
 import { fileURLToPath } from "node:url";
 import path from "node:path";
 import {
+  renderQualificationMarkdownReport,
+  sha256MarkdownReport,
+} from "./ocr-qualification-markdown-report.mjs";
+import {
   ARGUMENT_NAMES,
   inspectQualification,
   REQUIRED_INPUTS,
@@ -28,8 +32,11 @@ function parseArgs(args) {
     const name = Object.keys(ARGUMENT_NAMES).find(
       (inputName) => ARGUMENT_NAMES[inputName] === key.slice(2),
     );
-    if (!name && key !== "--output") throw new Error("invalid_arguments");
-    const optionName = name ?? "output";
+    if (!name && key !== "--output" && key !== "--markdown-report") {
+      throw new Error("invalid_arguments");
+    }
+    const optionName =
+      name ?? (key === "--output" ? "output" : "markdownReport");
     if (Object.hasOwn(options, optionName))
       throw new Error("duplicate_argument");
     options[optionName] = args[index + 1];
@@ -45,7 +52,7 @@ function usage() {
   return [
     "Usage: npm run qual:ocr -- \\",
     ...REQUIRED_INPUTS.map((name) => `  --${ARGUMENT_NAMES[name]} <path>`),
-    "  [--output <path>]",
+    "  [--output <path>] [--markdown-report <path>]",
     "",
     "This preflight checks Sigstore bundles when Cosign is available and reports diagnostic final-split scores/gates only after structural validation and pinned decoder replay pass. It always returns INCOMPLETE/NO_PROMOTION until protected policy, trusted workflow timing, independent review, and receipt generation/validation are established.",
   ].join("\n");
@@ -102,6 +109,15 @@ async function main() {
     rawInputBytes,
   });
   report.reason_codes = [...new Set([...reasonCodes, ...report.reason_codes])];
+
+  if (options.markdownReport) {
+    const markdown = renderQualificationMarkdownReport(report);
+    await writeFile(options.markdownReport, markdown, {
+      encoding: "utf8",
+      mode: 0o600,
+    });
+    report.diagnostic_markdown_sha256 = sha256MarkdownReport(markdown);
+  }
 
   if (options.output) {
     await writeFile(options.output, `${JSON.stringify(report, null, 2)}\n`, {
