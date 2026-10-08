@@ -1,15 +1,15 @@
 <p align="center">
   <a href="https://zero-state-llc.github.io/zzthis/">
     <picture>
-      <source media="(prefers-color-scheme: light)" srcset="docs/readme/banner-light.webp">
-      <img src="docs/readme/banner-dark.webp" alt="The zzThis home page: the headline 'Barcodes made things scannable. zzThis makes them writable, and smart.' beside a crate with the code zz-copper-lantern-sky-zz written on blue tape." width="100%">
+      <source media="(prefers-color-scheme: light)" srcset="public/images/logos/zzthis-logo-on-light.webp">
+      <img src="public/images/logos/zzthis-logo-on-dark.webp" alt="zzThis wordmark, with orange “zz” and “this” in black or white for the selected theme." width="480">
     </picture>
   </a>
 </p>
 
 # zzThis
 
-**Write a code on a thing; find its record by camera, typing, or voice.**
+**Write a code on a thing; connect it to a record, then look it up.**
 
 [Live site](https://zero-state-llc.github.io/zzthis/) · [Demo](https://zero-state-llc.github.io/zzthis/demo/) · [Project board](https://github.com/orgs/Zero-State-LLC/projects/25) · [Specs](specs/README.md) · [Spec source](docs/SPEC.md)
 
@@ -45,7 +45,7 @@ zzThis is a **prototype**.
 - The code library ([`packages/zz-core`](packages/zz-core/)), the `/v1` API server ([`workers/api`](workers/api/)), and the web client ([`apps/web`](apps/web/)) are implemented in this repository and pass their tests ([spec 005](specs/005-v1-api/spec.md)). The API and web client are deployed only to isolated staging; production deployment remains gated by the operator requirements in [`AGENTS.md`](AGENTS.md).
 - The demo uses scripted demo data only. It runs no recognition, makes no network requests, uses no camera or microphone, and stores nothing.
 - Images labeled "Concept illustration" are AI renderings, not photos of a working system.
-- Camera and voice recognition ([spec 004](specs/004-capture/spec.md)) are not built, and the on-device reader is off in v1. Typed lookup is available in the web client. No recognition accuracy or performance result is claimed.
+- Typed lookup is available in the web client. On-device camera recognition is planned for v1 but is not implemented yet; voice recognition is outside v1. The current OCR decision set in draft [PR #89](https://github.com/Zero-State-LLC/zzthis/pull/89) keeps raw photos on-device, uses a shared grammar/check-word validator, and sends only the canonical decoded code to the API. There is no cloud/server vision fallback. No recognition accuracy or performance result is claimed.
 
 ## Quick start
 
@@ -157,7 +157,7 @@ The marketing site and the demo are static and call no API. The server and the c
 ```mermaid
 flowchart LR
   subgraph Clients["API clients"]
-    Phone["Phone app<br/>on-device recognition"]
+    Phone["Phone app<br/>on-device recognition (planned)"]
     Web["Web app"]
     Partner["Partner systems"]
   end
@@ -167,17 +167,12 @@ flowchart LR
   subgraph Core["Central server (source of truth)"]
     API["Write and signing API<br/>issue, revoke, version, grants"]
     DB[("Portable SQL<br/>codes, records, record_versions,<br/>grants, audit_events")]
-    Blob[("Object storage<br/>photos for retries and review")]
-    Vision["Cloud vision model<br/>hard cases only"]
   end
   Phone -->|"decoded code"| Read
   Web --> Read
   Partner --> Read
   Read -->|"writes, signing, misses"| API
   API --> DB
-  API --> Blob
-  Phone -.->|"photo on retry or hard case"| API
-  API -.-> Vision
 ```
 
 ## Roadmap
@@ -212,7 +207,8 @@ Track work on the live [zzThis + zzThat board](https://github.com/orgs/Zero-Stat
 - [x] Wordlist pipeline and check-word library ([#14](https://github.com/Zero-State-LLC/zzthis/issues/14), [`packages/zz-core`](packages/zz-core/))
 - [x] Minimal exact-match resolver ([#13](https://github.com/Zero-State-LLC/zzthis/issues/13), [`workers/api`](workers/api/))
 - [x] Typed lookup in the web client (spec 005 US6)
-- [ ] Camera and voice recognition (spec 004); on-device camera reader is off in v1
+- [ ] On-device camera recognition (spec 004): planned for v1, not implemented yet. iOS baseline is Apple Vision; Android engine selection is gated by a shared frozen-corpus qualification. Raw photos stay on-device; no cloud/server vision fallback (draft [PR #89](https://github.com/Zero-State-LLC/zzthis/pull/89)).
+- [ ] Voice recognition is future scope, not v1.
 - [x] `/v1` API ([spec 005](specs/005-v1-api/spec.md)): contract shell ([#60](https://github.com/Zero-State-LLC/zzthis/issues/60)), data model ([#61](https://github.com/Zero-State-LLC/zzthis/issues/61)), sign-in ([#62](https://github.com/Zero-State-LLC/zzthis/issues/62)), mint and re-roll ([#63](https://github.com/Zero-State-LLC/zzthis/issues/63)), resolve and owner records ([#64](https://github.com/Zero-State-LLC/zzthis/issues/64)), retry photo ([#65](https://github.com/Zero-State-LLC/zzthis/issues/65)), rate limits ([#66](https://github.com/Zero-State-LLC/zzthis/issues/66))
 - [x] Later web client in this repo, thin client of `/v1` ([#67](https://github.com/Zero-State-LLC/zzthis/issues/67), [`apps/web`](apps/web/), spec 005 US6)
 - [ ] zzThat phone apps, specified in that repo, consume this API and [`design/`](design/README.md)
