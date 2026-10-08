@@ -1,0 +1,12 @@
+title = "zzthis security scanning"
+
+[extend]
+useDefault = true
+
+[[allowlists]]
+description = "Exact historical false positive: OCR gate threshold field label"
+condition = "AND"
+commits = ["ab3983ab952ddaa5974247bb8469bb63658285fa"]
+paths = ['''^scripts/ocr-qualification/receipt-semantics\\.mjs$''']
+regexTarget = "line"
+regexes = ['''^\\s*thresholdKey: "max_p95_latency_ms",\\s*$''']
