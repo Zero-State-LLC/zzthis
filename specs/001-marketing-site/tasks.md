@@ -82,3 +82,15 @@ Reference: `docs/redesign-2026-10-03/b-resolver-v1/`. Copy and layout: `docs/SPE
 - [x] T035 Self-host IBM Plex Sans Condensed and Hebrew through `@fontsource`. Ship Korean and Japanese as committed woff2 subsets of the glyphs the language examples use, not the full `@fontsource` faces. No other origin at runtime.
 - [x] T036 Rebuild Home, About, and Applications in the B layout. Move header, footer, theme toggle, and tokens to that system on every page. Leave How it works, demo, contact, and 404 content as they are.
 - [x] T037 Home console: `src/lib/grammar.ts` and `src/lib/resolver.ts` unchanged, exact match only, coming-later note for letters outside A–Z, simulated camera and voice, reduced motion.
+
+## Phase 12: Michael's 2026-10-07 changes
+
+Intent: `intent/2026-10-07-michael-content-changes.md`. Copy and layout: `docs/SPEC.md` Sections 3.2 (H.1b, H.8, H.9), 3.5, 3.8, 5.1, and 5.5; decision D-2026-10-07-01.
+
+- [x] T038 Home: only "zz" orange in both anatomy headings; the markers paragraph ending; "zz- In - any - language -zz"; the "About and people" H2 at the "Contact" H2 size; the Home contact email at about half size.
+- [x] T039 About: zzthis.com in place of zzthing.com with the header's theme-aware zzThis wordmarks, the commercial-use line, and the new label; the lowercase zzThat wordmark; the founder bio and Hacker Dojo paragraph replaced as given.
+- [x] T040 About: Omer F. Yalcin as the fifth advisor, with headshot, LinkedIn link, and Michael's role line; content test updated to the new order.
+- [x] T041 All pages: dark by default for every visitor; the toggle switches the current page to light; nothing stored (FR-022).
+- [ ] T042 Replace Omer's bio and closing line with Michael's wording if he sends it (Q72, issue #116).
+- [ ] T043 `/demo` "Current prototypes": swap zzthing.com for zzthis.com only if Michael says so (Q73, issue #117).
+- [ ] T044 zzThat app parity (FR-022, `docs/SPEC.md` Section 5.5): the apps default to dark and use the lowercase zzThat wordmark wherever one appears. The change lands in the zzThat specs and apps, tracked on the zzThis + zzThat board.
