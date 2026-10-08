@@ -215,7 +215,10 @@
         "gate_results"
       ],
       "properties": {
-        "frozen_at_utc": { "type": "string", "format": "date-time" },
+        "frozen_at_utc": {
+          "type": ["string", "null"],
+          "format": "date-time"
+        },
         "pre_run_attestation_sha256": {
           "type": "string",
           "pattern": "^[a-f0-9]{64}$"
@@ -303,7 +306,9 @@
             "min_rectification_success_rate",
             "max_p95_latency_ms",
             "fiducial_iou_threshold",
-            "cer_normalization"
+            "cer_normalization",
+            "accept_min_confidence",
+            "retry_below_confidence"
           ],
           "properties": {
             "max_false_accept_count": { "const": 0 },
@@ -339,7 +344,17 @@
               "exclusiveMinimum": 0,
               "maximum": 1
             },
-            "cer_normalization": { "const": "nfc-code-points-v1" }
+            "cer_normalization": { "const": "nfc-code-points-v1" },
+            "accept_min_confidence": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            },
+            "retry_below_confidence": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            }
           }
         },
         "gate_results": {
@@ -484,6 +499,7 @@
           "release_gates": {
             "type": "object",
             "properties": {
+              "frozen_at_utc": { "type": "string", "format": "date-time" },
               "gate_results": {
                 "type": "array",
                 "items": {
@@ -513,7 +529,9 @@
                 "properties": { "status": { "const": "approved" } }
               }
             }
-          }
+          },
+          "false_accepts": { "maxItems": 0 },
+          "false_valid_cases": { "maxItems": 0 }
         },
         "required": ["promoted_engine", "approver", "pull_request"],
         "not": {
@@ -542,7 +560,12 @@
         "properties": { "disposition": { "enum": ["FAIL", "INCOMPLETE"] } },
         "required": ["disposition"]
       },
-      "then": { "properties": { "promoted_engine": { "const": null } } }
+      "then": {
+        "properties": {
+          "promoted_engine": { "const": null },
+          "no_promotion_reason": { "type": "string", "minLength": 1 }
+        }
+      }
     }
   ],
   "$defs": {
@@ -635,8 +658,8 @@
           "additionalProperties": false,
           "required": ["p50", "p95"],
           "properties": {
-            "p50": { "type": "number", "minimum": 0 },
-            "p95": { "type": "number", "minimum": 0 }
+            "p50": { "type": ["number", "null"], "minimum": 0 },
+            "p95": { "type": ["number", "null"], "minimum": 0 }
           }
         },
         "package_size_delta_bytes": { "type": ["integer", "null"] },

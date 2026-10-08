@@ -127,9 +127,13 @@
       "properties": {
         "candidate_id": { "type": "string", "minLength": 1 },
         "pair_id": { "type": ["string", "null"] },
-        "raw_text": { "type": "string" },
+        "raw_text": {
+          "description": "Payload text between the paired fiducials; the adapter does not include or infer the markers.",
+          "type": "string"
+        },
         "confidence_status": { "enum": ["available", "not-available"] },
         "confidence": {
+          "description": "Normalized conservative candidate confidence: the minimum meaningful confidence across all payload parts, including the check word. If the engine exposes line-level scores, parts inherit their line score before taking the minimum. If a meaningful score is unavailable, confidence_status is not-available and confidence is null; do not synthesize a score.",
           "type": ["number", "null"],
           "minimum": 0,
           "maximum": 1
@@ -162,6 +166,8 @@
         "os_version",
         "device_class",
         "elapsed_ms",
+        "runtime_outcome",
+        "runtime_memory_bytes",
         "fiducials",
         "rois",
         "candidates",
@@ -178,6 +184,12 @@
         "os_version": { "type": "string", "minLength": 1 },
         "device_class": { "type": "string", "minLength": 1 },
         "elapsed_ms": { "type": "number", "minimum": 0 },
+        "runtime_outcome": { "enum": ["completed", "crash", "exception"] },
+        "runtime_memory_bytes": {
+          "type": ["integer", "null"],
+          "minimum": 0,
+          "description": "Peak measured runtime memory for this observation, or null when unavailable."
+        },
         "fiducials": {
           "type": "array",
           "items": { "$ref": "#/$defs/fiducialDetection" }

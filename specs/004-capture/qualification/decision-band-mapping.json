@@ -1,0 +1,46 @@
+{
+  "schema_version": 1,
+  "qualification_id": "ZZ-OCR-QUAL-001",
+  "confidence": {
+    "meaning": "minimum-meaningful-confidence-across-payload-parts-including-check-word",
+    "missing": "clarify",
+    "retry_below_config_key": "retry_below_confidence",
+    "accept_at_or_above_config_key": "accept_min_confidence"
+  },
+  "capture_issues": {
+    "missing-marker": "retry",
+    "cutoff-marker": "retry",
+    "blur": "retry",
+    "glare": "retry",
+    "bare-mark": "abstain"
+  },
+  "precedence": [
+    "bare-mark-abstain",
+    "explicit-unreadable-capture-issue-retry",
+    "no-candidate-retry",
+    "invalid-thresholds-abstain",
+    "invalid-hypothesis-count-abstain",
+    "multiple-hypotheses-clarify",
+    "malformed-payload-grammar-abstain",
+    "handle-name-field-or-near-word-clarify",
+    "wrong-check-word-length-abstain",
+    "check-word-mismatch-or-unknown-word-clarify",
+    "missing-confidence-clarify",
+    "confidence-below-retry-threshold-retry",
+    "confidence-below-accept-threshold-clarify",
+    "otherwise-accept"
+  ],
+  "confidence_intervals": {
+    "retry": "confidence < retry_below_confidence",
+    "clarify": "retry_below_confidence <= confidence < accept_min_confidence",
+    "accept": "confidence >= accept_min_confidence"
+  },
+  "manual_confirmation_classes": ["field", "handle", "name", "confirm"],
+  "checkword": {
+    "ok": "continue-to-confidence",
+    "check-mismatch": "clarify",
+    "unknown-word": "clarify",
+    "wrong-length": "abstain"
+  },
+  "resolver": "never-consulted-or-used-to-change-a-decoded-candidate"
+}

@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "qualification_id": "ZZ-OCR-QUAL-001",
-  "manifest_sha256": "a4de21e6a6c7ec8d5bbfbeac428f1e54403ee2e0667b9dd904d0e3d9a3e154b9",
+  "manifest_sha256": "a8cb271b84dec17ccd4330dc08dd715d9bba5d2025c0435853a5af3cf59a86f4",
   "candidate_id": "synthetic-fixture-ios-001",
   "candidate_bundle_sha256": "b4df37a02696c03adbe752695d8c0707b6b6e17cb1db07053dd7b08f5ace0d4d",
   "adapter": {
@@ -24,6 +24,8 @@
       "os_version": "fixture",
       "device_class": "simulator-fixture",
       "elapsed_ms": 12.5,
+      "runtime_outcome": "completed",
+      "runtime_memory_bytes": null,
       "fiducials": [
         {
           "detection_id": "d-open-1",
@@ -73,6 +75,8 @@
       "os_version": "fixture",
       "device_class": "simulator-fixture",
       "elapsed_ms": 8,
+      "runtime_outcome": "completed",
+      "runtime_memory_bytes": null,
       "fiducials": [
         {
           "detection_id": "d-open-2",

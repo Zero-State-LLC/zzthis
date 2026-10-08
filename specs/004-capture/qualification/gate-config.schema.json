@@ -57,7 +57,9 @@
         "min_rectification_success_rate",
         "max_p95_latency_ms",
         "fiducial_iou_threshold",
-        "cer_normalization"
+        "cer_normalization",
+        "accept_min_confidence",
+        "retry_below_confidence"
       ],
       "properties": {
         "max_false_accept_count": { "const": 0 },
@@ -85,7 +87,19 @@
           "exclusiveMinimum": 0,
           "maximum": 1
         },
-        "cer_normalization": { "const": "nfc-code-points-v1" }
+        "cer_normalization": { "const": "nfc-code-points-v1" },
+        "accept_min_confidence": {
+          "description": "Parameter used by the pinned decision-band mapping; prototype default from Q37 is 0.80.",
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "retry_below_confidence": {
+          "description": "Parameter used by the pinned decision-band mapping; prototype default from Q37 is 0.50 and must be less than accept_min_confidence.",
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        }
       }
     }
   },

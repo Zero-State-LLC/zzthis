@@ -1,5 +1,6 @@
 export * from "./checkword.ts";
 export * from "./classify.ts";
+export * from "./decisionBand.ts";
 export * from "./distance.ts";
 export * from "./grammar.ts";
 export * from "./issuer.ts";

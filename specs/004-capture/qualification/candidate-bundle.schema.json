@@ -54,13 +54,28 @@
         "band_mapping_sha256"
       ],
       "properties": {
-        "commit": { "$ref": "#/$defs/commit" },
+        "commit": {
+          "description": "Full 40-character Git commit for the clean source checkout used by decoder replay. The commit identifies parser, classifier, check-word, and decision-band implementation source.",
+          "$ref": "#/$defs/commit"
+        },
         "wordlist_version": { "type": "string", "minLength": 1 },
-        "wordlist_sha256": { "$ref": "#/$defs/sha256" },
+        "wordlist_sha256": {
+          "description": "SHA-256 over exact repository file bytes of packages/zz-core/src/generated/wordlists.ts.",
+          "$ref": "#/$defs/sha256"
+        },
         "checkword_version": { "type": "string", "minLength": 1 },
-        "checkword_sha256": { "$ref": "#/$defs/sha256" },
-        "vectors_sha256": { "$ref": "#/$defs/sha256" },
-        "band_mapping_sha256": { "$ref": "#/$defs/sha256" }
+        "checkword_sha256": {
+          "description": "SHA-256 over exact repository file bytes of packages/zz-core/src/checkword.ts.",
+          "$ref": "#/$defs/sha256"
+        },
+        "vectors_sha256": {
+          "description": "SHA-256 over exact repository file bytes of specs/003-wordlist-checkword/vectors.json.",
+          "$ref": "#/$defs/sha256"
+        },
+        "band_mapping_sha256": {
+          "description": "SHA-256 over exact repository file bytes of specs/004-capture/qualification/decision-band-mapping.json. The commit pins executable implementation; this file pins the reviewed mapping policy.",
+          "$ref": "#/$defs/sha256"
+        }
       }
     }
   },

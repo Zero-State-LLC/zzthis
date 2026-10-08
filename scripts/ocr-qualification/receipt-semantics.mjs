@@ -5,6 +5,7 @@ import {
   hasValidFrozenInputs,
   validateFrozenReleaseConfig,
 } from "./receipt-frozen-inputs.mjs";
+import { validateReceiptDisposition } from "./receipt-disposition.mjs";
 
 const receiptSchema = JSON.parse(
   readFileSync(
@@ -192,8 +193,8 @@ export function validateReceiptSemantics(
 ) {
   const errors = [];
 
-  if (!isRecord(receipt) || receipt.disposition !== "PASS") {
-    return incomplete("semantic gate only accepts a candidate PASS receipt");
+  if (!isRecord(receipt)) {
+    return incomplete("receipt must be an object");
   }
   if (!isRecord(gateConfig) || !isRecord(deviceMatrix)) {
     return incomplete("frozen gate config and device matrix are required");
@@ -233,20 +234,7 @@ export function validateReceiptSemantics(
       authorizesPromotion: false,
     };
   }
-  if (gateFailures.length > 0 || receipt.false_accepts.length > 0) {
-    return {
-      status: "NO_PROMOTION",
-      errors: [],
-      gateFailures,
-      authorizesPromotion: false,
-    };
-  }
-  return {
-    status: "SEMANTIC_CHECKS_PASS",
-    errors: [],
-    gateFailures: [],
-    authorizesPromotion: false,
-  };
+  return validateReceiptDisposition(receipt, gateFailures);
 }
 
 function incomplete(message) {
