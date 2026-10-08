@@ -34,8 +34,10 @@ function validateScore(scored) {
       (!Number.isFinite(scored.roi_mean_iou) ||
         scored.roi_mean_iou < 0 ||
         scored.roi_mean_iou > 1)) ||
+    (scored.roi_truth_count === 0 && scored.roi_mean_iou !== null) ||
     (scored.rectification_denominator !== null &&
-      scored.rectification_denominator !== scored.roi_truth_count)
+      (scored.rectification_denominator !== scored.roi_truth_count ||
+        scored.rectification_success_count > scored.rectification_denominator))
   ) {
     throw new TypeError("roi_scored_observation_metrics_invalid");
   }

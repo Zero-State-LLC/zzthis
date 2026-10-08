@@ -83,4 +83,16 @@ describe("OCR qualification fiducial aggregation", () => {
       "invalid_fiducial_metric_count:denominator",
     );
   });
+
+  it("rejects inconsistent per-sample count and rate fields", () => {
+    const row = scored("s1", "device-a", "final", [1, 2], [1, 1]);
+    row.false_finder_count = 0;
+
+    expect(() =>
+      aggregateFiducialScoring(
+        [row],
+        [{ sample_id: "s1", split: "final", stress_tags: [] }],
+      ),
+    ).toThrow("fiducial_observation_count_mismatch");
+  });
 });

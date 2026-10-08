@@ -64,4 +64,15 @@ describe("OCR qualification ROI and latency aggregation", () => {
       "duplicate_roi_device_sample_observation",
     );
   });
+
+  it("rejects a mean IoU without any truth ROIs", () => {
+    const row = scored("s1", "device-a", 0.5, 0, 0, 0, []);
+
+    expect(() =>
+      aggregateRoiLatencyScoring(
+        [row],
+        [{ sample_id: "s1", split: "final", stress_tags: [] }],
+      ),
+    ).toThrow("roi_scored_observation_metrics_invalid");
+  });
 });

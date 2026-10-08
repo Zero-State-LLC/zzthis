@@ -54,6 +54,20 @@ function applyObservation(accumulator, scored) {
   addCount(accumulator, "false_finder_count", scored.false_finder_count);
   addCount(accumulator, "missed_endpoint_count", scored.missed_endpoint_count);
   addCount(accumulator, "false_pair_count", scored.false_pair_count);
+  if (
+    scored.endpoint_precision.numerator !== scored.endpoint_recall.numerator ||
+    scored.false_finder_count !== scored.false_finder_rate.numerator ||
+    scored.false_finder_rate.denominator !==
+      scored.endpoint_precision.denominator ||
+    scored.missed_endpoint_count !==
+      scored.endpoint_recall.denominator - scored.endpoint_recall.numerator ||
+    scored.false_pair_count !== scored.false_pair_rate.numerator ||
+    scored.false_pair_rate.denominator !== scored.pair_accuracy.denominator ||
+    scored.false_pair_count !==
+      scored.pair_accuracy.denominator - scored.pair_accuracy.numerator
+  ) {
+    throw new TypeError("fiducial_observation_count_mismatch");
+  }
 }
 
 function finalize(accumulator) {
