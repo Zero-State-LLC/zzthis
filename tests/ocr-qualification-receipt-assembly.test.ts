@@ -1,8 +1,49 @@
+import {
+  chmod,
+  mkdtemp,
+  readFile,
+  rm,
+  stat,
+  writeFile,
+} from "node:fs/promises";
+import os from "node:os";
+import path from "node:path";
 import { describe, expect, it } from "vitest";
 import { assembleIncompleteQualificationReceipt } from "../scripts/ocr-qualification-receipt-assembly.mjs";
-import { publicDiagnosticReport } from "../scripts/ocr-qualification-cli.mjs";
+import {
+  assertDistinctOutputPaths,
+  publicDiagnosticReport,
+  writePrivateFile,
+} from "../scripts/ocr-qualification-cli.mjs";
 
 describe("incomplete OCR qualification receipt assembly", () => {
+  it("atomically replaces an existing output with restrictive permissions", async () => {
+    const directory = await mkdtemp(
+      path.join(os.tmpdir(), "zzthis-ocr-private-"),
+    );
+    const filePath = path.join(directory, "receipt.json");
+    try {
+      await writeFile(filePath, "old public contents");
+      await chmod(filePath, 0o644);
+
+      await writePrivateFile(filePath, "private receipt");
+
+      expect(await readFile(filePath, "utf8")).toBe("private receipt");
+      expect((await stat(filePath)).mode & 0o777).toBe(0o600);
+    } finally {
+      await rm(directory, { recursive: true, force: true });
+    }
+  });
+
+  it("rejects output paths that would overwrite one another", () => {
+    expect(() =>
+      assertDistinctOutputPaths({
+        output: "./qualification.json",
+        receiptOutput: path.resolve("qualification.json"),
+      }),
+    ).toThrow("output_paths_must_be_distinct");
+  });
+
   it("keeps per-sample OCR and receipt details out of stdout diagnostics", () => {
     const report = publicDiagnosticReport({
       qualification_scoring: {

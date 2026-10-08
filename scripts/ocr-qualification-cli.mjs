@@ -1,4 +1,5 @@
-import { readFile, writeFile } from "node:fs/promises";
+import { randomUUID } from "node:crypto";
+import { open, readFile, rename, unlink } from "node:fs/promises";
 import { fileURLToPath } from "node:url";
 import path from "node:path";
 import {
@@ -18,6 +19,46 @@ const OUTPUT_ARGUMENTS = {
   "--receipt-output": "receiptOutput",
   "--receipt-report": "receiptReport",
 };
+const OUTPUT_OPTION_NAMES = [
+  "output",
+  "markdownReport",
+  "receiptOutput",
+  "receiptReport",
+];
+
+export async function writePrivateFile(filePath, content) {
+  const destination = path.resolve(filePath);
+  const temporary = path.join(
+    path.dirname(destination),
+    `.${path.basename(destination)}.${randomUUID()}.tmp`,
+  );
+  let handle;
+  try {
+    handle = await open(temporary, "wx", 0o600);
+    await handle.writeFile(content, { encoding: "utf8" });
+    await handle.chmod(0o600);
+    await handle.sync();
+    await handle.close();
+    handle = undefined;
+    await rename(temporary, destination);
+  } catch (error) {
+    if (handle) await handle.close().catch(() => {});
+    await unlink(temporary).catch(() => {});
+    throw error;
+  }
+}
+
+export function assertDistinctOutputPaths(options) {
+  const paths = new Set();
+  for (const name of OUTPUT_OPTION_NAMES) {
+    if (!options[name]) continue;
+    const destination = path.resolve(options[name]);
+    const key =
+      process.platform === "darwin" ? destination.toLowerCase() : destination;
+    if (paths.has(key)) throw new Error("output_paths_must_be_distinct");
+    paths.add(key);
+  }
+}
 
 export function publicDiagnosticReport(report) {
   const result = { ...report };
@@ -75,6 +116,7 @@ function parseArgs(args) {
   for (const name of REQUIRED_INPUTS) {
     if (!options[name]) throw new Error(`argument_missing:${name}`);
   }
+  assertDistinctOutputPaths(options);
   return options;
 }
 
@@ -142,10 +184,7 @@ async function main() {
 
   if (options.markdownReport) {
     const markdown = renderQualificationMarkdownReport(report);
-    await writeFile(options.markdownReport, markdown, {
-      encoding: "utf8",
-      mode: 0o600,
-    });
+    await writePrivateFile(options.markdownReport, markdown);
     report.diagnostic_markdown_sha256 = sha256MarkdownReport(markdown);
   }
 
@@ -155,30 +194,26 @@ async function main() {
       process.stderr.write("qualification_receipt_unavailable\n");
     } else {
       if (options.receiptOutput) {
-        await writeFile(
+        await writePrivateFile(
           options.receiptOutput,
           `${JSON.stringify(
             { receipt: artifact.receipt, validation: artifact.validation },
             null,
             2,
           )}\n`,
-          { encoding: "utf8", mode: 0o600 },
         );
       }
       if (options.receiptReport) {
-        await writeFile(options.receiptReport, artifact.markdown, {
-          encoding: "utf8",
-          mode: 0o600,
-        });
+        await writePrivateFile(options.receiptReport, artifact.markdown);
       }
     }
   }
 
   if (options.output) {
-    await writeFile(options.output, `${JSON.stringify(report, null, 2)}\n`, {
-      encoding: "utf8",
-      mode: 0o600,
-    });
+    await writePrivateFile(
+      options.output,
+      `${JSON.stringify(report, null, 2)}\n`,
+    );
   } else {
     process.stdout.write(
       `${JSON.stringify(publicDiagnosticReport(report), null, 2)}\n`,
