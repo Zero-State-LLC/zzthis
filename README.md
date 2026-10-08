@@ -1,5 +1,5 @@
 <p align="center">
-  <a href="https://zero-state-llc.github.io/zzthis/">
+  <a href="https://zzthis.com/">
     <picture>
       <source media="(prefers-color-scheme: light)" srcset="docs/readme/banner-light.webp">
       <img src="docs/readme/banner-dark.webp" alt="The zzThis home page: the headline 'Barcodes made things scannable. zzThis makes them writable, and smart.' beside a crate with the code zz-copper-lantern-sky-zz written on blue tape." width="100%">
@@ -11,7 +11,7 @@
 
 **Write a code on a thing; find its record by camera, typing, or voice.**
 
-[Live site](https://zero-state-llc.github.io/zzthis/) · [Demo](https://zero-state-llc.github.io/zzthis/demo/) · [Project board](https://github.com/orgs/Zero-State-LLC/projects/25) · [Specs](specs/README.md) · [Spec source](docs/SPEC.md)
+[Live site](https://zzthis.com/) · [Demo](https://zzthis.com/demo/) · [Project board](https://github.com/orgs/Zero-State-LLC/projects/25) · [Specs](specs/README.md) · [Spec source](docs/SPEC.md)
 
 [![build](https://img.shields.io/github/actions/workflow/status/Zero-State-LLC/zzthis/ci.yml?branch=main&label=build)](https://github.com/Zero-State-LLC/zzthis/actions/workflows/ci.yml)
 [![Pages deploy](https://img.shields.io/github/actions/workflow/status/Zero-State-LLC/zzthis/pages.yml?branch=main&label=pages)](https://github.com/Zero-State-LLC/zzthis/actions/workflows/pages.yml)
@@ -24,7 +24,7 @@ Topics: `human-readable-codes` `handwritten-codes` `logistics` `astro` `github-p
 
 zzThis is a human-readable, human-writable code that works alongside barcodes and QR codes. A person writes a code such as `zz-copper-lantern-sky-zz` on tape, a crate, a parcel, or a sign, links it to a digital record, and finds that record later.
 
-This repository holds the marketing site and a scripted click-through demo, published on GitHub Pages under `/zzthis/`. As separate npm workspaces it also holds the shared code library, the web client, and the `/v1` API server that the specs describe.
+This repository holds the marketing site and a scripted click-through demo, published on GitHub Pages at the root of the custom domain [zzthis.com](https://zzthis.com/). It goes live there once the DNS records and the Pages custom domain are set ([#6](https://github.com/Zero-State-LLC/zzthis/issues/6)). After that, GitHub redirects the old project-site URL `zero-state-llc.github.io/zzthis/` to it. As separate npm workspaces it also holds the shared code library, the web client, and the `/v1` API server that the specs describe.
 
 ## Contents
 
@@ -53,7 +53,7 @@ Requirements: Node 24 (CI uses Node 24; `package.json` allows 22.12 or later) an
 
 ```sh
 npm ci              # install exact versions from package-lock.json
-npm run dev         # start the dev server at http://localhost:4321/zzthis/
+npm run dev         # start the dev server at http://localhost:4321/
 npm run lint        # ESLint and Prettier check
 npm run typecheck   # astro check and tsc --noEmit
 npm run test        # Vitest; root coverage gates src/lib and demoMachine.ts; zz-core, web, and API workspaces gate their configured src/**/*.ts scopes
@@ -70,7 +70,7 @@ npm run e2e -w apps/web
 
 ### Base path
 
-The site is served under `/zzthis/`. `astro.config.mjs` sets `base: '/zzthis/'`, and every internal link and asset URL goes through `src/lib/url.ts`. Do not write root-absolute paths such as `/images/...` or `/demo`. `scripts/check-dist.mjs` fails the build on root-absolute links and on other spec checks against `dist/`.
+The site is served from the root of `https://zzthis.com`. `astro.config.mjs` sets `site: 'https://zzthis.com'` and `base: process.env.ASTRO_BASE ?? '/'`, so the default build emits root paths such as `/_astro/...`. The Cloudflare staging workflows set `ASTRO_BASE=/` explicitly, and `ASTRO_BASE` can still point a build at a subpath. Every internal link and asset URL goes through `src/lib/url.ts`, so do not write root-absolute paths such as `/images/...` or `/demo` by hand. `scripts/check-dist.mjs` fails the build on a leftover `/zzthis/` path or a link to the old `zero-state-llc.github.io` host at the root base, on root paths that miss a configured subpath base, and on other spec checks against `dist/`. The Pages custom domain is set in the repository's Settings > Pages, not by a `CNAME` file: `pages.yml` deploys with GitHub Actions, and GitHub ignores a `CNAME` file for Actions-built sites.
 
 ## Design tokens
 
@@ -188,7 +188,7 @@ Track work on the live [zzThis + zzThat board](https://github.com/orgs/Zero-Stat
 
 - [x] Write the spec ([#2](https://github.com/Zero-State-LLC/zzthis/issues/2))
 - [x] Marketing site ([#3](https://github.com/Zero-State-LLC/zzthis/issues/3)) and click-through demo ([#4](https://github.com/Zero-State-LLC/zzthis/issues/4)), shipped in [PR #9](https://github.com/Zero-State-LLC/zzthis/pull/9)
-- [x] Deploy on GitHub Pages under `/zzthis/`
+- [x] Deploy on GitHub Pages (project-site path `/zzthis/` until the zzthis.com cutover)
 - [x] Architecture proposal (SPEC Section 10) and Michael's content answers
 
 ### Phase 1: Site decisions and polish
@@ -198,7 +198,7 @@ Track work on the live [zzThis + zzThat board](https://github.com/orgs/Zero-Stat
 - [x] Code rules for case, spacing, the bare mark, and `@` handles ([#33](https://github.com/Zero-State-LLC/zzthis/issues/33), [#34](https://github.com/Zero-State-LLC/zzthis/issues/34); SPEC Section 2.2a)
 - [ ] Demo follows the v1 code rules (spec 001 T029)
 - [ ] Image asset curation ([#7](https://github.com/Zero-State-LLC/zzthis/issues/7))
-- [ ] Domain and DNS, needs Danny's yes ([#6](https://github.com/Zero-State-LLC/zzthis/issues/6))
+- [ ] Domain and DNS: serve the site from the root of zzthis.com ([#6](https://github.com/Zero-State-LLC/zzthis/issues/6)). Danny said yes on 2026-10-08. Done when the DNS records, the Pages custom domain, and HTTPS are verified.
 - [x] Spec Kit constitution and specs 001 to 004 ([PR #17](https://github.com/Zero-State-LLC/zzthis/pull/17), [`specs/`](specs/README.md))
 - [ ] Automate the remaining manual acceptance checks: contrast, reduced motion, Lighthouse, no cross-origin requests
 

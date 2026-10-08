@@ -94,3 +94,10 @@ Intent: `intent/2026-10-07-michael-content-changes.md`. Copy and layout: `docs/S
 - [ ] T042 Replace Omer's bio and closing line with Michael's wording if he sends it (Q72, issue #116).
 - [ ] T043 `/demo` "Current prototypes": swap zzthing.com for zzthis.com only if Michael says so (Q73, issue #117).
 - [ ] T044 zzThat app parity (FR-022, `docs/SPEC.md` Section 5.5): the apps default to dark and use the lowercase zzThat wordmark wherever one appears. The change lands in the zzThat specs and apps, tracked on the zzThis + zzThat board.
+
+## Phase 14: zzthis.com cutover (issue #6)
+
+Decision D-2026-10-08-02 in `docs/SPEC.md`; Section 6, Hosting; acceptance item 28. Danny said yes on 2026-10-08.
+
+- [x] T047 Root base: `astro.config.mjs` sets `site` to `https://zzthis.com` and the default `base` to `/`, keeping the `ASTRO_BASE` override; `scripts/check-dist.mjs` defaults to `/` and fails on a leftover `/zzthis/` path or a `zero-state-llc.github.io` link; tests cover the config and both bases.
+- [ ] T048 Cutover: Michael's DNS records live and verified, Danny sets the Pages custom domain, the T047 PR merges right away, Enforce HTTPS once the certificate is issued, then check `https://zzthis.com`, the `www` redirect, and the `zero-state-llc.github.io/zzthis/` redirect. Owner: Danny.

@@ -1,7 +1,7 @@
 # Feature spec: zzThis marketing site and scripted demo
 
 Feature ID: 001-marketing-site
-Status: built and live (OBSERVED 2026-10-03 at https://zero-state-llc.github.io/zzthis/, `main` at d721783 after PR #32). This file restates the requirements in `docs/SPEC.md` in Spec Kit form. It is pending Danny's approval through its PR, as the constitution's Governance section requires.
+Status: built and live (OBSERVED 2026-10-03 at https://zero-state-llc.github.io/zzthis/, `main` at d721783 after PR #32). The site moves to the root of https://zzthis.com once the DNS records and the Pages custom domain are set (issue #6, [DANNY 2026-10-08]). This file restates the requirements in `docs/SPEC.md` in Spec Kit form. It is pending Danny's approval through its PR, as the constitution's Governance section requires.
 Phase: specify (what and why). The how lives in [plan.md](plan.md). Work items live in [tasks.md](tasks.md).
 Constitution: [.specify/memory/constitution.md](../../.specify/memory/constitution.md).
 
@@ -63,7 +63,7 @@ Acceptance: `/contact`, the Home contact action, the About contact card, and the
 
 | ID | Requirement | Source |
 |---|---|---|
-| FR-001 | Routes `/`, `/how-it-works`, `/applications`, `/about`, `/contact`, and `/demo` exist under the base path `/zzthis/`. | [OPERATOR 2026-10-01] |
+| FR-001 | Routes `/`, `/how-it-works`, `/applications`, `/about`, `/contact`, and `/demo` exist under the configured base path: `/`, the root of https://zzthis.com (`/zzthis/` on the project site before the cutover). | [OPERATOR 2026-10-01] [DANNY 2026-10-08] |
 | FR-002 | Main navigation is How it works, Applications, About, Contact, in that order. The demo is not in the main nav. | [BRIEF] [MICHAEL 2026-10-02] |
 | FR-003 | The footer shows How it works, Applications, Demo, About, Contact, the contact email, and the words "Patent pending". | [MICHAEL 2026-10-02] |
 | FR-004 | Each page has exactly one H1; headings follow content hierarchy without skipping levels. | [BRIEF] |
@@ -101,11 +101,11 @@ The accepted acceptance criteria are `docs/SPEC.md` Section 8, items 1 to 31 (it
 - A visitor on a phone without JavaScript opens `/demo`. Expected result: the static step list (FR-012).
 - A visitor types `zz-구리-등불-하늘-zz` in the Home console. Expected result: the coming-later note, not "This is not a zz code", and the field is not marked invalid (FR-020).
 - A visitor types `zz-river-maple-sky-zz` with one letter changed. Expected result: "No match" and no other code (FR-013, FR-020).
-- An unknown path under `/zzthis/`. Expected result: `404.html` with working links.
+- An unknown path under the site root. Expected result: `404.html` with working links.
 
 ## Out of scope
 
-Real recognition, a real resolver, accounts, forms or email backends, analytics, a custom domain or DNS, the Technology page, the long founder history page, and the zzthing.com and zzthat.com apps [BRIEF] [OPERATOR 2026-10-01].
+Real recognition, a real resolver, accounts, forms or email backends, analytics, any domain or DNS beyond the zzthis.com records (issue #6), the Technology page, the long founder history page, and the zzthing.com and zzthat.com apps [BRIEF] [OPERATOR 2026-10-01].
 
 ## Open questions
 
