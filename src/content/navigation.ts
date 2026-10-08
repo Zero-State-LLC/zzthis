@@ -1,4 +1,4 @@
-export type NavKey = "how" | "applications" | "about" | "contact";
+export type NavKey = "how" | "applications" | "demo" | "about" | "contact";
 
 export interface NavItem {
   key: NavKey;
@@ -9,6 +9,8 @@ export interface NavItem {
 export const navItems: readonly NavItem[] = [
   { key: "how", label: "How it works", path: "how-it-works" },
   { key: "applications", label: "Applications", path: "applications" },
+  // [MICHAEL 2026-10-08] Demo joins the top menu, in the footer's order.
+  { key: "demo", label: "Demo", path: "demo" },
   { key: "about", label: "About", path: "about" },
   { key: "contact", label: "Contact", path: "contact" },
 ];

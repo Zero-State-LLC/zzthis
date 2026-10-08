@@ -64,7 +64,7 @@ Acceptance: `/contact`, the Home contact action, the About contact card, and the
 | ID | Requirement | Source |
 |---|---|---|
 | FR-001 | Routes `/`, `/how-it-works`, `/applications`, `/about`, `/contact`, and `/demo` exist under the configured base path: `/`, the root of https://zzthis.com (`/zzthis/` on the project site before the cutover). | [OPERATOR 2026-10-01] [DANNY 2026-10-08] |
-| FR-002 | Main navigation is How it works, Applications, About, Contact, in that order. The demo is not in the main nav. | [BRIEF] [MICHAEL 2026-10-02] |
+| FR-002 | Main navigation is How it works, Applications, Demo, About, Contact, in that order (the footer's order); `/demo` marks Demo as the current page. Menu links are about 30% larger than `--text-sm` (`calc(var(--text-sm) * 1.3)`), the header stays 64 px high, and the logo never shrinks. The full menu shows from 64rem (1024 px); below that, the "Menu" button opens it. This supersedes the 2026-10-02 rule that kept the demo out of the main nav (Q5). | [BRIEF] [MICHAEL 2026-10-02] [MICHAEL 2026-10-08] |
 | FR-003 | The footer shows How it works, Applications, Demo, About, Contact, the contact email, and the words "Patent pending". | [MICHAEL 2026-10-02] |
 | FR-004 | Each page has exactly one H1; headings follow content hierarchy without skipping levels. | [BRIEF] |
 | FR-005 | Copy in `copy` blocks of `docs/SPEC.md` ships verbatim. Copy lives in typed content objects so that it can change without layout edits. | [BRIEF] |
