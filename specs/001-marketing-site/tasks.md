@@ -109,6 +109,14 @@ Decision D-2026-10-08-02 in `docs/SPEC.md`; Section 6, Hosting; acceptance item 
 - [x] T047 Root base: `astro.config.mjs` sets `site` to `https://zzthis.com` and the default `base` to `/`, keeping the `ASTRO_BASE` override; `scripts/check-dist.mjs` defaults to `/` and fails on a leftover `/zzthis/` path or a `zero-state-llc.github.io` link; tests cover the config and both bases.
 - [ ] T048 Cutover: Michael's DNS records live and verified, Danny sets the Pages custom domain, the T047 PR merges right away, Enforce HTTPS once the certificate is issued, then check `https://zzthis.com`, the `www` redirect, and the `zero-state-llc.github.io/zzthis/` redirect. Owner: Danny.
 
+## Phase 15: Michael's 2026-10-08 footer and About changes
+
+Intent: `intent/2026-10-08-michael-footer-social.md`. Spec: `docs/SPEC.md` Sections 3.1, 3.1a, 3.2 (Footer), 3.5, and 5.5, acceptance items 3, 9, and 10; FR-003 and FR-009; decision D-2026-10-08-03.
+
+- [x] T049 About: remove Omer F. Yalcin's advisor card and photo (`src/content/people.ts`, `public/images/people/omer-yalcin.webp` deleted) until his employer gives permission; the content test checks the four-advisor order. Restore the entry and photo from #118 when permission arrives, using the Q72-approved bio (T042).
+- [x] T050 Footer, every page: inline-SVG social icons between the page links and the notice (`src/components/Footer.astro`, `src/content/navigation.ts`, `src/styles/b-bands.css`): X for zzThis (https://x.com/zzthisapp); the lowercase zzthat wordmark (`zzthatLogo` from `src/content/contact.ts`) with zzThat's Discord (https://discord.gg/sp7smSzq7) and Instagram (https://www.instagram.com/zzthatcom/). 18 px icons in 44 px tap targets, accessible names, empty links hidden; the content test checks the links and their ownership. Checked in dark and light at 1280 px and 390 px.
+- [ ] T051 Discord invite: the patch gives https://discord.gg/sp7smSzq7 as permanent, but on 2026-10-08 Discord's invite API reported an expiry of 2026-11-07 (UTC). Confirm with Michael that the zzThat server's invite is set to never expire, or replace `zzthatDiscordUrl` in `src/content/navigation.ts` with a never-expiring invite before then. Owner: Michael.
+
 ## Phase 16: Michael's 2026-10-08 About image set (v2)
 
 Intent: `intent/2026-10-08-michael-kathy-found-dog.md`. Spec: `docs/SPEC.md` Sections 2.1, 3.1a, 3.5, and 3.8; FR-023; decision D-2026-10-08-04. (Phase 15 is #125.)
