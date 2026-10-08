@@ -15,7 +15,7 @@ export interface TitledImage {
 export const coreIdentity = {
   heading: "How it works",
   intro:
-    "Core identity: MARK a lowercase zz code → READ it by camera or manual entry → LINK it to a record → REPORT it in a voice handoff to another person if useful.",
+    "Core identity: MARK a lowercase zz code → READ it by manual entry today; on-device camera recognition is planned for v1 → LINK it to a record → REPORT it in a voice handoff to another person if useful.",
   steps: [
     {
       numeral: "01",
@@ -26,7 +26,7 @@ export const coreIdentity = {
     {
       numeral: "02",
       title: "Read",
-      text: "For camera reading, find the two zz endpoints first, then read the words between them. Manual entry uses the same code grammar.",
+      text: "Manual entry uses the same code grammar and is the available read path in this build. On-device camera recognition is planned for v1 but is not implemented yet.",
       image: "d",
     },
     {
@@ -81,14 +81,14 @@ export const howItWorksPage = {
     "Two connected workflows: one code for identity, and AI for the work that follows.",
   coreHeading: "Core identity",
   readWays: {
-    heading: "Two ways to read a code",
-    methods: ["Camera", "Typing"],
-    line: "Camera reading uses the two zz endpoints to frame the code before reading the words between them. Manual entry uses the same code grammar. Voice recognition is planned for a future release; it is not part of v1.",
+    heading: "Manual and planned camera reading",
+    methods: ["Manual entry (available)", "Camera recognition (planned)"],
+    line: "Manual entry uses the same code grammar and is the available read path in this build. On-device camera recognition is planned for v1 but is not implemented yet. Voice recognition is planned for a future release; it is not part of v1.",
     images: ["d", "f"] satisfies ImageId[],
   },
   uncertain: {
     heading: "When a reading is uncertain",
-    text: "If the endpoints or words are uncertain, the design asks for confirmation, another view, or manual entry. It does not guess a missing endpoint or another live code.",
+    text: "When implemented, the camera reader should ask for confirmation, another view, or manual entry if endpoints or words are uncertain; it should not guess a missing endpoint or another live code.",
   },
   aiHeading: "AI-assisted work: future exploration",
   publicRecord: {
