@@ -1,3 +1,24 @@
+import { readFileSync } from "node:fs";
+import Ajv2020 from "ajv/dist/2020.js";
+import addFormats from "ajv-formats";
+import {
+  hasValidFrozenInputs,
+  validateFrozenReleaseConfig,
+} from "./receipt-frozen-inputs.mjs";
+
+const receiptSchema = JSON.parse(
+  readFileSync(
+    new URL(
+      "../../specs/004-capture/qualification/receipt.schema.json",
+      import.meta.url,
+    ),
+    "utf8",
+  ),
+);
+const schemaValidator = new Ajv2020({ allErrors: true, strict: false });
+addFormats(schemaValidator);
+const validateReceiptSchema = schemaValidator.compile(receiptSchema);
+
 const REQUIRED_GATE_IDS = [
   "false-accept-count",
   "false-valid-decode-rate",
@@ -94,6 +115,27 @@ const isRecord = (value) =>
 const isFiniteNumber = (value) =>
   typeof value === "number" && Number.isFinite(value);
 
+export function validateQualificationReceipt(
+  receipt,
+  { gateConfig, deviceMatrix } = {},
+) {
+  if (!validateReceiptSchema(receipt)) {
+    return {
+      status: "INCOMPLETE",
+      errors: (validateReceiptSchema.errors ?? []).map(
+        ({ instancePath, message }) => `${instancePath || "/"} ${message}`,
+      ),
+      gateFailures: [],
+      schemaValid: false,
+      authorizesPromotion: false,
+    };
+  }
+  return {
+    ...validateReceiptSemantics(receipt, { gateConfig, deviceMatrix }),
+    schemaValid: true,
+  };
+}
+
 function addCaseIssues(cases, name, allowNullPair, errors) {
   const keys = new Set();
 
@@ -139,10 +181,10 @@ function addCaseIssues(cases, name, allowNullPair, errors) {
 }
 
 /**
- * Check receipt cross-field semantics only. This does not validate JSON Schema,
- * artifact hashes, attestations, corpus/results, or decoder replay. Even a clean
- * result is explicitly non-authorizing; the trusted qualification verifier must
- * complete those checks before it can make a promotion decision.
+ * Check receipt cross-field semantics after JSON Schema validation. This does
+ * not validate artifact hashes, attestations, corpus/results, or decoder replay.
+ * Even a clean result is explicitly non-authorizing; the trusted qualification
+ * verifier must complete those checks before it can make a promotion decision.
  */
 export function validateReceiptSemantics(
   receipt,
@@ -156,12 +198,7 @@ export function validateReceiptSemantics(
   if (!isRecord(gateConfig) || !isRecord(deviceMatrix)) {
     return incomplete("frozen gate config and device matrix are required");
   }
-  if (
-    !Array.isArray(deviceMatrix.entries) ||
-    deviceMatrix.entries.length === 0 ||
-    !Array.isArray(gateConfig.required_buckets) ||
-    !isRecord(gateConfig.thresholds)
-  ) {
+  if (!hasValidFrozenInputs(gateConfig, deviceMatrix)) {
     return incomplete("frozen inputs are incomplete");
   }
 
@@ -171,6 +208,7 @@ export function validateReceiptSemantics(
   ) {
     errors.push("frozen gate config does not require the protocol gate set");
   }
+  validateFrozenReleaseConfig(receipt, gateConfig, errors);
 
   const coverageById = validateDeviceCoverage(receipt, deviceMatrix, errors);
 
