@@ -246,15 +246,15 @@ describe("navigation and people", () => {
     ]);
   });
 
-  it("lists the advisors in the 2026-10-07 order, all with initials", () => {
+  it("lists the advisors in the 2026-10-08 order, all with initials", () => {
     // [MICHAEL 2026-10-06 change list] Daniel and Adam move to first.
-    // [MICHAEL 2026-10-07] Omer F. Yalcin is added last.
+    // [MICHAEL 2026-10-08] Omer F. Yalcin is removed until his employer
+    // gives permission.
     expect(advisors.map((person) => person.name)).toEqual([
       "Daniel Meyer",
       "Adam Fry",
       "Patrick Muggler",
       "Arshi Chadha",
-      "Omer F. Yalcin",
     ]);
     expect(advisors.every((person) => person.initials !== undefined)).toBe(
       true,
@@ -265,9 +265,10 @@ describe("navigation and people", () => {
     expect(
       advisors.some((person) => /advises zzThis on/i.test(person.bio ?? "")),
     ).toBe(false);
-    expect(
-      advisors.find((person) => person.name === "Omer F. Yalcin")?.bio,
-    ).toContain("Journal of Quantitative Description.");
+    // Omer's Q72-approved bio returns without a closing line if he is restored.
+    expect(advisors.some((person) => person.name === "Omer F. Yalcin")).toBe(
+      false,
+    );
   });
 
   it("applies Michael's 2026-10-02 answers", () => {
