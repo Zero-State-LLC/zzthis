@@ -91,6 +91,8 @@ Source: Michael's 2026-10-07 changes (`intent/2026-10-07-michael-content-changes
 | public/images/logos/zzthat-lowercase.webp | logo, replaced | Michael's 2026-10-07 lowercase "zzthat" logo file | 356 by 96. Now the zzThat wordmark shown on About under zzthat.com. The camel-case file stays, unused. |
 | public/images/logos/zzthis-logo-on-dark.webp, zzthis-logo-on-light.webp | logo, reused | existing header logos | Also shown on About under zzthis.com, swapped by theme (white "this" on dark, black "this" on light). |
 
+The theme-aware `zzthis-logo-on-light.webp` and `zzthis-logo-on-dark.webp` variants are used for the README lead image. The live site homepage keeps its interactive console and crate-photo hero.
+
 ## Wireframes
 
 docs/wireframes/wireframes-page-1..7.webp: Michael Chung's companion wireframes (zzThis Website Wireframes 2026-10-01). Pages 1-3 mobile Home (3 scroll segments), 4-5 desktop Home (2 segments), 6-7 About mobile and desktop. Reference only; do not ship them in the site.
