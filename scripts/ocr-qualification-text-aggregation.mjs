@@ -2,7 +2,11 @@ function addCount(target, key, value) {
   if (!Number.isSafeInteger(value) || value < 0) {
     throw new TypeError(`invalid_metric_count:${key}`);
   }
-  target[key] += value;
+  const total = target[key] + value;
+  if (!Number.isSafeInteger(total)) {
+    throw new TypeError(`invalid_metric_count:${key}`);
+  }
+  target[key] = total;
 }
 
 function createAccumulator() {

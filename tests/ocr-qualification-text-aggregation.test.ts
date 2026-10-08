@@ -105,4 +105,23 @@ describe("OCR qualification text aggregation", () => {
       aggregateTextScoring([first], [{ ...sample, split: "tuning" }]),
     ).toThrow("scored_observation_metadata_mismatch");
   });
+
+  it("rejects aggregate counts that exceed the safe integer range", () => {
+    const manifest = [
+      { sample_id: "s1", split: "final" as const, stress_tags: [] },
+      { sample_id: "s2", split: "final" as const, stress_tags: [] },
+    ];
+    const first = scored(
+      "s1",
+      "device-a",
+      [0, Number.MAX_SAFE_INTEGER],
+      [0, 0],
+      [0, 0],
+    );
+    const second = scored("s2", "device-a", [0, 1], [0, 0], [0, 0]);
+
+    expect(() => aggregateTextScoring([first, second], manifest)).toThrow(
+      "invalid_metric_count:denominator",
+    );
+  });
 });
