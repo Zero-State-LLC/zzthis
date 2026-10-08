@@ -35,10 +35,12 @@ describe("OCR qualification fiducial matching", () => {
     ];
     const result = matchFiducials(predictions, truths, 0.3);
 
-    expect(result.matches.map(({ prediction_index, truth_index }) => [
-      prediction_index,
-      truth_index,
-    ])).toEqual([
+    expect(
+      result.matches.map(({ prediction_index, truth_index }) => [
+        prediction_index,
+        truth_index,
+      ]),
+    ).toEqual([
       [0, 1],
       [1, 0],
     ]);

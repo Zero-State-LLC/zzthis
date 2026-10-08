@@ -35,6 +35,15 @@ function segmentsIntersect(a, b, c, d) {
 }
 
 function validateConvexPolygon(points, label) {
+  validateNormalizedPoints(points, label);
+  validateConsistentConvexTurns(points, label);
+  validateSimplePolygonEdges(points, label);
+  if (polygonArea(points) <= Number.EPSILON) {
+    throw new TypeError(`${label} must have positive area`);
+  }
+}
+
+function validateNormalizedPoints(points, label) {
   if (!Array.isArray(points) || points.length < 3) {
     throw new TypeError(`${label} must contain at least three points`);
   }
@@ -52,6 +61,9 @@ function validateConvexPolygon(points, label) {
       );
     }
   }
+}
+
+function validateConsistentConvexTurns(points, label) {
   let direction = 0;
   for (let i = 0; i < points.length; i += 1) {
     const turn = cross(
@@ -68,6 +80,12 @@ function validateConvexPolygon(points, label) {
     }
     direction = nextDirection;
   }
+  if (direction === 0) {
+    throw new TypeError(`${label} must have positive area`);
+  }
+}
+
+function validateSimplePolygonEdges(points, label) {
   for (let i = 0; i < points.length; i += 1) {
     const nextI = (i + 1) % points.length;
     for (let j = i + 1; j < points.length; j += 1) {
@@ -81,9 +99,6 @@ function validateConvexPolygon(points, label) {
         );
       }
     }
-  }
-  if (direction === 0 || polygonArea(points) <= Number.EPSILON) {
-    throw new TypeError(`${label} must have positive area`);
   }
 }
 
@@ -161,29 +176,29 @@ export function scoreRoiAndLatency({ roiTruth, rois, elapsedMs }) {
   ) {
     throw new TypeError("roiTruth, rois, and elapsedMs must be arrays");
   }
+  const truthByPair = indexPolygons(roiTruth, "ROI truth");
+  const predictionByPair = indexPolygons(rois, "predicted ROI");
+  return {
+    ...scoreRoiCoverage(truthByPair, predictionByPair),
+    ...summarizeLatency(elapsedMs),
+  };
+}
+
+function indexPolygons(items, label) {
   const truthByPair = new Map();
-  for (const truth of roiTruth) {
-    if (!truth?.pair_id || truthByPair.has(truth.pair_id)) {
+  for (const item of items) {
+    if (!item?.pair_id || truthByPair.has(item.pair_id)) {
       throw new TypeError(
-        "ROI truth pair_id values must be non-empty and unique",
+        `${label} pair_id values must be non-empty and unique`,
       );
     }
-    validateConvexPolygon(truth.polygon, `ROI truth ${truth.pair_id}`);
-    truthByPair.set(truth.pair_id, truth);
+    validateConvexPolygon(item.polygon, `${label} ${item.pair_id}`);
+    truthByPair.set(item.pair_id, item);
   }
-  const predictionByPair = new Map();
-  for (const prediction of rois) {
-    if (!prediction?.pair_id || predictionByPair.has(prediction.pair_id)) {
-      throw new TypeError(
-        "predicted ROI pair_id values must be non-empty and unique",
-      );
-    }
-    validateConvexPolygon(
-      prediction.polygon,
-      `predicted ROI ${prediction.pair_id}`,
-    );
-    predictionByPair.set(prediction.pair_id, prediction);
-  }
+  return truthByPair;
+}
+
+function scoreRoiCoverage(truthByPair, predictionByPair) {
   const ious = [];
   let rectificationSuccessCount = 0;
   let rectificationMeasured = true;
@@ -202,12 +217,6 @@ export function scoreRoiAndLatency({ roiTruth, rois, elapsedMs }) {
       rectificationSuccessCount += 1;
     }
   }
-  for (const value of elapsedMs) {
-    if (!Number.isFinite(value) || value < 0) {
-      throw new TypeError("elapsedMs values must be finite and non-negative");
-    }
-  }
-  const sortedLatency = [...elapsedMs].sort((a, b) => a - b);
   return {
     roi_truth_count: ious.length,
     roi_mean_iou:
@@ -221,6 +230,17 @@ export function scoreRoiAndLatency({ roiTruth, rois, elapsedMs }) {
         ? null
         : rectificationSuccessCount / ious.length,
     rectification_unmeasured_pair_ids: unmeasuredPairIds,
+  };
+}
+
+function summarizeLatency(elapsedMs) {
+  for (const value of elapsedMs) {
+    if (!Number.isFinite(value) || value < 0) {
+      throw new TypeError("elapsedMs values must be finite and non-negative");
+    }
+  }
+  const sortedLatency = [...elapsedMs].sort((a, b) => a - b);
+  return {
     latency_sample_count: sortedLatency.length,
     latency_ms:
       sortedLatency.length === 0

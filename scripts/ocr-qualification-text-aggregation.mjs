@@ -101,6 +101,30 @@ export function aggregateTextScoring(scoredSamples, manifestSamples) {
   if (!Array.isArray(scoredSamples) || !Array.isArray(manifestSamples)) {
     throw new TypeError("text_aggregation_arrays_required");
   }
+  const metadataBySample = indexManifestSamples(manifestSamples);
+  const aggregates = createAggregateGroups();
+  for (const scored of scoredSamples) {
+    aggregateScoredSample(scored, metadataBySample, aggregates);
+  }
+
+  return {
+    by_split: Object.fromEntries(
+      [...aggregates.bySplit.entries()]
+        .sort(([left], [right]) => left.localeCompare(right))
+        .map(([split, accumulator]) => [split, finalize(accumulator)]),
+    ),
+    by_device_split: sortedGroupRows(aggregates.byDeviceSplit, [
+      "device_matrix_entry_id",
+      "split",
+    ]),
+    by_split_bucket: sortedGroupRows(aggregates.bySplitBucket, [
+      "split",
+      "bucket_id",
+    ]),
+  };
+}
+
+function indexManifestSamples(manifestSamples) {
   const metadataBySample = new Map();
   for (const sample of manifestSamples) {
     if (
@@ -115,57 +139,54 @@ export function aggregateTextScoring(scoredSamples, manifestSamples) {
     }
     metadataBySample.set(sample.sample_id, sample);
   }
+  return metadataBySample;
+}
 
-  const bySplit = new Map();
-  const byDeviceSplit = new Map();
-  const bySplitBucket = new Map();
-  const seenObservations = new Set();
-  for (const scored of scoredSamples) {
-    const metadata = metadataBySample.get(scored?.sample_id);
-    if (
-      !metadata ||
-      !["tuning", "final"].includes(scored.split) ||
-      metadata.split !== scored.split ||
-      typeof scored.device_matrix_entry_id !== "string" ||
-      scored.device_matrix_entry_id.length === 0
-    ) {
-      throw new TypeError("scored_observation_metadata_mismatch");
-    }
-    const observationKey = `${scored.device_matrix_entry_id}\u0000${scored.sample_id}`;
-    if (seenObservations.has(observationKey)) {
-      throw new TypeError("duplicate_device_sample_observation");
-    }
-    seenObservations.add(observationKey);
-
-    const splitAccumulator = bySplit.get(scored.split) ?? createAccumulator();
-    applyObservation(splitAccumulator, scored);
-    bySplit.set(scored.split, splitAccumulator);
-
-    const deviceKey = `${scored.device_matrix_entry_id}\u0000${scored.split}`;
-    const deviceAccumulator =
-      byDeviceSplit.get(deviceKey) ?? createAccumulator();
-    applyObservation(deviceAccumulator, scored);
-    byDeviceSplit.set(deviceKey, deviceAccumulator);
-
-    for (const bucket of new Set(metadata.stress_tags)) {
-      const bucketKey = `${scored.split}\u0000${bucket}`;
-      const bucketAccumulator =
-        bySplitBucket.get(bucketKey) ?? createAccumulator();
-      applyObservation(bucketAccumulator, scored);
-      bySplitBucket.set(bucketKey, bucketAccumulator);
-    }
-  }
-
+function createAggregateGroups() {
   return {
-    by_split: Object.fromEntries(
-      [...bySplit.entries()]
-        .sort(([left], [right]) => left.localeCompare(right))
-        .map(([split, accumulator]) => [split, finalize(accumulator)]),
-    ),
-    by_device_split: sortedGroupRows(byDeviceSplit, [
-      "device_matrix_entry_id",
-      "split",
-    ]),
-    by_split_bucket: sortedGroupRows(bySplitBucket, ["split", "bucket_id"]),
+    bySplit: new Map(),
+    byDeviceSplit: new Map(),
+    bySplitBucket: new Map(),
+    seenObservations: new Set(),
   };
+}
+
+function aggregateScoredSample(scored, metadataBySample, aggregates) {
+  const metadata = metadataBySample.get(scored?.sample_id);
+  validateScoredMetadata(scored, metadata);
+  const observationKey = `${scored.device_matrix_entry_id}\u0000${scored.sample_id}`;
+  if (aggregates.seenObservations.has(observationKey)) {
+    throw new TypeError("duplicate_device_sample_observation");
+  }
+  aggregates.seenObservations.add(observationKey);
+  addGroupedObservation(aggregates.bySplit, scored.split, scored);
+
+  const deviceKey = `${scored.device_matrix_entry_id}\u0000${scored.split}`;
+  addGroupedObservation(aggregates.byDeviceSplit, deviceKey, scored);
+  addBucketObservations(aggregates.bySplitBucket, metadata, scored);
+}
+
+function validateScoredMetadata(scored, metadata) {
+  if (
+    !metadata ||
+    !["tuning", "final"].includes(scored.split) ||
+    metadata.split !== scored.split ||
+    typeof scored.device_matrix_entry_id !== "string" ||
+    scored.device_matrix_entry_id.length === 0
+  ) {
+    throw new TypeError("scored_observation_metadata_mismatch");
+  }
+}
+
+function addGroupedObservation(groups, key, scored) {
+  const accumulator = groups.get(key) ?? createAccumulator();
+  applyObservation(accumulator, scored);
+  groups.set(key, accumulator);
+}
+
+function addBucketObservations(groups, metadata, scored) {
+  for (const bucket of new Set(metadata.stress_tags)) {
+    const key = `${scored.split}\u0000${bucket}`;
+    addGroupedObservation(groups, key, scored);
+  }
 }

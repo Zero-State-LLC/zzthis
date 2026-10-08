@@ -73,31 +73,13 @@ export function scorePayloadObservations(
   pairScoring,
   wordlistVersion,
 ) {
-  if (
-    !manifestSample ||
-    !adapterResult ||
-    manifestSample.sample_id !== adapterResult.sample_id ||
-    !Array.isArray(manifestSample.ground_truth_codes) ||
-    !Array.isArray(adapterResult.candidates) ||
-    !Array.isArray(pairScoring?.correct_pairs)
-  ) {
-    throw new TypeError("payload_scoring_inputs_invalid");
-  }
+  validatePayloadScoringInputs(manifestSample, adapterResult, pairScoring);
   if (!isWordlistVersion(wordlistVersion)) {
     throw new RangeError("decoder_wordlist_version_unavailable");
   }
   const wordlist = loadWordlist(wordlistVersion);
-  const predictedPairByTruth = new Map();
-  for (const pair of pairScoring.correct_pairs) {
-    if (
-      typeof pair.truth_pair_id !== "string" ||
-      typeof pair.predicted_pair_id !== "string" ||
-      predictedPairByTruth.has(pair.truth_pair_id)
-    ) {
-      throw new TypeError("payload_pair_mapping_invalid");
-    }
-    predictedPairByTruth.set(pair.truth_pair_id, pair.predicted_pair_id);
-  }
+  const predictedPairByTruth = indexCorrectPairs(pairScoring.correct_pairs);
+  const candidatesByPair = groupCandidates(adapterResult.candidates);
 
   let exactNumerator = 0;
   let exactDenominator = 0;
@@ -110,57 +92,31 @@ export function scorePayloadObservations(
 
   for (const truth of manifestSample.ground_truth_codes) {
     const predictedPairId = predictedPairByTruth.get(truth.pair_id);
-    const pairCandidates =
-      predictedPairId === undefined
-        ? []
-        : adapterResult.candidates.filter(
-            (candidate) => candidate.pair_id === predictedPairId,
-          );
-    // Filtering is stable; the adapter's original engine order defines top-1.
-    const top1 = pairCandidates[0];
-    const decoded = decodeTop1(top1, wordlist);
-    const referenceLength = codePoints(truth.literal_payload).length;
-    const distance = levenshteinDistance(
-      decoded.rawText,
-      truth.literal_payload,
+    const score = scoreTruthObservation(
+      truth,
+      candidatesByPair.get(predictedPairId) ?? [],
+      wordlist,
     );
-    editDistance += distance;
-    referenceCodePointCount += referenceLength;
-
-    let exactCorrect = null;
-    if (typeof truth.canonical_code === "string") {
+    editDistance += score.editDistance;
+    referenceCodePointCount += score.referenceCodePointCount;
+    observations.push(score.observation);
+    if (score.exactCorrect !== null) {
       exactDenominator += 1;
-      exactCorrect = decoded.canonical === truth.canonical_code;
-      if (exactCorrect) exactNumerator += 1;
+      if (score.exactCorrect) exactNumerator += 1;
+    }
+    if (score.falseValidDecode !== null) {
       falseValidDenominator += 1;
-      const isFalseValid =
-        decoded.falseValidEligible &&
-        decoded.canonical !== truth.canonical_code;
-      if (isFalseValid) {
+      if (score.falseValidDecode) {
         falseValidNumerator += 1;
         falseValidCases.push({
           device_matrix_entry_id: adapterResult.device_matrix_entry_id,
           sample_id: manifestSample.sample_id,
           pair_id: truth.pair_id,
           expected_code: truth.canonical_code,
-          observed_code: decoded.canonical,
+          observed_code: score.observedCode,
         });
       }
     }
-
-    observations.push({
-      pair_id: truth.pair_id,
-      candidate_count: pairCandidates.length,
-      top1_candidate_id: top1?.candidate_id ?? null,
-      exact_code_correct: exactCorrect,
-      character_edit_distance: distance,
-      reference_code_point_count: referenceLength,
-      false_valid_decode:
-        typeof truth.canonical_code === "string"
-          ? decoded.falseValidEligible &&
-            decoded.canonical !== truth.canonical_code
-          : null,
-    });
   }
 
   return {
@@ -179,5 +135,79 @@ export function scorePayloadObservations(
     },
     false_valid_decode_rate: rate(falseValidNumerator, falseValidDenominator),
     false_valid_cases: falseValidCases,
+  };
+}
+
+function validatePayloadScoringInputs(
+  manifestSample,
+  adapterResult,
+  pairScoring,
+) {
+  if (
+    !manifestSample ||
+    !adapterResult ||
+    manifestSample.sample_id !== adapterResult.sample_id ||
+    !Array.isArray(manifestSample.ground_truth_codes) ||
+    !Array.isArray(adapterResult.candidates) ||
+    !Array.isArray(pairScoring?.correct_pairs)
+  ) {
+    throw new TypeError("payload_scoring_inputs_invalid");
+  }
+}
+
+function indexCorrectPairs(correctPairs) {
+  const predictedPairByTruth = new Map();
+  for (const pair of correctPairs) {
+    if (
+      typeof pair.truth_pair_id !== "string" ||
+      typeof pair.predicted_pair_id !== "string" ||
+      predictedPairByTruth.has(pair.truth_pair_id)
+    ) {
+      throw new TypeError("payload_pair_mapping_invalid");
+    }
+    predictedPairByTruth.set(pair.truth_pair_id, pair.predicted_pair_id);
+  }
+  return predictedPairByTruth;
+}
+
+function groupCandidates(candidates) {
+  const byPair = new Map();
+  for (const candidate of candidates) {
+    if (typeof candidate.pair_id !== "string") continue;
+    const group = byPair.get(candidate.pair_id) ?? [];
+    group.push(candidate);
+    byPair.set(candidate.pair_id, group);
+  }
+  return byPair;
+}
+
+function scoreTruthObservation(truth, candidates, wordlist) {
+  // Candidate arrays retain adapter order, so index zero is the gated top-1.
+  const top1 = candidates[0];
+  const decoded = decodeTop1(top1, wordlist);
+  const referenceLength = codePoints(truth.literal_payload).length;
+  const distance = levenshteinDistance(decoded.rawText, truth.literal_payload);
+  const hasCanonicalTruth = typeof truth.canonical_code === "string";
+  const exactCorrect = hasCanonicalTruth
+    ? decoded.canonical === truth.canonical_code
+    : null;
+  const falseValidDecode = hasCanonicalTruth
+    ? decoded.falseValidEligible && decoded.canonical !== truth.canonical_code
+    : null;
+  return {
+    editDistance: distance,
+    referenceCodePointCount: referenceLength,
+    exactCorrect,
+    falseValidDecode,
+    observedCode: decoded.canonical,
+    observation: {
+      pair_id: truth.pair_id,
+      candidate_count: candidates.length,
+      top1_candidate_id: top1?.candidate_id ?? null,
+      exact_code_correct: exactCorrect,
+      character_edit_distance: distance,
+      reference_code_point_count: referenceLength,
+      false_valid_decode: falseValidDecode,
+    },
   };
 }

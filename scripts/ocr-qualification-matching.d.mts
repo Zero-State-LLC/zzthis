@@ -33,7 +33,11 @@ export function matchFiducials(
 export function scoreFiducialPairs(
   predictions: Fiducial[],
   truths: Fiducial[],
-  matches: Array<{ prediction_index: number; truth_index: number; iou?: number }>,
+  matches: Array<{
+    prediction_index: number;
+    truth_index: number;
+    iou?: number;
+  }>,
 ): {
   correct_pairs: Array<{
     predicted_pair_id: string;
