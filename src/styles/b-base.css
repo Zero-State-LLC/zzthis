@@ -156,6 +156,10 @@ main > section {
   border-bottom: var(--rule-hair) solid var(--color-rule);
 }
 
+.nav__mark {
+  flex-shrink: 0;
+}
+
 .nav__mark img {
   height: 26px;
   width: auto;
@@ -207,12 +211,13 @@ kbd {
   margin-inline-start: auto;
 }
 
+/* [MICHAEL 2026-10-08] Menu links about 30% larger than --text-sm; the header height stays the same. */
 .nav__links a {
   display: inline-flex;
   align-items: center;
   min-height: 44px;
   padding-inline: var(--space-xs);
-  font-size: var(--text-sm);
+  font-size: calc(var(--text-sm) * 1.3);
   font-weight: 500;
   text-decoration: none;
   white-space: nowrap;
@@ -275,6 +280,8 @@ kbd {
   }
 }
 
+/* [MICHAEL 2026-10-08] The logo never shrinks (.nav__mark), so five larger
+   menu links cannot squeeze it. */
 @media (min-width: 64rem) {
   .nav__menu {
     display: none;

@@ -226,9 +226,11 @@ describe("applications (spec 3.2 H.7 and 3.4)", () => {
 
 describe("navigation and people", () => {
   it("lists nav items in spec order", () => {
+    // [MICHAEL 2026-10-08] Demo added between Applications and About.
     expect(navItems.map((item) => item.label)).toEqual([
       "How it works",
       "Applications",
+      "Demo",
       "About",
       "Contact",
     ]);
