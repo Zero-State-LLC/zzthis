@@ -7,7 +7,7 @@ These rules make the qualification harness deterministic. They do not set releas
 1. All image boxes use normalized image coordinates in [0,1].
 2. A predicted fiducial matches a ground-truth fiducial only when roles match and IoU is at least `thresholds.fiducial_iou_threshold` in the frozen gate config. The value is greater than 0 and at most 1, and cannot be selected after final results are viewed.
 3. Matching is one-to-one. Choose the assignment that maximizes total IoU. An unmatched prediction is a false finder. An unmatched truth endpoint is a missed endpoint.
-4. A predicted pair is correct only when its matched opening and closing endpoints share the same ground-truth pair_id. Otherwise it is a false pair.
+4. A predicted pair is eligible only when its ROI names one opening and one closing detection and all three evidence records share the same non-null `baseline_id`. A cross-baseline or unestablished-baseline pair is scored as a false pair and must have no payload OCR/candidates. A predicted pair is correct only when its matched opening and closing endpoints also share the same ground-truth `pair_id`.
 5. Multi-code images are scored per ground-truth pair. Every `ground_truth_codes` entry is keyed by `pair_id` and carries the literal payload used for CER/part scoring plus the canonical code when valid. Merging two codes into one ROI is not correct.
 
 ## ROI normalization and fail-closed geometry

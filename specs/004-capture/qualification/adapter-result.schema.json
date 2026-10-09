@@ -84,9 +84,10 @@
     "fiducialDetection": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["detection_id", "role", "box"],
+      "required": ["detection_id", "baseline_id", "role", "box"],
       "properties": {
         "detection_id": { "type": "string", "minLength": 1 },
+        "baseline_id": { "type": ["string", "null"], "minLength": 1 },
         "role": { "enum": ["opening", "closing", "unknown"] },
         "pair_id": { "type": ["string", "null"] },
         "score": { "type": "number", "minimum": 0, "maximum": 1 },
@@ -96,9 +97,18 @@
     "roiDetection": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["pair_id", "polygon"],
+      "required": [
+        "pair_id",
+        "opening_detection_id",
+        "closing_detection_id",
+        "baseline_id",
+        "polygon"
+      ],
       "properties": {
         "pair_id": { "type": "string", "minLength": 1 },
+        "opening_detection_id": { "type": "string", "minLength": 1 },
+        "closing_detection_id": { "type": "string", "minLength": 1 },
+        "baseline_id": { "type": "string", "minLength": 1 },
         "polygon": { "$ref": "#/$defs/polygon" },
         "orientation_degrees": {
           "type": "number",

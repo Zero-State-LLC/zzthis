@@ -27,6 +27,7 @@
       "fiducials": [
         {
           "detection_id": "d-open-1",
+          "baseline_id": "baseline-1",
           "role": "opening",
           "pair_id": "predicted-1",
           "score": 0.99,
@@ -34,6 +35,7 @@
         },
         {
           "detection_id": "d-close-1",
+          "baseline_id": "baseline-1",
           "role": "closing",
           "pair_id": "predicted-1",
           "score": 0.98,
@@ -43,6 +45,9 @@
       "rois": [
         {
           "pair_id": "predicted-1",
+          "opening_detection_id": "d-open-1",
+          "closing_detection_id": "d-close-1",
+          "baseline_id": "baseline-1",
           "polygon": [
             { "x": 0.18, "y": 0.35 },
             { "x": 0.72, "y": 0.35 },
@@ -76,6 +81,7 @@
       "fiducials": [
         {
           "detection_id": "d-open-2",
+          "baseline_id": "baseline-2",
           "role": "opening",
           "pair_id": null,
           "box": { "x": 0.05, "y": 0.4, "width": 0.1, "height": 0.2 }
