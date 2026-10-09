@@ -71,7 +71,8 @@ Corpus stress buckets include ordinary handwriting and print plus 0/O, 1/I/l, 2/
 ```text
 camera
   -> zz fiducial detection + pairing
-  -> ROI localization / optional rectification
+  -> box candidates; if multiple selectable visual candidates, wait for human selection
+  -> selected/sole pair ROI localization / optional rectification
   -> platform payload recognizer adapter
   -> RecognitionResult
   -> scanner / candidate extraction
