@@ -30,6 +30,7 @@ Historical analysis files preserve what was open when they were written. They ar
 
 | Item | Owner/evidence | Blocking effect |
 |---|---|---|
+| B17 consumer location capability | Operator disposition; consumer journey and privacy decisions in `specs/006-location/spec.md` | No contract-1 schema change or implementation until release/scope and privacy decisions are accepted |
 | OCR/fiducial release thresholds | ZZ-OCR-QUAL-001 tuning/final corpus | blocks camera Accept promotion, not typed entry |
 | production wordlist human-confusion thresholds | governed human/OCR qualification before first production mint | blocks freezing production wordlist |
 | product SLO, end-to-end RPO, RTO | deployment topology plus restore/incident drills (#86) | blocks production authorization |

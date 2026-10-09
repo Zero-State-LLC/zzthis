@@ -59,6 +59,17 @@ Until a future contract specifies otherwise:
 
 A V1.x/V2 implementation proposal must explicitly define Scope↔Namespace cardinality, ownership, lifecycle, selection, migration, and authorization before implementation.
 
+## Location research terms
+
+These terms are proposed by B17 and do not exist as contract-1 persisted entities:
+
+- **LocationAttachment**: optional, versioned record content describing a place or event location. It never changes the code-to-record resolver key.
+- **SourcePosition**: coordinate supplied by an explicit user action or one-time foreground device reading, with provenance and uncertainty when available. Retention is an open decision.
+- **DisclosedLocation**: the point, area, or owner-authored label the record is authorized to reveal. It may be coarser than the source position; public serialization must not reveal undisclosed data.
+- **LocationReference**: a future human-readable encoding derived from a typed location. It is not a record code, resolver key, or authority. Its scheme and grammar are unselected.
+
+The owner must explicitly choose to attach a location and preview its disclosure. No location is inferred from photos, text, or background device access. See `specs/006-location/spec.md` for unresolved choices and release gates.
+
 ## ZK research entities
 
 Proof, nullifier/replay tag, verifier/audience, authority-state commitment, and dictionary commitment are research-only terms under #83/S1 and create no V1 authority.
