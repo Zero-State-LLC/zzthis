@@ -94,3 +94,13 @@ Source: Michael's 2026-10-07 changes (`intent/2026-10-07-michael-content-changes
 ## Wireframes
 
 docs/wireframes/wireframes-page-1..7.webp: Michael Chung's companion wireframes (zzThis Website Wireframes 2026-10-01). Pages 1-3 mobile Home (3 scroll segments), 4-5 desktop Home (2 segments), 6-7 About mobile and desktop. Reference only; do not ship them in the site.
+
+## Added 2026-10-08 (Michael's About image set, v2)
+
+Source: Michael's 2026-10-08 v2 patch (`intent/2026-10-08-michael-kathy-found-dog.md`; replaces the v1 pair, whose `hw-kathy-community-board.webp` is not shipped).
+
+| path | status | source | notes |
+|---|---|---|---|
+| public/images/handwritten/hw-kathy-found-dog.webp | concept | Michael's 2026-10-08 v2 patch | 672 by 655. The zz-Kathy-found-dog-zz card in front of the plush corgi; the collar tag shows a capital-letter zz (spec 001 T053). About, under the four real photos, first of the set. |
+| public/images/handwritten/hw-kathy-phone.webp | concept | Michael's 2026-10-08 v2 patch | 395 by 380. A phone that scanned the card, showing Record found and zzpage.com/zz/Kathy-found-dog. About, second of the set. |
+| public/images/handwritten/hw-kathy-board-phone.webp | concept | Michael's 2026-10-08 v2 patch | 1040 by 515. The card pinned on a store community board, with the phone beside it. About, third of the set. |
