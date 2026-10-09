@@ -23,6 +23,7 @@ This roadmap groups fragmented product input into promotable capability bundles.
 | B14 Authorized Actions/Macros | v2+ | SHADOW | authenticated/authorized/confirmed actions referenced by human-readable codes | code-as-authority |
 | B15 ZK / Selective Disclosure | v2+ | SHADOW / RESEARCH | predicate/selective-disclosure proofs subordinate to semantic/resolver authority | proof-system selection before #87/#81 |
 | B16 Ledger/Agent/Blockchain Integrations | v2+ | SHADOW | optional integrations using core identifier/semantic contracts | blockchain as a v1 dependency |
+| B17 Consumer Location Layer | consumer v1.x candidate; later extensions v2+ | RESEARCH | owner-selected, privacy-aware location data attached to a record without changing the zz-code resolver key | background tracking, mandatory geocoder/map vendor, location-as-record-authority, unreviewed grid/word-code grammar; see [bundle proposal](006-location/bundle.md) |
 
 ## Current release boundary
 

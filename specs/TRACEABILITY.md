@@ -18,6 +18,7 @@ Status: current convergence artifact. This file links existing requirements; it 
 | Report/operator disposition | report -> operator query -> close/suspend/revoke/grant | report open -> closed; account active/suspended | 005 US7, FR-024/025/026; operator SQL | T038 ops tests | implemented; production operator runbook still gated |
 | Structured semantic resolution | canonical code -> resolver authz -> profile/dictionary binding -> disclosure | V1 identifier -> profile-bound semantic interpretation | #81; PR #82 | semantic-profile acceptance checklist | CANON-SHADOW, no runtime authority |
 | ZK predicate verification | authorized semantic resolution -> committed predicate proof -> verifier | proof absent -> generated -> accepted/rejected | #83; PR #84 S1 | 20 negative vectors planned | SPECULATIVE, no runtime authority |
+| Consumer location attachment | owner selects place and disclosure -> versioned record update -> public preview | absent -> attached -> updated/removed; disclosure scope stays explicit | B17; proposed spec 006 | permission, disclosure, signature, cache, erasure, and cross-client tests | RESEARCH, no contract-1 authority |
 
 ## Coverage rule
 
