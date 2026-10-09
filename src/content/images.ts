@@ -386,7 +386,7 @@ export const images = {
     height: 655,
     title: "zz-Kathy-found-dog-zz",
     shortCopy: "Concept image.",
-    alt: "A plush corgi with a round red zz collar tag, behind a hand-printed card reading zz-Kathy-found-dog-zz.",
+    alt: "A plush corgi with a round red collar tag marked with a capital-letter zz, behind a hand-printed card reading zz-Kathy-found-dog-zz.",
     caption: "Concept image.",
     focal: { x: 0.5, y: 0.5 },
     destination: ["about"],
