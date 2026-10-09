@@ -13,6 +13,12 @@ const handwritten = [
   images["hw-mark-on-object"],
   images["hw-dog-collar-tag"],
 ] as const;
+
+// [MICHAEL 2026-10-08] A pair under the photos, about 2/3 their height.
+const handwrittenPair = [
+  images["hw-kathy-found-dog"],
+  images["hw-kathy-community-board"],
+] as const;
 ---
 
 <BaseLayout title="About zzThis" description={aboutPage.intro} current="about">
@@ -121,6 +127,24 @@ const handwritten = [
         </li>
       ))}
     </ul>
+    <figure class="hw-pair">
+      <div class="hw-pair__images">
+        {handwrittenPair.map((photo) => (
+          <img
+            src={url(photo.src)}
+            width={photo.width}
+            height={photo.height}
+            alt={photo.alt}
+            loading="lazy"
+            decoding="async"
+          />
+        ))}
+      </div>
+      <figcaption>
+        <code>{handwrittenPair[0].title}</code>
+        {aboutPage.handwrittenPairCaption}
+      </figcaption>
+    </figure>
   </section>
 
   <section class="where" aria-label="Location and next action">

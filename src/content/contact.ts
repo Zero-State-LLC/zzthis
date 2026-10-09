@@ -57,6 +57,9 @@ export const aboutPage = {
     "zzThis is for commercial and government use; zzThat is our free consumer app, launching soon.",
   handwrittenHeading: "Codes written by hand",
   handwrittenLabel: "Real photos of handwritten codes.",
+  // [MICHAEL 2026-10-08] One explainer across the two Kathy images.
+  handwrittenPairCaption:
+    "Concept images. zz-code words, hand printed, for any thing or object. Then scanned, and more.",
   locationHeading: "Location",
   locationText:
     "Silicon Valley (Mountain View / Santa Clara; Hacker Dojo) and New York City.",
