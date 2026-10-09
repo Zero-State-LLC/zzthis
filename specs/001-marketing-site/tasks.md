@@ -108,3 +108,10 @@ Decision D-2026-10-08-02 in `docs/SPEC.md`; Section 6, Hosting; acceptance item 
 
 - [x] T047 Root base: `astro.config.mjs` sets `site` to `https://zzthis.com` and the default `base` to `/`, keeping the `ASTRO_BASE` override; `scripts/check-dist.mjs` defaults to `/` and fails on a leftover `/zzthis/` path or a `zero-state-llc.github.io` link; tests cover the config and both bases.
 - [ ] T048 Cutover: Michael's DNS records live and verified, Danny sets the Pages custom domain, the T047 PR merges right away, Enforce HTTPS once the certificate is issued, then check `https://zzthis.com`, the `www` redirect, and the `zero-state-llc.github.io/zzthis/` redirect. Owner: Danny.
+
+## Phase 16: Michael's 2026-10-08 About image pair
+
+Intent: `intent/2026-10-08-michael-kathy-found-dog.md`. Spec: `docs/SPEC.md` Sections 2.1, 3.1a, 3.5, and 3.8; FR-023; decision D-2026-10-08-04. (Phase 15 is #125.)
+
+- [x] T052 About, "Codes written by hand": the zz-Kathy-found-dog-zz pair under the four real photos (`public/images/handwritten/hw-kathy-found-dog.webp`, `hw-kathy-community-board.webp`; `src/content/images.ts` entries with status `concept`; `aboutPage.handwrittenPairCaption` in `src/content/contact.ts`; `.hw-pair` in `src/pages/about.astro` and `src/styles/b-about.css`). Each image about 2/3 the height of a photo above (checked at 1280 px and 390 px); one caption spans both and sits under the second image on phones.
+- [ ] T053 Ask Michael about the collar tag: in both Kathy images the corgi's red tag shows a capital-letter zz, carried over from the real photo `hw-dog-collar-tag`. Renders Michael supplies may show it (`docs/SPEC.md` Section 2.2), but images we generate stay lowercase (Section 2.2a G7, FR-019). If these count as generated, regenerate them with a lowercase zz on the tag. Owner: Michael.
