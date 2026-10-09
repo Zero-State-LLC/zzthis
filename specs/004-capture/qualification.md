@@ -146,6 +146,8 @@ A False Accept is always counted even if the wrong record does not exist on the 
 
 The final numerical release gates are frozen in a separate `gate-config.json` validated by `gate-config.schema.json`, then bound by a signed pre-run attestation before final-split execution. It includes the exact required gate-id set, thresholds, the fiducial IoU threshold, CER normalization, minimum tuning/final sample counts, and minimum counts for every required bucket. The receipt has exactly one final-split result for each required gate id and no others. Gates may be derived from pilot/tuning evidence but may not be relaxed after seeing final results. A post-result edit requires a new config hash, a new pre-run attestation, and a new candidate run; a caller-supplied or backdated timestamp is not evidence.
 
+The false-valid-decode gate is quantitative: every wrong-but-valid top-1 observation is counted under the frozen scoring denominator, and every reported false-valid case requires a non-empty reviewer disposition. A dispositioned case does not independently force NO_PROMOTION when the measured final rate is within the frozen threshold; exceeding that threshold fails the gate and prevents promotion. The false-Accept limit remains zero.
+
 An engine is ineligible if:
 
 1. it produces any uninvestigated False Accept or unsafe false-pair path;
