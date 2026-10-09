@@ -25,7 +25,7 @@
         "pair-accuracy",
         "exact-code-accuracy",
         "character-error-rate",
-        "rectification-success-rate",
+        "roi-normalization-success-rate",
         "p95-latency-ms"
       ]
     },
@@ -54,7 +54,7 @@
         "min_pair_accuracy",
         "min_exact_code_accuracy",
         "max_character_error_rate",
-        "min_rectification_success_rate",
+        "min_roi_normalization_success_rate",
         "max_p95_latency_ms",
         "fiducial_iou_threshold",
         "cer_normalization"
@@ -74,7 +74,7 @@
           "maximum": 1
         },
         "max_character_error_rate": { "type": "number", "minimum": 0 },
-        "min_rectification_success_rate": {
+        "min_roi_normalization_success_rate": {
           "type": "number",
           "minimum": 0,
           "maximum": 1

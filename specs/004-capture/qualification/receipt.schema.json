@@ -241,7 +241,7 @@
             "pair-accuracy",
             "exact-code-accuracy",
             "character-error-rate",
-            "rectification-success-rate",
+            "roi-normalization-success-rate",
             "p95-latency-ms"
           ]
         },
@@ -301,7 +301,7 @@
             "min_pair_accuracy",
             "min_exact_code_accuracy",
             "max_character_error_rate",
-            "min_rectification_success_rate",
+            "min_roi_normalization_success_rate",
             "max_p95_latency_ms",
             "fiducial_iou_threshold",
             "cer_normalization"
@@ -329,7 +329,7 @@
               "maximum": 1
             },
             "max_character_error_rate": { "type": "number", "minimum": 0 },
-            "min_rectification_success_rate": {
+            "min_roi_normalization_success_rate": {
               "type": "number",
               "minimum": 0,
               "maximum": 1
@@ -367,7 +367,7 @@
                   "pair-accuracy",
                   "exact-code-accuracy",
                   "character-error-rate",
-                  "rectification-success-rate",
+                  "roi-normalization-success-rate",
                   "p95-latency-ms"
                 ]
               },
@@ -424,7 +424,7 @@
             {
               "contains": {
                 "properties": {
-                  "gate_id": { "const": "rectification-success-rate" }
+                  "gate_id": { "const": "roi-normalization-success-rate" }
                 },
                 "required": ["gate_id"]
               }
@@ -583,7 +583,7 @@
         "false_pair_count",
         "false_pair_rate",
         "roi_mean_iou",
-        "rectification_success_rate",
+        "roi_normalization_success_rate",
         "exact_code_accuracy",
         "part_word_accuracy",
         "character_error_rate",
@@ -618,7 +618,7 @@
           "minimum": 0,
           "maximum": 1
         },
-        "rectification_success_rate": { "$ref": "#/$defs/rate" },
+        "roi_normalization_success_rate": { "$ref": "#/$defs/rate" },
         "exact_code_accuracy": { "$ref": "#/$defs/rate" },
         "part_word_accuracy": { "$ref": "#/$defs/rate" },
         "character_error_rate": { "type": ["number", "null"], "minimum": 0 },

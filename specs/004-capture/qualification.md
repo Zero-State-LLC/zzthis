@@ -95,7 +95,7 @@ CAPTURED
 CAPTURED -> RETRY        no usable endpoint evidence
 FIDUCIALS_DETECTED -> RETRY   one/cut/occluded endpoint or unusable geometry
 FIDUCIALS_DETECTED -> CLARIFY multiple plausible pairings requiring selection
-ROI_LOCALIZED -> RETRY        rectification/crop unusable
+ROI_LOCALIZED -> RETRY        ROI unsafe or crop/rotation normalization unsupported
 RECOGNIZED -> ABSTAIN    unsupported/invalid evidence
 DECODED -> CLARIFY       ambiguity or confirmation required
 DECODED -> RETRY         incomplete/low-quality recoverable read
@@ -113,7 +113,7 @@ For every engine and stress bucket report:
 - complete-pair detection rate;
 - endpoint pairing accuracy;
 - false-finder and false-pair counts/rates, including prose `zz` distractors;
-- ROI localization overlap/error and rectification success where ground truth exists;
+- ROI localization overlap/error and safe crop/rotation normalization success where ground truth exists;
 - exact canonical-code accuracy;
 - part/word accuracy;
 - character error rate;

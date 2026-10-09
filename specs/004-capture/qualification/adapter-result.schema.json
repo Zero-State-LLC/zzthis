@@ -111,7 +111,10 @@
           "maxItems": 9,
           "items": { "type": "number" }
         },
-        "rectification_succeeded": { "type": "boolean" }
+        "rectification_succeeded": {
+          "type": "boolean",
+          "description": "For v1, true means safe crop/rotation normalization succeeded; it never means perspective/projective rectification was applied."
+        }
       }
     },
     "textCandidate": {

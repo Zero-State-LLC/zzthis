@@ -9,7 +9,7 @@
     "pair-accuracy",
     "exact-code-accuracy",
     "character-error-rate",
-    "rectification-success-rate",
+    "roi-normalization-success-rate",
     "p95-latency-ms"
   ],
   "minimum_samples_by_split": { "tuning": 1, "final": 1 },
@@ -46,7 +46,7 @@
     "min_pair_accuracy": 1,
     "min_exact_code_accuracy": 1,
     "max_character_error_rate": 0,
-    "min_rectification_success_rate": 1,
+    "min_roi_normalization_success_rate": 1,
     "max_p95_latency_ms": 1000,
     "fiducial_iou_threshold": 0.5,
     "cer_normalization": "nfc-code-points-v1"

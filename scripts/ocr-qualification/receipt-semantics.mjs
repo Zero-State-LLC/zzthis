@@ -26,7 +26,7 @@ const REQUIRED_GATE_IDS = [
   "pair-accuracy",
   "exact-code-accuracy",
   "character-error-rate",
-  "rectification-success-rate",
+  "roi-normalization-success-rate",
   "p95-latency-ms",
 ];
 
@@ -90,11 +90,11 @@ const GATE_DEFINITIONS = {
     thresholdName: "max_character_error_rate",
     read: (receipt) => receipt.metrics_by_split?.final?.character_error_rate,
   },
-  "rectification-success-rate": {
+  "roi-normalization-success-rate": {
     operator: "gte",
-    thresholdName: "min_rectification_success_rate",
+    thresholdName: "min_roi_normalization_success_rate",
     read: (receipt) =>
-      receipt.metrics_by_split?.final?.rectification_success_rate?.rate,
+      receipt.metrics_by_split?.final?.roi_normalization_success_rate?.rate,
   },
   "p95-latency-ms": {
     operator: "lte",

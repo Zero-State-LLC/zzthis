@@ -39,7 +39,7 @@ const gateIds = [
   "pair-accuracy",
   "exact-code-accuracy",
   "character-error-rate",
-  "rectification-success-rate",
+  "roi-normalization-success-rate",
   "p95-latency-ms",
 ] as const;
 
@@ -164,7 +164,7 @@ function metricSet({
     false_pair_count: 0,
     false_pair_rate: rate(0),
     roi_mean_iou: 1,
-    rectification_success_rate: rate(),
+    roi_normalization_success_rate: rate(),
     exact_code_accuracy: rate(),
     part_word_accuracy: rate(),
     character_error_rate: 0,
@@ -198,7 +198,7 @@ function buildInputs(): FixtureInputs {
     min_pair_accuracy: 1,
     min_exact_code_accuracy: 1,
     max_character_error_rate: 0,
-    min_rectification_success_rate: 1,
+    min_roi_normalization_success_rate: 1,
     max_p95_latency_ms: 100,
   };
   const gateConfig = {
@@ -383,9 +383,9 @@ function buildInputs(): FixtureInputs {
       threshold: thresholds.max_character_error_rate,
       observed: 0,
     },
-    "rectification-success-rate": {
+    "roi-normalization-success-rate": {
       operator: "gte",
-      threshold: thresholds.min_rectification_success_rate,
+      threshold: thresholds.min_roi_normalization_success_rate,
       observed: 1,
     },
     "p95-latency-ms": {
