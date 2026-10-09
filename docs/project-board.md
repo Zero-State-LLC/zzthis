@@ -50,8 +50,8 @@ Project field changes are manual unless the board workflow explicitly automates 
 | PR #84 | In review after reconciliation | S1 research PR depends on semantic parent/rebase |
 | PR #85 | Closed (superseded) | its governance artifacts are already present on main; after syncing, no file diff remained, so it was closed without merging |
 | #86 production readiness evidence | Ready | the governance baseline is present on main; numeric RTO/RPO/SLO, restore evidence, observability, key lifecycle and deploy approval remain open |
-| PR #123 Michael's 2026-10-08 nav plus specs | In review | open PR; its card (Demo in the top menu, menu links about 30% larger, logo never shrinks, 64 px header) moves to Done when it merges. No zzThat parity card: the apps and the web client have no site menu or `/demo` link (`docs/SPEC.md` Section 5.5) |
 | PR #PRNUM Michael's 2026-10-08 About image pair plus specs | In review | open PR; its card (the zz-Kathy-found-dog-zz concept pair under the handwritten photos on About, T052) moves to Done when it merges. T053 (collar tag shows a capital-letter zz; keep or regenerate) is Backlog for Michael. No zzThat parity card: the apps and the web client have no About page |
+| PR #123 Michael's 2026-10-08 nav plus specs | In review | open PR; its card (Demo in the top menu, menu links about 30% larger, logo never shrinks, 64 px header) moves to Done when it merges. No zzThat parity card: the apps and the web client have no site menu or `/demo` link (`docs/SPEC.md` Section 5.5) |
 | #87 contract-2/semantic domain gate | Backlog | required before #81 can leave CANON-SHADOW |
 | PR #118 Michael's 2026-10-07 site changes plus specs | In review | open PR; its change cards (dark default, wordmarks, Omer, zzthis.com on About, Home headings, bio and Hacker Dojo text) move to Done when it merges |
 | #116 Q72, #117 Q73 | Backlog | open questions for Michael from the 2026-10-07 changes |
