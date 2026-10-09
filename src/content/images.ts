@@ -374,6 +374,53 @@ export const images = {
     status: "real-photo",
     sourceTag: "MICHAEL",
   },
+  // [MICHAEL 2026-10-08] A set of three below the real photos: the
+  // zz-Kathy-found-dog-zz card, a phone that scanned it, and the card on a
+  // community board beside the phone. Michael chose this order for phones and
+  // progressive viewing. Concept images, one shared explainer
+  // (aboutPage.handwrittenSetCaption and handwrittenSetZzPage).
+  "hw-kathy-found-dog": {
+    id: "hw-kathy-found-dog",
+    src: "images/handwritten/hw-kathy-found-dog.webp",
+    width: 672,
+    height: 655,
+    title: "zz-Kathy-found-dog-zz",
+    shortCopy: "Concept image.",
+    alt: "A plush corgi with a round red zz collar tag, behind a hand-printed card reading zz-Kathy-found-dog-zz.",
+    caption: "Concept image.",
+    focal: { x: 0.5, y: 0.5 },
+    destination: ["about"],
+    status: "concept",
+    sourceTag: "MICHAEL",
+  },
+  "hw-kathy-phone": {
+    id: "hw-kathy-phone",
+    src: "images/handwritten/hw-kathy-phone.webp",
+    width: 395,
+    height: 380,
+    title: "zz-Kathy-found-dog-zz scanned",
+    shortCopy: "Concept image.",
+    alt: "A hand holds a phone that has scanned zz-Kathy-found-dog-zz and shows Record found with the zzPage address zzpage.com/zz/Kathy-found-dog.",
+    caption: "Concept image.",
+    focal: { x: 0.5, y: 0.5 },
+    destination: ["about"],
+    status: "concept",
+    sourceTag: "MICHAEL",
+  },
+  "hw-kathy-board-phone": {
+    id: "hw-kathy-board-phone",
+    src: "images/handwritten/hw-kathy-board-phone.webp",
+    width: 1040,
+    height: 515,
+    title: "zz-Kathy-found-dog-zz on a community board",
+    shortCopy: "Concept image.",
+    alt: "A store community board with the corgi photo and its zz-Kathy-found-dog-zz card pinned in the center; beside it a phone shows Record found, zzpage.com/zz/Kathy-found-dog, and a short found-dog message.",
+    caption: "Concept image.",
+    focal: { x: 0.5, y: 0.5 },
+    destination: ["about"],
+    status: "concept",
+    sourceTag: "MICHAEL",
+  },
   "logo-light": {
     id: "logo-light",
     src: "images/logos/zzthis-logo-on-light.webp",

@@ -57,6 +57,11 @@ export const aboutPage = {
     "zzThis is for commercial and government use; zzThat is our free consumer app, launching soon.",
   handwrittenHeading: "Codes written by hand",
   handwrittenLabel: "Real photos of handwritten codes.",
+  // [MICHAEL 2026-10-08] One explainer across the three Kathy images.
+  handwrittenSetCaption:
+    "Concept images. zz-code words, hand printed, for any thing or object. Then scanned, and more.",
+  handwrittenSetZzPage:
+    "Every zz-code can optionally have its own zzPage (here, zzpage.com/zz/Kathy-found-dog), hosted by zzThis or in the user's own cloud storage: Google Drive or Docs, OneDrive, Dropbox, iCloud, or Box.",
   locationHeading: "Location",
   locationText:
     "Silicon Valley (Mountain View / Santa Clara; Hacker Dojo) and New York City.",
