@@ -1,0 +1,71 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://zer0state.com/schemas/zz-ocr-qual-candidate-bundle-v1.json",
+  "title": "ZZ-OCR-QUAL-001 sealed adapter and decoder candidate bundle",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "qualification_id",
+    "candidate_id",
+    "platform",
+    "device_matrix_sha256",
+    "adapter",
+    "decoder"
+  ],
+  "properties": {
+    "schema_version": { "const": 1 },
+    "qualification_id": { "const": "ZZ-OCR-QUAL-001" },
+    "candidate_id": { "type": "string", "minLength": 1 },
+    "platform": { "enum": ["ios", "android"] },
+    "device_matrix_sha256": { "$ref": "#/$defs/sha256" },
+    "adapter": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "commit",
+        "artifact_sha256",
+        "engine_id",
+        "engine_version",
+        "config_sha256",
+        "preprocessing_sha256",
+        "confidence_mapping_sha256"
+      ],
+      "properties": {
+        "commit": { "$ref": "#/$defs/commit" },
+        "artifact_sha256": { "$ref": "#/$defs/sha256" },
+        "engine_id": { "type": "string", "minLength": 1 },
+        "engine_version": { "type": "string", "minLength": 1 },
+        "config_sha256": { "$ref": "#/$defs/sha256" },
+        "preprocessing_sha256": { "$ref": "#/$defs/sha256" },
+        "confidence_mapping_sha256": { "$ref": "#/$defs/sha256" }
+      }
+    },
+    "decoder": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "commit",
+        "wordlist_version",
+        "wordlist_sha256",
+        "checkword_version",
+        "checkword_sha256",
+        "vectors_sha256",
+        "band_mapping_sha256"
+      ],
+      "properties": {
+        "commit": { "$ref": "#/$defs/commit" },
+        "wordlist_version": { "type": "string", "minLength": 1 },
+        "wordlist_sha256": { "$ref": "#/$defs/sha256" },
+        "checkword_version": { "type": "string", "minLength": 1 },
+        "checkword_sha256": { "$ref": "#/$defs/sha256" },
+        "vectors_sha256": { "$ref": "#/$defs/sha256" },
+        "band_mapping_sha256": { "$ref": "#/$defs/sha256" }
+      }
+    }
+  },
+  "$defs": {
+    "sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+    "commit": { "type": "string", "pattern": "^[a-f0-9]{40}$" }
+  }
+}

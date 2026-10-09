@@ -1,0 +1,292 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://zer0state.com/schemas/zz-ocr-qual-gates-v1.json",
+  "title": "ZZ-OCR-QUAL-001 frozen pre-run gates",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "qualification_id",
+    "manifest_sha256",
+    "required_gate_ids",
+    "minimum_samples_by_split",
+    "required_buckets",
+    "thresholds"
+  ],
+  "properties": {
+    "schema_version": { "const": 1 },
+    "qualification_id": { "const": "ZZ-OCR-QUAL-001" },
+    "manifest_sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+    "required_gate_ids": {
+      "const": [
+        "false-accept-count",
+        "false-valid-decode-rate",
+        "endpoint-recall",
+        "pair-accuracy",
+        "exact-code-accuracy",
+        "character-error-rate",
+        "roi-normalization-success-rate",
+        "p95-latency-ms"
+      ]
+    },
+    "minimum_samples_by_split": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["tuning", "final"],
+      "properties": {
+        "tuning": { "type": "integer", "minimum": 1 },
+        "final": { "type": "integer", "minimum": 1 }
+      }
+    },
+    "required_buckets": {
+      "type": "array",
+      "minItems": 24,
+      "maxItems": 24,
+      "items": { "$ref": "#/$defs/bucketRequirement" }
+    },
+    "thresholds": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "max_false_accept_count",
+        "max_false_valid_decode_rate",
+        "min_endpoint_recall",
+        "min_pair_accuracy",
+        "min_exact_code_accuracy",
+        "max_character_error_rate",
+        "min_roi_normalization_success_rate",
+        "max_p95_latency_ms",
+        "fiducial_iou_threshold",
+        "cer_normalization"
+      ],
+      "properties": {
+        "max_false_accept_count": { "const": 0 },
+        "max_false_valid_decode_rate": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "min_endpoint_recall": { "type": "number", "minimum": 0, "maximum": 1 },
+        "min_pair_accuracy": { "type": "number", "minimum": 0, "maximum": 1 },
+        "min_exact_code_accuracy": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "max_character_error_rate": { "type": "number", "minimum": 0 },
+        "min_roi_normalization_success_rate": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "max_p95_latency_ms": { "type": "number", "exclusiveMinimum": 0 },
+        "fiducial_iou_threshold": {
+          "type": "number",
+          "exclusiveMinimum": 0,
+          "maximum": 1
+        },
+        "cer_normalization": { "const": "nfc-code-points-v1" }
+      }
+    }
+  },
+  "$defs": {
+    "bucketRequirement": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["bucket_id", "minimum_sample_count"],
+      "properties": {
+        "bucket_id": {
+          "enum": [
+            "handwriting",
+            "print",
+            "low-contrast",
+            "glare",
+            "blur",
+            "motion-blur",
+            "perspective",
+            "rotation",
+            "distance",
+            "wrapped",
+            "multi-code",
+            "partial-fiducial",
+            "false-zz",
+            "ambiguous-pairing",
+            "unequal-fiducial-size",
+            "curved-surface",
+            "candidate-overflow",
+            "running-text",
+            "confusable-character",
+            "near-word",
+            "invalid-reserved-character",
+            "no-code",
+            "handle",
+            "field-code-part"
+          ]
+        },
+        "minimum_sample_count": { "type": "integer", "minimum": 1 }
+      }
+    }
+  },
+  "allOf": [
+    {
+      "properties": {
+        "required_buckets": {
+          "allOf": [
+            {
+              "contains": {
+                "properties": { "bucket_id": { "const": "handwriting" } },
+                "required": ["bucket_id"]
+              }
+            },
+            {
+              "contains": {
+                "properties": { "bucket_id": { "const": "print" } },
+                "required": ["bucket_id"]
+              }
+            },
+            {
+              "contains": {
+                "properties": { "bucket_id": { "const": "low-contrast" } },
+                "required": ["bucket_id"]
+              }
+            },
+            {
+              "contains": {
+                "properties": { "bucket_id": { "const": "glare" } },
+                "required": ["bucket_id"]
+              }
+            },
+            {
+              "contains": {
+                "properties": { "bucket_id": { "const": "blur" } },
+                "required": ["bucket_id"]
+              }
+            },
+            {
+              "contains": {
+                "properties": { "bucket_id": { "const": "motion-blur" } },
+                "required": ["bucket_id"]
+              }
+            },
+            {
+              "contains": {
+                "properties": { "bucket_id": { "const": "perspective" } },
+                "required": ["bucket_id"]
+              }
+            },
+            {
+              "contains": {
+                "properties": { "bucket_id": { "const": "rotation" } },
+                "required": ["bucket_id"]
+              }
+            },
+            {
+              "contains": {
+                "properties": { "bucket_id": { "const": "distance" } },
+                "required": ["bucket_id"]
+              }
+            },
+            {
+              "contains": {
+                "properties": { "bucket_id": { "const": "wrapped" } },
+                "required": ["bucket_id"]
+              }
+            },
+            {
+              "contains": {
+                "properties": { "bucket_id": { "const": "multi-code" } },
+                "required": ["bucket_id"]
+              }
+            },
+            {
+              "contains": {
+                "properties": { "bucket_id": { "const": "partial-fiducial" } },
+                "required": ["bucket_id"]
+              }
+            },
+            {
+              "contains": {
+                "properties": { "bucket_id": { "const": "false-zz" } },
+                "required": ["bucket_id"]
+              }
+            },
+            {
+              "contains": {
+                "properties": { "bucket_id": { "const": "ambiguous-pairing" } },
+                "required": ["bucket_id"]
+              }
+            },
+            {
+              "contains": {
+                "properties": {
+                  "bucket_id": { "const": "unequal-fiducial-size" }
+                },
+                "required": ["bucket_id"]
+              }
+            },
+            {
+              "contains": {
+                "properties": { "bucket_id": { "const": "curved-surface" } },
+                "required": ["bucket_id"]
+              }
+            },
+            {
+              "contains": {
+                "properties": {
+                  "bucket_id": { "const": "candidate-overflow" }
+                },
+                "required": ["bucket_id"]
+              }
+            },
+            {
+              "contains": {
+                "properties": { "bucket_id": { "const": "running-text" } },
+                "required": ["bucket_id"]
+              }
+            },
+            {
+              "contains": {
+                "properties": {
+                  "bucket_id": { "const": "confusable-character" }
+                },
+                "required": ["bucket_id"]
+              }
+            },
+            {
+              "contains": {
+                "properties": { "bucket_id": { "const": "near-word" } },
+                "required": ["bucket_id"]
+              }
+            },
+            {
+              "contains": {
+                "properties": {
+                  "bucket_id": { "const": "invalid-reserved-character" }
+                },
+                "required": ["bucket_id"]
+              }
+            },
+            {
+              "contains": {
+                "properties": { "bucket_id": { "const": "no-code" } },
+                "required": ["bucket_id"]
+              }
+            },
+            {
+              "contains": {
+                "properties": { "bucket_id": { "const": "handle" } },
+                "required": ["bucket_id"]
+              }
+            },
+            {
+              "contains": {
+                "properties": { "bucket_id": { "const": "field-code-part" } },
+                "required": ["bucket_id"]
+              }
+            }
+          ]
+        }
+      }
+    }
+  ]
+}

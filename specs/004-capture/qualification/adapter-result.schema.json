@@ -1,0 +1,215 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://zer0state.com/schemas/zz-ocr-qual-adapter-result-v1.json",
+  "title": "ZZ-OCR-QUAL-001 serialized adapter results",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "qualification_id",
+    "manifest_sha256",
+    "candidate_id",
+    "candidate_bundle_sha256",
+    "adapter",
+    "results"
+  ],
+  "properties": {
+    "schema_version": { "const": 1 },
+    "qualification_id": { "const": "ZZ-OCR-QUAL-001" },
+    "manifest_sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+    "candidate_id": { "type": "string", "minLength": 1 },
+    "candidate_bundle_sha256": { "$ref": "#/$defs/sha256" },
+    "adapter": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "commit",
+        "platform",
+        "engine_id",
+        "engine_version",
+        "artifact_sha256",
+        "config_sha256",
+        "preprocessing_sha256",
+        "confidence_mapping_sha256",
+        "device_matrix_sha256"
+      ],
+      "properties": {
+        "commit": { "type": "string", "pattern": "^[a-f0-9]{40}$" },
+        "platform": { "enum": ["ios", "android"] },
+        "engine_id": { "type": "string", "minLength": 1 },
+        "engine_version": { "type": "string", "minLength": 1 },
+        "artifact_sha256": { "$ref": "#/$defs/sha256" },
+        "config_sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+        "preprocessing_sha256": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        },
+        "confidence_mapping_sha256": { "$ref": "#/$defs/sha256" },
+        "device_matrix_sha256": { "$ref": "#/$defs/sha256" }
+      }
+    },
+    "results": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/sampleResult" }
+    }
+  },
+  "$defs": {
+    "sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+    "point": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["x", "y"],
+      "properties": {
+        "x": { "type": "number", "minimum": 0, "maximum": 1 },
+        "y": { "type": "number", "minimum": 0, "maximum": 1 }
+      }
+    },
+    "polygon": {
+      "type": "array",
+      "minItems": 3,
+      "items": { "$ref": "#/$defs/point" }
+    },
+    "box": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["x", "y", "width", "height"],
+      "properties": {
+        "x": { "type": "number", "minimum": 0, "maximum": 1 },
+        "y": { "type": "number", "minimum": 0, "maximum": 1 },
+        "width": { "type": "number", "exclusiveMinimum": 0, "maximum": 1 },
+        "height": { "type": "number", "exclusiveMinimum": 0, "maximum": 1 }
+      }
+    },
+    "fiducialDetection": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["detection_id", "baseline_id", "role", "box"],
+      "properties": {
+        "detection_id": { "type": "string", "minLength": 1 },
+        "baseline_id": { "type": ["string", "null"], "minLength": 1 },
+        "role": { "enum": ["opening", "closing", "unknown"] },
+        "pair_id": { "type": ["string", "null"] },
+        "score": { "type": "number", "minimum": 0, "maximum": 1 },
+        "box": { "$ref": "#/$defs/box" }
+      }
+    },
+    "roiDetection": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "pair_id",
+        "opening_detection_id",
+        "closing_detection_id",
+        "baseline_id",
+        "polygon"
+      ],
+      "properties": {
+        "pair_id": { "type": "string", "minLength": 1 },
+        "opening_detection_id": { "type": "string", "minLength": 1 },
+        "closing_detection_id": { "type": "string", "minLength": 1 },
+        "baseline_id": { "type": "string", "minLength": 1 },
+        "polygon": { "$ref": "#/$defs/polygon" },
+        "orientation_degrees": {
+          "type": "number",
+          "minimum": -360,
+          "maximum": 360
+        },
+        "rectification_transform": {
+          "type": "array",
+          "minItems": 9,
+          "maxItems": 9,
+          "items": { "type": "number" }
+        },
+        "rectification_succeeded": {
+          "type": "boolean",
+          "description": "For v1, true means safe crop/rotation normalization succeeded; it never means perspective/projective rectification was applied."
+        }
+      }
+    },
+    "textCandidate": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "candidate_id",
+        "raw_text",
+        "confidence_status",
+        "confidence",
+        "regions"
+      ],
+      "properties": {
+        "candidate_id": { "type": "string", "minLength": 1 },
+        "pair_id": { "type": ["string", "null"] },
+        "raw_text": { "type": "string" },
+        "confidence_status": { "enum": ["available", "not-available"] },
+        "confidence": {
+          "type": ["number", "null"],
+          "minimum": 0,
+          "maximum": 1
+        },
+        "regions": { "type": "array", "items": { "$ref": "#/$defs/box" } }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": { "confidence_status": { "const": "available" } },
+            "required": ["confidence_status"]
+          },
+          "then": {
+            "properties": {
+              "confidence": { "type": "number", "minimum": 0, "maximum": 1 }
+            }
+          },
+          "else": { "properties": { "confidence": { "const": null } } }
+        }
+      ]
+    },
+    "sampleResult": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "sample_id",
+        "split",
+        "input_image_sha256",
+        "device_matrix_entry_id",
+        "os_version",
+        "device_class",
+        "elapsed_ms",
+        "fiducials",
+        "rois",
+        "candidates",
+        "reason_codes"
+      ],
+      "properties": {
+        "sample_id": { "type": "string", "pattern": "^[A-Za-z0-9._-]+$" },
+        "split": { "enum": ["tuning", "final"] },
+        "input_image_sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+        "device_matrix_entry_id": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9._-]+$"
+        },
+        "os_version": { "type": "string", "minLength": 1 },
+        "device_class": { "type": "string", "minLength": 1 },
+        "elapsed_ms": { "type": "number", "minimum": 0 },
+        "fiducials": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/fiducialDetection" }
+        },
+        "rois": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/roiDetection" }
+        },
+        "candidates": {
+          "type": "array",
+          "description": "Text hypotheses in original engine order. The harness and consumer must not reorder by confidence or decoded outcome.",
+          "items": { "$ref": "#/$defs/textCandidate" }
+        },
+        "reason_codes": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": { "type": "string", "minLength": 1 }
+        }
+      }
+    }
+  }
+}

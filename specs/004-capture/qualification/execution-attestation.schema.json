@@ -1,0 +1,41 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://zer0state.com/schemas/zz-ocr-qual-execution-attestation-v1.json",
+  "title": "ZZ-OCR-QUAL-001 final execution attestation",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "qualification_id",
+    "candidate_id",
+    "candidate_bundle_sha256",
+    "run_id",
+    "pre_run_attestation_sha256",
+    "manifest_sha256",
+    "gate_config_sha256",
+    "device_matrix_sha256",
+    "adapter_results_sha256",
+    "started_at_utc",
+    "finished_at_utc"
+  ],
+  "properties": {
+    "schema_version": { "const": 1 },
+    "qualification_id": { "const": "ZZ-OCR-QUAL-001" },
+    "candidate_id": { "type": "string", "minLength": 1 },
+    "candidate_bundle_sha256": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "run_id": { "type": "string", "minLength": 1 },
+    "pre_run_attestation_sha256": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "manifest_sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+    "gate_config_sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+    "device_matrix_sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+    "adapter_results_sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+    "started_at_utc": { "type": "string", "format": "date-time" },
+    "finished_at_utc": { "type": "string", "format": "date-time" }
+  }
+}

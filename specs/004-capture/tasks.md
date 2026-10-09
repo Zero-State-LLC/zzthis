@@ -1,32 +1,51 @@
 # Tasks: capture
 
-Feature: [spec.md](spec.md) · Plan: [plan.md](plan.md) · Related issue: #13 (reads on the device; server-side OCR only for retries)
-Workflows for every implementing task: anti-slop-code, production-systems, google-developer-style. CI: `ci.yml`, `site-ci.yml`, `free-security-scan.yml`.
+Bundle: **B2 Camera Capture** · Target: **v1** · Status: **ACTIVE / qualification-gated**. Scope expansion follows `specs/SCOPE-GOVERNANCE.md`; T017-T018 belong to B12 Advanced Recognition and are not v1 implementation authority.
 
+Feature: [spec.md](spec.md) · Plan: [plan.md](plan.md) · Recognition intent: [2026-10-06 v1 recognizer qualification](../../intent/2026-10-06-v1-recognizer-qualification.md)
+Workflows for every implementing task: anti-slop-code, production-systems, google-developer-style.
 
-## Status reconciliation
+This qualification-gated task list supersedes the earlier capture decomposition. It keeps v1 on-device and no-cloud for raw photos; unchecked tasks are planned work, not implementation evidence. Use [TRACEABILITY](../TRACEABILITY.md) and current product specs before scheduling work.
 
-This is the original capture decomposition. V1 boundaries and server/client integration were consolidated under spec 005/zzThat. Voice, trained-reader work, and the Option B benchmark remain deferred. Unchecked boxes are **not** a reliable current-status list. Use [TRACEABILITY](../TRACEABILITY.md) and current product specs before scheduling work.
-## Phase 0: Decisions
+## Phase 0: Contract and corpus
 
-- [ ] T001 App scope and platform (Q33). Owner: Michael and Danny.
-- [ ] T002 Real-photo test set source and consent (Q34).
+- [ ] T001 Define the Swift and Kotlin `RecognitionResult` adapters from the plan, including optional terminal-fiducial boxes/roles, pair evidence, validated ROI, orientation, and crop/rotation provenance. Preserve engine ID/version, raw candidates, confidence when available, and geometry/line provenance when available. Missing confidence stays missing. The contract must represent unsupported/unsafe geometry and candidate-cap overflow without emitting payload candidates; reject perspective/projective transforms.
+- [ ] T002 Implement one private corpus manifest containing both tuning and final samples, split by writer group. Validate that writer groups are disjoint across splits. Freeze expected outputs, the complete required stress-bucket set and minimum counts, and the manifest hash. Use team-made/synthetic/separately-approved images with no faces or personal data. Do not commit private photos to Git or CI artifacts.
+- [ ] T003 Implement the qualification harness against the manifest, device-matrix, evidence-only adapter-result, sealed candidate-bundle, gate-config, pre-run-attestation, execution-attestation, receipt schemas, and scoring rules. It validates the whole corpus and per-device-matrix sample coverage, verifies bundle/matrix JCS hashes and receipt-to-bundle/matrix identity equality, and verifies both detached Sigstore Cosign bundles using the Sigstore public-good TUF trust root plus the protected verifier policy's exact GitHub Actions OIDC issuer/workflow identity allowlist. It semantically validates each pair's opening/closing detection IDs and requires the linked ROI and both detections to share a non-null baseline group; cross-baseline predictions remain false-pair evidence and may never include payload OCR/candidates. It computes per-split/per-bucket metrics, keeps unsupported-geometry/candidate-overflow safety-probe denominators separate from supported-geometry OCR accuracy, requires safe-refusal/no-payload-OCR evidence for those probes, replays normalized evidence through spec 003 without network access, derives product state locally, validates ground truth through the pinned decoder, and emits a schema-valid receipt plus Markdown summary. Synthetic fixtures must validate; absent/untrusted policy or attestations, malformed inputs, or incomplete evidence must never produce PASS. Add negative semantic-validation tests for schema-valid receipts with device or bucket observations below their frozen minima, gate results inconsistent with recomputed metrics/thresholds, missing per-device final latency, undispositioned false-accept/false-valid cases, payload output on a fail-closed probe, unpaired/cross-baseline ROI linkage, and unpinned geometry/candidate limits; each must return INCOMPLETE or NO_PROMOTION and must not authorize promotion.
 
-## Phase 1: Foundational (after spec 003 T008)
+- [ ] T003A Add one documented local command for the harness (target: `npm run qual:ocr`) that accepts whole-corpus manifest, device matrix, sealed candidate bundle, gate-config, pre-run attestation and its Sigstore bundle, execution attestation and its Sigstore bundle, adapter-result, and output paths. The protected workflow must verify pre-run Rekor inclusion/timestamp before starting final-split evaluation; it captures start and finish from its trusted runner clock, not caller input. The execution attestation binds the same bundle, pre-run attestation, matrix, resulting evidence hash, and captured times. Do not upload corpus images, per-sample private corpus data, or adapter outputs; hash-only publication metadata may be published through the protected workflow. If the required verifier policy, identity allowlist, or trust material is absent, output INCOMPLETE/NO_PROMOTION only.
 
-- [ ] T003 Snap-to-wordlist and check-word verification on the client, shared with spec 003. Every reading goes through the spec 003 grammar library first (FR-008); handle and field parts are not snapped (FR-010), and a part counts as a field part only after the near-word confirm step (FR-015), tested with the `docs/SPEC.md` G1a vectors.
-- [ ] T004 Decision bands: accept, clarify, retry, abstain, with a human confirm step. One test per trigger row in the spec's Decision bands table, with thresholds as parameters until Q37.
-- [ ] T009 Multi-line and multi-code reads (FR-009, FR-014); bare mark, non-ASCII, and reserved-symbol handling (FR-011, FR-012); running-text scan (FR-013).
+## Phase 1: Shared decoder path
 
-## Phase 2: US1 and US2 (P1)
+- [ ] T004 Snap-to-wordlist, near-word handling, and check-word verification remain shared with spec 003. Every camera reading passes through the same grammar/vectors; recognizers cannot query live codes or resolver records.
+- [ ] T005 Decision bands: Accept, Clarify, Retry, Abstain. Preserve the accepted prototype thresholds as parameters. Add explicit tests proving a wrong-but-valid decoded code is never silently corrected by resolver lookup.
+- [ ] T006 Multi-line, multi-code, partial-marker, bare-mark, non-ASCII, reserved-symbol, running-text, handle, and field-code cases use the existing spec 004 rules.
+- [ ] T006A Implement terminal-`zz` fiducial detection/pairing before payload OCR. Pair only same-baseline endpoints; preserve endpoint regions, pair evidence, validated ROI, and permitted crop/rotation provenance. Freeze baseline tolerance and hard caps for fiducial/pair counts in the candidate configuration before final qualification. On overflow, perspective-dependent geometry, unsafe ROI, or unsupported curved/wrapped surfaces, fail closed for the whole frame: never truncate/rank candidates, never emit payload OCR, and offer rescan/typed entry. Test one endpoint, occlusion, false `zz` prose, ambiguous pairing, multiple codes, rotation, skew/perspective negative probes, candidate overflow, flat two-line payloads, curved/wrapped surfaces, and no-code images. Pairing cannot consult resolver/live-code state or payload wordlist proximity.
 
-- [ ] T005 Option A camera read on the device.
-- [ ] T006 Typed and spoken entry through the same snap and verify path.
+## Phase 2: Platform adapters
 
-## Phase 3: US3 (P2)
+- [ ] T007 iOS Apple Vision adapter. On-device only. Normalize output to RecognitionResult; do not put Vision objects into shared grammar code.
+- [ ] T008 Android ML Kit Text Recognition adapter. On-device only. Normalize output to RecognitionResult.
+- [ ] T009 Android PP-OCR mobile/ONNX prototype adapter for qualification. On-device only. Dependency/package/security review is required before it can become a shipping dependency.
 
-- [ ] T007 Retry path: upload photo, cloud read, same snap and verify. Depends on spec 002.
+## Phase 3: ZZ-OCR-QUAL-001
 
-## Phase 4: Benchmark (v1 exit gate)
+- [ ] T010 Run the fiducial stage plus Apple Vision, ML Kit, and PP-OCR payload candidates under qualification.md against the frozen final corpus where platform execution permits. Produce the machine-readable receipt and Markdown report with version/configuration hashes, device/OS evidence, supported-geometry per-bucket metrics, fail-closed safety-probe outcomes, and PASS/FAIL/INCOMPLETE.
+- [ ] T011 Report every metric required by qualification.md, including fiducial precision/recall, same-baseline pair accuracy, false-finder/false-pair, safe ROI/crop-or-rotation performance, safe-refusal/no-OCR behavior on unsupported geometry and candidate overflow, false-valid-decode, False Accept, no-code false positives, band distribution, crash count, median/p95 latency, and footprint. Keep supported OCR-accuracy denominators separate from negative safety probes. Disposition every False Accept by sample_id; resolver state cannot hide it.
+- [ ] T012 Android promotion decision: choose ML Kit or PP-OCR from ZZ-OCR-QUAL-001 evidence. False-valid-decode behavior is the primary safety metric; generic vendor benchmark claims are not promotion evidence. Record the decision and engine/version pin.
+- [ ] T013 iOS release gate: Apple Vision must pass the same product-level qualification. If it does not, stop and open a replacement-engine decision; do not lower validation requirements to make it pass.
 
-- [ ] T008 Option B 2-week prototype benchmarked against Option A on the same test set (Q18). The result decides whether the v2 trained-reader track starts (`docs/SPEC.md` Section 12). Training and shipping our own model beyond this benchmark is v2.
+## Phase 4: v1 integration
+
+- [ ] T014 Creation check and ordinary scan both use the promoted platform adapter plus the same shared decoder.
+- [ ] T015 Verify raw photos never leave the device in v1 and no cloud/server vision path is reachable or advertised.
+- [ ] T016 End-to-end evidence on representative iOS and Android devices: camera -> recognizer -> shared decoder -> band -> canonical code/clarify/retry/abstain. Verify two-retry behavior, typed-entry fallback, local photo deletion, no raw-photo network request, and the rollback/disable-camera-Accept path.
+
+## Deferred v2 — B12 Advanced Recognition (RESEARCH; not active v1 tasks)
+
+- [ ] T017 Evaluate a Qwen-class VLM only as a hard-case verifier behind RecognitionResult; no v1 dependency.
+- [ ] T018 Evaluate a custom zz-specific recognizer after enough governed data exists. Compare it against the frozen qualification baseline before promotion.
+
+## Definition of done
+
+Capture v1 is implementation-ready only when every normative rule has a task and test owner, no OPEN item blocks implementation, qualification.md can produce a reproducible receipt without inventing fields, and zzThat consumes the same boundary. Camera Accept is release-ready only after a PASS receipt for that platform's pinned adapter. NO_PROMOTION is a valid qualification outcome and leaves typed entry available.

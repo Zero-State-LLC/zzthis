@@ -1,0 +1,46 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://zer0state.com/schemas/zz-ocr-qual-device-matrix-v1.json",
+  "title": "ZZ-OCR-QUAL-001 frozen device matrix",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "qualification_id",
+    "candidate_id",
+    "platform",
+    "entries"
+  ],
+  "properties": {
+    "schema_version": { "const": 1 },
+    "qualification_id": { "const": "ZZ-OCR-QUAL-001" },
+    "candidate_id": { "type": "string", "minLength": 1 },
+    "platform": { "enum": ["ios", "android"] },
+    "entries": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/deviceEntry" }
+    }
+  },
+  "$defs": {
+    "deviceEntry": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "device_matrix_entry_id",
+        "os_version",
+        "device_class",
+        "minimum_sample_count"
+      ],
+      "properties": {
+        "device_matrix_entry_id": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9._-]+$"
+        },
+        "os_version": { "type": "string", "minLength": 1 },
+        "device_class": { "type": "string", "minLength": 1 },
+        "minimum_sample_count": { "type": "integer", "minimum": 1 }
+      }
+    }
+  }
+}

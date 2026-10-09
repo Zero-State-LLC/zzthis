@@ -1,13 +1,13 @@
 # Feature spec: capture by camera, typing, or voice
 
 Feature ID: 004-capture
-Status: not built. Recognition approach decided (Q18, #74): Option A on the device. Deepened 2026-10-03: grammar path, decision-band triggers, error states, and edge cases. v1 reads English (ASCII) codes with Option A; trained models and other scripts are v2 (issue #35).
+Status: not built. Recognition boundary decided: on-device, engine-neutral evidence feeds the shared zz decoder. Apple Vision is the iOS baseline; Android ML Kit and PP-OCR are qualification candidates under ZZ-OCR-QUAL-001. No cloud reader in v1. Trained/VLM readers and other scripts are v2 (issue #35).
 Phase: specify (what and why). The how is in [plan.md](plan.md).
 Constitution: [.specify/memory/constitution.md](../../.specify/memory/constitution.md).
 
 ## Why
 
-A person reads a code by camera, typing, or voice [BRIEF]. Handwriting and print recognition of zz codes is untested [PRODUCT]. Capture must turn a messy real-world mark into exactly one code, or ask for help, and never silently pick the wrong one [PRODUCT] [OPERATOR 2026-10-02].
+A person reads a code by camera, typing, or voice [BRIEF]. Handwriting and print recognition of zz codes is untested [PRODUCT]. Capture must turn a messy real-world mark into exactly one code, or ask for help, and never silently pick the wrong one [PRODUCT] [OPERATOR 2026-10-02]. In camera capture, the terminal `zz` marks are also the code's human-readable fiducial/index marks: vision finds and pairs them to localize the symbol before payload recognition. They remain literal grammar markers, but are not payload data.
 
 ## User stories
 
@@ -31,25 +31,30 @@ Acceptance:
 1. Typed input goes through the same grammar library as the demo and the resolver; every `docs/SPEC.md` Section 2.2a G9 vector gives the same result here (FR-008).
 2. Spoken words are joined into a code and shown back before lookup. If the person says only the words, the client adds the `zz` markers in what it shows back, and lookup waits for the person to confirm (INFERRED; the closing-marker rule applies to written codes, and the confirm step stands in for it in speech).
 
-### US3. Retry a hard case (P2)
+### US3. Retry a hard case without leaking the photo (P2)
 
-As a user whose reading failed, I can send the photo for a server-side read, so that hard cases still work [OPERATOR 2026-10-02].
+As a user whose reading failed, I can rescan or type the code, so that v1 fails safely without sending the raw photo off device.
 
-Acceptance: the photo leaves the device only on a retry or hard case [OPERATOR 2026-10-02].
+Acceptance: v1 never uploads the raw photo for recognition. A server/VLM hard-case read is a v2 candidate and requires a separate decision.
 
 ## Functional requirements
 
 | ID | Requirement | Source |
 |---|---|---|
 | FR-001 | Inputs: camera, typing, voice. | [BRIEF] |
-| FR-002 | On-device recognition first; photo stays on the device by default. | [OPERATOR 2026-10-02]; Q18 is decided [DELEGATED 2026-10-04, #74]: Option A on the device (Apple Vision, ML Kit), no cloud reader in v1 |
+| FR-018 | In camera capture, the opening and closing `zz` markers are structural fiducials/index marks. Detection and pairing of marker regions happens before payload OCR. A valid pair defines a candidate region of interest (ROI), orientation/baseline evidence, and payload extent. Pairing is limited to opening/closing markers on the same detected baseline and in plausible reading order. V1 may crop and rotate the selected ROI to normalize orientation, but does not apply perspective/projective rectification. Fiducials are framing evidence and literal grammar markers, not X1/X2/X3 payload fields. | [DANNY 2026-10-06]; v1 geometry decision accepted 2026-10-08 |
+| FR-019 | Fiducial detection never fabricates a missing endpoint. One endpoint, an occluded/cut endpoint, implausible pairing, or ambiguous geometry produces Retry/Clarify/Abstain as specified; it cannot reach Accept by inferring the missing marker. | Safety requirement from FR-018 |
+| FR-020 | Multiple plausible fiducial pairs produce multiple boxed candidates. Pairing uses same-baseline geometry and reading order only and never resolver existence, wordlist proximity, live-code knowledge, or payload OCR to choose a pair. Candidate detection/pair counts are bounded by versioned limits frozen before final qualification. If a limit is exceeded, the client does not truncate or rank away candidates: it fails closed for the whole frame, performs no payload OCR, and offers rescan/typed entry. The person chooses before payload OCR whenever FR-013 presents more than one selectable visual candidate, including a complete pair alongside partial/bare candidates. A sole unambiguous complete pair may proceed directly only when it is the only selectable visual candidate. | FR-013/FR-014 refined by FR-018; v1 geometry decision accepted 2026-10-08 |
+| FR-021 | Payload OCR runs only for the sole unambiguous complete pair when it is the only selectable visual candidate, or for a complete pair the person selected, and only inside its validated interior ROI. Selecting a partial/bare candidate does not trigger payload OCR. The client may crop and rotate the selected ROI when its same-baseline geometry permits; it does not apply perspective/projective rectification. Unsafe, incomplete, perspective-dependent, or unsupported geometry fails closed to Clarify/Retry/Abstain. The shared grammar still receives a representation containing the literal opening/closing markers so existing spec 003 grammar/vectors remain authoritative. Marker recognition confidence does not count as payload-word confidence. Qualification may OCR every predicted complete pair with safe supported geometry to measure each adapter independently, but those results do not define runtime selection behavior. | [DANNY 2026-10-06]; v1 geometry decision accepted 2026-10-08 |
+| FR-022 | Typed and voice input do not require visual fiducial detection. They continue to use literal `zz` grammar markers and the shared decoder. | Input-mode boundary |
+| FR-002 | Recognition runs on device in v1 and the raw photo stays on device. The recognizer is an adapter that emits evidence; it does not own zz semantics. Apple Vision is the iOS baseline. Android ML Kit and PP-OCR are qualification candidates; ZZ-OCR-QUAL-001 selects the promoted Android adapter. | [OPERATOR 2026-10-02]; Q18 [DELEGATED 2026-10-04, #74], refined by accepted 2026-10-06 recognizer-qualification intent |
 | FR-003 | Every reading is snapped to the closed wordlist (spec 003) and the check word is verified. | [OPERATOR 2026-10-02] |
-| FR-004 | Calibrated confidence decides accept, clarify, retry, or abstain, separately for voice, image, and typed input. | [PRODUCT]; thresholds OPEN (Q37) |
+| FR-004 | The shared decision-band function decides accept, clarify, retry, or abstain from normalized recognition evidence plus grammar/check-word results. Engine confidence is evidence only; missing confidence is explicit and is never invented. | [PRODUCT]; Q37 prototype thresholds are parameters |
 | FR-005 | A person confirms low-confidence readings. | [OPERATOR 2026-10-02] [PRODUCT] |
 | FR-006 | Correction happens on the client against the wordlist and check word, never by asking the server for nearby codes. | [OPERATOR 2026-10-02] |
 | FR-007 | Read-back confirmation errors are measured, not assumed away. | [PRODUCT]; method OPEN (Q37) |
 | FR-008 | Every reading, from camera, typing, or voice, passes through the v1 grammar library (spec 003 US3) before snapping, and the client sends only the canonical form. | [MICHAEL 2026-10-02 #33] [MICHAEL 2026-10-02 #34] |
-| FR-009 | A code written across two lines, or wrapped around an edge, reads as one code when both markers are found. | [MICHAEL 2026-10-02 #33] |
+| FR-009 | A code whose payload spans two lines in a flat capture may read as one code when both terminal markers form a valid same-baseline pair and the interior ROI is safe. V1 does not promise recognition when a code wraps around an object edge or requires perspective/projective rectification; such geometry must fail closed. | [MICHAEL 2026-10-02 #33], narrowed by v1 geometry decision accepted 2026-10-08 |
 | FR-010 | Wordlist snapping applies only to parts expected to be wordlist words. Handle parts and field-code parts (names, numbers) are read as written, never snapped, and always shown back for confirmation. A part is treated as a field part only after the near-word check (FR-015). | INFERRED, so a name is never turned into a dictionary word |
 | FR-011 | A bare mark is reported as a bare mark. v1 does not resolve it; the client says so and offers typed entry. Linking a bare mark by photo, place, and time is a v2 candidate. | [MICHAEL 2026-10-02 #33]; v1 split INFERRED |
 | FR-012 | A reading with letters outside ASCII, or with a reserved symbol (`#`, `$`, `/`, `:`), abstains with the grammar reason. It is never snapped to the nearest valid code. | [MICHAEL 2026-10-02 #34]; abstain rule INFERRED |
@@ -67,7 +72,7 @@ Thresholds stay OPEN (Q37). The triggers below say which band applies; they set 
 |---|---|---|
 | Accept | Grammar passes, every snapped word is above the accept threshold, and the check word verifies (word codes) | The canonical code, then the record view |
 | Clarify | Grammar passes, but one or more words fall between the thresholds, the check word fails with one uncertain word, or the classifier returns `confirm` (a near-word, FR-015) | The uncertain word with wordlist candidates and the part as written; confirm or type it |
-| Retry | A marker is missing or cut off, the photo is blurred, or glare hides part of the code | "Take another photo" with the reason; after a set number of retries, offer the server read (US3) |
+| Retry | A marker is missing or cut off, the photo is blurred, or glare hides part of the code | "Take another photo" with the reason; after two retries, continue to offer rescan or typed entry. No server/cloud read exists in v1. |
 | Abstain | Grammar fails for any reason other than a missing or cut-off marker (that is Retry), including `unsupported-script` and `reserved-symbol` (FR-012). A bare mark also lands here in v1 (FR-011), and so does a word code whose check-word verify returns `wrong-length` (FR-016) | The reason in plain words, and typed entry |
 
 Handles and field codes never reach Accept without a person confirming them (FR-010).
@@ -76,30 +81,41 @@ Handles and field codes never reach Accept without a person confirming them (FR-
 
 - Markers written in capitals: accepted and shown in lowercase (FR-008). The display rule bars a capital-letter zz in our own materials, not in what people write.
 - A circled `(zz)` at one end and a plain `zz` at the other: one code (`docs/SPEC.md` Section 2.2a G3).
-- Only the opening marker visible: Retry, not a guess.
-- Only the closing marker visible: Retry (INFERRED, D-2026-10-04-06).
+- Only the opening fiducial visible: Retry, not a guess.
+- Only the closing fiducial visible: Retry (INFERRED, D-2026-10-04-06).
+- Two endpoint-like `zz` marks with ambiguous pairing: box the plausible candidates and Clarify/pick; never select by payload plausibility or resolver existence.
+- A false `zz` in surrounding prose: may be a fiducial candidate, but geometry/pairing and later grammar validation must reject or expose it without silently changing the payload.
+- Rotation, skew, perspective, curved/wrapped surfaces, partial occlusion, unequal marker sizes, and candidate-limit overflow are qualification stress cases. Rotation normalization and ROI cropping are permitted; perspective/projective rectification is not. Perspective-dependent, curved/wrapped, unsafe, or over-limit cases must fail closed and never reach payload OCR. A transform cannot create a missing endpoint.
 - A smiley or star drawn next to the code: ignored by the text reader; drawn symbols are a separate v2 mode.
 - Korean, Japanese, or other non-ASCII words between markers: Abstain with `unsupported-script` in v1 (issue #35 for v2).
 - Voice input that sounds like two different wordlist words: Clarify with both candidates, never auto-pick.
 
 ## Success criteria
 
-Not set for this feature. Research accuracy targets are not acceptance criteria and are not kept in this repo (Q24). Option A and B are compared on the same test set before any switch [OPERATOR 2026-10-02].
+Product-level qualification is defined by [ZZ-OCR-QUAL-001](qualification.md). The protocol defines the corpus, safety metrics, evidence receipt, promotion/no-promotion outcome, change control, and rollback rule. Generic OCR benchmark claims are not acceptance evidence. The gate config freezes scoring parameters (including fiducial IoU and CER normalization), thresholds, and required bucket counts. Each unsigned JCS attestation is signed as a detached Sigstore Cosign blob. The verifier bootstraps the Sigstore public-good TUF trust root independently of candidate inputs and uses a protected policy pinned before the run to allowlist the exact GitHub Actions OIDC issuer and qualification-workflow identity. Both signatures require Rekor inclusion proof and signed entry timestamps; the trusted workflow gates final execution on pre-run publication and captures execution times itself. Missing or untrusted policy, identity, or evidence makes the result INCOMPLETE/NO_PROMOTION; it does not authorize PASS.
 
 ## Out of scope
 
-The phone and web apps as products (not yet specified; Q33), the resolver (spec 002), and the wordlist (spec 003).
+App product behavior outside capture (zzThat owns the native app implementation), the resolver (spec 002), the wordlist/check-word algorithm (spec 003), cloud OCR, and custom/VLM recognition in v1.
+
+## Privacy and data lifecycle
+
+- Raw v1 scan images are ephemeral app-cache data. They are deleted when the attempt/flow ends and are never uploaded for recognition.
+- Recognition evidence is processed locally. Production logs, analytics, crash reports, and API payloads do not contain raw images, OCR candidate text, canonical codes, or tokens.
+- The private qualification corpus is governed by [qualification.md](qualification.md); raw private images never enter Git or CI artifacts and are not training data by default.
+- A rescan is a new recognition attempt. Clarify may retain only the current attempt's local evidence until the person confirms, retries, types, or leaves the flow.
 
 ## Client read pipeline for the v1 build (decided 2026-10-04)
 
 Status: decided. Danny said yes on #74 (2026-10-04). Source: [analysis 2026-10-04](../analysis-2026-10-04.md). The iOS and Android apps both scan, so they need one rule for finding codes in text, or the two apps will disagree. The rows in [spec 003 `vectors.json`](../003-wordlist-checkword/vectors.json) (`scanner`) are the test. The web client in v1 is typing only (spec 005 US6), so it uses steps 3 to 6 on the typed text.
 
-1. Recognize text on the device. Join the recognized lines in reading order (top to bottom, then left to right) with spaces. Each line keeps the recognizer's confidence, from 0 to 1: on iOS the top candidate's `VNRecognizedText.confidence`, on Android `Text.Line.getConfidence()`. Never use ML Kit Element or Symbol confidence. Each token remembers the line it came from, and a word takes its line's confidence. A candidate takes the lowest confidence among the lines its words came from, so a code that wraps onto two lines takes the lower of the two. "Every word" in the band table means every part between the markers, including the check word; the markers do not count (INFERRED). The band function takes a list of (token, line index, line confidence), not recognizer objects. The same band rows run in the Swift and Kotlin grammar libraries: for a word code whose check word verifies, every line at 0.80 gives Accept, one line at 0.79 gives Clarify, and a code wrapped across lines at 0.90 and 0.45 gives Retry.
-2. Find candidates with the scanner rules below.
-3. Classify each plain code against the bundled list (Section 2.2a G1): word, field, or confirm.
-4. For a word code, verify the check word (spec 003) when the bundled list version equals `wordlist_version` from `GET /v1`. Otherwise skip the local check. The server still verifies.
-5. Set the band (table below).
-6. One candidate in Accept: resolve it. More than one candidate: list them all and wait for a tap. Never resolve a candidate the person did not pick (FR-013, FR-014).
+1. Detect candidate terminal `zz` fiducial regions on device. Apply the versioned hard limits for fiducial and pair candidates. If a limit is exceeded, do not truncate, rank, or partially process the frame: show a bounded-resource retry/typed-entry state and do no payload OCR. Pair only plausible opening/closing fiducials that share the same detected baseline and reading order; each pair defines an ROI. Preserve endpoint boxes, pairing score/evidence, baseline/orientation, and any permitted crop/rotation transform. Do not consult resolver/live-code data, payload wordlist proximity, or payload OCR to choose a pair. Box and present every candidate before processing an ambiguous view.
+2. Proceed without a tap only when one unambiguous complete pair is the only selectable visual candidate. Otherwise wait for the person's selection; selecting a partial/bare candidate does not trigger payload OCR. Crop and, when the validated same-baseline geometry permits, rotate only the sole or selected complete pair's validated interior ROI; do not perspective/projectively rectify it. Recognize only that interior payload through the platform adapter and normalize it to `RecognitionResult` (plan.md): engine/version, raw candidates, confidence when the engine exposes a meaningful score, and geometry/line provenance when available. Never run payload OCR on unselected candidate pairs at runtime. Apple Vision is the iOS baseline. Android ML Kit and PP-OCR remain candidates until ZZ-OCR-QUAL-001 promotes one. Shared grammar code never receives vendor recognizer objects. Join recognized lines in reading order (top to bottom, then left to right) with spaces. Where line confidence exists, each token remembers its line and a candidate takes the lowest relevant line confidence. Missing confidence is not synthesized; the qualification report must define how that adapter maps evidence to bands before promotion. "Every word" in the band table means every part between the markers, including the check word; markers do not count.
+3. Reconstruct normalized candidate evidence with literal boundary markers plus the recognized payload, then run the scanner rules below. The fiducial boxes are structural evidence; their recognition score is not a payload-word confidence.
+4. Classify each plain code against the bundled list (Section 2.2a G1): word, field, or confirm.
+5. For a word code, verify the check word (spec 003) when the bundled list version equals `wordlist_version` from `GET /v1`. Otherwise skip the local check. The server still verifies.
+6. Set the band (table below).
+7. One candidate in Accept: resolve it. More than one candidate: list them all and wait for a tap. Never resolve a candidate the person did not pick (FR-013, FR-014).
 
 ### Scanner rules
 
@@ -135,7 +151,7 @@ Thresholds stay parameters (Q37). These values let the apps ship. They are not m
 
 Bands use the local verify only when step 4 ran. When the list versions differ, the server's 400 `wrong-length` maps to `scan.wrong_length` (zzThat spec.md Errors).
 
-After two retries in one scan, a client may offer the server read (US3) only when `GET /v1` reports `photo_reads: true`. It is false in v1, because Q18 chose on-device reading only, so the v1 apps do not show the offer.
+After two retries in one scan, v1 continues to offer rescan or typed entry. `photo_reads` remains false: no raw-photo cloud/server read is enabled in v1. A future server/VLM hard-case verifier requires a separate v2 decision.
 
 The creation check (FR-017) runs the same steps on the person's photo and passes when the picked candidate's canonical form equals the minted code.
 
@@ -154,7 +170,7 @@ The pre-build audit found that the scanner rules, read literally, could not pair
 
 | ID | Question | Default |
 |---|---|---|
-| Q18 | Fine-tune our own small model (Option B)? Also: must Option A include an on-device model, or may US1 fall back to cloud vision? | RESOLVED [DELEGATED 2026-10-04, #74]: Option A on the device (Apple Vision, ML Kit); no cloud reader in v1; the Option B benchmark is v2 |
+| Q18 | Which recognition engine ships? | REFINED 2026-10-06: on-device and no-cloud remain locked. Apple Vision is the iOS baseline. Android ML Kit and PP-OCR are qualified under ZZ-OCR-QUAL-001 and the winner is pinned from evidence. Custom/VLM readers remain v2. |
 | Q33 | Scope of the zzThat app (web, Android, iOS) as a product: which features ship first? | RESOLVED [DELEGATED 2026-10-04, #74]: iOS and Android together with the zzThat spec 001 scope; the web client in spec 005 |
 | Q34 | Where the test set of real photos comes from, and consent for using them | RESOLVED [DELEGATED 2026-10-04, #74]: Team-made photos with written consent, no faces or personal data, kept private, used to measure only |
 | Q37 | Confidence thresholds for accept, clarify, retry, and abstain, and how read-back errors are measured | RESOLVED [DELEGATED 2026-10-04, #74]: Accept at 0.80, retry below 0.50, as parameters |
