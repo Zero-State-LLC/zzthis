@@ -1,5 +1,4 @@
-import { randomUUID } from "node:crypto";
-import { open, readFile, rename, unlink } from "node:fs/promises";
+import { readFile } from "node:fs/promises";
 import { fileURLToPath } from "node:url";
 import path from "node:path";
 import {
@@ -12,6 +11,9 @@ import {
   REQUIRED_INPUTS,
 } from "./ocr-qualification-preflight.mjs";
 import { verifyQualificationBundles } from "./ocr-qualification-sigstore-pair.mjs";
+import { writePrivateFile } from "./ocr-qualification-private-files.mjs";
+
+export { writePrivateFile };
 
 const OUTPUT_ARGUMENTS = {
   "--output": "output",
@@ -25,28 +27,6 @@ const OUTPUT_OPTION_NAMES = [
   "receiptOutput",
   "receiptReport",
 ];
-
-export async function writePrivateFile(filePath, content) {
-  const destination = path.resolve(filePath);
-  const temporary = path.join(
-    path.dirname(destination),
-    `.${path.basename(destination)}.${randomUUID()}.tmp`,
-  );
-  let handle;
-  try {
-    handle = await open(temporary, "wx", 0o600);
-    await handle.writeFile(content, { encoding: "utf8" });
-    await handle.chmod(0o600);
-    await handle.sync();
-    await handle.close();
-    handle = undefined;
-    await rename(temporary, destination);
-  } catch (error) {
-    if (handle) await handle.close().catch(() => {});
-    await unlink(temporary).catch(() => {});
-    throw error;
-  }
-}
 
 export function assertDistinctOutputPaths(options) {
   const paths = new Set();
