@@ -10,7 +10,7 @@ anti-slop-code, production-systems, google-developer-style. CI: `ci.yml`, `site-
 
 | Item | Choice | Status |
 |---|---|---|
-| Fiducial stage | Terminal `zz` regions are detected and paired before payload OCR; pair geometry defines ROI/orientation/rectification evidence. | v1 camera requirement |
+| Fiducial stage | Terminal `zz` regions are detected and paired before payload OCR; only same-baseline pairs in reading order are eligible. The adapter defines a validated ROI; v1 permits crop/rotation normalization but no perspective/projective rectification. Candidate caps and baseline tolerance are versioned, frozen config. | v1 camera requirement; accepted 2026-10-08 |
 | Recognition boundary | Engine-neutral `RecognitionResult`: candidates, confidence, geometry/line provenance when available, engine ID/version. Recognizers emit evidence only. | v1 requirement |
 | iOS baseline | Apple Vision text recognition, on device. | v1 baseline; must pass ZZ-OCR-QUAL-001 |
 | Android candidates | Google ML Kit Text Recognition and PP-OCR mobile/ONNX path, on device. | Benchmark both; promote from evidence |
@@ -18,7 +18,7 @@ anti-slop-code, production-systems, google-developer-style. CI: `ci.yml`, `site-
 | Hard-case VLM | Qwen-class or equivalent vision model behind the same recognition boundary. | v2 research only |
 | Custom zz recognizer | Small model trained/fine-tuned on consented/synthetic zz examples. | v2 candidate after corpus exists |
 | Raw-photo transport | None in v1. | Raw photos stay on device |
-| Qualification corpus | Team-made, consented, private; no faces/personal data; includes handwriting/print, blur, glare, rotation, wrapping, distance, and confusable glyphs/words. | ZZ-OCR-QUAL-001 |
+| Qualification corpus | Team-made, consented, private; no faces/personal data. Covers supported OCR conditions and separately tagged fail-closed safety probes for perspective-dependent/curved wrapping and candidate-cap overflow. | ZZ-OCR-QUAL-001 |
 | App platforms | iOS and Android together; web v1 is typed input. | Decided |
 
 ## RecognitionResult contract
@@ -38,7 +38,7 @@ RecognitionResult
     region
     detection_score?
   roi?
-  orientation? / rectification_transform?
+  orientation? / crop_rotation_provenance?
   capture_quality?
 ```
 
@@ -58,13 +58,13 @@ Required measures:
 - per-part/word accuracy and character error rate;
 - **false-valid-decode rate**: recognizer evidence leads the shared decoder to a different valid code than ground truth;
 - Accept / Clarify / Retry / Abstain distribution;
-- multi-code and wrapped-code detection behavior;
+- multi-code and flat two-line payload behavior; fail-closed/no-OCR behavior for unsupported perspective/curved wrapping and candidate-cap overflow;
 - latency on representative devices;
 - package/runtime footprint where applicable.
 
 Promotion rule: false-valid-decode behavior is the primary safety metric. No engine is promoted because of generic OCR benchmark claims alone. A lower raw accuracy engine can win if it safely abstains/clarifies rather than producing wrong valid codes. Numerical release thresholds are set only from the qualification evidence; this spec does not invent them.
 
-Corpus stress buckets include ordinary handwriting and print plus 0/O, 1/I/l, 2/Z, 5/S-like confusions where applicable, poor pen contrast, glare, blur, skew/rotation, perspective, distance, two-line/wrapped codes, multiple codes, partial markers, running text, and field/handle cases.
+Corpus stress buckets include ordinary handwriting and print plus 0/O, 1/I/l, 2/Z, 5/S-like confusions where applicable, poor pen contrast, glare, blur, rotation, distance, flat two-line payloads, multiple codes, partial markers, running text, and field/handle cases. Perspective-dependent/curved wrapping and candidate-cap overflow are required fail-closed probes; exclude these unsupported cases from supported-geometry OCR accuracy denominators but retain them in safety reporting and the hard-zero False Accept check.
 
 ## Platform flow
 
@@ -72,7 +72,7 @@ Corpus stress buckets include ordinary handwriting and print plus 0/O, 1/I/l, 2/
 camera
   -> zz fiducial detection + pairing
   -> box candidates; if multiple selectable visual candidates, wait for human selection
-  -> selected/sole pair ROI localization / optional rectification
+  -> selected/sole pair validated interior ROI crop / permitted rotation normalization
   -> platform payload recognizer adapter
   -> RecognitionResult
   -> scanner / candidate extraction
@@ -98,7 +98,7 @@ iOS starts with Apple Vision. Android carries ML Kit and PP-OCR as qualification
 | No semantic authority in OCR | spec 003 decoder boundary | replay harness + negative resolver-query test | T003-T006 |
 | No raw-photo transport | v1 privacy invariant | network/log inspection + E2E | T015 |
 | False valid / false Accept | qualification.md safety definitions | frozen-corpus receipt | T010-T013 |
-| Fiducial localization/pairing | FR-018 to FR-021 | endpoint localization, pairing, false-finder, ROI/rectification metrics | T001, T006A, T010 |
+| Fiducial localization/pairing | FR-018 to FR-021 | endpoint localization, same-baseline pairing, false-finder, safe ROI/crop-or-rotation metrics, fail-closed overflow/unsupported-geometry probes | T001, T006A, T010 |
 | Multi-line / multi-code | scanner rules + geometry provenance | corpus buckets + vectors | T006, T010 |
 | Missing confidence | explicit optional confidence | adapter/band mapping tests | T001, T005 |
 | Android engine choice | promotion rule | PASS receipt + recorded pin | T012 |

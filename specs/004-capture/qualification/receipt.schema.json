@@ -247,8 +247,8 @@
         },
         "required_buckets": {
           "type": "array",
-          "minItems": 23,
-          "maxItems": 23,
+          "minItems": 24,
+          "maxItems": 24,
           "items": {
             "type": "object",
             "additionalProperties": false,
@@ -276,6 +276,7 @@
                   "ambiguous-pairing",
                   "unequal-fiducial-size",
                   "curved-surface",
+                  "candidate-overflow",
                   "running-text",
                   "confusable-character",
                   "near-word",

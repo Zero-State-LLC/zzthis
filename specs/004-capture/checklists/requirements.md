@@ -38,5 +38,13 @@ Checked 2026-10-07. Capture is not built. Recognition architecture refined by th
 - [x] Missing endpoints are never inferred from payload plausibility.
 - [x] Ambiguous/multiple endpoint pairings remain visible candidates and never use resolver/live-code knowledge for selection.
 - [x] Marker confidence is separate from payload-word confidence.
-- [x] Qualification measures endpoint precision/recall, pair accuracy, false finders/pairs, ROI/rectification, and downstream decode safety separately.
+- [x] Qualification measures endpoint precision/recall, pair accuracy, false finders/pairs, safe ROI normalization, and downstream decode safety separately.
 - [x] Ordinary handwritten/printed `zz` is the v1 format; no new stylized finder glyph is required by this spec.
+
+## V1 geometry and OCR boundary decision 2026-10-08
+
+- [x] Only same-baseline opening/closing fiducials may form a pair; payload OCR cannot influence pairing.
+- [x] V1 may crop and rotate a validated interior ROI but does not use perspective/projective rectification.
+- [x] Candidate-count limits are versioned and frozen before final qualification; overflow rejects the whole frame without truncation or payload OCR.
+- [x] Runtime OCR waits for user selection when more than one visual candidate is selectable; qualification may measure every predicted complete pair independently.
+- [x] Perspective-dependent, curved/wrapped-surface, and overflow conditions are fail-closed safety probes, not supported OCR accuracy cases; false accepts still count against the whole run.

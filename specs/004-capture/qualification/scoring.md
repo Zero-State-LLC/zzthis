@@ -10,9 +10,11 @@ These rules make the qualification harness deterministic. They do not set releas
 4. A predicted pair is correct only when its matched opening and closing endpoints share the same ground-truth pair_id. Otherwise it is a false pair.
 5. Multi-code images are scored per ground-truth pair. Every `ground_truth_codes` entry is keyed by `pair_id` and carries the literal payload used for CER/part scoring plus the canonical code when valid. Merging two codes into one ROI is not correct.
 
-## ROI and rectification
+## ROI normalization and fail-closed geometry
 
-Where ROI ground truth exists, report polygon localization IoU/error before rectification and rectification success separately from payload OCR errors. Match predicted and ground-truth ROIs by fiducial `pair_id`; assignments are one-to-one. If a manifest case requires ROI truth and it is absent, the manifest is invalid. If a prediction or metric is unavailable, record the explicit null/not-measured reason; do not silently omit the metric.
+Where ROI ground truth exists, report polygon localization IoU/error separately from payload OCR errors. The existing `rectification-success-rate` gate measures successful, safe crop/rotation normalization only; it does not permit perspective/projective rectification. Match predicted and ground-truth ROIs by fiducial `pair_id`; assignments are one-to-one. If a manifest case requires ROI truth and it is absent, the manifest is invalid. If a prediction or metric is unavailable, record the explicit null/not-measured reason; do not silently omit the metric.
+
+Perspective-dependent, curved/wrapped-surface, and candidate-overflow samples are safety probes outside v1's supported OCR geometry. Their required outcome is fail closed with no payload OCR, no payload candidates, and no Accept. Any violation yields `NO_PROMOTION` independent of aggregate thresholds. Report their safe-refusal rate separately from supported-geometry recognition metrics, and include any False Accept from any probe in the final hard-zero False Accept gate. Exclude safety probes from supported-geometry exact-code, part/word, and CER denominators; do not silently drop the probes from corpus coverage or reporting. Flat two-line payloads are scored normally when their terminal markers satisfy the same-baseline and ROI-safety contract.
 
 ## Text and code scoring
 

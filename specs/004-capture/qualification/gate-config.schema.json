@@ -40,8 +40,8 @@
     },
     "required_buckets": {
       "type": "array",
-      "minItems": 23,
-      "maxItems": 23,
+      "minItems": 24,
+      "maxItems": 24,
       "items": { "$ref": "#/$defs/bucketRequirement" }
     },
     "thresholds": {
@@ -113,6 +113,7 @@
             "ambiguous-pairing",
             "unequal-fiducial-size",
             "curved-surface",
+            "candidate-overflow",
             "running-text",
             "confusable-character",
             "near-word",
@@ -226,6 +227,14 @@
             {
               "contains": {
                 "properties": { "bucket_id": { "const": "curved-surface" } },
+                "required": ["bucket_id"]
+              }
+            },
+            {
+              "contains": {
+                "properties": {
+                  "bucket_id": { "const": "candidate-overflow" }
+                },
                 "required": ["bucket_id"]
               }
             },

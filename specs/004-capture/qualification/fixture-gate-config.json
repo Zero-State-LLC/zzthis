@@ -30,6 +30,7 @@
     { "bucket_id": "ambiguous-pairing", "minimum_sample_count": 1 },
     { "bucket_id": "unequal-fiducial-size", "minimum_sample_count": 1 },
     { "bucket_id": "curved-surface", "minimum_sample_count": 1 },
+    { "bucket_id": "candidate-overflow", "minimum_sample_count": 1 },
     { "bucket_id": "running-text", "minimum_sample_count": 1 },
     { "bucket_id": "confusable-character", "minimum_sample_count": 1 },
     { "bucket_id": "near-word", "minimum_sample_count": 1 },

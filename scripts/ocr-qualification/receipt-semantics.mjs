@@ -47,6 +47,7 @@ const REQUIRED_BUCKET_IDS = [
   "ambiguous-pairing",
   "unequal-fiducial-size",
   "curved-surface",
+  "candidate-overflow",
   "running-text",
   "confusable-character",
   "near-word",
