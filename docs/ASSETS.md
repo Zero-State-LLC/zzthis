@@ -91,6 +91,10 @@ Source: Michael's 2026-10-07 changes (`intent/2026-10-07-michael-content-changes
 | public/images/logos/zzthat-lowercase.webp | logo, replaced | Michael's 2026-10-07 lowercase "zzthat" logo file | 356 by 96. Now the zzThat wordmark shown on About under zzthat.com. The camel-case file stays, unused. |
 | public/images/logos/zzthis-logo-on-dark.webp, zzthis-logo-on-light.webp | logo, reused | existing header logos | Also shown on About under zzthis.com, swapped by theme (white "this" on dark, black "this" on light). |
 
+## Wireframes
+
+docs/wireframes/wireframes-page-1..7.webp: Michael Chung's companion wireframes (zzThis Website Wireframes 2026-10-01). Pages 1-3 mobile Home (3 scroll segments), 4-5 desktop Home (2 segments), 6-7 About mobile and desktop. Reference only; do not ship them in the site.
+
 ## Added 2026-10-08 (Michael's About image pair)
 
 Source: Michael's 2026-10-08 patch (`intent/2026-10-08-michael-kathy-found-dog.md`).
@@ -99,7 +103,3 @@ Source: Michael's 2026-10-08 patch (`intent/2026-10-08-michael-kathy-found-dog.m
 |---|---|---|---|
 | public/images/handwritten/hw-kathy-found-dog.webp | concept | Michael's 2026-10-08 patch | 672 by 655. The zz-Kathy-found-dog-zz card in front of the plush corgi; the collar tag shows a capital-letter zz (spec 001 T053). About, under the four real photos, first of the pair. |
 | public/images/handwritten/hw-kathy-community-board.webp | concept | Michael's 2026-10-08 patch | 680 by 339. The same card pinned on a store community board. About, second of the pair. |
-
-## Wireframes
-
-docs/wireframes/wireframes-page-1..7.webp: Michael Chung's companion wireframes (zzThis Website Wireframes 2026-10-01). Pages 1-3 mobile Home (3 scroll segments), 4-5 desktop Home (2 segments), 6-7 About mobile and desktop. Reference only; do not ship them in the site.
