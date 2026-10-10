@@ -34,12 +34,14 @@ describe("ops/grant.sql", () => {
       scope: "logistics",
       role: "issuer",
       expires_at: "",
+      org_id: "acme",
     });
     expect(shown).toEqual([
       {
         id: expect.stringMatching(UUID_V4),
         scope: "logistics",
         role: "issuer",
+        org_id: "acme",
         expires_at: null,
       },
     ]);
@@ -66,6 +68,7 @@ describe("ops/grant.sql", () => {
         scope: "enterprise",
         role,
         expires_at: expiry,
+        org_id: "acme",
       });
     }
     const grants = await env.ZZ_DB.prepare(
@@ -80,7 +83,7 @@ describe("ops/grant.sql", () => {
     expect(await audit("grant.add")).toHaveLength(2);
   });
 
-  it("writes nothing for an unknown or deleted account, a bad scope or role, or an expiry in another form", async () => {
+  it("writes nothing for an unknown or deleted account, a bad scope, role, or org_id, or an expiry in another form", async () => {
     const w = await makeWorld();
     const alice = await signIn(w, "alice");
     const gone = await signIn(w, "gone");
@@ -92,6 +95,7 @@ describe("ops/grant.sql", () => {
       scope: "enterprise",
       role: "issuer",
       expires_at: "",
+      org_id: "acme",
     };
     const cases: Record<string, string>[] = [
       { ...good, subject_id: crypto.randomUUID() },
@@ -101,6 +105,16 @@ describe("ops/grant.sql", () => {
       { ...good, expires_at: "2027-01-01" },
       { ...good, expires_at: "2027-02-30T00:00:00.000Z" },
       { ...good, expires_at: "2027-01-01T00:00:00Z" },
+      { ...good, org_id: "Acme" },
+      { ...good, org_id: "acme corp" },
+      { ...good, org_id: "acme_1" },
+      { ...good, org_id: "a".repeat(65) },
+      {
+        subject_id: alice.accountId,
+        scope: "enterprise",
+        role: "issuer",
+        expires_at: "",
+      },
       {},
     ];
     for (const values of cases) {
@@ -126,6 +140,7 @@ describe("ops/grant.sql", () => {
         scope,
         role,
         expires_at: "",
+        org_id: "acme",
         ...extra,
       });
       return shown.find((row) => row.scope === scope && row.role === role)
@@ -181,6 +196,7 @@ describe("ops/grant.sql, one organization per scope (RM-073, D-2026-10-10-22)", 
       scope,
       role,
       expires_at: "",
+      org_id: "acme",
       same_org: "",
       ...extra,
     });
@@ -295,6 +311,7 @@ describe("ops/remove-grant.sql", () => {
       scope: "enterprise",
       role: "issuer",
       expires_at: "",
+      org_id: "acme",
     });
     const id = granted?.id as string;
     expect(
@@ -337,6 +354,7 @@ describe("ops/remove-grant.sql", () => {
       scope: "logistics",
       role: "viewer",
       expires_at: past,
+      org_id: "acme",
     });
     await runOps("remove-grant.sql", { grant_id: granted?.id as string });
     await runOps("remove-grant.sql", { grant_id: crypto.randomUUID() });

@@ -8,12 +8,12 @@ import { iso } from "../lib/time.ts";
 const ACTIVE_GRANT =
   "SELECT 1 AS granted FROM grants WHERE subject_id = ? AND role = ? AND (expires_at IS NULL OR expires_at > ?)";
 
-// FR-034: an issuer or viewer grant holds for one scope.
+// FR-034: an issuer grant holds for one scope.
 export async function hasScopeGrant(
   c: AppContext,
   accountId: string,
   scope: string,
-  role: "issuer" | "viewer",
+  role: "issuer",
 ): Promise<boolean> {
   const row = await c.env.ZZ_DB.prepare(`${ACTIVE_GRANT} AND scope = ?`)
     .bind(accountId, role, iso(c.get("now")), scope)
@@ -21,19 +21,35 @@ export async function hasScopeGrant(
   return row !== null;
 }
 
+// FR-035 (D-2026-10-10-22, #135): a viewer grant on the code's scope opens
+// another account's private record only when the grant's org_id is set
+// and equals the owner's. The join on org_id never matches a null, so a
+// grant with no organization, or an owner with none, opens nothing.
+export async function viewerReaches(
+  c: AppContext,
+  viewerId: string,
+  scope: string,
+  ownerId: string,
+): Promise<boolean> {
+  const row = await c.env.ZZ_DB.prepare(
+    "SELECT 1 AS granted FROM grants g JOIN accounts o ON o.org_id = g.org_id WHERE g.subject_id = ? AND g.role = 'viewer' AND g.scope = ? AND (g.expires_at IS NULL OR g.expires_at > ?) AND o.id = ?",
+  )
+    .bind(viewerId, scope, iso(c.get("now")), ownerId)
+    .first();
+  return row !== null;
+}
+
 // D-2026-10-05-04 (Danny, #78): the auditor role is least-privilege. An
-// account reads the events of the scopes it holds an auditor grant for,
-// and no grant reads the whole log.
-export async function auditorScopes(
+// account reads only what its auditor grants reach (FR-016), and no grant
+// reads the whole log.
+export async function isAuditor(
   c: AppContext,
   accountId: string,
-): Promise<string[]> {
-  const rows = await c.env.ZZ_DB.prepare(
-    "SELECT DISTINCT scope FROM grants WHERE subject_id = ? AND role = 'auditor' AND (expires_at IS NULL OR expires_at > ?) ORDER BY scope",
-  )
-    .bind(accountId, iso(c.get("now")))
-    .all<{ scope: string }>();
-  return rows.results.map((row) => row.scope);
+): Promise<boolean> {
+  const row = await c.env.ZZ_DB.prepare(ACTIVE_GRANT)
+    .bind(accountId, "auditor", iso(c.get("now")))
+    .first();
+  return row !== null;
 }
 
 // FR-005 and FR-034: free_public needs ZZ_FREE_PUBLIC; enterprise and

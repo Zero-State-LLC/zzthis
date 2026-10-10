@@ -1,8 +1,8 @@
 import { requireCaller } from "../auth/caller.ts";
-import { auditorScopes } from "../codes/scope.ts";
+import { isAuditor } from "../codes/scope.ts";
 import type { AppContext } from "../http/context.ts";
 import { forbidden, json, malformed } from "../http/respond.ts";
-import { parseTimestamp } from "../lib/time.ts";
+import { iso, parseTimestamp } from "../lib/time.ts";
 import { limitUser } from "../limits/enforce.ts";
 
 const DEFAULT_LIMIT = 50;
@@ -47,33 +47,50 @@ function filters(c: AppContext): Filter[] {
   return out;
 }
 
+// The caller's active auditor grants, each one scope and one organization
+// (FR-016, D-2026-10-10-22, #135).
+const AUDITOR_GRANTS =
+  "WITH ag AS (SELECT DISTINCT scope, org_id, subject_id AS holder FROM grants WHERE subject_id = ? AND role = 'auditor' AND (expires_at IS NULL OR expires_at > ?))";
+
+// The code's owner is in the grant's organization or, for a grant with no
+// organization, is the auditor.
+const OWNER_IN_ORG =
+  "((ag.org_id IS NOT NULL AND ag.org_id = (SELECT org_id FROM accounts WHERE id = c.owner_id)) OR (ag.org_id IS NULL AND c.owner_id = ag.holder))";
+
 // An event's scope is its target's: a code's scope, the scope of a
 // record's codes, the scope a refused mint named, or a grant's scope (the
-// operator's grant.add and grant.remove, D-2026-10-05-07). Events whose
-// target has no scope (accounts, nonces, reports, reads, and not-found
-// resolves, whose target is an HMAC) are listed for no auditor.
-function inScopes(scopes: readonly string[]): Filter {
-  const marks = scopes.map(() => "?").join(", ");
-  return {
-    sql: `((target_type = 'code' AND target_id IN (SELECT id FROM codes WHERE scope IN (${marks}))) OR (target_type = 'record' AND target_id IN (SELECT record_id FROM codes WHERE scope IN (${marks}))) OR (target_type = 'scope' AND target_id IN (${marks})) OR (target_type = 'grant' AND target_id IN (SELECT id FROM grants WHERE scope IN (${marks}))))`,
-    params: [...scopes, ...scopes, ...scopes, ...scopes],
-  };
-}
+// operator's grant.add and grant.remove, D-2026-10-05-07). Within that
+// scope a grant reaches one organization: code and record events of codes
+// whose owner is in it, refused mints whose actor is in it, and grants
+// bound to it. A grant with no organization reaches only its holder's own
+// codes, refused mints, and grants. Events whose target has no scope
+// (accounts, nonces, reports, reads, and not-found resolves, whose target
+// is an HMAC) are listed for no auditor.
+const IN_REACH = [
+  `(e.target_type = 'code' AND EXISTS (SELECT 1 FROM codes c JOIN ag ON ag.scope = c.scope WHERE c.id = e.target_id AND ${OWNER_IN_ORG}))`,
+  `(e.target_type = 'record' AND EXISTS (SELECT 1 FROM codes c JOIN ag ON ag.scope = c.scope WHERE c.record_id = e.target_id AND ${OWNER_IN_ORG}))`,
+  "(e.target_type = 'scope' AND EXISTS (SELECT 1 FROM ag WHERE ag.scope = e.target_id AND ((ag.org_id IS NOT NULL AND ag.org_id = (SELECT org_id FROM accounts WHERE id = e.actor_id)) OR (ag.org_id IS NULL AND e.actor_id = ag.holder))))",
+  "(e.target_type = 'grant' AND EXISTS (SELECT 1 FROM grants g JOIN ag ON ag.scope = g.scope WHERE g.id = e.target_id AND ((ag.org_id IS NOT NULL AND g.org_id = ag.org_id) OR (ag.org_id IS NULL AND g.org_id IS NULL AND g.subject_id = ag.holder))))",
+].join(" OR ");
 
-// GET /v1/audit (FR-016): the append-only log, newest last, for the scopes
-// the caller holds an auditor grant for.
+// GET /v1/audit (FR-016): the append-only log, newest last, for what the
+// caller's auditor grants reach.
 export async function listAudit(c: AppContext): Promise<Response> {
   const caller = await requireCaller(c);
   await limitUser(c, "audit", caller.id);
-  const scopes = await auditorScopes(c, caller.id);
-  if (scopes.length === 0) throw forbidden();
+  if (!(await isAuditor(c, caller.id))) throw forbidden();
   const limit = limitParam(c.req.query("limit"));
-  const where = [inScopes(scopes), ...filters(c)];
+  const where = [{ sql: `(${IN_REACH})`, params: [] }, ...filters(c)];
   const clause = where.map((f) => f.sql).join(" AND ");
   const rows = await c.env.ZZ_DB.prepare(
-    `SELECT id, actor_id, action, target_type, target_id, result, created_at FROM audit_events WHERE ${clause} ORDER BY created_at ASC, id ASC LIMIT ?`,
+    `${AUDITOR_GRANTS} SELECT e.id, e.actor_id, e.action, e.target_type, e.target_id, e.result, e.created_at FROM audit_events e WHERE ${clause} ORDER BY e.created_at ASC, e.id ASC LIMIT ?`,
   )
-    .bind(...where.flatMap((f) => f.params), limit)
+    .bind(
+      caller.id,
+      iso(c.get("now")),
+      ...where.flatMap((f) => f.params),
+      limit,
+    )
     .all();
   return json(200, { events: rows.results });
 }

@@ -6,7 +6,7 @@ import {
 } from "@zzthis/zz-core";
 import { optionalCaller, type Caller } from "../auth/caller.ts";
 import { auditStatement, type AuditEvent } from "../audit/writer.ts";
-import { hasScopeGrant } from "../codes/scope.ts";
+import { viewerReaches } from "../codes/scope.ts";
 import type { components } from "../generated/api.ts";
 import type { AppContext } from "../http/context.ts";
 import { ApiError, json, malformed, notFound } from "../http/respond.ts";
@@ -71,7 +71,8 @@ async function lookup(
 }
 
 // Step 7 (FR-035): a private record resolves only for its owner or for an
-// account with a viewer grant on the code's scope.
+// account with a viewer grant on the code's scope bound to the owner's
+// organization (D-2026-10-10-22).
 async function viewFor(
   c: AppContext,
   caller: Caller | null,
@@ -80,7 +81,7 @@ async function viewFor(
   if (row.visibility === "public") return "public";
   if (caller === null) return null;
   if (caller.id === row.owner_id) return "owner";
-  return (await hasScopeGrant(c, caller.id, row.scope, "viewer"))
+  return (await viewerReaches(c, caller.id, row.scope, row.owner_id))
     ? "viewer"
     : null;
 }
