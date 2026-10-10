@@ -467,10 +467,12 @@ RM-050 production resources ─> RM-053 web build ─> RM-051 deploy ─> RM-052
 
 - Release v1.2 · P1 · Backlog (QUEUED) · Bundle B9 · Owner: Danny promotes
 - **Acceptance.** Written abuse review from v1.0 data; content policy; `ZZ_FREE_PUBLIC=true` in production after approval.
+- **PROPOSED (D-2026-10-10-21, not adopted).** Release v1.1 · P0 · Gate: v1.1 store launch. Adds a per-account daily mint cap for `free_public`, a moderation runbook with a named moderator and response time, written spend and abuse thresholds for turning the flag off, and a staging rehearsal of `ZZ_FREE_PUBLIC=false` as the kill switch.
 
 ### RM-077 Report triage tooling
 
 - Release v1.2 · P2 · Backlog · Bundle B9 · Operator SQL views for open reports by age and code.
+- **PROPOSED (D-2026-10-10-21, not adopted).** Release v1.1 · P1, required before `ZZ_FREE_PUBLIC` turns on.
 
 ### RM-078 Web issuer controls
 
