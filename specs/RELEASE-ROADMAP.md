@@ -95,7 +95,7 @@ Each gate needs dated evidence linked from the release packet (RM-054). A gate w
 - **Contracts and data.** None in this repository. zzThat pins the v1.0 release commit and verifies tolerant readers (RM-075).
 - **Security and privacy.** No raw photo leaves the device; store privacy labels match the data lifecycle matrix.
 - **Gates.** A signed PASS receipt per promoted engine, or confirm-only mode; store review passes; account deletion from each app verified against production.
-- **PROPOSED (D-2026-10-10-21, Danny agreed in chat 2026-10-09; adopted on merge).** Add public community create for the web and the apps: `ZZ_FREE_PUBLIC` turns on at the v1.1 gate after Danny's written yes, with RM-076 and RM-077 moved here from v1.2 and the prerequisites in that record (RM-028, RM-030, RM-031, RM-032, RM-033, RM-041, RM-042, RM-063, RM-068, a per-account mint cap, and a rehearsed kill switch). Until Danny decides, v1.2 below stands.
+- **PROPOSED (D-2026-10-10-21, Danny agreed in chat 2026-10-09; adopted on merge).** Add public community create for the web and the apps: `ZZ_FREE_PUBLIC` turns on at the v1.1 gate after Danny's written yes, with RM-076 and RM-077 moved here from v1.2 and the prerequisites in that record (RM-028, RM-030, RM-031, RM-032, RM-033, RM-041, RM-042, RM-063, RM-068, RM-072 durable-key mint cap, and a rehearsed shutoff redeploy with a target time). Until Danny decides, v1.2 below stands.
 
 ## v1.2 Public community codes (QUEUED, B9)
 
