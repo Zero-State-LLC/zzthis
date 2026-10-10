@@ -281,7 +281,7 @@ describe("navigation and people", () => {
     expect(zzthatSocial).toEqual([
       {
         label: "zzThat on Discord",
-        href: "https://discord.gg/sp7smSzq7",
+        href: "https://discord.gg/hwXvVKYzn4",
         icon: "discord",
       },
       {
