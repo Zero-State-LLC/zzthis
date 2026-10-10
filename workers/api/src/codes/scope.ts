@@ -38,10 +38,13 @@ export async function auditorScopes(
 
 // FR-005 and FR-034: free_public needs ZZ_FREE_PUBLIC; enterprise and
 // logistics need an issuer grant for that scope.
+// Re-roll issues a new code too, so it runs the same check on the old
+// code's scope (RM-032), audited under its own action.
 export async function checkMintScope(
   c: AppContext,
   caller: Caller,
   scope: ScopeName,
+  action: "code.mint" | "code.reroll" = "code.mint",
 ): Promise<void> {
   if (scope === "free_public") {
     if (!c.get("settings").freePublic)
@@ -49,7 +52,7 @@ export async function checkMintScope(
     return;
   }
   if (!(await hasScopeGrant(c, caller.id, scope, "issuer"))) {
-    await auditDenied(c, caller.id, "code.mint", { type: "scope", id: scope });
+    await auditDenied(c, caller.id, action, { type: "scope", id: scope });
     throw forbidden();
   }
 }

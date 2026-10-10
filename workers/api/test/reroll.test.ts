@@ -223,3 +223,45 @@ describe("POST /v1/codes/{id}/reroll (T009)", () => {
     });
   });
 });
+
+describe("re-roll keeps the mint scope rules (RM-032)", () => {
+  it("refuses a re-roll after the issuer grant ended, writes nothing, and audits the refusal", async () => {
+    const w = await makeWorld();
+    const alice = await signIn(w);
+    const grantId = crypto.randomUUID();
+    await env.ZZ_DB.prepare(
+      "INSERT INTO grants (id, subject_id, scope, role, expires_at) VALUES (?, ?, 'logistics', 'issuer', NULL)",
+    )
+      .bind(grantId, alice.accountId)
+      .run();
+    const code = await mint(w, alice.access, { scope: "logistics" });
+    await env.ZZ_DB.prepare("UPDATE grants SET expires_at = ? WHERE id = ?")
+      .bind(new Date(w.clock.ms - 1000).toISOString(), grantId)
+      .run();
+    const before = await count(w, "SELECT count(*) AS n FROM codes");
+    const response = await reroll(w, alice.access, code.id);
+    expect(await expectMatchesSchema(response, "rerollCode", 403)).toEqual({
+      error: "forbidden",
+    });
+    expect(await count(w, "SELECT count(*) AS n FROM codes")).toBe(before);
+    expect(
+      await count(
+        w,
+        "SELECT count(*) AS n FROM audit_events WHERE action = 'code.reroll' AND result = 'denied' AND target_type = 'scope' AND target_id = 'logistics'",
+      ),
+    ).toBe(1);
+  });
+
+  it("refuses a free_public re-roll once the scope flag is off", async () => {
+    const on = await makeWorld();
+    const alice = await signIn(on);
+    const code = await mint(on, alice.access);
+    const off = await makeWorld({ settings: { ZZ_FREE_PUBLIC: "false" } });
+    const before = await count(off, "SELECT count(*) AS n FROM codes");
+    const response = await reroll(off, alice.access, code.id);
+    expect(await expectMatchesSchema(response, "rerollCode", 403)).toEqual({
+      error: "scope-unavailable",
+    });
+    expect(await count(off, "SELECT count(*) AS n FROM codes")).toBe(before);
+  });
+});

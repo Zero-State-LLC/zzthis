@@ -222,3 +222,58 @@ describe("purge on record update, revoke, and deletion (T024)", () => {
     expect(body.record.title).toBe("Found cat");
   });
 });
+
+describe("cache faults never fail a request (RM-034)", () => {
+  it("answers a resolve from D1 when the cache lookup and put throw", async () => {
+    const w = await makeWorld();
+    const alice = await signIn(w);
+    const code = await mint(w, alice.access);
+    vi.spyOn(caches.default, "match").mockRejectedValue(
+      new Error("cache down"),
+    );
+    vi.spyOn(caches.default, "put").mockRejectedValue(new Error("cache down"));
+    const errors = vi.spyOn(console, "error").mockImplementation(() => {});
+    const response = await resolve(w, code.canonical);
+    expect(response.status).toBe(200);
+    expect(response.headers.get("Cache-Control")).toBe(PUBLIC_CACHE_CONTROL);
+    const events = errors.mock.calls.map((args) => String(args[0]));
+    expect(events).toContain(
+      JSON.stringify({ event: "cache-fault", op: "match" }),
+    );
+    expect(events).toContain(
+      JSON.stringify({ event: "cache-fault", op: "put" }),
+    );
+    expect(events.join("\n")).not.toContain(code.canonical);
+  });
+
+  it("keeps a committed revoke and record version when the purge throws", async () => {
+    const w = await makeWorld();
+    const alice = await signIn(w);
+    const code = await mint(w, alice.access);
+    vi.spyOn(caches.default, "delete").mockRejectedValue(
+      new Error("cache down"),
+    );
+    vi.spyOn(console, "error").mockImplementation(() => {});
+    const version = await call(
+      w,
+      "POST",
+      `/v1/records/${code.record_id}/versions`,
+      {
+        token: alice.access,
+        body: { title: "Found cat", body: "Back home." },
+      },
+    );
+    expect(version.status).toBe(201);
+    const revoked = await call(w, "POST", `/v1/codes/${code.id}/revoke`, {
+      token: alice.access,
+    });
+    expect(revoked.status).toBe(200);
+    expect(
+      await count(
+        w,
+        "SELECT count(*) AS n FROM codes WHERE id = ? AND status = 'revoked'",
+        code.id,
+      ),
+    ).toBe(1);
+  });
+});
