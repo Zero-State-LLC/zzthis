@@ -109,7 +109,7 @@ Each gate needs dated evidence linked from the release packet (RM-054). A gate w
 ## v1.3 Single-organization enterprise pilot (QUEUED, B7 phase 1)
 
 - **Outcome.** One pilot organization issues private, single-use, or expiring codes and audits them.
-- **Prerequisites.** v1.0; the one-organization-per-scope grant rule (RM-063); audit scope index (RM-088).
+- **Prerequisites.** v1.0; the one-organization-per-scope grant rule (RM-063) enforced in the grant script (RM-073); org-bound grants for viewer resolve and the auditor filter (RM-074, D-2026-10-10-22, closes #135); audit scope index (RM-088).
 - **Included.** Web issuer controls for `visibility`, `single_use`, and `expires_at`, which contract 1 already accepts (RM-078); signed-in resolve for viewers; an auditor view of `GET /v1/audit` (RM-079); onboarding runbook.
 - **Excluded.** More than one organization per scope (v2.0); links to external identifiers as structured fields (v2.0); AI photo-to-action (R-AI).
 

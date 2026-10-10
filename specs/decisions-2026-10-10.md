@@ -59,6 +59,8 @@ Research note. Sources were read on 2026-10-10 through web search results that q
 
 ## D-2026-10-10-06 Tenant isolation inside a scope (ADOPTED operating rule; model change PROPOSED for contract 2)
 
+> AMENDED by D-2026-10-10-22 (Danny approved 2026-10-09): the rule is enforced in `ops/grant.sql` now, and org-bound grants land inside contract 1 before the v1.3 pilot. The Organization entity stays in contract 2 (RM-080).
+
 - **Question.** `viewer` and `auditor` grants cover a whole scope (`enterprise` or `logistics`), so two customers in one scope can read each other's private records and audit events.
 - **Evidence.** spec 005 FR-034 and FR-035; `workers/api/migrations/0001_init.sql` (scope is a three-value enum); backend review H2.
 - **Alternatives.** (a) Add an organization column inside contract 1. Rejected: it changes grants, resolve authorization, and audit scoping, which contract 1 freezes. (b) Operating rule now, model change in contract 2. Selected.
@@ -176,3 +178,13 @@ Research note. Sources were read on 2026-10-10 through web search results that q
 - **Roadmap correction.** RELEASE-ROADMAP v1.0 previously promised web create, edit, and revoke, which the flag-off web client cannot deliver. v1.0 is now lookup only on the web; create, edit, and revoke on the web move to v1.1 with the apps. The v1.0 canary (G12, RM-052) and cache check (RM-016) use one operator-minted synthetic code instead of a public web mint (INFERRED: an `issuer` grant on a single operator test account under RM-063).
 - **Default until merge.** The current plan holds: `free_public` in v1.2, RM-076 QUEUED.
 - **Revisit when.** v1.0 production data shows abuse or cost above the agreed thresholds, or the v1.1 gate slips while public create is the only blocker.
+
+## D-2026-10-10-22 Enforce one organization per scope now; org-bound grants before v1.3 (ADOPTED: Danny approved 2026-10-09)
+
+- **Question.** Issue [#135](https://github.com/Zero-State-LLC/zzthis/issues/135): a `viewer` or `auditor` grant covers a whole scope, so a second customer in the same scope can read the first customer's private records (resolve step 7) and audit events. D-2026-10-10-06 relies on an operator rule with no enforcement and defers the model change to contract 2.
+- **Evidence.** `workers/api/migrations/0001_init.sql:104-110` (grants carry scope and role only); `src/resolve/resolve.ts:75-86` (`viewFor` accepts any scope-wide viewer); `src/codes/scope.ts:12-37` and `src/audit/route.ts:55-77` (auditor filter is scope-only); `src/records/read.ts:22` and `GET /v1/me/codes` are owner-only and do not leak. Not reachable in v1.0 (lookup only) or v1.1 (`free_public` is always public and needs no grant); reachable as soon as two organizations hold grants in one scope, at the earliest the v1.3 pilot.
+- **Alternatives.** (a) Runbook rule only (status quo). Rejected: one operator mistake exposes private data. (b) Per-grant capability lists (a grant names codes or records). Rejected: heavy operator upkeep for the same protection. (c) The Organization entity in contract 2 only (RM-080). Kept for v2.0, too late for a v1.x second customer. (d) Enforce the rule in the grant script now, and add a nullable `org_id` on accounts and grants inside contract 1 before v1.3. Selected.
+- **Decision.** Task A (RM-073, v1.0): `ops/grant.sql` refuses an `enterprise` or `logistics` grant when another account already holds an active grant in that scope, unless the operator sets `:same_org` to the scope name. Task B (RM-074, before the v1.3 pilot): migration 0003 adds nullable `org_id` to `accounts` and `grants`; a private record opens as `viewer` only when the grant's `org_id` equals the owner's (both non-null); `GET /v1/audit` lists only events whose code or record owner, actor, or grant shares the auditor grant's `org_id`; a null-org grant reaches only its holder's own rows. spec 005 FR-034, FR-035 (Resolve step 7), and FR-016 are amended in the Task B pull request. No wire change: OpenAPI and response shapes stay the same, so contract 1 stays frozen (D-2026-10-10-12).
+- **Consequences.** D-2026-10-10-06 is amended: enforcement starts now and the interim tenant key arrives in contract 1. `org_id` becomes the migration source for the Organization entity (RM-080). Task A does not close #135; Task B does.
+- **Revisit when.** RM-080 lands, or a pilot needs one account in two organizations.
+
