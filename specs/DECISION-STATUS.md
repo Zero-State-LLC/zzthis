@@ -54,6 +54,8 @@ Full records: [decisions-2026-10-10.md](decisions-2026-10-10.md). Rows in docs/S
 | D-2026-10-10-18 | Location (PR #127) is research | ADOPTED | - |
 | D-2026-10-10-19 | Backend defects enter v1.0 | ASSIMILATED | - |
 | D-2026-10-10-20 | Tests become a required check | PROPOSED | Danny |
+| D-2026-10-10-22 | One organization per scope now; org-bound grants before v1.3 | ADOPTED; built in PR #146 | - |
+| D-2026-10-10-24 | Follow-ups from the org-bound grants build | PROPOSED | Danny |
 
 ## Genuinely open or evidence-gated
 

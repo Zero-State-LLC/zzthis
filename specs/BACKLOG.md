@@ -397,22 +397,29 @@ RM-050 production resources ─> RM-053 web build ─> RM-051 deploy ─> RM-052
 
 ### RM-063 Single-organization grant runbook
 
-- Release v1.0 · P1 · In review (with RM-073, branch `claude/vigilant-hypatia-9bex3q`) · Bundle B1 · Journeys J10
+- Release v1.0 · P1 · Done (PR #146 merged 2026-10-10, with RM-073) · Bundle B1 · Journeys J10
 - **Scope.** Add the D-2026-10-10-06 rule to the operator SQL docs (`workers/api/ops/grant.sql` header and plan.md Operator work).
 - **Acceptance.** The runbook names the rule and the check the operator performs before each grant. Enforcement is RM-073 (D-2026-10-10-22).
 
 ### RM-073 Grant script enforces one organization per scope
 
-- Release v1.0 · P1 · In review (branch `claude/vigilant-hypatia-9bex3q`) · Bundle B1 · Owner: kneelbeforez0D · Issue #135 (does not close it)
+- Release v1.0 · P1 · Done (PR #146 merged 2026-10-10) · Bundle B1 · Owner: kneelbeforez0D · Issue #135 (does not close it)
 - **Scope.** `workers/api/ops/grant.sql` refuses an `enterprise` or `logistics` grant when another account holds an active grant in that scope, unless `:same_org` equals the scope name; header documents the rule (D-2026-10-10-06, D-2026-10-10-22).
 - **Acceptance.** `test/ops-grants.test.ts`: second-account grant without the override writes no grant and no audit row; with the override it succeeds; same-account, expired, deleted-account, and `free_public` cases are not blocked.
 
 ### RM-074 Org-bound grants for viewer resolve and the auditor filter
 
-- Release v1.3 (prerequisite, before the pilot onboards) · P0 · In review (branch `claude/vigilant-hypatia-9bex3q`) · Bundle B7 · Owner: kneelbeforez0D · Closes #135
+- Release v1.3 (prerequisite, before the pilot onboards) · P0 · Done (PR #146 merged 2026-10-10, closed #135; migration 0003 applied on staging by Cloudflare API staging run 38025424156) · Bundle B7 · Owner: kneelbeforez0D · Closes #135
 - **Scope.** Migration `0003_org_bound_grants.sql` (nullable `org_id` on `accounts` and `grants`, indexes); `ops/grant.sql` takes `:org_id`; `ops/set-org.sql`; resolve step 7 requires a matching non-null `org_id`; `GET /v1/audit` filters by scope and organization; null-org grants reach only the holder's own rows. Spec 005 FR-034, FR-035, FR-016 and the data model amended in the same pull request; OpenAPI unchanged.
 - **Acceptance.** Two organizations in `enterprise` plus a null-org account: cross-organization private resolve is the one not-found body; auditor lists, including `record_id` and `code_id` filters, show only the auditor's organization; public resolve unchanged; existing FR-034, FR-035, FR-016 tests pass.
-- **Governing.** D-2026-10-10-22; D-2026-10-10-06 (amended); RM-080 replaces `org_id` with the Organization entity.
+- **Governing.** D-2026-10-10-22; D-2026-10-10-06 (amended); RM-080 replaces `org_id` with the Organization entity. Follow-ups: D-2026-10-10-24, RM-098.
+
+### RM-098 Grant organization must match the holder's
+
+- Release v1.3 (prerequisite, before the pilot onboards) · P2 · Backlog (Blocked on Danny: D-2026-10-10-24 item 3) · Bundle B7
+- **Scope.** `workers/api/ops/grant.sql` writes no grant and no audit row when `:org_id` differs from the subject's `accounts.org_id` (empty matches null); header and plan.md Operator work say to run `ops/set-org.sql` first. plan.md also notes that an account moved with `set-org.sql` takes its history to the new organization's auditors (D-2026-10-10-24 item 4).
+- **Acceptance.** `test/ops-grants.test.ts`: a mismatched `:org_id` writes nothing; a matching one, and empty for an account with no organization, succeed; existing grant tests pass after their fixtures run `set-org.sql` first.
+- **Governing.** D-2026-10-10-24 (PROPOSED); D-2026-10-10-22.
 
 ## v1.1 items
 
