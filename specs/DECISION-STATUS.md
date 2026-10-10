@@ -56,7 +56,7 @@ Full records: [decisions-2026-10-10.md](decisions-2026-10-10.md). Rows in docs/S
 | D-2026-10-10-20 | Tests become a required check | PROPOSED | Danny |
 | D-2026-10-10-22 | One organization per scope now; org-bound grants before v1.3 | ADOPTED; built in PR #146 | - |
 | D-2026-10-10-24 | Follow-ups from the org-bound grants build | ACCEPTED (Danny, 2026-10-09 PT); RM-098 to RM-100 | - |
-| D-2026-10-10-25 | App Store and Google Play compliance gaps for v1.1 | ACCEPTED (Danny, chat 2026-10-09 23:21 PT); RM-101 to RM-112; RM-112 needs Danny's yes on the D-2026-10-10-12 exception | - |
+| D-2026-10-10-25 | App Store and Google Play compliance gaps for v1.1 | ACCEPTED (Danny, chat 2026-10-09 23:21 PT); RM-101 to RM-112; RM-112 exception to D-2026-10-10-12 accepted (Danny, 2026-10-09 PT) | - |
 
 ## Genuinely open or evidence-gated
 
