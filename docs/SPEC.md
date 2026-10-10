@@ -11,7 +11,7 @@
 > | 8 Acceptance | [`specs/001-marketing-site/checklists/requirements.md`](../specs/001-marketing-site/checklists/requirements.md) |
 > | 2.2a v1 text grammar | Accepted 2026-10-03 from Michael's Q48 and Q49 answers; updated the same day from his answers to Q50 to Q61 (draft, pending Danny's merge). Implemented by the spec 003 library (US3). |
 > | 9 Questions | Question table. Q21 to Q39 were added on 2026-10-02; Q49 to Q61 on 2026-10-03, and Q50 to Q61 were answered the same day. Q62 (2026-10-03) sets the v1.0 hero headline with a spaced hyphen and no em dash. Q63 to Q65 were answered the same day (issues #51, #54, and #55). Section 3.1b records direction B v1.0 (accepted 2026-10-03). Section 9a is the running decisions log. |
-> | 12 Roadmap | v1 scope, exit criteria, and v2 candidates. |
+> | 12 Roadmap | v1 scope, exit criteria, and v2 candidates. Superseded for sequencing by [`specs/RELEASE-ROADMAP.md`](../specs/RELEASE-ROADMAP.md) (2026-10-10). |
 > | 10 Architecture | [`specs/002-resolver-core/plan.md`](../specs/002-resolver-core/plan.md), [`specs/004-capture/plan.md`](../specs/004-capture/plan.md) |
 >
 > Research targets, the funding-pitch founder bio, and the company-stage line were removed from this repo on 2026-10-02 (Q24 RESOLVED).
@@ -61,7 +61,7 @@ This spec covers three deliverables and one proposal:
 - zzThis has no validated codebook and no controlled comparisons yet [PRODUCT]. Recognition, resolver security, and human-factors performance are untested [PRODUCT].
 - No performance figure appears on the site or in this repo until it is measured (Q7, Q24).
 - The site makes no claim of pilots, customers, endorsement, or government adoption. The footer shows the words "Patent pending" at Michael's direction [MICHAEL 2026-10-02]; the site makes no other patent claim (Q9 RESOLVED).
-- The xTech panel images are concept renderings [ASSETS]. The site footer also states that third-party names, logos, and artwork shown belong to their respective owners and appear for illustration only; no affiliation is implied [MICHAEL 2026-10-06]. The handwritten photos are real photos of Michael's handwritten codes [ASSETS].
+- The xTech panel images are concept renderings [ASSETS]. The site footer also states that third-party names, logos, and artwork shown belong to their respective owners and appear for illustration only; no affiliation is implied [MICHAEL 2026-10-06]. The handwritten photos are real photos of Michael's handwritten codes [ASSETS]. The zz-Kathy-found-dog-zz set under them on About is three concept images, labeled as such [MICHAEL 2026-10-08].
 
 ## 2. Product spec
 
@@ -74,10 +74,11 @@ This spec covers three deliverables and one proposal:
 | Word codebook | Not validated; no controlled comparisons | [PRODUCT] |
 | Handwriting and print recognition of zz codes | Untested | [PRODUCT] |
 | Secure resolver | Untested; prototype planned | [PRODUCT] |
-| Central API, edge layer, and on-device capture (Section 10) | Proposal, not built | [OPERATOR 2026-10-02] |
+| Central API, edge layer, and on-device capture (Section 10) | Proposal on 2026-10-02. OBSERVED 2026-10-10: the `/v1` server and web client are implemented and tested and run on isolated staging only; on-device capture lives in zzThat and is not qualified; nothing is in production | [OPERATOR 2026-10-02]; [`specs/analysis-2026-10-10-architecture-review.md`](../specs/analysis-2026-10-10-architecture-review.md) |
 | AI photo-to-action, inventory assistant, touch-first handling | Concept, shown as image concepts | [BRIEF] |
 | Panels a–o and demo images | Concept renderings | [ASSETS] |
 | Handwritten photos of codes on paper | Real photos | [ASSETS] |
+| zz-Kathy-found-dog-zz set on About (`hw-kathy-found-dog`, `hw-kathy-phone`, `hw-kathy-board-phone`) | Concept images | [MICHAEL 2026-10-08] |
 
 ### 2.2 Code grammar
 
@@ -357,7 +358,9 @@ Codes are public identifiers, and authorization stays separate [PRODUCT]. Resear
 
 ### 3.1 Information architecture
 
-**Navigation, in order:** How it works | Applications | About | Contact [BRIEF]. The zzThis logo links to `/` (INFERRED). A theme toggle sits at the end of the nav bar (INFERRED). On viewports narrower than 900 px, the nav collapses into a disclosure button labeled "Menu" (INFERRED).
+**Navigation, in order:** How it works | Applications | Demo | About | Contact [BRIEF] [MICHAEL 2026-10-08]. This is the footer's order; Demo sits between Applications and About, and the `/demo` page marks it as the current page (`aria-current="page"`) [MICHAEL 2026-10-08]. The zzThis logo links to `/` (INFERRED). A theme toggle sits at the end of the nav bar (INFERRED). On viewports narrower than 64rem (1024 px), the nav collapses into a disclosure button labeled "Menu"; from 64rem the full menu shows in one row (INFERRED; checked at 1024 px on 2026-10-08).
+
+**Header (2026-10-08).** The header stays 64 px high (`--nav-h`). Menu links are about 30% larger than `--text-sm`: `calc(var(--text-sm) * 1.3)`, about 19.5 px [MICHAEL 2026-10-08: "25 to 33%", header height unchanged]. The logo never shrinks (`.nav__mark { flex-shrink: 0 }`), so the five larger links cannot squeeze it [MICHAEL 2026-10-08]. Source: `intent/2026-10-08-michael-nav-demo.md`.
 
 | Route | H1 | Purpose | Source |
 |---|---|---|---|
@@ -370,7 +373,7 @@ Codes are public identifiers, and authorization stays separate [PRODUCT]. Resear
 | `/technology` | (not built) | Michael's draft wording is stored in `src/content/technology.ts`; the page is built and enters navigation only when it has that explanation plus a supporting example [MICHAEL 2026-10-02] | [BRIEF] [MICHAEL 2026-10-02] |
 
 - `/how-it-works` is a real page that reuses the Home workflow components. Home also exposes `#how-it-works` (INFERRED; the [BRIEF] allows "Anchored Home sections; stable detail route later").
-- The demo is not in the main nav. Links to it appear on `/how-it-works`, in the Home core workflow section, and in the footer [MICHAEL 2026-10-02] (Q5 RESOLVED). When the free zzThat app launches, add a prominent "Try zzThat" navigation action that links to zzthat.com [MICHAEL 2026-10-02].
+- The demo is in the main nav, between Applications and About [MICHAEL 2026-10-08]. This supersedes the 2026-10-02 answer that kept it out of the main nav (Q5). Links to it also appear on `/how-it-works`, in the Home core workflow section, and in the footer [MICHAEL 2026-10-02]. When the free zzThat app launches, add a prominent "Try zzThat" navigation action that links to zzthat.com [MICHAEL 2026-10-02].
 - **Technology page:** `src/content/technology.ts` holds Michael's public draft wording, marked `unpublished`. No route is generated and no page links to it until the page has that explanation plus a supporting example. Do not publish an empty stub [MICHAEL 2026-10-02] (Q14 RESOLVED).
 - Every page has exactly one H1, then H2 and H3 by content hierarchy, not by menu [BRIEF].
 - Every page has a footer with "Contact: 1@1000x10.com" [BRIEF], the nav links, and a link to `/demo` (INFERRED).
@@ -437,6 +440,7 @@ The controlled swipe row uses CSS scroll snap and a visible peek of the next car
 | 4 | Hacker Dojo: eyebrow, H2, subtitle, logo, two paragraphs | Same block; logo about 96 px square [MICHAEL 2026-10-02] |
 | 5 | Advisors, one stacked card each [WIRE]. Headshot where one was supplied, otherwise initials | Daniel Meyer, Adam Fry, Patrick Muggler, Arshi Chadha [MICHAEL 2026-10-06], then Omer F. Yalcin [MICHAEL 2026-10-07] |
 | 6 | Codes written by hand, four real photos, 2×2 | 2×2 [MICHAEL 2026-10-02] (Q42 RESOLVED) |
+| 6b | Under the photos, the zz-Kathy-found-dog-zz set of three concept images, each about 2/3 the photos' height: the card and the phone scan side by side, the community board with the phone underneath, then the explainer [MICHAEL 2026-10-08 v2] | All three in one row from 64rem (1024 px), each about 2/3 the photos' height, with the explainer under the row [MICHAEL 2026-10-08 v2] |
 | 7 | Location, then Next action | Location and Next action, 2 across [WIRE] |
 
 The 2026-10-02 brief and wireframes add Adam Fry and drop the Future space card. Michael's later 2026-10-02 answers remove Jim White from the advisors [MICHAEL 2026-10-02]. Headshots ship for Michael Chung, Patrick Muggler, Arshi Chadha, and Adam Fry. Daniel Meyer stays on initials. Michael's 2026-10-06 change list moves Daniel and Adam to the first two advisor places and supplies Adam's headshot; Ridham Bhagat is removed from the site (approved by Danny 2026-10-07) [MICHAEL 2026-10-06]. Michael's 2026-10-07 changes add Omer F. Yalcin as the fifth advisor, with a headshot and LinkedIn link [MICHAEL 2026-10-07]; his bio and closing line wait on Michael (Q72, issue #116). The implementer does not scrape LinkedIn [MICHAEL 2026-10-02] (Q6, Q46 RESOLVED).
@@ -784,6 +788,7 @@ The layout follows Section 3.1a.
 | H2 Hacker Dojo | Subtitle: "Innovation community and advisory network." Logo removed from the page [MICHAEL 2026-10-03 v1.0 change list]. One paragraph, verbatim, as replaced in Michael's 2026-10-07 change list (Michael's en dashes kept; no em dash): "Many of us are at Hacker Dojo, a premier coworking, maker, and networking community in the heart of Silicon Valley, minutes from the headquarters of Google, NVIDIA, Apple, Meta, NASA Ames, Stanford, SRI International, and many more – where every day brings direct discussions with, and participation in, the latest ideas and experience of deep and broad knowledge base and professional expertise – and “live” the cutting-edge developments and information, news, and breaking trends for problem solving and opportunities, innovation and creativity, and resources; its several hundred members cover a full range of skills: blockchain, crypto, and decentralized and distributed systems; software, hardware, devices, IoT, physical AI, and robotics; AI agents and local (on-device) AI; cybersecurity and cryptography; networking and infrastructure; UX and UI design." | [MICHAEL 2026-10-07]; earlier [MICHAEL 2026-10-03 v1.0 change list] (Q44 subtitle kept; Q45 logo no longer shown on the page) |
 | H2 Advisors | Cards, in order: Daniel Meyer, "Full-stack development"; Adam Fry, "AI agents, infrastructure and deployment"; Patrick Muggler, "Connected logistics and IoT"; Arshi Chadha, "AI security"; Omer F. Yalcin, "Data scientist and computational social scientist" [MICHAEL 2026-10-07]. Bios for Patrick, Arshi, and Daniel are verbatim from the brief; Adam's bio is as updated 2026-10-06 (`src/content/people.ts`). Omer's bio is condensed from his LinkedIn profile and his closing "advises zzThis on" line is drafted, both pending Michael (Q72, issue #116). Headshots for Patrick, Arshi, Adam, and Omer (Q46). Daniel Meyer keeps initials. Ridham Bhagat removed (Danny approved 2026-10-07). | [MICHAEL 2026-10-06] [MICHAEL 2026-10-07] |
 | H2 Codes written by hand | Four real photos in a 2×2 (Section 3.8): hw-agent-notes, hw-usps-tally, hw-mark-on-object, and hw-dog-collar-tag, including the two capital-ZZ photos (Q42 RESOLVED). zz-hackerdojo-zz, zz-helloworld-zz, and zz-roto-zz are removed. Label: "Real photos of handwritten codes." | [MICHAEL 2026-10-02]; label INFERRED |
+| Concept set, under the photos | Three concept images in Michael's order: `hw-kathy-found-dog` (the zz-Kathy-found-dog-zz card in front of the plush corgi), `hw-kathy-phone` (a phone that scanned the card, showing Record found and zzpage.com/zz/Kathy-found-dog), then `hw-kathy-board-phone` (the card pinned on a store community board, with the phone beside it). One explainer under the set: the code `zz-Kathy-found-dog-zz`, then "Concept images. zz-code words, hand printed, for any thing or object. Then scanned, and more." (`aboutPage.handwrittenSetCaption`), then on its own line "Every zz-code can optionally have its own zzPage (here, zzpage.com/zz/Kathy-found-dog), hosted by zzThis or in the user's own cloud storage: Google Drive or Docs, OneDrive, Dropbox, iCloud, or Box." (`aboutPage.handwrittenSetZzPage`). The zzPage address is plain text, not a link, until zzpage.com is live. Each image is about 2/3 the height of a photo above at every width (2 columns of photos on phones, 4 from 64rem), with `object-fit: contain` and the hairline frame. From 64rem the three sit in one row; on phones the first two sit side by side, the board underneath, then the explainer. Source: `intent/2026-10-08-michael-kathy-found-dog.md` (v2). | [MICHAEL 2026-10-08 v2] |
 | Location | "Silicon Valley (Mountain View / Santa Clara; Hacker Dojo) and New York City." [MICHAEL 2026-10-06] | [WIRE] [BRIEF] |
 | Next action | "Discuss a pilot, test cohort or collaboration." → mailto | [WIRE] |
 
@@ -871,6 +876,9 @@ All panel images have status `concept` [ASSETS]. Captions follow the [BRIEF] sce
 | real photo | handwritten/hw-agent-notes.webp | Handwritten paper notes reading zz-patient name-zz, zz-ai@ agentsmith-zz, and zz dojo mojo glade-zz. Title: zz-ai@ agentsmith-zz | Real photo. [MICHAEL 2026-10-02] (Q42 RESOLVED) | /about. Source: Michael's OneDrive share, 2026-10-02 (`zz mix of hand drawn zzcodes/` and `zz logos, other assets/`) |
 | real photo | handwritten/hw-usps-tally.webp | Handwritten page with an address sketch marked with a zz-usps-apple code, the line zz- be bold be brave be beautiful-zz, and a circled (zz) bravo code with four tally marks. Title: zz- be bold be brave be beautiful-zz | Real photo. [MICHAEL 2026-10-02] (Q42 RESOLVED) | /about. Source: Michael's OneDrive share, 2026-10-02 (`zz mix of hand drawn zzcodes/` and `zz logos, other assets/`) |
 | real photo | handwritten/hw-mark-on-object.webp | A framed Flower Power print with a circled capital-letter zz sticker in the lower left and a handwritten zz note with a smiley in the lower right. Title: zz mark on an object | Real photo. [MICHAEL 2026-10-02] (Q42 RESOLVED) | /about. Source: Michael's OneDrive share, 2026-10-02 (`zz mix of hand drawn zzcodes/` and `zz logos, other assets/`) |
+| concept | handwritten/hw-kathy-found-dog.webp | A plush corgi with a round red collar tag marked with a capital-letter zz, behind a hand-printed card reading zz-Kathy-found-dog-zz. Title: zz-Kathy-found-dog-zz | Concept image. 672 by 655. [MICHAEL 2026-10-08] | /about, under the four real photos, first of the set. Source: Michael's 2026-10-08 v2 patch (`intent/2026-10-08-michael-kathy-found-dog.md`) |
+| concept | handwritten/hw-kathy-phone.webp | A hand holds a phone that has scanned zz-Kathy-found-dog-zz and shows Record found with the zzPage address zzpage.com/zz/Kathy-found-dog. Title: zz-Kathy-found-dog-zz scanned | Concept image. 395 by 380. [MICHAEL 2026-10-08 v2] | /about, second of the set. Source: Michael's 2026-10-08 v2 patch |
+| concept | handwritten/hw-kathy-board-phone.webp | A store community board with the corgi photo and its zz-Kathy-found-dog-zz card pinned in the center; beside it a phone shows Record found, zzpage.com/zz/Kathy-found-dog, and a short found-dog message. Title: zz-Kathy-found-dog-zz on a community board | Concept image. 1040 by 515. [MICHAEL 2026-10-08 v2] | /about, third of the set. Source: Michael's 2026-10-08 v2 patch |
 | real photo | handwritten/hw-dog-collar-tag.webp | A plush corgi wearing a round red collar tag marked with a capital-letter zz, to identify the dog. Title: zz tag on a dog collar | Real photo. [MICHAEL 2026-10-02] (Q42 RESOLVED) | /about. Source: Michael's OneDrive share, 2026-10-02 (`zz mix of hand drawn zzcodes/` and `zz logos, other assets/`) |
 | removed | handwritten/zz-hackerdojo-zz.webp, zz-helloworld-zz.webp, zz-roto-zz.webp | Not used [MICHAEL 2026-10-02] | Removed from public/images/handwritten/ | none |
 | headshot | people/michael-chung.webp | Michael Chung | 440 by 440. [MICHAEL 2026-10-02] (Q46 RESOLVED) | /about, founder and advisor headshot. Source: Michael's OneDrive share, 2026-10-02 (`zz mix of hand drawn zzcodes/` and `zz logos, other assets/`) |
@@ -1010,6 +1018,7 @@ Kept for the record. Do not implement from this table.
 | Sub-topic H2 | IBM Plex Sans Condensed 600 | `--text-h2`: 0.75 × `--text-xl` | |
 | H3 | IBM Plex Sans Condensed 600 | `--text-sub`: max(body, 0.75 × 1.25rem) | Never smaller than body |
 | Body | IBM Plex Sans 400 | 1.0625rem | Line height 1.6 |
+| Header menu links | IBM Plex Sans 500 | `calc(var(--text-sm) * 1.3)`, about 19.5 px | About 30% larger than `--text-sm`; the 64 px header height is unchanged [MICHAEL 2026-10-08] |
 | Codes | IBM Plex Mono 500 | 0.92em inside text | |
 | Language examples | IBM Plex Sans KR, JP, and Hebrew 500 | with the code | Self-hosted subsets only |
 
@@ -1049,15 +1058,16 @@ Brand and UI stay consistent across zzThis and the zzThat iOS and Android apps [
 
 - Theme: the apps start in the dark theme by default, like the site, and still offer light. Today the zzThat spec has the apps follow the system setting (zzThat `specs/001-zzthat-apps/runtime.md`, Accessibility), so the zzThat specs change to match. Tracked on the zzThis + zzThat board.
 - Wordmarks: where an app shows the zzThat wordmark, it uses the lowercase "zzthat" variant (`public/images/logos/zzthat-lowercase.webp`). Where a client shows the zzThis wordmark, it is theme-aware: white "this" on dark (`zzthis-logo-on-dark`), black "this" on light (`zzthis-logo-on-light`), from `design/brand/`. The zzThat apps show no wordmark today (zzThat `design.md`), so nothing changes in the apps until one is added; the lowercase zzThat file then joins the pinned `design/brand/`.
+- Site header (2026-10-08): Demo in the top menu, larger menu links, and the no-shrink logo apply to the marketing site only. The zzThat apps navigate with three tabs (Scan, Create, My codes) and an Account toolbar item, and the web client's top bar shows the same four (`design/UX.md`, Navigation). Neither has a site menu or a link to `/demo`, so no app change follows. If an app later links to the site menu or `/demo`, it uses this order and the word "Demo".
 - The rule lives in `design/UX.md`, Theme and brand parity.
 
 ## 6. Stack, repo layout, and engineering rules
 
 **Stack:** Astro (static output), INFERRED. Astro builds static HTML with no client JavaScript by default. The demo and the Home console each ship one TypeScript island. Neither island calls the network, the camera, the microphone, or storage. The build makes no runtime external requests and includes no analytics. The site has no service worker. IBM Plex Sans, Plex Sans Condensed, Plex Mono, and the KR, JP, and Hebrew faces used by the language examples are self-hosted through `@fontsource` packages [OPERATOR 2026-10-01] [JEV 2026-10-03].
 
-**Hosting:** GitHub Pages, deployed from the public repo `Zero-State-LLC/zzthis` (organization plan Team). The repo and the Pages site are both public [OPERATOR 2026-10-02], so nothing private (source documents, costs, credentials) may be committed. The project-site URL is `https://zero-state-llc.github.io/zzthis/`. The site has no custom domain, no DNS, and no Vercel [OPERATOR 2026-10-01].
+**Hosting:** GitHub Pages, deployed from the public repo `Zero-State-LLC/zzthis` (organization plan Team). The repo and the Pages site are both public [OPERATOR 2026-10-02], so nothing private (source documents, costs, credentials) may be committed. The site is served from the root of the custom domain `https://zzthis.com` [DANNY 2026-10-08, #6]. DNS: apex `A` and `AAAA` records point at the GitHub Pages addresses, and `www` is a `CNAME` to `zero-state-llc.github.io`, so GitHub redirects `www.zzthis.com` to the apex. The custom domain is set in the repository's Settings > Pages; `pages.yml` deploys with GitHub Actions, and GitHub ignores a `CNAME` file for Actions-built sites, so the repo has none. The site goes live at zzthis.com once the DNS records and the Pages custom domain are set. Before that cutover the site lived at the project-site URL `https://zero-state-llc.github.io/zzthis/` [OPERATOR 2026-10-01], which GitHub redirects to the custom domain once it is set. No Vercel [OPERATOR 2026-10-01].
 
-**Base path:** `astro.config.mjs` sets `output: 'static'`, `site: 'https://zero-state-llc.github.io'`, and `base: '/zzthis/'`. Every internal link and image URL is built from `import.meta.env.BASE_URL`. The source contains no absolute root paths such as `/images/...` or `/demo` [OPERATOR 2026-10-01]. A small helper in `src/lib/url.ts` that joins `BASE_URL` with a relative path keeps this consistent (INFERRED).
+**Base path:** `astro.config.mjs` sets `output: 'static'`, `site: 'https://zzthis.com'`, and `base: process.env.ASTRO_BASE ?? '/'` [DANNY 2026-10-08, #6]. The default build serves from the root, like the isolated Cloudflare staging Worker, whose workflows still set `ASTRO_BASE=/`. Until the cutover the base was `/zzthis/` [OPERATOR 2026-10-01]. Every internal link and image URL is built from `import.meta.env.BASE_URL`. The source contains no absolute root paths such as `/images/...` or `/demo` [OPERATOR 2026-10-01]. A small helper in `src/lib/url.ts` that joins `BASE_URL` with a relative path keeps this consistent (INFERRED).
 
 ```
 .github/workflows/
@@ -1114,14 +1124,14 @@ package-lock.json
 
 ## 8. Acceptance criteria
 
-1. `/zzthis/`, `/zzthis/how-it-works`, `/zzthis/applications`, `/zzthis/about`, `/zzthis/contact`, and `/zzthis/demo` build as static HTML and return content. `/technology` does not exist, and no page links to it.
+1. `/`, `/how-it-works`, `/applications`, `/about`, `/contact`, and `/demo` (under the configured base, `/` on zzthis.com) build as static HTML and return content. `/technology` does not exist, and no page links to it.
 2. Each page has exactly one `<h1>`, and no heading level is skipped.
-3. The nav shows, in order: How it works, Applications, About, Contact. The footer shows How it works, Applications, Demo, About, Contact, then "Patent pending" [MICHAEL 2026-10-02].
+3. The nav shows, in order: How it works, Applications, Demo, About, Contact [MICHAEL 2026-10-08]; on `/demo`, the Demo link carries `aria-current="page"`. The footer shows How it works, Applications, Demo, About, Contact, then "Patent pending" [MICHAEL 2026-10-02]. The header stays 64 px high with the larger menu links, and at 1024 px the full menu shows with the logo at full size and no horizontal overflow [MICHAEL 2026-10-08].
 4. The hero H1, subline, paragraph, featured statement, comparison cells, workflow lines, and category stories match Sections 3.2–3.4 character for character. This check uses a snapshot test of the content objects.
 5. No rendered copy contains an em dash (U+2014) [MICHAEL 2026-10-02], with no exceptions. The hero headline uses a spaced hyphen: "readable-writable - and smart." (Q62) [DANNY 2026-10-03, revised: "Fix the em dashes"].
 6. The Home section order matches Section 3.1b (direction B v1.0). Field logistics and From photo to action remain the largest image bands on Home.
 7. Panel placement matches Section 3.8. j, k, and l render as an ordered list labeled 01 to 03.
-8. Concept labels follow Section 3.1a [MICHAEL 2026-10-02]: standalone panels carry "Concept illustration", each grouped gallery has one label above it, and the About prototype block has one. `/zzthis/demo` shows the "Demo · demo data" badge on every step, A0–A7 and B0–B4 [MICHAEL 2026-10-03 #54].
+8. Concept labels follow Section 3.1a [MICHAEL 2026-10-02]: standalone panels carry "Concept illustration", each grouped gallery has one label above it, and the About prototype block has one. `/demo` shows the "Demo · demo data" badge on every step, A0–A7 and B0–B4 [MICHAEL 2026-10-03 #54].
 9. The advisor list is Daniel Meyer, Adam Fry, Patrick Muggler, Arshi Chadha, and Omer F. Yalcin [MICHAEL 2026-10-06] [MICHAEL 2026-10-07]. Every page footer shows "Patent pending".
 10. Founder and advisor cards show a supplied headshot where one exists (Michael, Patrick, Arshi, Adam, Omer) and initials otherwise [MICHAEL 2026-10-06] [MICHAEL 2026-10-07] (Q46).
 11. Flow A reaches A7 with the keyboard alone. A7 states that nothing was submitted.
@@ -1136,19 +1146,19 @@ package-lock.json
 20. The required `build` check from `ci.yml` is green on the PR, with `npm ci`, lint, and build passing under Node 24. If `site-ci.yml` exists, its typecheck and test (100% coverage on the required logic) are green. `ci.yml` is unchanged [OPERATOR 2026-10-01].
 21. Repo size budget: images 15 MB or less, and the total build output 20 MB or less (INFERRED). No file exceeds 2 MB.
 22. A secret scan (gitleaks or an equivalent tool) is clean, and no private source document is in the repo.
-23. Every internal `href` and `src` in `dist/` starts with `/zzthis/` or is relative. A grep check finds no `href="/` or `src="/` that lacks the `/zzthis/` prefix [OPERATOR 2026-10-01].
-24. `dist/404.html` exists, and its links resolve under `/zzthis/`.
+23. Every internal `href` and `src` in `dist/` is built from `BASE_URL` or is relative. With the default root base, `scripts/check-dist.mjs` finds no path that still starts with the old `/zzthis/` prefix and no link to `zero-state-llc.github.io`; with a subpath `ASTRO_BASE`, it finds no `href="/` or `src="/` that lacks that prefix [OPERATOR 2026-10-01] [DANNY 2026-10-08, #6].
+24. `dist/404.html` exists, and its links resolve under the configured base (`/`).
 25. The build output contains no service worker registration.
 26. `package-lock.json` is committed, and `npm ci` succeeds from a clean checkout.
 27. `pages.yml` matches Section 6: it triggers only on `push` to `main` and `workflow_dispatch`, uses the listed permissions and concurrency group, and uploads `dist`. The PR does not trigger a deploy.
-28. After merge, `https://zero-state-llc.github.io/zzthis/` serves Home, and every nav link and image loads without a 404.
+28. After the zzthis.com cutover (DNS live, Pages custom domain set, the root-base change merged and deployed), `https://zzthis.com/` serves Home over HTTPS, every nav link and image loads without a 404, and `https://www.zzthis.com/` and `https://zero-state-llc.github.io/zzthis/` redirect to it [DANNY 2026-10-08, #6].
 29. Site copy (text, headings, captions, titles) writes every zz code in lowercase and never writes a standalone capital "ZZ". Photos and renders may show uppercase letters inside a code word. Real photos may show a capital-letter zz mark (Q53 RESOLVED: keep [MICHAEL 2026-10-03 #39]); images we generate may not; alt text describes them in words or quotes the code as shown [MICHAEL 2026-10-02] (Q42). A check in `check-dist.mjs` fails on a standalone capital ZZ in rendered text or in an `alt` or `title` attribute, and does not flag uppercase letters inside a code.
 30. After 001 T029: Flow B returns, for every input in Section 2.2a G9, the outcome that the grammar gives (plain or handle input that is not a mock code goes to B3, bare goes to B5, each failure goes to its B4 line). A unit test runs the whole G9 table against the demo parser [MICHAEL 2026-10-02 #33] [MICHAEL 2026-10-02 #34].
 31. After 001 T030: no image we generated shows a capital-letter zz mark, on its own or in a code [MICHAEL 2026-10-02 #33]. The three real photos (`hw-mark-on-object`, `hw-dog-collar-tag`, `app-truck-after`) stay as supplied [MICHAEL 2026-10-03 #39] (Q53, issue #39).
 
 ## 9. Out of scope and OPEN questions
 
-**Out of scope for the site:** real recognition, camera access, a real resolver, accounts, forms or email backends, analytics, service workers, a custom domain or DNS, Vercel, the technology page, the founder history page (patent, civic payments, HalfHashed Labs, Unity Consensus) [BRIEF], the zzthing.com and zzthat.com apps, and CMS integration. GitHub Pages replaces the earlier Vercel target [OPERATOR 2026-10-01].
+**Out of scope for the site:** real recognition, camera access, a real resolver, accounts, forms or email backends, analytics, service workers, any domain or DNS beyond the zzthis.com records in Section 6 [DANNY 2026-10-08, #6], Vercel, the technology page, the founder history page (patent, civic payments, HalfHashed Labs, Unity Consensus) [BRIEF], the zzthing.com and zzthat.com apps, and CMS integration. GitHub Pages replaces the earlier Vercel target [OPERATOR 2026-10-01].
 
 Michael's answers arrived on 2026-10-02 through Danny (issue #10), in an updated content brief and updated wireframes. [MICHAEL 2026-10-02] tags each answer.
 
@@ -1158,7 +1168,7 @@ Michael's answers arrived on 2026-10-02 through Danny (issue #10), in an updated
 | Q2 | Home order | Closed by [WIRE] |
 | Q3 | H1 wording for `/demo` | RESOLVED: "See zzThis in action." [MICHAEL 2026-10-02] |
 | Q4 | Which l and m renders are the final corrected versions? | RESOLVED: Field Tablet Turn-In Request Review (l) and Split-screen water stock drops by Day 4 (m), already the primary files; the alternates are not used [MICHAEL 2026-10-02] |
-| Q5 | Should the demo appear in the main nav? | RESOLVED: no; link from How it works and the footer. Add "Try zzThat" to the nav when the free app launches [MICHAEL 2026-10-02] |
+| Q5 | Should the demo appear in the main nav? | RESOLVED: no; link from How it works and the footer. Add "Try zzThat" to the nav when the free app launches [MICHAEL 2026-10-02]. SUPERSEDED 2026-10-08: Demo joins the main nav between Applications and About (D-2026-10-08-01) [MICHAEL 2026-10-08] |
 | Q6 | Founder and advisor portraits: should the team supply approved photos? No LinkedIn scraping. | RESOLVED: initials cards until Michael supplies approved original headshots; supplied LinkedIn URLs are profile links [MICHAEL 2026-10-02] |
 | Q7 | Should research targets be published, and where? | RESOLVED: do not publish them on the site [MICHAEL 2026-10-02]; removed from the repo (Q24) |
 | Q8 | Michael's origin story for the About page | RESOLVED: short founder origin on About (Section 3.5); room for a longer history later [MICHAEL 2026-10-02] |
@@ -1168,7 +1178,7 @@ Michael's answers arrived on 2026-10-02 through Danny (issue #10), in an updated
 | Q12 | Should Adam Fry (named in [PRODUCT]) be listed? | RESOLVED: yes, initials card; specialty "AI agents, infrastructure and deployment" and bio supplied [MICHAEL 2026-10-02]. RESOLVED [DELEGATED 2026-10-04, #74]: no profile link and no photo until supplied (the Q6 rule) |
 | Q13 | CI | Closed: PR #1 `ci.yml` (job `build`) is the required check; do not edit or duplicate it; optional `site-ci.yml` runs typecheck and test only [OPERATOR 2026-10-01] |
 | Q14 | Public wording for the technology page | RESOLVED: draft wording supplied (stored in `technology.ts`); no empty page; the page enters navigation only with that content plus an example [MICHAEL 2026-10-02] |
-| Q15 | Domain | Closed for launch: GitHub Pages project URL https://zero-state-llc.github.io/zzthis/, no custom domain or DNS [OPERATOR 2026-10-01] |
+| Q15 | Domain | Closed for launch: GitHub Pages project URL https://zero-state-llc.github.io/zzthis/, no custom domain or DNS [OPERATOR 2026-10-01]. SUPERSEDED [DANNY 2026-10-08, #6]: the site moves to the root of https://zzthis.com on GitHub Pages (Section 6, Hosting); Michael sets the DNS records at the registrar, and Danny sets the Pages custom domain |
 | Q16 | Ridham Bhagat's role: "robotics and resilient operations" [BRIEF] or "robotics and operations" [WIRE]? | RESOLVED: "Cybersecurity, cryptography and research methods", with the updated bio from Michael's later answers (replaces "Robotics and smart-contract security") [MICHAEL 2026-10-02] |
 | Q17 | Concept label wording | RESOLVED: "Concept illustration" on standalone AI-render panels; one label above a grouped gallery (Section 3.1a) [MICHAEL 2026-10-02] |
 | Q18 | Should we fine-tune our own small model for on-device capture (Option B, Section 10.8)? | RESOLVED [DELEGATED 2026-10-04, #74]: ship Option A on the device: Apple Vision on iOS, ML Kit on Android. No cloud reader in v1 (`photo_reads` false, spec 005 US5). The Option B benchmark waits for the real-photo test set (Q34) and is a v2 track |
@@ -1234,6 +1244,29 @@ One running list of decisions, so every agent and advisor works from the same ru
 
 | ID | Date | Issue | Decision | Source |
 |---|---|---|---|---|
+| D-2026-10-10-20 | 2026-10-10 | #86 | PROPOSED: require the `site-ci.yml` `typecheck-and-test` job on `main`; `ci.yml` stays unchanged. Danny sets branch protection. | [`specs/decisions-2026-10-10.md`](../specs/decisions-2026-10-10.md) |
+| D-2026-10-10-19 | 2026-10-10 | #86 | ASSIMILATED into v1.0 as defect fixes: re-roll scope check, mint account guard, cache side effects off the request path, bounded retention and deletion fan-out, outbound timeouts, `ZZ_DATA_KEY` key ids, limiter failure policy, request and version logging (BACKLOG RM-021, RM-030 to RM-039). | review |
+| D-2026-10-10-18 | 2026-10-10 | PR #127 | The proposed location capability stays research (R-B17) with no release until PR #127 is reviewed. | review |
+| D-2026-10-10-17 | 2026-10-10 | #126 | The About zzPage explainer stays as labeled concept copy; the capability is research R-ZZPAGE and must resolve the FR-007 link-safety rule first. | review |
+| D-2026-10-10-16 | 2026-10-10 | #86 | ASSIMILATED: a published privacy policy and support address are v1.0 gates; out-of-app access and deletion requests use an operator runbook; self-service export is v2.0. | review |
+| D-2026-10-10-15 | 2026-10-10 | #93 | PROPOSED: the marketing site stays on GitHub Pages for v1.0; the Worker migration is optional B4 work. | review |
+| D-2026-10-10-14 | 2026-10-10 | #92 | The six high npm advisories are build or simulator tooling and do not reach the Worker bundle or the static site; upgrade separately. | local `npm audit`; `workers/api/dist/meta.json` |
+| D-2026-10-10-13 | 2026-10-10 | PR #122 | The red `security` check on `main` is a gitleaks false positive on the unmerged branch `spec/zz-ocr-qual-001`; allowlist that commit, path, and line; keep scanning every ref. | redacted local gitleaks run |
+| D-2026-10-10-12 | 2026-10-10 | #87 | PROPOSED amendment to `docs/CONTRACT-EVOLUTION.md`: contract 1 is frozen through v1.1; later additive revisions need verified tolerant readers in every client cohort. | kotlinx.serialization and OpenAPI Generator docs |
+| D-2026-10-10-11 | 2026-10-10 | #86 | Observability baseline: request id, ray id, version, and error class in logs; invocation logs off and pinned; a scheduled GitHub Actions probe; no third-party telemetry. | review |
+| D-2026-10-10-10 | 2026-10-10 | #86 | PROPOSED: v1.0 authoritative state is D1 plus four secrets; R2 and the limiter are out of RPO scope while photo reads are off; secret escrow; deletion replay after restore; RPO 5 minutes and RTO 4 hours pending a drill and Danny's acceptance; audit retention decided at 1 GB or 6 months. | Cloudflare D1 limits; staging drill |
+| D-2026-10-10-09 | 2026-10-10 | #93 | PROPOSED: production runs on Workers Paid (spend, Danny). | Cloudflare Workers and D1 limits |
+| D-2026-10-10-08 | 2026-10-10 | #93, PR #95 | PROPOSED: a `wrangler.production.toml` with a guard test and a manual, reviewer-gated production workflow that bookmarks D1 before migrations; supersedes PR #95 when merged. | review |
+| D-2026-10-10-07 | 2026-10-10 | #93 | PROPOSED: an Access-protected staging hostname on `zer0state.com` with developer sign-in and mint on, so writes and the edge cache can be verified; the Cache API has no effect on workers.dev. Fallback: verify the cache at the production canary. | Cloudflare Cache API and Access docs |
+| D-2026-10-10-06 | 2026-10-10 | #87 | Scope is not a tenant: each of `enterprise` and `logistics` serves at most one organization until contract 2 adds an Organization entity. | spec 005 FR-034, FR-035 |
+| D-2026-10-10-05 | 2026-10-10 | #86 | ASSIMILATED: IPv6 callers are rate-limited by /64; a zone rule protects resolve; audit growth is monitored. | `workers/api/src/limits/enforce.ts` |
+| D-2026-10-10-04 | 2026-10-10 | #14 | PROPOSED: keep two data words plus a check word for v1.0; build the production list with the Q35 filters and the blocklist; freeze with R-B6 evidence or Danny's recorded risk acceptance; re-decide the format when issued public codes pass 1% of the code space. | spec 003; review H1 |
+| D-2026-10-10-03 | 2026-10-10 | PR #89 | A platform without a ZZ-OCR-QUAL-001 PASS receipt ships camera capture in confirm-only mode; Accept needs a receipt. | DECISION-STATUS |
+| D-2026-10-10-02 | 2026-10-10 | #86 | v1 ships as v1.0 (production API, web client, site, production wordlist) then v1.1 (native apps and qualified camera, the zzThat store launch). Sequencing only; no outcome widened. | Apple App Review 5.1.1(v) |
+| D-2026-10-10-01 | 2026-10-10 | - | Release convention: `vMAJOR.MINOR`, MAJOR equals the API contract generation; research phases `R-<topic>`; deferred items `DF-<nn>`. | [`specs/RELEASE-ROADMAP.md`](../specs/RELEASE-ROADMAP.md) |
+| D-2026-10-08-04 | 2026-10-08 | #126 | Michael's 2026-10-08 About addition, amended to his v2 the same evening and used as given (`intent/2026-10-08-michael-kathy-found-dog.md`; v2 replaces the v1 pair). Under the four real photos in "Codes written by hand", a set of three concept images in Michael's order: the zz-Kathy-found-dog-zz card with the plush corgi, a phone that scanned it, then the card on a store community board with the phone beside it. Each is about 2/3 the height of a photo above at every width [MICHAEL 2026-10-08: not too large]. From 64rem (1024 px) the three sit in one row; on phones the first two sit side by side, the board underneath, then the explainer. One explainer under the set: the code, then "Concept images. zz-code words, hand printed, for any thing or object. Then scanned, and more.", then on a new line "Every zz-code can optionally have its own zzPage (here, zzpage.com/zz/Kathy-found-dog), hosted by zzThis or in the user's own cloud storage: Google Drive or Docs, OneDrive, Dropbox, iCloud, or Box." The zzPage address is plain text, not a link, until zzpage.com is live (Michael owns zzpage.com); it reads Kathy-found-dog because that is what the phone in the images shows. All three have status `concept` and say so in the explainer, since the label above says "Real photos". The corgi's collar tag in all three images shows a capital-letter zz; these are renders Michael supplied, which Section 2.2 allows, and the card's alt text says so in words. Whether a render may show it (Section 2.2a G7, FR-019 in spec 001) is for Michael (spec 001 T053). Site only: the zzThat apps and the web client have no About page, so nothing changes there (Section 5.5). | [MICHAEL 2026-10-08 v2] |
+| D-2026-10-08-02 | 2026-10-08 | #6 | The marketing site moves from the GitHub Pages project path (`/zzthis/`) to the root of `https://zzthis.com`: `site` is `https://zzthis.com`, the default `base` is `/`, and `ASTRO_BASE` still overrides it. No `CNAME` file, because GitHub ignores it for Actions-built Pages sites; the custom domain lives in Settings > Pages. Cutover order: DNS live and verified, then the Pages custom domain, then merge the root-base change right away, then Enforce HTTPS once the certificate is issued (Section 6, Hosting; acceptance item 28). | [DANNY 2026-10-08] |
+| D-2026-10-08-01 | 2026-10-08 | #123 | Michael's 2026-10-08 header changes, used as given (`intent/2026-10-08-michael-nav-demo.md`). The top menu is How it works, Applications, Demo, About, Contact, the footer's order; `/demo` marks Demo as the current page. Menu links are about 30% larger (`calc(var(--text-sm) * 1.3)`; Michael asked for 25 to 33%), and the header stays 64 px high. The logo never shrinks (`.nav__mark { flex-shrink: 0 }`). The full menu still shows from 64rem (1024 px). Supersedes the Q5 answer that kept the demo out of the main nav (Section 3.1). The zzThat apps have no site menu and no link to `/demo` (zzThat `runtime.md`, Navigation: three tabs), so nothing changes there (Section 5.5). | [MICHAEL 2026-10-08] |
 | D-2026-10-07-02 | 2026-10-07 | #118 | Brand and UI stay consistent across zzThis and the zzThat iOS and Android apps. The apps start in the dark theme by default and still offer light, and use the lowercase zzThat wordmark and the theme-aware zzThis wordmarks wherever they show one (Section 5.5, `design/UX.md`). The zzThat specs change to match in that repo; tracked on the zzThis + zzThat board. | [DANNY 2026-10-07] |
 | D-2026-10-07-01 | 2026-10-07 | #118, #116, #117 | Michael's 2026-10-07 site changes, used as given (`intent/2026-10-07-michael-content-changes.md`). Home: only "zz" is orange in "Why the zz markers matter" and in the language heading; the markers paragraph ends "Two “zz” letters or “marks”, recognizable almost anywhere, in any handwriting."; the language heading reads "zz- In - any - language -zz"; the "About and people" H2 matches the "Contact" H2, and the Home contact email is about half its earlier size. About: zzthis.com replaces zzthing.com, with the header's theme-aware zzThis wordmarks, a commercial-use line, and a new label; the zzThat wordmark shows the lowercase "zzthat" variant from Michael's file; the founder bio and the Hacker Dojo paragraph are replaced as given; Omer F. Yalcin joins as the fifth advisor with a headshot, LinkedIn link, and Michael's role line (bio and closing line wait on Q72). All pages: dark is the default for every visitor; the header toggle switches the current page to light, and nothing is stored. | [MICHAEL 2026-10-07] |
 | D-2026-10-05-07 | 2026-10-05 | #78 | The operator SQL and one copy key, decided under Danny's delegation of the remaining calls on #78 (https://github.com/Zero-State-LLC/zzthis/pull/78#issuecomment-6004261086). (1) The four files plan.md names, in `workers/api/ops/` (spec 005 T038). `reports.sql` lists the open reports and closes one by setting `closed_at`, which the FR-026 report deletion needs. Listing writes no audit row. `suspend.sql` and `revoke-code.sql` revoke with `revoked_reason` `operator`, and a code revoked from SQL keeps the FR-018 worst case of 60 seconds in the edge cache. `grant.sql` adds an issuer, viewer, or auditor grant, as FR-034 and FR-035 need. (2) Two new files. `unsuspend.sql` clears `suspended_at` and writes `account.unsuspend`, and codes revoked during the suspension stay revoked. `remove-grant.sql` ends one grant by setting `expires_at` to now and writes `grant.remove`. It keeps the row, so the grant's scope still resolves. (3) `grant.add` and `grant.remove` target the grant, so the event takes the grant's scope and that scope's auditors list it (FR-016). The audit row has no column for the role, and the schema is unchanged. Every operator event has no actor. (4) `common.back`, "Back", in `design/copy.json`, labels the back arrow. Its text waits for Michael's review. Decided 2026-10-05 by established practice [DELEGATED 2026-10-05, zzThis #78]. Danny asked for each call to go through Jev (https://github.com/Zero-State-LLC/zzthis/pull/78#issuecomment-6004271824). Each call was then run through Jev (TypeSafe System One, jev-latest, 2026-10-05, through Luna's API) and Jev chose the same option: grant audit rows point at the grant (confidence 0.92); add the undo scripts (0.63); remove a grant by expiring it (0.98); label the back arrow with a `common.back` copy key (1.00). | [DELEGATED 2026-10-05, zzThis #78] |
@@ -1277,9 +1310,11 @@ One running list of decisions, so every agent and advisor works from the same ru
 | D-2026-10-03-17 | 2026-10-03 | #33, #34 | Repeated in the 2026-10-03 document with no change. Rules stay as in Q48 and Q49 | [MICHAEL 2026-10-03] |
 | D-2026-10-03-00 | 2026-10-03 | #33, #34 | v1 text grammar accepted (Section 2.2a), PR #43 | Q48, Q49; Danny accepted 2026-10-03 2:52 AM PT |
 
-## 10. Architecture (proposal, not built)
+## 10. Architecture (proposal of 2026-10-02; implemented through spec 005)
 
-**Status: proposal.** Nothing in this section is built. It records the architecture direction that Danny set on 2026-10-02, plus the recommendations he accepted [OPERATOR 2026-10-02]. The marketing site and the `/demo` click-through (Sections 3 and 4) stay static and mock-only; they do not call this API. Product behavior in Section 2 still governs where the two differ. Items marked **INFERRED** are sketch details added in this spec, not operator decisions.
+**Status update 2026-10-10.** This section is the operator's 2026-10-02 proposal, kept as written for provenance. Spec 005 implements its central server as one Cloudflare Worker with D1, R2, a Durable Object limiter, and a cron; the implementation is tested and deployed to isolated staging only. Two parts are superseded: no cloud vision model reads photos in v1 (Q18), and partner authentication is decided for contract 2 (Q19). Current architecture authority is [`specs/CLOUDFLARE-RUNTIME.md`](../specs/CLOUDFLARE-RUNTIME.md) and spec 005; sequencing is [`specs/RELEASE-ROADMAP.md`](../specs/RELEASE-ROADMAP.md).
+
+**Status: proposal (2026-10-02 text).** Nothing in this section was built when it was written. It records the architecture direction that Danny set on 2026-10-02, plus the recommendations he accepted [OPERATOR 2026-10-02]. The marketing site and the `/demo` click-through (Sections 3 and 4) stay static and mock-only; they do not call this API. Product behavior in Section 2 still governs where the two differ. Items marked **INFERRED** are sketch details added in this spec, not operator decisions.
 
 ### 10.1 Topology
 
@@ -1326,7 +1361,7 @@ AI reads, grammar verifies [OPERATOR 2026-10-02].
 
 1. Recognition runs on the device with an AI vision model, preferably a small on-device model [OPERATOR 2026-10-02].
 2. Only the decoded code goes to the API. The photo stays on the device by default [OPERATOR 2026-10-02].
-3. Photos go to the server only on a retry or a hard case. There, a larger cloud vision model can read them [OPERATOR 2026-10-02].
+3. Photos go to the server only on a retry or a hard case. There, a larger cloud vision model can read them [OPERATOR 2026-10-02]. Superseded for v1 by Q18: no cloud reader, `photo_reads` false; a server read is a v2.2 research item (B12).
 4. Every model read, on device or in the cloud, is snapped to the closed wordlist, and the checksum word is verified [OPERATOR 2026-10-02].
 5. Low-confidence reads go to clarify or retry, with a human confirm step, using the decision bands in Section 2.5 [OPERATOR 2026-10-02] [PRODUCT].
 
@@ -1409,7 +1444,7 @@ The table rows are a comparison drawn up in this spec from the operator's factor
 ### 10.9 Open items
 
 - **Fine-tune a small handwriting model?** Not in v1 (Q18, decided [DELEGATED 2026-10-04, #74]). The 2-week benchmark (Section 10.8) is a v2 track.
-- **API auth for partner apps.** Not decided [OPERATOR 2026-10-02]. See Q19.
+- **API auth for partner apps.** Not decided [OPERATOR 2026-10-02]. RESOLVED since: Q19, OAuth 2.0 client credentials in contract 2 (v2.0).
 
 ## 11. Provenance
 
@@ -1432,22 +1467,26 @@ The table rows are a comparison drawn up in this spec from the operator's factor
 
 Added 2026-10-03. This section draws the v1 line from sources already in the repo. It adds no feature. INFERRED marks where the line itself is a choice.
 
+**Superseded for sequencing on 2026-10-10.** [`specs/RELEASE-ROADMAP.md`](../specs/RELEASE-ROADMAP.md) assigns every capability to v1.0, v1.1, v1.2, v1.3, v2.0, v2.1, v2.2, a research phase, or the deferred register (D-2026-10-10-01, D-2026-10-10-02). The table below is the 2026-10-03 snapshot with its state column updated.
+
 ### 12.1 What v1 is (INFERRED)
 
 v1 is the public site and demo plus an English-only prototype of the three product parts. The boundary follows Section 10.8 (ship Option A, decide Option B after a benchmark) and issue #35, which files our own trained models and any-language codes as v2.
 
-| Part | Spec | State at d721783 | v1 exit criterion |
+| Part | Spec | State at d721783, updated 2026-10-10 | v1 exit criterion |
 |---|---|---|---|
 | Site and demo | 001 | Built and live (PRs #9 to #32) | Section 8 items 1 to 31 pass; items 15 to 19 automated or recorded as manual with a date (001 T014) |
-| v1 text grammar | 003 US3, Section 2.2a | Rules accepted 2026-10-03; demo parser diverges (Section 4.4) | One library passes every G9 vector; the demo uses it (001 T029) |
-| Wordlist and check word | 003 US1, US2 (issue #14) | Not started | List v1 with a yield report; check word detects every single wrong word (Q30 minimum) |
-| Resolver prototype | 002 (issue #13) | Not started | US1 to US4 and one test per FR-010 abuse case pass in CI |
-| Capture prototype, Option A | 004 | Not started | Typed, spoken, and photographed codes go through one grammar, snap, and verify path with accept, clarify, retry, and abstain |
-| Option B benchmark | 004 T008 (Q18) | Not started | Result recorded; it opens or defers v2 track A |
+| v1 text grammar | 003 US3, Section 2.2a | Implemented in `packages/zz-core`; the demo uses it (001 T029 done) | One library passes every G9 vector; the demo uses it (001 T029) |
+| Wordlist and check word | 003 US1, US2 (issue #14) | proto-v0, check word, and issuer implemented; production list open (B6, RM-020) | List v1 with a yield report; check word detects every single wrong word (Q30 minimum) |
+| Resolver prototype | 002 (issue #13) | Implemented through spec 005; staging only | US1 to US4 and one test per FR-010 abuse case pass in CI |
+| Capture prototype, Option A | 004 | Scanner and classifier implemented in zz-core; on-device camera in zzThat, unqualified (v1.1) | Typed, spoken, and photographed codes go through one grammar, snap, and verify path with accept, clarify, retry, and abstain |
+| Option B benchmark | 004 T008 (Q18) | Not started; research phase R-B12 | Result recorded; it opens or defers v2 track A |
 
 Every OPEN question that blocks a v1 task has a GitHub issue and a default. Q50 to Q61 (issues #36 to #42, #44 to #48) were filed and answered on 2026-10-03; the answers are in Sections 2.2a and 9a.
 
 ### 12.2 v2 candidates (not committed)
+
+Each row now has a release, research phase, or deferred entry in the capability disposition table of [`specs/RELEASE-ROADMAP.md`](../specs/RELEASE-ROADMAP.md).
 
 | Candidate | Where the repo defers it |
 |---|---|

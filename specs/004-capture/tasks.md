@@ -7,6 +7,8 @@ Workflows for every implementing task: anti-slop-code, production-systems, googl
 ## Status reconciliation
 
 This is the original capture decomposition. V1 boundaries and server/client integration were consolidated under spec 005/zzThat. Voice, trained-reader work, and the Option B benchmark remain deferred. Unchecked boxes are **not** a reliable current-status list. Use [TRACEABILITY](../TRACEABILITY.md) and current product specs before scheduling work.
+
+Reconciled 2026-10-10: T001 and T002 are decided (Q33, Q34). T003 and T009 are implemented for text in `packages/zz-core` (`classify.ts`, `scanner.ts`, vectors); their camera parts and T004, T005, and T006 belong to zzThat (v1.1, BACKLOG RM-060 to RM-065). T007 is superseded by Q18 for v1 (RM-092, v2.2). T008 is research phase R-B12.
 ## Phase 0: Decisions
 
 - [ ] T001 App scope and platform (Q33). Owner: Michael and Danny.

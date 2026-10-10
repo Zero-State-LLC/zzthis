@@ -1,6 +1,6 @@
 # Plan: resolver core
 
-Feature: [spec.md](spec.md). Status: proposal, not built.
+Feature: [spec.md](spec.md). Status: proposal of 2026-10-02, implemented through spec 005 (status note 2026-10-10); production deployment gated. The deployed shape is [CLOUDFLARE-RUNTIME.md](../CLOUDFLARE-RUNTIME.md) and spec 005 plan.md.
 
 This plan carries `docs/SPEC.md` Section 10 (architecture), which was operator direction from 2026-10-02 [OPERATOR 2026-10-02]. Section 10 stays in `docs/SPEC.md` as the full record, including the topology diagram. This file summarizes the parts that govern the resolver and lists what is still undecided.
 

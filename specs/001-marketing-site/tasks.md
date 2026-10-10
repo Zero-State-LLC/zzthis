@@ -94,3 +94,25 @@ Intent: `intent/2026-10-07-michael-content-changes.md`. Copy and layout: `docs/S
 - [ ] T042 Replace Omer's bio and closing line with Michael's wording if he sends it (Q72, issue #116).
 - [ ] T043 `/demo` "Current prototypes": swap zzthing.com for zzthis.com only if Michael says so (Q73, issue #117).
 - [ ] T044 zzThat app parity (FR-022, `docs/SPEC.md` Section 5.5): the apps default to dark and use the lowercase zzThat wordmark wherever one appears. The change lands in the zzThat specs and apps, tracked on the zzThis + zzThat board.
+
+## Phase 13: Michael's 2026-10-08 header changes
+
+Intent: `intent/2026-10-08-michael-nav-demo.md`. Spec: `docs/SPEC.md` Sections 3.1, 5.2, and 5.5, acceptance item 3; FR-002; decision D-2026-10-08-01.
+
+- [x] T045 Top menu: Demo between Applications and About, the footer's order (`src/content/navigation.ts`, `NavKey` gains `demo`); `/demo` passes `current="demo"`; the content test checks the new order.
+- [x] T046 Header: menu links about 30% larger (`calc(var(--text-sm) * 1.3)`), header height unchanged at 64 px; `.nav__mark { flex-shrink: 0 }` so the logo never shrinks; full menu from 64rem, checked at 1024 px.
+
+## Phase 14: zzthis.com cutover (issue #6)
+
+Decision D-2026-10-08-02 in `docs/SPEC.md`; Section 6, Hosting; acceptance item 28. Danny said yes on 2026-10-08.
+
+- [x] T047 Root base: `astro.config.mjs` sets `site` to `https://zzthis.com` and the default `base` to `/`, keeping the `ASTRO_BASE` override; `scripts/check-dist.mjs` defaults to `/` and fails on a leftover `/zzthis/` path or a `zero-state-llc.github.io` link; tests cover the config and both bases.
+- [ ] T048 Cutover: Michael's DNS records live and verified, Danny sets the Pages custom domain, the T047 PR merges right away, Enforce HTTPS once the certificate is issued, then check `https://zzthis.com`, the `www` redirect, and the `zero-state-llc.github.io/zzthis/` redirect. Owner: Danny.
+
+## Phase 16: Michael's 2026-10-08 About image set (v2)
+
+Intent: `intent/2026-10-08-michael-kathy-found-dog.md`. Spec: `docs/SPEC.md` Sections 2.1, 3.1a, 3.5, and 3.8; FR-023; decision D-2026-10-08-04. (Phase 15 is #125.)
+
+- [x] T052 About, "Codes written by hand": Michael's v1 pair under the four real photos, replaced by T054.
+- [ ] T053 Ask Michael about the collar tag: in all three Kathy images the corgi's red tag shows a capital-letter zz, carried over from the real photo `hw-dog-collar-tag`. Renders Michael supplies may show it (`docs/SPEC.md` Section 2.2), but images we generate stay lowercase (Section 2.2a G7, FR-019). If these count as generated, regenerate them with a lowercase zz on the tag. Owner: Michael.
+- [x] T054 About, Michael's v2 set (replaces the T052 pair): three concept images in order, card, phone scan, community board with the phone (`public/images/handwritten/hw-kathy-found-dog.webp`, `hw-kathy-phone.webp`, `hw-kathy-board-phone.webp`; `src/content/images.ts` entries with status `concept`; `aboutPage.handwrittenSetCaption` and `aboutPage.handwrittenSetZzPage` in `src/content/contact.ts`; `.hw-pair` in `src/pages/about.astro` and `src/styles/b-about.css`). Each about 2/3 the height of a photo above; one row from 64rem; on phones the first two side by side, the board underneath, then the explainer. The zzPage address zzpage.com/zz/Kathy-found-dog is plain text, not a link. Checked at 1280 px and 390 px, dark and light.

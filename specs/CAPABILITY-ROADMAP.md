@@ -24,6 +24,30 @@ This roadmap groups fragmented product input into promotable capability bundles.
 | B15 ZK / Selective Disclosure | v2+ | SHADOW / RESEARCH | predicate/selective-disclosure proofs subordinate to semantic/resolver authority | proof-system selection before #87/#81 |
 | B16 Ledger/Agent/Blockchain Integrations | v2+ | SHADOW | optional integrations using core identifier/semantic contracts | blockchain as a v1 dependency |
 
+## Release assignment (2026-10-10)
+
+[RELEASE-ROADMAP.md](RELEASE-ROADMAP.md) places each bundle on a numbered release (D-2026-10-10-01). It changes no bundle status.
+
+| Bundle | Release | Note |
+|---|---|---|
+| B1 | v1.0 (typed and web); v1.1 (apps); issuer, viewer, auditor UI in v1.3 | server implemented |
+| B2 | v1.1 | the fiducial and qualification terms come from draft PR #89 and are not yet in spec 004 on `main`; without a PASS receipt a platform ships confirm-only (D-2026-10-10-03) |
+| B3 | v1.1 | zzThat repository |
+| B4 | v1.0 | the site Worker migration is proposed as optional, not a v1.0 gate (D-2026-10-10-15) |
+| B5 | v1.0, continuing | |
+| B6 | v1.0 gate | D-2026-10-10-04 |
+| B7 | v1.3 (one-organization pilot), then v2.0 | D-2026-10-10-06 |
+| B8 | behind v2.0; payments deferred (DF-01) | |
+| B9 | v1.2 | `free_public` flag only |
+| B10 | v2.1 | after #87 |
+| B11 | v2.0 | |
+| B12 | v2.2 after R-B12 | |
+| B13 | R-B13 | |
+| B14 | DF-02 | |
+| B15 | R-B15 | |
+| B16 | DF-03 | |
+| B17 (proposed in PR #127) | R-B17 | not on `main`; D-2026-10-10-18 |
+
 ## Current release boundary
 
 v1 implementation authority is limited to B1-B5 plus evidence needed to promote B6 and production gates in B4. B7-B16 may inform interfaces and compatibility but do not create v1 implementation tasks unless explicitly promoted under SCOPE-GOVERNANCE.

@@ -2,7 +2,11 @@ import { readdirSync, readFileSync, statSync, existsSync } from "node:fs";
 import { join, relative } from "node:path";
 
 const DIST = "dist";
-const BASE = process.env.ASTRO_BASE ?? "/zzthis/";
+// Must match the default base in astro.config.mjs.
+const BASE = process.env.ASTRO_BASE ?? "/";
+// The retired GitHub Pages project-site path and host (issue #6).
+const OLD_PROJECT_BASE = "/zzthis/";
+const OLD_PROJECT_HOST = "zero-state-llc.github.io";
 const MAX_FILE = 2 * 1024 * 1024;
 const MAX_TOTAL = 20 * 1024 * 1024;
 const REQUIRED = [
@@ -68,11 +72,16 @@ function collectPaths(content) {
 }
 
 function checkRootPaths(file, content) {
-  // A Workers deployment is served from its origin root. GitHub Pages uses
-  // /zzthis/ instead, so enforce the prefix only when one is configured.
-  if (BASE === "/") return;
+  // The site is served from the origin root (https://zzthis.com and the
+  // staging Worker). At the root, any root path is fine, but a leftover
+  // /zzthis/ prefix from the old project site would 404. When a subpath base
+  // is configured, every root path must carry it.
   for (const path of collectPaths(content)) {
-    if (path.startsWith("/") && !path.startsWith(BASE)) {
+    if (BASE === "/") {
+      if (path.startsWith(OLD_PROJECT_BASE)) {
+        report(file, `old project-site path at root base: ${path}`);
+      }
+    } else if (path.startsWith("/") && !path.startsWith(BASE)) {
       report(file, `root path without base: ${path}`);
     }
   }
@@ -154,6 +163,8 @@ function checkFile(full) {
   }
   if (isHtml) {
     if (content.includes("/technology")) report(file, "links to /technology");
+    if (content.includes(OLD_PROJECT_HOST))
+      report(file, `links to the old project-site host ${OLD_PROJECT_HOST}`);
     checkExternalOrigins(file, content);
     checkText(file, content);
     checkHeadings(file, content);

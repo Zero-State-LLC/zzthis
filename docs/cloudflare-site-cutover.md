@@ -38,7 +38,7 @@ Bundle: B4/B5. Status: marketing staging rollback rehearsal passed; route-parity
 - Site reconciliation is merged or explicitly superseded.
 - Staging parity passes.
 - Production custom-domain target and redirect behavior are approved.
-- Canonical URL/base-path changes are implemented/tested. Current Astro config is GitHub-Pages-specific and must not be reused blindly for a root custom domain.
+- Canonical URL/base-path changes are implemented/tested. Since the zzthis.com change (issue #6), `astro.config.mjs` sets `site` to `https://zzthis.com` and defaults `base` to `/`; the Worker build still sets `ASTRO_BASE=/`. Recheck both against the approved production domain before a Worker cutover.
 - Rollback target remains deployable.
 - Operator approves DNS/domain/deploy.
 

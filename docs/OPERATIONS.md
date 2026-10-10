@@ -97,6 +97,21 @@ Production approval must define budget guardrails, storage-growth monitoring, ra
 
 Production authorization requires: numeric SLO posture, RTO/RPO, successful restore test, incident contacts/runbook, observability/redaction review, secret/key lifecycle, data-lifecycle review, security threat-model review, and Danny's explicit deploy approval.
 
+## Recovery scope and proposed objectives (2026-10-10)
+
+Recorded in [D-2026-10-10-10](../specs/decisions-2026-10-10.md). Status: PROPOSED until Danny accepts the numbers.
+
+- **Authoritative state for v1.0.** D1 plus four secrets: `ZZ_TOKEN_SECRET`, `ZZ_DATA_KEY`, `ZZ_RECORD_SIGNING_KEY` (with its key id), and `APPLE_PRIVATE_KEY`. Configuration is in git.
+- **Out of the RPO scope while `ZZ_PHOTO_READS` is false.** R2 holds no application object, and the limiter Durable Object is non-authoritative. The production configuration test (BACKLOG RM-001) fails if photo reads are turned on, so R2 cannot silently join the scope.
+- **Secret escrow.** The operator keeps each secret in an escrow outside Cloudflare and outside this repository, names the location in a private runbook, and rehearses restore into a scratch Worker (RM-022).
+- **Deletion replay.** A Time Travel restore undoes account deletions made after the restore point. Before restoring, list accounts deleted after the target from the audit log; after restoring, re-run deletion for each (RM-023).
+- **Migration bookmark.** Every production migration prints a D1 bookmark first (RM-002).
+- **Proposed objectives.** RPO 5 minutes for D1; RTO 4 hours from incident declaration to verified service. These are conservative defaults from minute-granular Time Travel and the 1.735-second staging restore, not measured service results. They count only after the seeded drill (RM-024) meets them.
+- **Service objective.** Proposed: no public SLO for v1.0; track 30-day resolve success from Cloudflare Worker metrics and review it weekly during the first pilot (RM-043).
+- **Plan.** Production runs on Workers Paid for the 30-day recovery window and invocation limits (D-2026-10-10-09).
+- **Alerting.** A scheduled GitHub Actions probe of `GET /v1` and one synthetic public code files an issue on failure (D-2026-10-10-11, RM-040). Invocation logs stay off, pinned in configuration.
+- **Kill switches.** `ZZ_MINT_ENABLED=false` stops new codes; a zone rule can block `/v1/resolve/*`; Worker rollback to a recorded version (RM-025).
+
 ## Production readiness packet (2026-10-07)
 
 **Decision: NO-GO for production.** Staging evidence does not authorize production resources, routes, DNS, or deployment.
@@ -116,3 +131,5 @@ Production authorization requires: numeric SLO posture, RTO/RPO, successful rest
 | Security/data approval | Threat-model and data-lifecycle reviews remain open; no production deploy approval is recorded. |
 
 Close each open gate with dated evidence and the accountable operator before reconsidering production. Do not infer approval from completion of staging drills.
+
+The ordered work that closes these gates is the v1.0 section of [specs/BACKLOG.md](../specs/BACKLOG.md); the release gates G1 to G12 are in [specs/RELEASE-ROADMAP.md](../specs/RELEASE-ROADMAP.md). As of 2026-10-10 the staging API cannot exercise any write path (mint, developer sign-in, and providers are off) and the Cache API has no effect on its workers.dev host, so the packet above has no write-path or cache evidence (D-2026-10-10-07).

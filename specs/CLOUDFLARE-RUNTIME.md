@@ -118,3 +118,14 @@ B4 Cloudflare Runtime is implementation-complete when:
 - marketing migration parity/rollback passes if that move is included;
 - observability/redaction and budget guardrails are accepted;
 - production deploy remains explicitly operator-authorized.
+
+## Review notes (2026-10-10)
+
+From the [architecture review](analysis-2026-10-10-architecture-review.md) and [decisions](decisions-2026-10-10.md):
+
+- The Cache API has no effect on `*.workers.dev`, so FR-018 caching can only be verified on a custom hostname: an Access-protected staging host (D-2026-10-10-07) or the production canary.
+- Staging cannot exercise writes while mint, developer sign-in, and providers are off; the staging plan in D-2026-10-10-07 fixes that behind Access.
+- Production needs `wrangler.production.toml` with a guard test and a reviewer-gated workflow (D-2026-10-10-08), on Workers Paid (D-2026-10-10-09).
+- Recovery scope for v1.0 is D1 plus four secrets; R2 and the limiter are out of scope while photo reads are off (D-2026-10-10-10).
+- The marketing-site migration above is proposed as optional for v1.0 (D-2026-10-10-15); FR-029 and Q69 already keep the site on Pages.
+- Handlers call D1, the Cache API, R2, and Durable Objects directly rather than through ports. SQL stays portable, so the Portability rule above holds for data and grammar; a substrate move would rewrite handlers.
