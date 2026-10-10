@@ -256,7 +256,7 @@ RM-050 production resources ─> RM-053 web build ─> RM-051 deploy ─> RM-052
 
 ### RM-030 Rate-limit IPv6 callers by /64
 
-- Release v1.0 · P0 · Ready · Bundle B1 · Gate G10 · Journeys J1
+- Release v1.0 · P0 · In review (PR A for #130) · Bundle B1 · Gate G10 · Journeys J1
 - **Problem.** `workers/api/src/limits/enforce.ts:33-36` keys on the full address.
 - **Acceptance.** Two addresses in one /64 share a bucket; two IPv4 addresses do not; the HMAC still hides the prefix (FR-027).
 - **Governing.** D-2026-10-10-05; FR-011.
@@ -269,21 +269,21 @@ RM-050 production resources ─> RM-053 web build ─> RM-051 deploy ─> RM-052
 
 ### RM-032 Re-roll checks the scope
 
-- Release v1.0 · P0 · Ready · Bundle B1 · Journeys J3
+- Release v1.0 · P0 · In review (PR A for #130) · Bundle B1 · Journeys J3
 - **Problem.** `rerollCode` never calls `checkMintScope` (`workers/api/src/codes/reroll.ts:86-97`), so an account whose issuer grant was removed, or a `free_public` code after the flag turns off, still gets a new code.
 - **Acceptance.** Re-roll after `remove-grant.sql` returns 403 `forbidden`; re-roll of a `free_public` code with the flag off returns 403 `scope-unavailable`; nothing is written.
 - **Governing.** FR-005, FR-034.
 
 ### RM-033 Mint checks the account in its batch
 
-- Release v1.0 · P0 · Ready · Bundle B1 · Journeys J2, J7
+- Release v1.0 · P0 · In review (PR A for #130) · Bundle B1 · Journeys J2, J7
 - **Problem.** The mint batch is plain inserts (`workers/api/src/codes/store.ts:63-116`), so a mint racing `DELETE /v1/me` or `suspend.sql` can leave an active code owned by a deleted or suspended account.
 - **Acceptance.** An interleaving test leaves no active code for a deleted or suspended account; the response is 401 or 403 as for a request that arrived after.
 - **Governing.** FR-023, FR-025, FR-031.
 
 ### RM-034 Cache writes and purges never fail a committed request
 
-- Release v1.0 · P0 · Ready · Bundle B1 · Journeys J1, J4, J5
+- Release v1.0 · P0 · In review (PR A for #130) · Bundle B1 · Journeys J1, J4, J5
 - **Problem.** `storeResolve` and `purgeResolve` are awaited inline (`workers/api/src/resolve/resolve.ts:205`, `codes/revoke.ts:55`, `records/versions.ts:112`, `codes/reroll.ts:107`); a cache error turns a committed write into 500.
 - **Acceptance.** With a throwing cache, resolve returns 200, revoke 200, and a version 201; a purge-failure log class is emitted; FR-018's 60-second bound is the only consequence.
 
@@ -302,13 +302,13 @@ RM-050 production resources ─> RM-053 web build ─> RM-051 deploy ─> RM-052
 
 ### RM-037 Timeouts on outbound calls
 
-- Release v1.0 · P1 · Ready · Bundle B1 · Journeys J6, J7
+- Release v1.0 · P1 · In review (PR A for #130) · Bundle B1 · Journeys J6, J7
 - **Problem.** Apple token and revoke calls have no timeout (`workers/api/src/auth/apple.ts:37-41`).
 - **Acceptance.** A never-resolving stub returns within 3 seconds; sign-in still succeeds and logs the failure (FR-020); the cron moves on to the next row.
 
 ### RM-038 Limiter failure policy
 
-- Release v1.0 · P1 · Ready · Bundle B1 · Journeys J1
+- Release v1.0 · P1 · In review (PR A for #130) · Bundle B1 · Journeys J1
 - **Problem.** A Durable Object error or hang becomes 500 on every route (`workers/api/src/limits/enforce.ts:23`).
 - **Scope.** A timeout and a documented policy per route class: fail closed for auth, mint, re-roll, and reports; fail open for discovery and the OpenAPI document. Resolve fails closed (abuse risk).
 - **Acceptance.** A test per route class shows the documented status when the limiter throws.
