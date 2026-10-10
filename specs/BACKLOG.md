@@ -587,7 +587,7 @@ RM-050 production resources ─> RM-053 web build ─> RM-051 deploy ─> RM-052
 
 ### RM-112 Optional creator reference on Resolve for creator blocking
 
-- Release v1.1 · P0 · Backlog (needs Danny's yes on the D-2026-10-10-12 exception, and RM-075) · Bundle B9 · Owner: kneelbeforez0D
+- Release v1.1 · P0 · Ready (exception accepted by Danny, 2026-10-09 PT; ships after RM-075) · Bundle B9 · Owner: kneelbeforez0D
 - **Scope.** Resolve gains an optional response field `creator`: an opaque, stable HMAC of the owner account id (keyed with a server secret, never the raw id), null for private records. OpenAPI `info.version` changes and discovery advertises it. Old clients must ignore it (RM-075).
 - **Acceptance.** Worker tests: two public codes from one owner resolve with the same `creator`; codes from different owners differ; a private record gives null; the raw account id never appears; the cached public response keeps the field. zzThat tolerant-reader tests pass on both apps.
 - **Governing.** D-2026-10-10-25 item 1; D-2026-10-10-12; Apple 1.2; Play UGC.
