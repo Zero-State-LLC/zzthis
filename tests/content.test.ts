@@ -24,7 +24,7 @@ const { images } = imagesModule;
 const { navItems, footerItems, footerNotice } = navigationModule;
 const { advisors, founder, founderOrigin } = peopleModule;
 const { topWays } = usesModule;
-const { demoTitle } = demoModule;
+const { demoTitle, demoPrototypeLinks } = demoModule;
 const { technologyDraft } = technologyModule;
 const { conceptLabels } = labelsModule;
 const { coreIdentity, fieldLogistics, photoToAction } = workflowsModule;
@@ -88,6 +88,16 @@ describe("hero and featured statement (spec 3.2)", () => {
     expect(featured.text).toBe(
       "A zz code gives people a way to create the mark themselves, wherever the work happens. AI can help identify what a camera sees, count what remains, suggest how an item should be handled, and prepare the next task. The same visible code connects the item, its history, and the people responsible for it. It bridges physical things and their digital control: the easiest, smartest way to identify, manage, and act on them. zzThis is designed AI-first, on the principle that AI is the new UI, and the great connector and leveler across big tech stacks.",
     );
+  });
+});
+
+describe("demo prototype decisions", () => {
+  it("keeps zzthing.com in the demo pending the October 31 review", () => {
+    expect(demoPrototypeLinks.map((link) => link.name)).toEqual([
+      "zzthing.com",
+      "zzthat.com",
+    ]);
+    expect(demoPrototypeLinks[0]?.href).toBe("https://zzthing.com");
   });
 });
 
@@ -249,6 +259,15 @@ describe("navigation and people", () => {
     expect(advisors.every((person) => person.initials !== undefined)).toBe(
       true,
     );
+  });
+
+  it("omits drafted advisory closing lines from every advisor bio", () => {
+    expect(
+      advisors.some((person) => /advises zzThis on/i.test(person.bio ?? "")),
+    ).toBe(false);
+    expect(
+      advisors.find((person) => person.name === "Omer F. Yalcin")?.bio,
+    ).toContain("Journal of Quantitative Description.");
   });
 
   it("applies Michael's 2026-10-02 answers", () => {

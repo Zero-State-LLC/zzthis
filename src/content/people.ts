@@ -78,7 +78,7 @@ export const advisors: readonly Person[] = [
     },
     role: "Connected logistics and IoT",
     profileUrl: "https://www.linkedin.com/in/pmuggler",
-    bio: "Patrick leads product and strategic programs at Trackonomy. His work has connected more than 200,000 assets across over 100 airports and 40 countries. He advises zzThis on logistics workflows, connected assets, and commercialization.",
+    bio: "Patrick leads product and strategic programs at Trackonomy. His work has connected more than 200,000 assets across over 100 airports and 40 countries.",
   },
   {
     name: "Arshi Chadha",
@@ -90,7 +90,7 @@ export const advisors: readonly Person[] = [
     },
     role: "AI security",
     profileUrl: "https://www.linkedin.com/in/arshichadha/",
-    bio: "Arshi is a security engineer at Zscaler and a co-lead of the OWASP Top 10 for LLM Applications work. She earned a master’s degree in information security at Carnegie Mellon and advises zzThis on AI and application security.",
+    bio: "Arshi is a security engineer at Zscaler and a co-lead of the OWASP Top 10 for LLM Applications work. She earned a master’s degree in information security at Carnegie Mellon.",
   },
   {
     name: "Omer F. Yalcin",
@@ -102,7 +102,7 @@ export const advisors: readonly Person[] = [
     },
     role: "Data scientist and computational social scientist",
     profileUrl: "https://www.linkedin.com/in/ofyalcin/",
-    bio: "Omer is a data scientist and computational social scientist with a Ph.D. in Political Science and Social Data Analytics and more than 8 years of experience in Python, R, and SQL, spanning machine learning, NLP, causal inference, and network analysis. He teaches graduate courses in data science, machine learning, and statistics at UMass Amherst, and his research has appeared in ICWSM, EMNLP Findings, and the Journal of Quantitative Description. He advises zzThis on data analysis, model evaluation, and test design.",
+    bio: "Omer is a data scientist and computational social scientist with a Ph.D. in Political Science and Social Data Analytics and more than 8 years of experience in Python, R, and SQL, spanning machine learning, NLP, causal inference, and network analysis. He teaches graduate courses in data science, machine learning, and statistics at UMass Amherst, and his research has appeared in ICWSM, EMNLP Findings, and the Journal of Quantitative Description.",
   },
 ];
 
