@@ -62,7 +62,7 @@ Replaces the 2026-10-07 map, which listed PRs #118, #123, #124, and #126 as in r
 | PR #121 README and board mirror | In review (draft) | v1.0; RM-006 | overlaps this review's README and board updates; reconcile before merge |
 | PR #91 site reconciliation, #90 | In review (draft) | v1.0 (B5); RM-044 | closes #90 |
 | PR #120 Q72 and Q73 answers; #116, #117 | Done | v1.0 (B5); RM-044 | Michael's answers |
-| PR #125 footer social icons and Omer removal | In review | v1.0 (B5); RM-044 | Michael's 2026-10-08 changes |
+| PR #125 footer social icons and Omer removal | Done | v1.0 (B5); RM-044 | Michael's 2026-10-08 changes |
 | PR #128 LICENSE owner name | In review | v1.0 (legal) | legal text needs Danny's yes |
 | PR #127 location capability | In review | R-B17 | research only (D-2026-10-10-18) |
 | #87 contract-2 gate | Backlog | v2.0; RM-080 | now includes the Organization entity (D-2026-10-10-06) |

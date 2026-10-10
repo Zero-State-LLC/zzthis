@@ -21,7 +21,8 @@ const { applications, applicationsPage } = applicationsModule;
 const { comparisonColumns, comparisonNote, comparisonRows } = comparisonModule;
 const { featured, hero } = heroModule;
 const { images } = imagesModule;
-const { navItems, footerItems, footerNotice } = navigationModule;
+const { navItems, footerItems, footerNotice, zzthisSocial, zzthatSocial } =
+  navigationModule;
 const { advisors, founder, founderOrigin } = peopleModule;
 const { topWays } = usesModule;
 const { demoTitle, demoPrototypeLinks } = demoModule;
@@ -246,15 +247,15 @@ describe("navigation and people", () => {
     ]);
   });
 
-  it("lists the advisors in the 2026-10-07 order, all with initials", () => {
+  it("lists the advisors in the 2026-10-08 order, all with initials", () => {
     // [MICHAEL 2026-10-06 change list] Daniel and Adam move to first.
-    // [MICHAEL 2026-10-07] Omer F. Yalcin is added last.
+    // [MICHAEL 2026-10-08] Omer F. Yalcin is removed until his employer
+    // gives permission.
     expect(advisors.map((person) => person.name)).toEqual([
       "Daniel Meyer",
       "Adam Fry",
       "Patrick Muggler",
       "Arshi Chadha",
-      "Omer F. Yalcin",
     ]);
     expect(advisors.every((person) => person.initials !== undefined)).toBe(
       true,
@@ -265,9 +266,34 @@ describe("navigation and people", () => {
     expect(
       advisors.some((person) => /advises zzThis on/i.test(person.bio ?? "")),
     ).toBe(false);
-    expect(
-      advisors.find((person) => person.name === "Omer F. Yalcin")?.bio,
-    ).toContain("Journal of Quantitative Description.");
+    // Omer's Q72-approved bio returns without a closing line if he is restored.
+    expect(advisors.some((person) => person.name === "Omer F. Yalcin")).toBe(
+      false,
+    );
+  });
+
+  it("lists the footer social links with their owners", () => {
+    // [MICHAEL 2026-10-08] X belongs to zzThis; Discord and Instagram belong
+    // to zzThat and sit beside the zzthat wordmark.
+    expect(zzthisSocial).toEqual([
+      { label: "zzThis on X", href: "https://x.com/zzthisapp", icon: "x" },
+    ]);
+    expect(zzthatSocial).toEqual([
+      {
+        label: "zzThat on Discord",
+        href: "https://discord.gg/sp7smSzq7",
+        icon: "discord",
+      },
+      {
+        label: "zzThat on Instagram",
+        href: "https://www.instagram.com/zzthatcom/",
+        icon: "instagram",
+      },
+    ]);
+    for (const link of [...zzthisSocial, ...zzthatSocial]) {
+      expect(link.href.startsWith("https://")).toBe(true);
+      expect(link.label).not.toBe("");
+    }
   });
 
   it("applies Michael's 2026-10-02 answers", () => {

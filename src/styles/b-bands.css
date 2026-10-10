@@ -192,3 +192,46 @@
 .colophon p {
   max-width: 96ch;
 }
+
+/* [MICHAEL 2026-10-08] Small, discreet social icons: X for zzThis, then a
+   zzthat wordmark with its Discord and Instagram links. */
+.colophon__social {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0 var(--space-lg);
+}
+
+.social {
+  display: flex;
+  align-items: center;
+  gap: 0 var(--space-xs);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.social a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  color: var(--color-ink-2);
+}
+
+.social a:hover,
+.social a:focus-visible {
+  color: var(--color-ink);
+}
+
+.social svg {
+  width: 18px;
+  height: 18px;
+}
+
+.social__brand img {
+  display: block;
+  width: auto;
+  height: 16px;
+}
