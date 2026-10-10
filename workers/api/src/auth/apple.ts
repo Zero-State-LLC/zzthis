@@ -28,19 +28,32 @@ export async function appleClientSecret(
     .sign(apple.privateKey);
 }
 
+// RM-037: a call that has not answered within the timeout counts as a
+// failure (null), like a network error. The signal cancels the request;
+// the race also covers a fetch that ignores the signal.
 async function post(
   deps: Deps,
   url: string,
   form: URLSearchParams,
 ): Promise<Response | null> {
+  let timer = 0;
+  const timeout = new Promise<null>((resolve) => {
+    timer = setTimeout(() => resolve(null), deps.outboundTimeoutMs);
+  });
   try {
-    return await deps.fetch(url, {
-      method: "POST",
-      headers: { "Content-Type": "application/x-www-form-urlencoded" },
-      body: form,
-    });
+    return await Promise.race([
+      deps.fetch(url, {
+        method: "POST",
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body: form,
+        signal: AbortSignal.timeout(deps.outboundTimeoutMs),
+      }),
+      timeout,
+    ]);
   } catch {
     return null;
+  } finally {
+    clearTimeout(timer);
   }
 }
 

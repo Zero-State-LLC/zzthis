@@ -2,7 +2,8 @@
 
 Author: Claude, from the 2026-10-10 architecture review
 Date: 2026-10-10
-Status: draft
+Status: accepted
+Accepted-by: the requesting maintainer in the 2026-10-10 Claude Code session ("ok do them")
 Product: zzThis (`Zero-State-LLC/zzthis`)
 
 This file is a proto-spec. It comes before code. Next stage: the spec 005 clarifications listed under Change map, then implementation. Do not implement from this file until a human sets `Status: accepted`.
@@ -21,7 +22,7 @@ Two pull requests, each with its own tests at the existing 100% coverage thresho
 
 - RM-032: re-roll runs the mint scope check on the old code's scope, so a removed issuer or a `free_public` code with the flag off gets 403 and nothing is written.
 - RM-033: the mint batch writes only while the account is neither deleted nor suspended; a mint that loses the race answers 401 or 403 as if it arrived after.
-- RM-034: cache puts and purges run in `waitUntil` with their errors caught and logged as a class; a cache fault never fails a committed write.
+- RM-034: cache lookups, puts, and purges catch their errors and log the operation only; a cache fault never fails a committed write. (Awaiting with a catch, rather than `waitUntil`, keeps test timing deterministic and needs no new runtime behavior.)
 - RM-030: IPv6 callers are limited by their /64 prefix; IPv4 and IPv4-mapped addresses by the address. The limiter key stays an HMAC.
 - RM-037: Apple token and revoke calls abort after 3 seconds; sign-in still succeeds and logs the failure (FR-020).
 - RM-038: limiter calls time out; discovery and the OpenAPI document fail open; every other route fails closed with 503 `not-ready`, which every operation already declares.
@@ -89,7 +90,6 @@ The acceptance line of each backlog item (`specs/BACKLOG.md`), plus: `npm run li
 |---|---|
 | The defects exist as described | `[verified: source read at 8189ce1; spot-checked enforce.ts, reroll.ts, store.ts, cache.ts, me.ts, crypto.ts]` |
 | 503 `not-ready` is declared on every operation | `[verified: D-2026-10-05-01; spec 005 Errors]` |
-| `waitUntil` keeps a cache promise alive after the response | `[assumed: Cloudflare Workers ExecutionContext documentation]` |
 
 ## Next
 

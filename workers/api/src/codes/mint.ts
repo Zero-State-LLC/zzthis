@@ -1,5 +1,5 @@
 import { resolveMatchKey, type ParseSuccess } from "@zzthis/zz-core";
-import { requireActive } from "../auth/caller.ts";
+import { refuseInactive, requireActive } from "../auth/caller.ts";
 import { readJson } from "../http/body.ts";
 import type { AppContext } from "../http/context.ts";
 import { ApiError, json, malformed, notReady } from "../http/respond.ts";
@@ -49,7 +49,7 @@ async function writeHandle(
   record: NewRecord,
   request: MintBody,
   options: MintOptions & { handle: ParseSuccess },
-): Promise<CodeRow> {
+): Promise<CodeRow | null> {
   const matchKey = resolveMatchKey(options.handle);
   try {
     return await writeMint(c, record, {
@@ -103,5 +103,6 @@ export async function mintCode(c: AppContext): Promise<Response> {
           ...options,
           handle: options.handle,
         });
+  if (row === null) return refuseInactive(c, caller.id, "code.mint", "mint");
   return json(201, codeBody(row, iso(c.get("now"))));
 }
