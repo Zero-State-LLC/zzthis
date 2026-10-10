@@ -65,7 +65,7 @@ Full records: [decisions-2026-10-10.md](decisions-2026-10-10.md). Rows in docs/S
 | contract-2 Scope/Namespace/Organization model | #87 plus D-2026-10-10-06 | blocks promotion of #81 semantic-profile work and multi-organization pilots |
 | ZK proof-system promotion | #87/#81 plus S1 negative vectors and trust/lifecycle decisions | #83 remains CANON-SHADOW |
 | audit retention and minimization | Danny, at 1 GB or 6 months after launch (D-2026-10-10-10) | none before then |
-| Michael-supplied website assets/copy | exact supplied source (Q72 #116, Q73 #117, spec 001 T053) | blocks only those content deltas |
+| Michael-supplied website assets/copy | exact supplied source (spec 001 T053; Q72 and Q73 resolved, D-2026-10-07-03) | blocks only those content deltas |
 | production OAuth/secrets/domain/deploy approvals | operator/human gates (BACKLOG RM-011, RM-042, RM-050, RM-051) | blocks production deploy, not local/staging implementation |
 
 Resolved since 2026-10-06: the six high npm audit findings (#92) are dispositioned as build-only (D-2026-10-10-14); upgrades remain a hygiene item (RM-004).

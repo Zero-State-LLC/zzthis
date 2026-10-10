@@ -91,8 +91,8 @@ Intent: `intent/2026-10-07-michael-content-changes.md`. Copy and layout: `docs/S
 - [x] T039 About: zzthis.com in place of zzthing.com with the header's theme-aware zzThis wordmarks, the commercial-use line, and the new label; the lowercase zzThat wordmark; the founder bio and Hacker Dojo paragraph replaced as given.
 - [x] T040 About: Omer F. Yalcin as the fifth advisor, with headshot, LinkedIn link, and Michael's role line; content test updated to the new order.
 - [x] T041 All pages: dark by default for every visitor; the toggle switches the current page to light; nothing stored (FR-022).
-- [ ] T042 Replace Omer's bio and closing line with Michael's wording if he sends it (Q72, issue #116).
-- [ ] T043 `/demo` "Current prototypes": swap zzthing.com for zzthis.com only if Michael says so (Q73, issue #117).
+- [x] T042 Omer's bio kept as approved; closing lines removed from every advisor bio (Q72, D-2026-10-07-03).
+- [x] T043 `/demo` "Current prototypes" keeps zzthing.com as Michael directed; revisit on or about 2026-10-31 (Q73, D-2026-10-07-03).
 - [ ] T044 zzThat app parity (FR-022, `docs/SPEC.md` Section 5.5): the apps default to dark and use the lowercase zzThat wordmark wherever one appears. The change lands in the zzThat specs and apps, tracked on the zzThis + zzThat board.
 
 ## Phase 13: Michael's 2026-10-08 header changes
