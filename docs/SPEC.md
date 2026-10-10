@@ -1499,6 +1499,23 @@ v1 is the public site and demo plus an English-only prototype of the three produ
 
 Every OPEN question that blocks a v1 task has a GitHub issue and a default. Q50 to Q61 (issues #36 to #42, #44 to #48) were filed and answered on 2026-10-03; the answers are in Sections 2.2a and 9a.
 
+### 12.1a Structured semantic evolution (CANON-SHADOW; issue #81)
+
+This is a specification track, not an implemented v1 feature and not authorization to change contract 1.
+
+The product can evolve without changing the physical grammar by separating recognition from interpretation:
+
+1. **V1:** readable/writable identifier with deterministic parsing and resolver behavior.
+2. **V1.x:** opt-in structured semantic identifier. A versioned semantic profile may define X1 as a compact schema/class selector, X2 as a schema-defined locus/target, and X3 as a schema-defined state/action/qualifier. These roles do not apply to arbitrary three-part codes.
+3. **V2:** visual/contextual recognition plus a separately specified scope-aware resolver contract and richer namespace semantics.
+4. **V2+:** cryptographically verifiable private semantics and selective disclosure where a concrete requirement justifies commitments, attestations, or zero-knowledge proofs.
+
+The governing boundary is: capture recognizes observations; spec 003 recognizes syntax and canonical form; spec 002 establishes authority and disclosure; an explicitly bound semantic profile establishes meaning. A visible code is public and copyable and is not authorization.
+
+Keep `wordlist_version`, `semantic_profile_id`, `dictionary_version`, and `namespace_id` separate. Security does not depend on hiding the semantic dictionary. Steganography is at most a future redundant provenance/tamper signal, never the confidentiality boundary. Namespace secrets are cryptographic material and are not hashes of profile PII.
+
+No new feature spec 006 is created for this track because ownership remains clear across specs 002 to 005.
+
 ### 12.2 v2 candidates (not committed)
 
 Each row now has a release, research phase, or deferred entry in the capability disposition table of [`specs/RELEASE-ROADMAP.md`](../specs/RELEASE-ROADMAP.md).
