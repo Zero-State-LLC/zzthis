@@ -483,6 +483,14 @@ RM-050 production resources ─> RM-053 web build ─> RM-051 deploy ─> RM-052
 - **Acceptance.** Generated clients ignore unknown keys and tolerate unknown enum values, shown by a contract test with an extra field.
 - **Governing.** D-2026-10-10-12.
 
+### RM-096 Live multi-frame reading with word-by-word voting (zzThat)
+
+- Release v1.1 · P3 · Backlog · Bundle B2, B3 · D-2026-10-10-23
+- **Problem.** One photo may read only some words well; asking for a second photo adds a step (Michael, 2026-10-09).
+- **Scope.** Live camera reading of many frames inside FR-013's frame, merged word by word: a shared zz-core merge or vote function used by both apps; an overlap and grammar guard so two different codes are never joined (otherwise "Incomplete code. Rescan."); merging only within one scan session (until a code is accepted, the person cancels, or a short timeout).
+- **Acceptance.** zz-core vectors: agreeing frames raise confidence; a disagreement goes to Clarify; `zz-kathy-found` plus `found-dog-zz` joins only when the overlap and grammar pass; two codes side by side are never joined.
+- **Governing.** D-2026-10-10-23; spec 004 FR-013 and bands.
+
 ## v1.2 and v1.3 items
 
 ### RM-076 Public community codes review
@@ -526,4 +534,5 @@ RM-050 production resources ─> RM-053 web build ─> RM-051 deploy ─> RM-052
 | RM-090 | v2.0 | P3 | Backlog | Name suffixes beyond `.eth` | spec 003 FR-023 |
 | RM-091 | v2.1 | P1 | Backlog (SHADOW) | Semantic profiles after RM-080 and PR #82 | #81 |
 | RM-092 | v2.2 | P1 | Backlog (RESEARCH) | Advanced recognition and photo reads after R-B12; R2 joins recovery scope | B12; spec 005 US5 |
+| RM-097 | v2.2 | P3 | Backlog (RESEARCH) | Image matching of scans against the creator's photos (Michael 2026-10-09); needs reference photos, consent wording, and a retention limit | D-2026-10-10-23; `docs/SPEC.md` 12.2 |
 | RM-095 | R-B6 | P1 | Backlog | Human and OCR confusion evaluation of the production list on the Q34 corpus | spec 003 FR-001, FR-002 |
