@@ -91,8 +91,8 @@ Intent: `intent/2026-10-07-michael-content-changes.md`. Copy and layout: `docs/S
 - [x] T039 About: zzthis.com in place of zzthing.com with the header's theme-aware zzThis wordmarks, the commercial-use line, and the new label; the lowercase zzThat wordmark; the founder bio and Hacker Dojo paragraph replaced as given.
 - [x] T040 About: Omer F. Yalcin as the fifth advisor, with headshot, LinkedIn link, and Michael's role line; content test updated to the new order.
 - [x] T041 All pages: dark by default for every visitor; the toggle switches the current page to light; nothing stored (FR-022).
-- [ ] T042 Replace Omer's bio and closing line with Michael's wording if he sends it (Q72, issue #116).
-- [ ] T043 `/demo` "Current prototypes": swap zzthing.com for zzthis.com only if Michael says so (Q73, issue #117).
+- [x] T042 Omer's bio kept as approved; closing lines removed from every advisor bio (Q72, D-2026-10-07-03).
+- [x] T043 `/demo` "Current prototypes" keeps zzthing.com as Michael directed; revisit on or about 2026-10-31 (Q73, D-2026-10-07-03).
 - [ ] T044 zzThat app parity (FR-022, `docs/SPEC.md` Section 5.5): the apps default to dark and use the lowercase zzThat wordmark wherever one appears. The change lands in the zzThat specs and apps, tracked on the zzThis + zzThat board.
 
 ## Phase 13: Michael's 2026-10-08 header changes
@@ -108,6 +108,14 @@ Decision D-2026-10-08-02 in `docs/SPEC.md`; Section 6, Hosting; acceptance item 
 
 - [x] T047 Root base: `astro.config.mjs` sets `site` to `https://zzthis.com` and the default `base` to `/`, keeping the `ASTRO_BASE` override; `scripts/check-dist.mjs` defaults to `/` and fails on a leftover `/zzthis/` path or a `zero-state-llc.github.io` link; tests cover the config and both bases.
 - [ ] T048 Cutover: Michael's DNS records live and verified, Danny sets the Pages custom domain, the T047 PR merges right away, Enforce HTTPS once the certificate is issued, then check `https://zzthis.com`, the `www` redirect, and the `zero-state-llc.github.io/zzthis/` redirect. Owner: Danny.
+
+## Phase 15: Michael's 2026-10-08 footer and About changes
+
+Intent: `intent/2026-10-08-michael-footer-social.md`. Spec: `docs/SPEC.md` Sections 3.1, 3.1a, 3.2 (Footer), 3.5, and 5.5, acceptance items 3, 9, and 10; FR-003 and FR-009; decision D-2026-10-08-03.
+
+- [x] T049 About: remove Omer F. Yalcin's advisor card and photo (`src/content/people.ts`, `public/images/people/omer-yalcin.webp` deleted) until his employer gives permission; the content test checks the four-advisor order. Restore the entry and photo from #118 when permission arrives, using the Q72-approved bio (T042).
+- [x] T050 Footer, every page: inline-SVG social icons between the page links and the notice (`src/components/Footer.astro`, `src/content/navigation.ts`, `src/styles/b-bands.css`): X for zzThis (https://x.com/zzthisapp); the lowercase zzthat wordmark (`zzthatLogo` from `src/content/contact.ts`) with zzThat's Discord (https://discord.gg/sp7smSzq7) and Instagram (https://www.instagram.com/zzthatcom/). 18 px icons in 44 px tap targets, accessible names, empty links hidden; the content test checks the links and their ownership. Checked in dark and light at 1280 px and 390 px.
+- [ ] T051 Discord invite: the patch gives https://discord.gg/sp7smSzq7 as permanent, but on 2026-10-08 Discord's invite API reported an expiry of 2026-11-07 (UTC). Confirm with Michael that the zzThat server's invite is set to never expire, or replace `zzthatDiscordUrl` in `src/content/navigation.ts` with a never-expiring invite before then. Owner: Michael.
 
 ## Phase 16: Michael's 2026-10-08 About image set (v2)
 

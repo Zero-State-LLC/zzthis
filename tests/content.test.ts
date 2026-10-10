@@ -21,10 +21,11 @@ const { applications, applicationsPage } = applicationsModule;
 const { comparisonColumns, comparisonNote, comparisonRows } = comparisonModule;
 const { featured, hero } = heroModule;
 const { images } = imagesModule;
-const { navItems, footerItems, footerNotice } = navigationModule;
+const { navItems, footerItems, footerNotice, zzthisSocial, zzthatSocial } =
+  navigationModule;
 const { advisors, founder, founderOrigin } = peopleModule;
 const { topWays } = usesModule;
-const { demoTitle } = demoModule;
+const { demoTitle, demoPrototypeLinks } = demoModule;
 const { technologyDraft } = technologyModule;
 const { conceptLabels } = labelsModule;
 const { coreIdentity, fieldLogistics, photoToAction } = workflowsModule;
@@ -88,6 +89,16 @@ describe("hero and featured statement (spec 3.2)", () => {
     expect(featured.text).toBe(
       "A zz code gives people a way to create the mark themselves, wherever the work happens. AI can help identify what a camera sees, count what remains, suggest how an item should be handled, and prepare the next task. The same visible code connects the item, its history, and the people responsible for it. It bridges physical things and their digital control: the easiest, smartest way to identify, manage, and act on them. zzThis is designed AI-first, on the principle that AI is the new UI, and the great connector and leveler across big tech stacks.",
     );
+  });
+});
+
+describe("demo prototype decisions", () => {
+  it("keeps zzthing.com in the demo pending the October 31 review", () => {
+    expect(demoPrototypeLinks.map((link) => link.name)).toEqual([
+      "zzthing.com",
+      "zzthat.com",
+    ]);
+    expect(demoPrototypeLinks[0]?.href).toBe("https://zzthing.com");
   });
 });
 
@@ -236,19 +247,53 @@ describe("navigation and people", () => {
     ]);
   });
 
-  it("lists the advisors in the 2026-10-07 order, all with initials", () => {
+  it("lists the advisors in the 2026-10-08 order, all with initials", () => {
     // [MICHAEL 2026-10-06 change list] Daniel and Adam move to first.
-    // [MICHAEL 2026-10-07] Omer F. Yalcin is added last.
+    // [MICHAEL 2026-10-08] Omer F. Yalcin is removed until his employer
+    // gives permission.
     expect(advisors.map((person) => person.name)).toEqual([
       "Daniel Meyer",
       "Adam Fry",
       "Patrick Muggler",
       "Arshi Chadha",
-      "Omer F. Yalcin",
     ]);
     expect(advisors.every((person) => person.initials !== undefined)).toBe(
       true,
     );
+  });
+
+  it("omits drafted advisory closing lines from every advisor bio", () => {
+    expect(
+      advisors.some((person) => /advises zzThis on/i.test(person.bio ?? "")),
+    ).toBe(false);
+    // Omer's Q72-approved bio returns without a closing line if he is restored.
+    expect(advisors.some((person) => person.name === "Omer F. Yalcin")).toBe(
+      false,
+    );
+  });
+
+  it("lists the footer social links with their owners", () => {
+    // [MICHAEL 2026-10-08] X belongs to zzThis; Discord and Instagram belong
+    // to zzThat and sit beside the zzthat wordmark.
+    expect(zzthisSocial).toEqual([
+      { label: "zzThis on X", href: "https://x.com/zzthisapp", icon: "x" },
+    ]);
+    expect(zzthatSocial).toEqual([
+      {
+        label: "zzThat on Discord",
+        href: "https://discord.gg/sp7smSzq7",
+        icon: "discord",
+      },
+      {
+        label: "zzThat on Instagram",
+        href: "https://www.instagram.com/zzthatcom/",
+        icon: "instagram",
+      },
+    ]);
+    for (const link of [...zzthisSocial, ...zzthatSocial]) {
+      expect(link.href.startsWith("https://")).toBe(true);
+      expect(link.label).not.toBe("");
+    }
   });
 
   it("applies Michael's 2026-10-02 answers", () => {
