@@ -9,7 +9,7 @@ import {
   type Session,
 } from "./helpers/http.ts";
 import { runOps } from "./helpers/ops.ts";
-import { fixture7Codes } from "./helpers/random.ts";
+import { unknownCode } from "./helpers/random.ts";
 import { expectMatchesSchema } from "./helpers/schema.ts";
 import { makeWorld, type World } from "./helpers/world.ts";
 
@@ -134,7 +134,7 @@ describe("org-bound viewer grants (FR-035, Resolve step 7)", () => {
     ).toBe("viewer");
     // Across organizations, the answer is the one not-found body: the same
     // status, body, and Cache-Control as a code that was never issued.
-    const unknown = fixture7Codes()[29] as string;
+    const unknown = await unknownCode();
     const never = await resolve(w, unknown, acme.viewer.access);
     const across = await resolve(
       w,

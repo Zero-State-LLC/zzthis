@@ -1,3 +1,4 @@
+import { env } from "cloudflare:workers";
 import type { RandomUint32 } from "@zzthis/zz-core";
 
 // A random source that repeats the given values, so a test knows which
@@ -49,4 +50,15 @@ export function fixture7Codes(): string[] {
     }
   }
   return out;
+}
+
+// An issuable fixture-7 code that this database has never stored. A fixed
+// index is not safe: a world that mints draws from the same 30 codes, so
+// the control code would sometimes be a live one (#152).
+export async function unknownCode(): Promise<string> {
+  const rows = await env.ZZ_DB.prepare("SELECT canonical FROM codes").all<{
+    canonical: string;
+  }>();
+  const taken = new Set(rows.results.map((row) => row.canonical));
+  return fixture7Codes().find((code) => !taken.has(code)) as string;
 }

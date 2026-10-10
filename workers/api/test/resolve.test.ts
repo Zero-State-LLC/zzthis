@@ -9,7 +9,7 @@ import {
   signIn,
   type Session,
 } from "./helpers/http.ts";
-import { fixture7Codes, repeating } from "./helpers/random.ts";
+import { repeating, unknownCode } from "./helpers/random.ts";
 import { expectMatchesSchema } from "./helpers/schema.ts";
 import { makeWorld, testDataKeys, type World } from "./helpers/world.ts";
 
@@ -46,15 +46,6 @@ async function enterprise(w: World, name: string): Promise<Session> {
   const session = await signIn(w, name);
   await grant(session.accountId, "enterprise", "issuer");
   return session;
-}
-
-// An issuable fixture-7 code that this database has never stored.
-async function unknownCode(): Promise<string> {
-  const rows = await env.ZZ_DB.prepare("SELECT canonical FROM codes").all<{
-    canonical: string;
-  }>();
-  const taken = new Set(rows.results.map((row) => row.canonical));
-  return fixture7Codes().find((code) => !taken.has(code)) as string;
 }
 
 function headersOf(response: Response): Record<string, string> {
