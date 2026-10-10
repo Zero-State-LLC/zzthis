@@ -261,6 +261,7 @@ describe("ops/revoke-code.sql", () => {
         scope: "enterprise",
         role,
         expires_at: "",
+        same_org: "enterprise",
       });
     }
     const code = await mint(w, issuer.access, { scope: "enterprise" });

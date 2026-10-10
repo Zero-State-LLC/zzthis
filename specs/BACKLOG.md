@@ -403,7 +403,7 @@ RM-050 production resources ─> RM-053 web build ─> RM-051 deploy ─> RM-052
 
 ### RM-073 Grant script enforces one organization per scope
 
-- Release v1.0 · P1 · Ready · Bundle B1 · Owner: kneelbeforez0D · Issue #135 (does not close it)
+- Release v1.0 · P1 · In review (branch `claude/vigilant-hypatia-9bex3q`) · Bundle B1 · Owner: kneelbeforez0D · Issue #135 (does not close it)
 - **Scope.** `workers/api/ops/grant.sql` refuses an `enterprise` or `logistics` grant when another account holds an active grant in that scope, unless `:same_org` equals the scope name; header documents the rule (D-2026-10-10-06, D-2026-10-10-22).
 - **Acceptance.** `test/ops-grants.test.ts`: second-account grant without the override writes no grant and no audit row; with the override it succeeds; same-account, expired, deleted-account, and `free_public` cases are not blocked.
 
