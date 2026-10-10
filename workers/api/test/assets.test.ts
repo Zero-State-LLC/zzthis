@@ -100,8 +100,11 @@ describe("log lines (FR-027)", () => {
         "duration_ms",
         "limiter",
         "method",
+        "ray",
+        "request_id",
         "route",
         "status",
+        "version",
       ]);
     }
     expect(lines.map((line) => line.route)).toEqual([
@@ -152,7 +155,9 @@ describe("log lines (FR-027)", () => {
     });
     expect(response.status).toBe(500);
     const logged = errors.mock.calls.map((args) => String(args[0]));
-    expect(logged).toContain('{"event":"unhandled","error":"Error"}');
+    expect(logged).toContain(
+      '{"event":"unhandled","error":"Error","class":"other"}',
+    );
     expect(logged.join("\n")).not.toContain("secret detail");
   });
 });
@@ -172,5 +177,78 @@ describe("the module the runtime loads", () => {
     expect(Math.abs(deps.now() - Date.now())).toBeLessThan(1000);
     expect(deps.random()).toBeGreaterThanOrEqual(0);
     expect(typeof deps.fetch).toBe("function");
+  });
+});
+
+describe("trace fields on the log line (RM-036)", () => {
+  it("carries the request id, the ray id, and the deployed version", async () => {
+    const logs = vi.spyOn(console, "log").mockImplementation(() => {});
+    const w = await makeWorld({
+      settings: {
+        CF_VERSION_METADATA: { id: "version-1", tag: "", timestamp: "" },
+      },
+    });
+    await call(w, "GET", "/v1", {
+      headers: { "cf-ray": "8f0c1ab2c3d4e5f6-SJC" },
+    });
+    await call(w, "GET", "/", { contract: null });
+    const lines = logs.mock.calls.map(
+      (args) => JSON.parse(String(args[0])) as Record<string, unknown>,
+    );
+    expect(lines[0]).toMatchObject({
+      route: "/v1",
+      ray: "8f0c1ab2c3d4e5f6-SJC",
+      version: "version-1",
+    });
+    expect(String(lines[0]?.request_id)).toMatch(/^[0-9a-f-]{36}$/);
+    expect(lines[1]).toMatchObject({
+      route: "assets",
+      request_id: null,
+      ray: null,
+    });
+  });
+
+  it("names a D1 error's class without its message", async () => {
+    const errors = vi.spyOn(console, "error").mockImplementation(() => {});
+    const w = await makeWorld();
+    const alice = await signIn(w);
+    const db = w.env.ZZ_DB;
+    const failing = new Proxy(db, {
+      get(target, property) {
+        if (property === "batch") {
+          return () =>
+            Promise.reject(new Error("D1_ERROR: constraint failed: secret"));
+        }
+        const value = Reflect.get(target, property, target) as unknown;
+        return typeof value === "function" ? value.bind(target) : value;
+      },
+    });
+    const broken = { ...w, env: { ...w.env, ZZ_DB: failing } };
+    const response = await call(broken, "POST", "/v1/codes", {
+      token: alice.access,
+      body: { scope: "free_public", record: { title: "t", body: "" } },
+    });
+    expect(response.status).toBe(500);
+    const logged = errors.mock.calls.map((args) => String(args[0]));
+    expect(logged).toContain(
+      '{"event":"unhandled","error":"Error","class":"d1"}',
+    );
+    expect(logged.join("\n")).not.toContain("secret");
+  });
+
+  it("logs no request id when the settings check fails first", async () => {
+    const logs = vi.spyOn(console, "log").mockImplementation(() => {});
+    vi.spyOn(console, "error").mockImplementation(() => {});
+    const w = await makeWorld({ settings: { ZZ_ENV: undefined } });
+    await call(w, "GET", "/v1");
+    const line = JSON.parse(String(logs.mock.calls[0]?.[0])) as Record<
+      string,
+      unknown
+    >;
+    expect(line).toMatchObject({
+      status: 503,
+      request_id: null,
+      version: null,
+    });
   });
 });

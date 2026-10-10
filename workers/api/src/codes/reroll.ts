@@ -67,17 +67,20 @@ function rerollBatch(
 // POST /v1/codes/{id}/reroll. There is no 409.
 export async function rerollCode(c: AppContext): Promise<Response> {
   const caller = await requireActive(c, "code.reroll", "mint");
-  if (!c.get("settings").mintEnabled) throw notReady();
   const oldId = c.req.param("id") as string;
   // RM-032: a re-roll issues a code in the old code's scope, so the caller
   // must still be allowed to mint there. Another owner's code, or no code,
   // stays the one not-found body.
   const owned = await c.env.ZZ_DB.prepare(
-    "SELECT scope FROM codes WHERE id = ? AND owner_id = ?",
+    "SELECT scope, kind FROM codes WHERE id = ? AND owner_id = ?",
   )
     .bind(oldId, caller.id)
-    .first<{ scope: CodeRow["scope"] }>();
+    .first<{ scope: CodeRow["scope"]; kind: "plain" | "handle" }>();
   if (owned === null) throw notFound();
+  // RM-039: a handle never re-rolls (FR-006), whether or not the plain-code
+  // issuer is on.
+  if (owned.kind === "handle") throw new ApiError(403, "reroll-cap");
+  if (!c.get("settings").mintEnabled) throw notReady();
   await checkMintScope(c, caller, owned.scope, "code.reroll");
   const newId = await withDrawnCode(c, async (code) => {
     const id = crypto.randomUUID();

@@ -106,7 +106,9 @@ describe("Sign in with Apple (FR-020, T005)", () => {
     >();
     expect(identity?.provider).toBe("apple");
     expect(identity?.apple_client_id).toBe(APPLE_BUNDLE_ID);
-    expect(identity?.apple_refresh_token_enc).toMatch(/^[A-Za-z0-9_-]+$/);
+    expect(identity?.apple_refresh_token_enc).toMatch(
+      /^k1\.[0-9a-f]{8}\.[A-Za-z0-9_-]+$/,
+    );
   });
 
   it("exchanges a web code with the Services ID and the one redirect URI", async () => {

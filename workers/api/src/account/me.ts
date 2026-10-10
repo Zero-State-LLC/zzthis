@@ -142,6 +142,45 @@ function accountDeletion(
   ];
 }
 
+// RM-035: step 3 does bounded work after the deletion committed. R2 takes
+// at most 1,000 keys per call. Only a code that could be in the edge cache
+// is purged: reusable, no expiry, public, and resolved at least once; any
+// other code was never cached (FR-019 a). At most PURGE_MAX keys are
+// purged, PURGE_CHUNK at a time; any beyond that age out within max-age,
+// the FR-018 worst case. A cleanup fault is logged and the 204 stands: the
+// rows are gone, and the reads/ lifecycle rule expires a stray object.
+const R2_DELETE_MAX = 1000;
+export const PURGE_MAX = 500;
+const PURGE_CHUNK = 50;
+
+async function deletionCleanup(
+  c: AppContext,
+  accountId: string,
+  objectKeys: readonly string[],
+): Promise<void> {
+  try {
+    for (let i = 0; i < objectKeys.length; i += R2_DELETE_MAX) {
+      await c.env.ZZ_PHOTOS.delete(objectKeys.slice(i, i + R2_DELETE_MAX));
+    }
+  } catch {
+    console.error(
+      JSON.stringify({ event: "deletion-cleanup-fault", step: "photos" }),
+    );
+  }
+  const cached = await c.env.ZZ_DB.prepare(
+    "SELECT c.canonical FROM codes c JOIN records r ON r.id = c.record_id WHERE c.owner_id = ? AND c.write_id = ? AND c.single_use = 0 AND c.expires_at IS NULL AND c.first_resolved_at IS NOT NULL AND r.visibility = 'public' LIMIT ?",
+  )
+    .bind(accountId, c.get("requestId"), PURGE_MAX)
+    .all<{ canonical: string }>();
+  for (let i = 0; i < cached.results.length; i += PURGE_CHUNK) {
+    await Promise.all(
+      cached.results
+        .slice(i, i + PURGE_CHUNK)
+        .map((row) => purgeResolve(row.canonical)),
+    );
+  }
+}
+
 // DELETE /v1/me (FR-023). Audit rows stay, and the words are never issued
 // again. Signing in later creates a new, empty account.
 export async function deleteMe(c: AppContext): Promise<Response> {
@@ -154,13 +193,11 @@ export async function deleteMe(c: AppContext): Promise<Response> {
     .bind(caller.id)
     .all<{ object_key: string }>();
   await db.batch(accountDeletion(c, caller.id, pending));
-  // Step 3: the photo objects and the cache keys of the revoked codes.
-  await c.env.ZZ_PHOTOS.delete(photos.results.map((row) => row.object_key));
-  const revoked = await db
-    .prepare("SELECT canonical FROM codes WHERE owner_id = ? AND write_id = ?")
-    .bind(caller.id, c.get("requestId"))
-    .all<{ canonical: string }>();
-  await Promise.all(revoked.results.map((row) => purgeResolve(row.canonical)));
+  await deletionCleanup(
+    c,
+    caller.id,
+    photos.results.map((row) => row.object_key),
+  );
   return new Response(null, {
     status: 204,
     headers:
