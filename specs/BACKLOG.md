@@ -380,13 +380,14 @@ RM-050 production resources ─> RM-053 web build ─> RM-051 deploy ─> RM-052
 ### RM-052 Production canary
 
 - Release v1.0 · P0 · Ready (after RM-051) · Bundle B4 · Gate G3, G12
-- **Scope.** Within 1 hour: discovery, real sign-in, mint, resolve (cache miss and hit if RM-016 did not run), edit, revoke, delete account; latency within twice the staging p95 (PROPOSED).
+- **Scope.** Within 1 hour: discovery, real sign-in, one operator-minted synthetic code (public web mint is off in v1.0, D-2026-10-10-21), resolve (cache miss and hit if RM-016 did not run), revoke, delete account; latency within twice the staging p95 (PROPOSED).
 - **Acceptance.** Results in the release packet; rollback rehearsed to the recorded previous version if a step fails.
 
 ### RM-053 Production web build
 
 - Release v1.0 · P0 · Ready (after RM-011, RM-026) · Bundle B1
 - **Acceptance.** The deployed `/signin/` shows Apple and Google only; no `dev`; the dist check passes.
+- **PROPOSED (D-2026-10-10-21, Danny agreed in chat 2026-10-09; adopted on merge).** v1.0 web is lookup only: production discovery reports `free_public: false`, so `/create/` shows its Unavailable state; web create, edit, and revoke are verified in v1.1.
 
 ### RM-054 Release evidence packet and GO decision
 
@@ -455,6 +456,14 @@ RM-050 production resources ─> RM-053 web build ─> RM-051 deploy ─> RM-052
 - Release v1.1 · P1 · Blocked on Michael · Bundle B3
 - **Scope.** The lowercase zzThat wordmark in `design/brand/` and a square app icon (`design/UX.md`).
 
+### RM-072 Durable-key daily mint cap for free_public
+
+- Release v1.1 · P0 · Backlog · PROPOSED (D-2026-10-10-21) · Bundle B9
+- **Problem.** A cap keyed to the account id resets when a person deletes and recreates the account, so it does not bound one person's mints.
+- **Scope.** A daily `free_public` mint cap keyed to an HMAC of the sign-in provider and provider subject (keyed with the limiter HMAC key, so the raw subject is never stored), which survives account deletion for the cap window only, plus a per-IP daily cap on the RM-030 subject (/64 for IPv6, address for IPv4). Over either cap is 429 `rate-limited`, the existing contract-1 body. Numbers are Danny's.
+- **Acceptance.** Tests: mint to the cap, delete the account, sign in again with the same provider subject, and the next mint is 429; two accounts from one /64 share the IP cap; no raw provider subject appears in storage or logs.
+- **Governing.** D-2026-10-10-21; spec 005 FR-011; RM-030; data lifecycle (the key expires with the window).
+
 ### RM-075 Tolerant-reader verification in zzThat (external)
 
 - Release v1.1 · P1 · Backlog · Bundle B3
@@ -467,10 +476,12 @@ RM-050 production resources ─> RM-053 web build ─> RM-051 deploy ─> RM-052
 
 - Release v1.2 · P1 · Backlog (QUEUED) · Bundle B9 · Owner: Danny promotes
 - **Acceptance.** Written abuse review from v1.0 data; content policy; `ZZ_FREE_PUBLIC=true` in production after approval.
+- **PROPOSED (D-2026-10-10-21, Danny agreed in chat 2026-10-09; adopted on merge).** Release v1.1 · P0 · Covers web and app create together · Gate: v1.1 store launch. Needs the RM-072 durable-key daily mint cap for `free_public`, a moderation runbook with a named moderator and response time, written spend and abuse thresholds for turning the flag off, and a timed staging rehearsal of the shutoff redeploy (`ZZ_FREE_PUBLIC=false` through RM-002; it is a Wrangler var, so shutoff is a deploy, target 30 minutes, PROPOSED).
 
 ### RM-077 Report triage tooling
 
 - Release v1.2 · P2 · Backlog · Bundle B9 · Operator SQL views for open reports by age and code.
+- **PROPOSED (D-2026-10-10-21, Danny agreed in chat 2026-10-09; adopted on merge).** Release v1.1 · P1, required before `ZZ_FREE_PUBLIC` turns on.
 
 ### RM-078 Web issuer controls
 
