@@ -13,9 +13,13 @@
 -- on that organization's accounts. A viewer grant opens the private records
 -- of accounts with that org_id only (FR-035), and an auditor grant lists
 -- only their events (FR-016). Empty means no organization: the grant then
--- reaches only its holder's own records and events. Give the grant the
--- holder's own org_id. An issuer grant only lets its holder mint, so its
--- org_id changes nothing today.
+-- reaches only its holder's own records and events. An issuer grant only
+-- lets its holder mint, so its org_id changes nothing today.
+--
+-- The grant's org_id must be the holder's own (D-2026-10-10-24, RM-098):
+-- nothing is written when :org_id differs from the account's org_id, and
+-- empty matches only an account with no organization. Run ops/set-org.sql
+-- for the account first.
 --
 -- One organization per scope (D-2026-10-10-06, D-2026-10-10-22, RM-073).
 -- Until contract 2, each of enterprise and logistics serves one
@@ -24,7 +28,7 @@
 -- account holding one belongs to the same organization as the new account
 -- (RM-063):
 --
---   SELECT g.subject_id, g.role, g.expires_at FROM grants g
+--   SELECT g.subject_id, g.role, g.org_id, g.expires_at FROM grants g
 --   JOIN accounts a ON a.id = g.subject_id
 --   WHERE g.scope = 'enterprise' AND a.deleted_at IS NULL
 --     AND (g.expires_at IS NULL
@@ -35,9 +39,12 @@
 -- holds an active grant (any role) in that scope. Expired grants do not
 -- count. Once that check is done, set :same_org to the scope name, which is
 -- the operator's written statement that the new account belongs to the
--- same organization, and the grant goes ahead. Leave :same_org empty
--- otherwise. A further grant to an account that already holds an active
--- grant in the scope, and every free_public grant, is never refused.
+-- same organization. The file checks that statement (D-2026-10-10-24,
+-- RM-098): the grant goes ahead only when its org_id is not empty and
+-- equals the org_id of every active grant in the scope held by an account
+-- that is not deleted. Leave :same_org empty otherwise. A further grant to
+-- an account that already holds an active grant in the scope, and every
+-- free_public grant, is never refused by this rule.
 --
 -- :expires_at is a time in the spec 005 form (RFC 3339 UTC, three
 -- fractional digits, Z), or empty for a grant that does not expire. Nothing
@@ -72,9 +79,23 @@ WHERE id = ':subject_id' AND deleted_at IS NULL
     ':expires_at' = ''
     OR strftime('%Y-%m-%dT%H:%M:%fZ', ':expires_at') = ':expires_at'
   )
+  AND org_id IS NULLIF(':org_id', '')
   AND (
     ':scope' = 'free_public'
-    OR ':same_org' = ':scope'
+    OR (
+      ':same_org' = ':scope' AND ':org_id' <> ''
+      AND NOT EXISTS (
+        SELECT 1
+        FROM grants g
+        JOIN accounts a ON a.id = g.subject_id
+        WHERE g.scope = ':scope' AND a.deleted_at IS NULL
+          AND (
+            g.expires_at IS NULL
+            OR g.expires_at > strftime('%Y-%m-%dT%H:%M:%fZ', 'now')
+          )
+          AND g.org_id IS NOT ':org_id'
+      )
+    )
     OR EXISTS (
       SELECT 1
       FROM grants g
