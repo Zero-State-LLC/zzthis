@@ -73,7 +73,7 @@ A browser client in this repo, not the marketing site, does US1 to US4 with the 
 
 ### US7. Operator safety (P2)
 
-The server refuses record text that contains a blocklisted term (FR-024). The operator can suspend an account (FR-025) and revoke a reported code. Reports and photos follow FR-017 and FR-026. There is no admin route in contract 1. The operator works in D1 with the queries in [plan.md](plan.md).
+The server refuses record text that contains a blocklisted term (FR-024). The operator can suspend an account (FR-025) and revoke a reported code. Once `ZZ_FREE_PUBLIC` is on, every report is triaged within 24 hours, and a confirmed abusive code is revoked and its owner suspended within that window; operator suspension is the service-level block that store rules require, and the apps add a device-only hide (D-2026-10-10-25). Reports and photos follow FR-017 and FR-026. There is no admin route in contract 1. The operator works in D1 with the queries in [plan.md](plan.md).
 
 ## Functional requirements
 
