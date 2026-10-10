@@ -1,3 +1,4 @@
+import { env } from "cloudflare:workers";
 import { describe, expect, it } from "vitest";
 import {
   call,
@@ -17,10 +18,13 @@ import { makeWorld, type World } from "./helpers/world.ts";
 // RM-074, #135): two organizations, acme and beta, in enterprise, plus
 // accounts with no organization.
 //
-// Every grant goes through ops/grant.sql. Grants for a second organization
-// in one scope set :same_org, which the one-organization rule (RM-073)
-// would otherwise refuse: this is the mistake that rule guards against,
-// and the server must still keep the organizations apart.
+// Grants go through ops/grant.sql. Since RM-098 that file refuses a
+// second organization in one scope, and a grant with no organization next
+// to one with: the mistake the one-organization rule (RM-073) guards
+// against. These tests need that state anyway, because the server must
+// keep the organizations apart even if the database holds it (written by
+// hand, or before RM-098). So a grant grant.sql refuses is written
+// directly, with the grant.add event grant.sql writes.
 
 interface Event {
   actor_id: string | null;
@@ -44,8 +48,19 @@ async function grant(
     expires_at: "",
     same_org: scope,
   });
-  return shown.find((row) => row.scope === scope && row.role === role)
-    ?.id as string;
+  const granted = shown.find((row) => row.scope === scope && row.role === role)
+    ?.id as string | undefined;
+  if (granted !== undefined) return granted;
+  const id = crypto.randomUUID();
+  await env.ZZ_DB.batch([
+    env.ZZ_DB.prepare(
+      "INSERT INTO grants (id, subject_id, scope, role, org_id) VALUES (?, ?, ?, ?, NULLIF(?, ''))",
+    ).bind(id, subject.accountId, scope, role, org),
+    env.ZZ_DB.prepare(
+      "INSERT INTO audit_events (id, actor_id, action, target_type, target_id, result, created_at) VALUES (?, NULL, 'grant.add', 'grant', ?, 'ok', strftime('%Y-%m-%dT%H:%M:%fZ', 'now'))",
+    ).bind(crypto.randomUUID(), id),
+  ]);
+  return id;
 }
 
 async function member(w: World, name: string, org: string): Promise<Session> {
@@ -319,5 +334,37 @@ describe("org-bound auditor grants (FR-016)", () => {
         ["grant.add", grants[1]],
       ].sort(),
     );
+  });
+
+  it("keeps a deleted owner's code and record events listed, and drops its grant events (RM-100)", async () => {
+    const w = await makeWorld();
+    const acme = await organization(w, "acme");
+    await resolve(w, acme.privateCode.canonical, acme.viewer.access);
+    const before = await events(w, acme.auditor.access);
+    const [issuerGrant] = acme.grants;
+    expect(before.some((event) => event.target_id === issuerGrant)).toBe(true);
+    expect(
+      (await call(w, "DELETE", "/v1/me", { token: acme.issuer.access })).status,
+    ).toBe(204);
+    // Deletion revokes the owner's code rows and keeps them, and the account
+    // row keeps its org_id, so its code and record events stay listed. It
+    // removes the owner's grant rows, so their grant events drop out. The
+    // account.delete event has an account target and is listed for no
+    // auditor.
+    const after = await events(w, acme.auditor.access);
+    expect(after).toEqual(
+      before.filter((event) => event.target_id !== issuerGrant),
+    );
+    expect(
+      after.some(
+        (event) =>
+          event.action === "code.mint" &&
+          event.target_id === acme.privateCode.id &&
+          event.actor_id === acme.issuer.accountId,
+      ),
+    ).toBe(true);
+    expect(
+      after.some((event) => event.target_id === acme.privateCode.record_id),
+    ).toBe(true);
   });
 });
