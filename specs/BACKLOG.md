@@ -515,8 +515,8 @@ RM-050 production resources ─> RM-053 web build ─> RM-051 deploy ─> RM-052
 ### RM-101 Hide this code and the expanded report flow in the apps (external)
 
 - Release v1.1 · P0 · Ready · Bundle B3 · Owner: kneelbeforez0D
-- **Scope.** zzThat FR-035 replaces "No block list" (D-2026-10-10-25 item 1). Resolve and the Report sheet offer "Hide this code": a device-only list of hidden canonical codes (no server call), shown afterwards as a hidden state with Unhide; cleared on account deletion. The Report sheet's sent state says the creator is reviewed within 24 hours and can be suspended. Copy keys go through zzThis `design/copy.json`.
-- **Acceptance.** iOS and Android tests: hide a code, resolve it again (scan and typed) and see the hidden state without its title or body; unhide restores it; delete the account and the list is empty; no network call is made by hide or unhide.
+- **Scope.** zzThat FR-035 replaces "No block list" (D-2026-10-10-25 item 1). Resolve and the Report sheet offer "Hide this code" and, once RM-112 ships, "Block this creator": a device-only list of hidden canonical codes and blocked creator references (no server call), shown afterwards as a hidden state with Unhide or Unblock; cleared on account deletion and by a Settings reset. Create asks for terms acceptance before the first create and again when the terms version changes (RM-103). The Report sheet's sent state says the creator is reviewed within 24 hours and can be suspended. Copy keys go through zzThis `design/copy.json`.
+- **Acceptance.** iOS and Android tests: hide a code, resolve it again (scan and typed) and see the hidden state without its title or body; unhide restores it; block a creator and another code with the same `creator` shows the hidden state; delete the account, or run the Settings reset, and both lists are empty; no network call is made by hide, block, unhide, or unblock; Create refuses until the current terms version is accepted.
 - **Governing.** D-2026-10-10-25; Apple 1.2; Play UGC.
 
 ### RM-102 Moderation tooling: triage SLA, suspend, and runbook
@@ -530,7 +530,7 @@ RM-050 production resources ─> RM-053 web build ─> RM-051 deploy ─> RM-052
 
 - Release v1.1 · P0 · Backlog · Bundle B9 · Owner: Danny (approval)
 - **Scope.** Draft terms of use and a content policy (prohibited content, reporting, suspension, appeals by email), linked from Create and Account in the apps and on the web. Legal approval is Danny's.
-- **Acceptance.** Danny's written yes; links present in both apps and the web client before `ZZ_FREE_PUBLIC` turns on.
+- **Acceptance.** Danny's written yes; links present in both apps and the web client; each client requires acceptance of the current terms version before a person's first create and again after a version change, before `ZZ_FREE_PUBLIC` turns on.
 - **Governing.** D-2026-10-10-25 item 2; Play UGC terms requirement.
 
 ### RM-104 Data safety and privacy drafts include ML Kit diagnostics (external)
@@ -584,6 +584,13 @@ RM-050 production resources ─> RM-053 web build ─> RM-051 deploy ─> RM-052
 - Release v1.1 · P3 · Backlog (after spec 001 T051) · Owner: kneelbeforez0D
 - **Scope.** Account shows zzThat's Discord and Instagram with the `design/UX.md` URLs only after T051 confirms a never-expiring invite.
 - **Governing.** D-2026-10-10-25 item 11.
+
+### RM-112 Optional creator reference on Resolve for creator blocking
+
+- Release v1.1 · P0 · Backlog (needs Danny's yes on the D-2026-10-10-12 exception, and RM-075) · Bundle B9 · Owner: kneelbeforez0D
+- **Scope.** Resolve gains an optional response field `creator`: an opaque, stable HMAC of the owner account id (keyed with a server secret, never the raw id), null for private records. OpenAPI `info.version` changes and discovery advertises it. Old clients must ignore it (RM-075).
+- **Acceptance.** Worker tests: two public codes from one owner resolve with the same `creator`; codes from different owners differ; a private record gives null; the raw account id never appears; the cached public response keeps the field. zzThat tolerant-reader tests pass on both apps.
+- **Governing.** D-2026-10-10-25 item 1; D-2026-10-10-12; Apple 1.2; Play UGC.
 
 ## v1.2 and v1.3 items
 

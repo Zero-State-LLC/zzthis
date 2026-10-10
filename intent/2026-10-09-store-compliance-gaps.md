@@ -14,7 +14,7 @@ The 2026-10-09 store compliance audit (zzthat `main` e2bb2a4, zzthis `main` 6afd
 ## Proposed outcome
 
 - D-2026-10-10-25 records one decision per gap with a store citation.
-- BACKLOG carries RM-101 to RM-111 with release, priority, and owner.
+- BACKLOG carries RM-101 to RM-112 with release, priority, and owner.
 - RELEASE-ROADMAP v1.1 lists them as prerequisites.
 
 ## Constraints
