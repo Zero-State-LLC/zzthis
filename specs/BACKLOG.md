@@ -512,6 +512,86 @@ RM-050 production resources ─> RM-053 web build ─> RM-051 deploy ─> RM-052
 - **Acceptance.** zz-core vectors: agreeing frames raise confidence; a disagreement goes to Clarify; `zz-kathy-found` plus `found-dog-zz` joins only when the overlap and grammar pass; two codes side by side are never joined.
 - **Governing.** D-2026-10-10-23; spec 004 FR-013 and bands.
 
+### RM-101 Hide this code and the expanded report flow in the apps (external)
+
+- Release v1.1 · P0 · Ready · Bundle B3 · Owner: kneelbeforez0D
+- **Scope.** zzThat FR-035 replaces "No block list" (D-2026-10-10-25 item 1). Resolve and the Report sheet offer "Hide this code" and, once RM-112 ships, "Block this creator": a device-only list of hidden canonical codes and blocked creator references (no server call), shown afterwards as a hidden state with Unhide or Unblock; cleared on account deletion and by a Settings reset. Create asks for terms acceptance before the first create and again when the terms version changes (RM-103). The Report sheet's sent state says the creator is reviewed within 24 hours and can be suspended. Copy keys go through zzThis `design/copy.json`.
+- **Acceptance.** iOS and Android tests: hide a code, resolve it again (scan and typed) and see the hidden state without its title or body; unhide restores it; block a creator and another code with the same `creator` shows the hidden state; delete the account, or run the Settings reset, and both lists are empty; no network call is made by hide, block, unhide, or unblock; Create refuses until the current terms version is accepted.
+- **Governing.** D-2026-10-10-25; Apple 1.2; Play UGC.
+
+### RM-102 Moderation tooling: triage SLA, suspend, and runbook
+
+- Release v1.1 · P0 · Ready · Bundle B9 · Owner: kneelbeforez0D (tooling), Danny (moderator name)
+- **Scope.** Extends RM-077. `workers/api/ops/` SQL: open reports by age and code, a query for reports open longer than 24 hours, suspend and unsuspend an account with audit rows (FR-025), and revoke a reported code. `docs/OPERATIONS.md` gains the moderator runbook: named moderator and backup, 24-hour response, and the escalation to `ZZ_FREE_PUBLIC=false`.
+- **Acceptance.** Tests on the ops SQL: a report older than 24 hours appears in the breach query; suspend blocks mint, re-roll, and record writes with 403 `forbidden` and writes an audit row; unsuspend restores them. The runbook is rehearsed once on staging.
+- **Governing.** D-2026-10-10-25 item 2; Apple 1.2 "timely responses"; Play UGC.
+
+### RM-103 Terms of use and content policy
+
+- Release v1.1 · P0 · Backlog · Bundle B9 · Owner: Danny (approval)
+- **Scope.** Draft terms of use and a content policy (prohibited content, reporting, suspension, appeals by email), linked from Create and Account in the apps and on the web. Legal approval is Danny's.
+- **Acceptance.** Danny's written yes; links present in both apps and the web client; each client requires acceptance of the current terms version before a person's first create and again after a version change, before `ZZ_FREE_PUBLIC` turns on.
+- **Governing.** D-2026-10-10-25 item 2; Play UGC terms requirement.
+
+### RM-104 Data safety and privacy drafts include ML Kit diagnostics (external)
+
+- Release v1.1 · P1 · Ready · Bundle B3 · Owner: kneelbeforez0D
+- **Scope.** zzThat `apps/store/data-safety-draft.md` and `apps/store/privacy-policy-draft.md` per D-2026-10-10-25 item 4; this repository's `docs/DATA-LIFECYCLE.md` row is in the decision pull request.
+- **Acceptance.** The Data safety draft lists App info and performance and Device or other IDs as collected by the ML Kit SDK, not shared, for analytics and diagnostics; no "no analytics" sentence remains unqualified; the list matches Google's ML Kit disclosure page for the pinned version.
+- **Governing.** D-2026-10-10-25 item 4.
+
+### RM-105 Age rating 13+ and Teen (external)
+
+- Release v1.1 · P1 · Ready · Bundle B3 · Owner: kneelbeforez0D (spec), Danny (filing)
+- **Scope.** zzThat FR-031, spec.md Privacy and permissions, and `apps/store/listing-draft.md` say Apple 13+ and Google Play Teen, with the questionnaire answers (user-generated content yes; no other mature themes) recorded in the listing draft.
+- **Acceptance.** No "12+" remains in zzThat; the draft lists each answer.
+- **Governing.** D-2026-10-10-25 item 5.
+
+### RM-106 Signed AAB release job and Play App Signing (external)
+
+- Release v1.1 · P0 · Ready · Bundle B3 · Owner: kneelbeforez0D (job), Danny (secrets, Play enrollment)
+- **Scope.** zzThat workflow job `release-android`, `workflow_dispatch` only, behind a protected environment: `bundleProdRelease`, signed with the upload key from secrets, injected API origin and client ids, AAB uploaded as an artifact. No key, password, or keystore in the tree.
+- **Acceptance.** A run produces a signed `.aab`; `jarsigner -verify` passes with the upload certificate; a secret scan of the tree is clean; Danny enrolls the app in Play App Signing at first upload.
+- **Governing.** D-2026-10-10-25 item 6.
+
+### RM-107 Privacy manifest HMAC entry and SDK manifest check (external)
+
+- Release v1.1 · P1 · Ready · Bundle B3 · Owner: kneelbeforez0D
+- **Scope.** zzThat `PrivacyInfo.xcprivacy` adds Other Data Types (not linked, not tracking, App Functionality); a Release archive's Xcode Privacy Report is attached to the PR.
+- **Acceptance.** The manifest matches the App Store privacy draft row for row; the report shows a manifest for every linked SDK and no undeclared required-reason API.
+- **Governing.** D-2026-10-10-25 item 7.
+
+### RM-108 Enter the store privacy forms
+
+- Release v1.1 · P1 · Backlog (after RM-104, RM-107, RM-026) · Bundle B3 · Owner: Danny
+- **Acceptance.** App Store Connect privacy answers and Play Data safety match the merged drafts; the Play deletion link is `https://zz.zer0state.com/account/`.
+- **Governing.** D-2026-10-10-25 items 8 and 9.
+
+### RM-109 EU DSA trader status
+
+- Release v1.1 · P1 · Ready · Owner: Danny
+- **Acceptance.** Trader status verified in App Store Connect before the EU storefront is selected.
+- **Governing.** D-2026-10-10-25 item 10.
+
+### RM-110 One support address across site, stores, and apps
+
+- Release v1.1 · P2 · Backlog (Michael's yes for the site footer) · Owner: Danny
+- **Scope.** `support@zer0state.com` in the site contact (`src/content/contact.ts`), both store listings, and the apps.
+- **Governing.** D-2026-10-10-25 item 11.
+
+### RM-111 zzThat Discord and Instagram links in the apps (external)
+
+- Release v1.1 · P3 · Backlog (after spec 001 T051) · Owner: kneelbeforez0D
+- **Scope.** Account shows zzThat's Discord and Instagram with the `design/UX.md` URLs only after T051 confirms a never-expiring invite.
+- **Governing.** D-2026-10-10-25 item 11.
+
+### RM-112 Optional creator reference on Resolve for creator blocking
+
+- Release v1.1 · P0 · Backlog (needs Danny's yes on the D-2026-10-10-12 exception, and RM-075) · Bundle B9 · Owner: kneelbeforez0D
+- **Scope.** Resolve gains an optional response field `creator`: an opaque, stable HMAC of the owner account id (keyed with a server secret, never the raw id), null for private records. OpenAPI `info.version` changes and discovery advertises it. Old clients must ignore it (RM-075).
+- **Acceptance.** Worker tests: two public codes from one owner resolve with the same `creator`; codes from different owners differ; a private record gives null; the raw account id never appears; the cached public response keeps the field. zzThat tolerant-reader tests pass on both apps.
+- **Governing.** D-2026-10-10-25 item 1; D-2026-10-10-12; Apple 1.2; Play UGC.
+
 ## v1.2 and v1.3 items
 
 ### RM-076 Public community codes review

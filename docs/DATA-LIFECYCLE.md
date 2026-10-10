@@ -29,7 +29,7 @@ For every production deletion flow, tests or runbook evidence must show which pr
 
 ## External processors
 
-Current identity flows may contact Apple or Google as specified. Retry-photo upload remains disabled in normal V1 discovery. Any future vision provider, analytics system, or proof service requires an explicit update to this matrix before use.
+Current identity flows may contact Apple or Google as specified. Retry-photo upload remains disabled in normal V1 discovery. Any future vision provider, analytics system, or proof service requires an explicit update to this matrix before use. The zzThat Android app links Google ML Kit text recognition (bundled model), which sends Google diagnostics and usage data (device and app information, per-installation identifiers, performance metrics) and no image or text; store disclosures list it as collected by the SDK and not shared (D-2026-10-10-25). Vision on iOS sends nothing.
 
 ## Export
 
