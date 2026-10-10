@@ -399,7 +399,20 @@ RM-050 production resources ─> RM-053 web build ─> RM-051 deploy ─> RM-052
 
 - Release v1.0 · P1 · Ready · Bundle B1 · Journeys J10
 - **Scope.** Add the D-2026-10-10-06 rule to the operator SQL docs (`workers/api/ops/grant.sql` header and plan.md Operator work).
-- **Acceptance.** The runbook names the rule and the check the operator performs before each grant.
+- **Acceptance.** The runbook names the rule and the check the operator performs before each grant. Enforcement is RM-073 (D-2026-10-10-22).
+
+### RM-073 Grant script enforces one organization per scope
+
+- Release v1.0 · P1 · Ready · Bundle B1 · Owner: kneelbeforez0D · Issue #135 (does not close it)
+- **Scope.** `workers/api/ops/grant.sql` refuses an `enterprise` or `logistics` grant when another account holds an active grant in that scope, unless `:same_org` equals the scope name; header documents the rule (D-2026-10-10-06, D-2026-10-10-22).
+- **Acceptance.** `test/ops-grants.test.ts`: second-account grant without the override writes no grant and no audit row; with the override it succeeds; same-account, expired, deleted-account, and `free_public` cases are not blocked.
+
+### RM-074 Org-bound grants for viewer resolve and the auditor filter
+
+- Release v1.3 (prerequisite, before the pilot onboards) · P0 · Ready · Bundle B7 · Owner: kneelbeforez0D · Closes #135
+- **Scope.** Migration `0003_org_bound_grants.sql` (nullable `org_id` on `accounts` and `grants`, indexes); `ops/grant.sql` takes `:org_id`; `ops/set-org.sql`; resolve step 7 requires a matching non-null `org_id`; `GET /v1/audit` filters by scope and organization; null-org grants reach only the holder's own rows. Spec 005 FR-034, FR-035, FR-016 and the data model amended in the same pull request; OpenAPI unchanged.
+- **Acceptance.** Two organizations in `enterprise` plus a null-org account: cross-organization private resolve is the one not-found body; auditor lists, including `record_id` and `code_id` filters, show only the auditor's organization; public resolve unchanged; existing FR-034, FR-035, FR-016 tests pass.
+- **Governing.** D-2026-10-10-22; D-2026-10-10-06 (amended); RM-080 replaces `org_id` with the Organization entity.
 
 ## v1.1 items
 

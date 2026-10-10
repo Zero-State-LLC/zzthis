@@ -1252,6 +1252,8 @@ One running list of decisions, so every agent and advisor works from the same ru
 
 | ID | Date | Issue | Decision | Source |
 |---|---|---|---|---|
+| D-2026-10-10-22 | 2026-10-09 | #135 | Danny approved: `ops/grant.sql` enforces one organization per `enterprise` or `logistics` scope now (RM-073); org-bound grants (nullable `org_id` on accounts and grants, migration 0003) land before the v1.3 pilot and amend FR-034, FR-035 step 7, and FR-016 with no wire change (RM-074). Amends D-2026-10-10-06. | [`specs/decisions-2026-10-10.md`](../specs/decisions-2026-10-10.md) |
+| D-2026-10-10-21 | 2026-10-09 | PR #139 | PROPOSED, Danny agreed in chat 2026-10-09: v1.0 web is lookup only; `free_public` create opens in v1.1 for web and apps together, behind abuse, blocklist, moderation, cost, and durable mint-cap prerequisites (RM-072, RM-076, RM-077). | [`specs/decisions-2026-10-10.md`](../specs/decisions-2026-10-10.md) |
 | D-2026-10-10-20 | 2026-10-10 | #86 | PROPOSED: require the `site-ci.yml` `typecheck-and-test` job on `main`; `ci.yml` stays unchanged. Danny sets branch protection. | [`specs/decisions-2026-10-10.md`](../specs/decisions-2026-10-10.md) |
 | D-2026-10-10-19 | 2026-10-10 | #86 | ASSIMILATED into v1.0 as defect fixes: re-roll scope check, mint account guard, cache side effects off the request path, bounded retention and deletion fan-out, outbound timeouts, `ZZ_DATA_KEY` key ids, limiter failure policy, request and version logging (BACKLOG RM-021, RM-030 to RM-039). | review |
 | D-2026-10-10-18 | 2026-10-10 | PR #127 | The proposed location capability stays research (R-B17) with no release until PR #127 is reviewed. | review |
