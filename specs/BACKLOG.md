@@ -90,7 +90,7 @@ RM-050 production resources ─> RM-053 web build ─> RM-051 deploy ─> RM-052
 
 ### RM-003 Repair the security check on main
 
-- Release v1.0 · P0 · Ready · Bundle B4 · Gate G1 · Owner: any maintainer
+- Release v1.0 · P0 · In review (PR #122's allowlist also carried in PR #129) · Bundle B4 · Gate G1 · Owner: any maintainer
 - **Problem.** `security` fails on every push to `main` since 2026-10-08 because gitleaks scans every ref and finds a verified false positive on the unmerged branch `spec/zz-ocr-qual-001` (`scripts/ocr-qualification/receipt-semantics.mjs:79`, commit `ab3983ab95`).
 - **Outcome and scope.** Land a `.gitleaks.toml` allowlist scoped to that commit, path, and line (draft PR #122). Do not narrow the scan to `main`.
 - **Depends on.** None. **Components.** gitleaks configuration, `scripts/security-scan.sh` if it needs a config flag.
