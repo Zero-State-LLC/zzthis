@@ -66,7 +66,7 @@ Non-goals:
 | RM-037 | `auth/apple.ts`, `deps.ts`; tests `providers.test.ts`, `cron.test.ts` |
 | RM-038 | `limits/enforce.ts`, `http/app.ts`; test `limits.test.ts` |
 | RM-035 | `retention/cron.ts`, `account/me.ts`, `migrations/0002_retention_indexes.sql`; tests `cron.test.ts`, `account.test.ts`, `data.test.ts` |
-| RM-021 | `lib/crypto.ts`, `env.ts`, `account/me.ts`, `retention/cron.ts`, `.dev.vars.example`; test `crypto.test.ts`, `account.test.ts` |
+| RM-021 | `lib/crypto.ts`, `env.ts`, `.dev.vars.example`, generated Worker types; tests `crypto.test.ts`, `settings.test.ts`, `providers.test.ts` (stored-token format) |
 | RM-036 | `http/log.ts`, `http/app.ts`, `env.ts`, both wrangler files; test `assets.test.ts` (log lines) |
 | RM-039 | `lib/text.ts`, `http/body.ts`, `auth/signin.ts`, `codes/reroll.ts`; matching tests |
 | Spec | spec 005 FR-011 (IPv6 /64), FR-018 (cache faults), FR-026 (bounded run), Mint step 5 (account guard), Re-roll (scope check), Environment (`ZZ_DATA_KEY_PREVIOUS`, version metadata), plan.md (limiter failure policy) |

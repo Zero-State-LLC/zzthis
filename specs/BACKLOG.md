@@ -193,7 +193,7 @@ RM-050 production resources ─> RM-053 web build ─> RM-051 deploy ─> RM-052
 
 ### RM-021 Key ids for `ZZ_DATA_KEY` sealed values and tags
 
-- Release v1.0 · P0 · Ready · Bundle B4 · Gate G5 · Journeys J7
+- Release v1.0 · P0 · In review (part B of #130) · Bundle B4 · Gate G5 · Journeys J7
 - **Problem.** Sealed Apple tokens and HMAC tags carry no key id and use fixed `v1` HKDF labels (`workers/api/src/lib/crypto.ts:9-10,97-112`), so a rotation silently breaks Apple revocation at deletion (`account/me.ts:48-62`).
 - **Scope.** Prefix new sealed values with a key id; accept an optional `ZZ_DATA_KEY_PREVIOUS` for decryption; treat unprefixed values as the first key; add a re-encrypt step in the cron.
 - **Acceptance.** A test seals with key A, rotates to key B with A as previous, and still revokes; a test with no previous key fails closed with a logged class.
@@ -256,7 +256,7 @@ RM-050 production resources ─> RM-053 web build ─> RM-051 deploy ─> RM-052
 
 ### RM-030 Rate-limit IPv6 callers by /64
 
-- Release v1.0 · P0 · In review (PR A for #130) · Bundle B1 · Gate G10 · Journeys J1
+- Release v1.0 · P0 · Done (PR #140 merged 2026-10-10) · Bundle B1 · Gate G10 · Journeys J1
 - **Problem.** `workers/api/src/limits/enforce.ts:33-36` keys on the full address.
 - **Acceptance.** Two addresses in one /64 share a bucket; two IPv4 addresses do not; the HMAC still hides the prefix (FR-027).
 - **Governing.** D-2026-10-10-05; FR-011.
@@ -269,53 +269,53 @@ RM-050 production resources ─> RM-053 web build ─> RM-051 deploy ─> RM-052
 
 ### RM-032 Re-roll checks the scope
 
-- Release v1.0 · P0 · In review (PR A for #130) · Bundle B1 · Journeys J3
+- Release v1.0 · P0 · Done (PR #140 merged 2026-10-10) · Bundle B1 · Journeys J3
 - **Problem.** `rerollCode` never calls `checkMintScope` (`workers/api/src/codes/reroll.ts:86-97`), so an account whose issuer grant was removed, or a `free_public` code after the flag turns off, still gets a new code.
 - **Acceptance.** Re-roll after `remove-grant.sql` returns 403 `forbidden`; re-roll of a `free_public` code with the flag off returns 403 `scope-unavailable`; nothing is written.
 - **Governing.** FR-005, FR-034.
 
 ### RM-033 Mint checks the account in its batch
 
-- Release v1.0 · P0 · In review (PR A for #130) · Bundle B1 · Journeys J2, J7
+- Release v1.0 · P0 · Done (PR #140 merged 2026-10-10) · Bundle B1 · Journeys J2, J7
 - **Problem.** The mint batch is plain inserts (`workers/api/src/codes/store.ts:63-116`), so a mint racing `DELETE /v1/me` or `suspend.sql` can leave an active code owned by a deleted or suspended account.
 - **Acceptance.** An interleaving test leaves no active code for a deleted or suspended account; the response is 401 or 403 as for a request that arrived after.
 - **Governing.** FR-023, FR-025, FR-031.
 
 ### RM-034 Cache writes and purges never fail a committed request
 
-- Release v1.0 · P0 · In review (PR A for #130) · Bundle B1 · Journeys J1, J4, J5
+- Release v1.0 · P0 · Done (PR #140 merged 2026-10-10) · Bundle B1 · Journeys J1, J4, J5
 - **Problem.** `storeResolve` and `purgeResolve` are awaited inline (`workers/api/src/resolve/resolve.ts:205`, `codes/revoke.ts:55`, `records/versions.ts:112`, `codes/reroll.ts:107`); a cache error turns a committed write into 500.
 - **Acceptance.** With a throwing cache, resolve returns 200, revoke 200, and a version 201; a purge-failure log class is emitted; FR-018's 60-second bound is the only consequence.
 
 ### RM-035 Bound retention and deletion work; add cron indexes
 
-- Release v1.0 · P0 · Ready · Bundle B1, B4 · Gate G6 · Journeys J7, J8
+- Release v1.0 · P0 · In review (part B of #130) · Bundle B1, B4 · Gate G6 · Journeys J7, J8
 - **Problem.** The cron selects and deletes without limits (`workers/api/src/retention/cron.ts`); account deletion purges every revoked code and deletes all photos in one call (`account/me.ts:155-163`); retention queries scan without indexes.
 - **Scope.** Limited loops with a time budget and per-step isolation; purge only codes that were cacheable; chunk R2 deletes at 1,000 keys; indexes on `auth_nonces(expires_at)`, `refresh_tokens(expires_at)`, `pending_revocations(next_attempt_at)`, `reports(closed_at)`; a log class for abandoned Apple revocations.
 - **Acceptance.** Deleting an account with 5,000 codes returns 204; a cron run with 10,000 expired nonces finishes over successive runs without exceeding one invocation's limits.
 
 ### RM-036 Request, version, and error-class logging
 
-- Release v1.0 · P0 · Ready · Bundle B4 · Gate G7
+- Release v1.0 · P0 · In review (part B of #130) · Bundle B4 · Gate G7
 - **Scope.** Log the request id and `cf-ray` and return `X-Request-Id`; log the deployed version from version metadata; log D1, R2, and Durable Object error classes; keep FR-027 exclusions.
 - **Acceptance.** A log-line test asserts the fields and the absence of code, token, text, and IP.
 
 ### RM-037 Timeouts on outbound calls
 
-- Release v1.0 · P1 · In review (PR A for #130) · Bundle B1 · Journeys J6, J7
+- Release v1.0 · P1 · Done (PR #140 merged 2026-10-10) · Bundle B1 · Journeys J6, J7
 - **Problem.** Apple token and revoke calls have no timeout (`workers/api/src/auth/apple.ts:37-41`).
 - **Acceptance.** A never-resolving stub returns within 3 seconds; sign-in still succeeds and logs the failure (FR-020); the cron moves on to the next row.
 
 ### RM-038 Limiter failure policy
 
-- Release v1.0 · P1 · In review (PR A for #130) · Bundle B1 · Journeys J1
+- Release v1.0 · P1 · Done (PR #140 merged 2026-10-10) · Bundle B1 · Journeys J1
 - **Problem.** A Durable Object error or hang becomes 500 on every route (`workers/api/src/limits/enforce.ts:23`).
 - **Scope.** A timeout and a documented policy per route class: fail closed for auth, mint, re-roll, and reports; fail open for discovery and the OpenAPI document. Resolve fails closed (abuse risk).
 - **Acceptance.** A test per route class shows the documented status when the limiter throws.
 
 ### RM-039 Low-severity hardening
 
-- Release v1.0 · P2 · Ready · Bundle B1
+- Release v1.0 · P2 · In review (part B of #130) · Bundle B1
 - **Scope.** Strip Unicode format characters before the blocklist check (`workers/api/src/lib/text.ts:5`); check JSON body size while streaming (`http/body.ts:21-22`); revoke the previous Apple token when a new one replaces it (`auth/signin.ts:88-96`); audit a rejected ID token; return `reroll-cap` for a handle re-roll even when mint is disabled (`codes/reroll.ts:88`); document whether reports and reads from suspended accounts are allowed (FR-025).
 - **Acceptance.** One test per change.
 
