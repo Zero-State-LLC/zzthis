@@ -414,12 +414,26 @@ RM-050 production resources ─> RM-053 web build ─> RM-051 deploy ─> RM-052
 - **Acceptance.** Two organizations in `enterprise` plus a null-org account: cross-organization private resolve is the one not-found body; auditor lists, including `record_id` and `code_id` filters, show only the auditor's organization; public resolve unchanged; existing FR-034, FR-035, FR-016 tests pass.
 - **Governing.** D-2026-10-10-22; D-2026-10-10-06 (amended); RM-080 replaces `org_id` with the Organization entity. Follow-ups: D-2026-10-10-24, RM-098.
 
-### RM-098 Grant organization must match the holder's
+### RM-098 Grant organization must match the holder's and the scope's
 
-- Release v1.3 (prerequisite, before the pilot onboards) · P2 · Backlog (Blocked on Danny: D-2026-10-10-24 item 3) · Bundle B7
-- **Scope.** `workers/api/ops/grant.sql` writes no grant and no audit row when `:org_id` differs from the subject's `accounts.org_id` (empty matches null); header and plan.md Operator work say to run `ops/set-org.sql` first. plan.md also notes that an account moved with `set-org.sql` takes its history to the new organization's auditors (D-2026-10-10-24 item 4).
-- **Acceptance.** `test/ops-grants.test.ts`: a mismatched `:org_id` writes nothing; a matching one, and empty for an account with no organization, succeed; existing grant tests pass after their fixtures run `set-org.sql` first.
-- **Governing.** D-2026-10-10-24 (PROPOSED); D-2026-10-10-22.
+- Release v1.3 (prerequisite, before the pilot onboards) · P1 · Ready · Bundle B7 · Owner: kneelbeforez0D
+- **Scope.** `workers/api/ops/grant.sql` writes no grant and no audit row when `:org_id` differs from the subject's `accounts.org_id` (empty matches null), and, for `enterprise` and `logistics`, `:same_org` lets a grant through only when its `org_id` equals the non-null `org_id` of every other active grant in the scope. Header and plan.md Operator work say to run `ops/set-org.sql` first.
+- **Acceptance.** `test/ops-grants.test.ts`: a mismatched `:org_id` writes nothing, including for an existing holder; a matching one, and empty for an account with no organization, succeed; `:same_org` with a different or null `org_id` than the scope's active grants writes nothing; existing grant tests pass after their fixtures run `set-org.sql` first.
+- **Governing.** D-2026-10-10-24 items 1 to 3; D-2026-10-10-22.
+
+### RM-099 set-org.sql guards for moved accounts
+
+- Release v1.3 (prerequisite, before the pilot onboards) · P1 · Ready · Bundle B7 · Owner: kneelbeforez0D
+- **Scope.** `workers/api/ops/set-org.sql` writes nothing (no update, no audit row) when the account holds an active grant whose `org_id` differs from the new one, unless `:revoke_grants` is set, in which case those grants are revoked in the same batch with `grant.remove` events. It also writes nothing when the account owns `enterprise` or `logistics` codes, unless `:move_owner` equals `yes`. plan.md Operator work gains the runbook note: a moved owner takes its history, including the old organization's actor ids, to the new organization's auditors, and the old organization loses it; to keep history, create a new account.
+- **Acceptance.** `test/ops-org.test.ts`: a holder with a different-org grant is not moved; with `:revoke_grants` it is moved and the grants stop reaching (viewer 404, auditor list empty); an owner of an `enterprise` code is not moved without `:move_owner`, and is with it; a first assignment from null with no grants and no codes still works.
+- **Governing.** D-2026-10-10-24 item 4.
+
+### RM-100 Deleted accounts' audit visibility
+
+- Release v1.3 (prerequisite, before the pilot onboards) · P2 · Ready · Bundle B7 · Owner: kneelbeforez0D
+- **Scope.** Spec 005 FR-016 states what an auditor sees after an owner in its organization deletes the account (whether that owner's code and record events stay listed or drop out when their code rows are purged); a test pins the behavior.
+- **Acceptance.** `test/org-grants.test.ts` or `test/audit.test.ts`: after `DELETE /v1/me` by an owner in `acme`, the `acme` auditor's list matches the FR-016 sentence.
+- **Governing.** D-2026-10-10-24 item 4.
 
 ## v1.1 items
 
