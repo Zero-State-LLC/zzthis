@@ -11,7 +11,7 @@
 > | 8 Acceptance | [`specs/001-marketing-site/checklists/requirements.md`](../specs/001-marketing-site/checklists/requirements.md) |
 > | 2.2a v1 text grammar | Accepted 2026-10-03 from Michael's Q48 and Q49 answers; updated the same day from his answers to Q50 to Q61 (draft, pending Danny's merge). Implemented by the spec 003 library (US3). |
 > | 9 Questions | Question table. Q21 to Q39 were added on 2026-10-02; Q49 to Q61 on 2026-10-03, and Q50 to Q61 were answered the same day. Q62 (2026-10-03) sets the v1.0 hero headline with a spaced hyphen and no em dash. Q63 to Q65 were answered the same day (issues #51, #54, and #55). Section 3.1b records direction B v1.0 (accepted 2026-10-03). Section 9a is the running decisions log. |
-> | 12 Roadmap | v1 scope, exit criteria, and v2 candidates. |
+> | 12 Roadmap | v1 scope, exit criteria, and v2 candidates. Superseded for sequencing by [`specs/RELEASE-ROADMAP.md`](../specs/RELEASE-ROADMAP.md) (2026-10-10). |
 > | 10 Architecture | [`specs/002-resolver-core/plan.md`](../specs/002-resolver-core/plan.md), [`specs/004-capture/plan.md`](../specs/004-capture/plan.md) |
 >
 > Research targets, the funding-pitch founder bio, and the company-stage line were removed from this repo on 2026-10-02 (Q24 RESOLVED).
@@ -74,7 +74,7 @@ This spec covers three deliverables and one proposal:
 | Word codebook | Not validated; no controlled comparisons | [PRODUCT] |
 | Handwriting and print recognition of zz codes | Untested | [PRODUCT] |
 | Secure resolver | Untested; prototype planned | [PRODUCT] |
-| Central API, edge layer, and on-device capture (Section 10) | Proposal, not built | [OPERATOR 2026-10-02] |
+| Central API, edge layer, and on-device capture (Section 10) | Proposal on 2026-10-02. OBSERVED 2026-10-10: the `/v1` server and web client are implemented and tested and run on isolated staging only; on-device capture lives in zzThat and is not qualified; nothing is in production | [OPERATOR 2026-10-02]; [`specs/analysis-2026-10-10-architecture-review.md`](../specs/analysis-2026-10-10-architecture-review.md) |
 | AI photo-to-action, inventory assistant, touch-first handling | Concept, shown as image concepts | [BRIEF] |
 | Panels a–o and demo images | Concept renderings | [ASSETS] |
 | Handwritten photos of codes on paper | Real photos | [ASSETS] |
@@ -1244,6 +1244,26 @@ One running list of decisions, so every agent and advisor works from the same ru
 
 | ID | Date | Issue | Decision | Source |
 |---|---|---|---|---|
+| D-2026-10-10-20 | 2026-10-10 | #86 | PROPOSED: require the `site-ci.yml` `typecheck-and-test` job on `main`; `ci.yml` stays unchanged. Danny sets branch protection. | [`specs/decisions-2026-10-10.md`](../specs/decisions-2026-10-10.md) |
+| D-2026-10-10-19 | 2026-10-10 | #86 | ASSIMILATED into v1.0 as defect fixes: re-roll scope check, mint account guard, cache side effects off the request path, bounded retention and deletion fan-out, outbound timeouts, `ZZ_DATA_KEY` key ids, limiter failure policy, request and version logging (BACKLOG RM-021, RM-030 to RM-039). | review |
+| D-2026-10-10-18 | 2026-10-10 | PR #127 | The proposed location capability stays research (R-B17) with no release until PR #127 is reviewed. | review |
+| D-2026-10-10-17 | 2026-10-10 | #126 | The About zzPage explainer stays as labeled concept copy; the capability is research R-ZZPAGE and must resolve the FR-007 link-safety rule first. | review |
+| D-2026-10-10-16 | 2026-10-10 | #86 | ASSIMILATED: a published privacy policy and support address are v1.0 gates; out-of-app access and deletion requests use an operator runbook; self-service export is v2.0. | review |
+| D-2026-10-10-15 | 2026-10-10 | #93 | PROPOSED: the marketing site stays on GitHub Pages for v1.0; the Worker migration is optional B4 work. | review |
+| D-2026-10-10-14 | 2026-10-10 | #92 | The six high npm advisories are build or simulator tooling and do not reach the Worker bundle or the static site; upgrade separately. | local `npm audit`; `workers/api/dist/meta.json` |
+| D-2026-10-10-13 | 2026-10-10 | PR #122 | The red `security` check on `main` is a gitleaks false positive on the unmerged branch `spec/zz-ocr-qual-001`; allowlist that commit, path, and line; keep scanning every ref. | redacted local gitleaks run |
+| D-2026-10-10-12 | 2026-10-10 | #87 | PROPOSED amendment to `docs/CONTRACT-EVOLUTION.md`: contract 1 is frozen through v1.1; later additive revisions need verified tolerant readers in every client cohort. | kotlinx.serialization and OpenAPI Generator docs |
+| D-2026-10-10-11 | 2026-10-10 | #86 | Observability baseline: request id, ray id, version, and error class in logs; invocation logs off and pinned; a scheduled GitHub Actions probe; no third-party telemetry. | review |
+| D-2026-10-10-10 | 2026-10-10 | #86 | PROPOSED: v1.0 authoritative state is D1 plus four secrets; R2 and the limiter are out of RPO scope while photo reads are off; secret escrow; deletion replay after restore; RPO 5 minutes and RTO 4 hours pending a drill and Danny's acceptance; audit retention decided at 1 GB or 6 months. | Cloudflare D1 limits; staging drill |
+| D-2026-10-10-09 | 2026-10-10 | #93 | PROPOSED: production runs on Workers Paid (spend, Danny). | Cloudflare Workers and D1 limits |
+| D-2026-10-10-08 | 2026-10-10 | #93, PR #95 | PROPOSED: a `wrangler.production.toml` with a guard test and a manual, reviewer-gated production workflow that bookmarks D1 before migrations; supersedes PR #95 when merged. | review |
+| D-2026-10-10-07 | 2026-10-10 | #93 | PROPOSED: an Access-protected staging hostname on `zer0state.com` with developer sign-in and mint on, so writes and the edge cache can be verified; the Cache API has no effect on workers.dev. Fallback: verify the cache at the production canary. | Cloudflare Cache API and Access docs |
+| D-2026-10-10-06 | 2026-10-10 | #87 | Scope is not a tenant: each of `enterprise` and `logistics` serves at most one organization until contract 2 adds an Organization entity. | spec 005 FR-034, FR-035 |
+| D-2026-10-10-05 | 2026-10-10 | #86 | ASSIMILATED: IPv6 callers are rate-limited by /64; a zone rule protects resolve; audit growth is monitored. | `workers/api/src/limits/enforce.ts` |
+| D-2026-10-10-04 | 2026-10-10 | #14 | PROPOSED: keep two data words plus a check word for v1.0; build the production list with the Q35 filters and the blocklist; freeze with R-B6 evidence or Danny's recorded risk acceptance; re-decide the format when issued public codes pass 1% of the code space. | spec 003; review H1 |
+| D-2026-10-10-03 | 2026-10-10 | PR #89 | A platform without a ZZ-OCR-QUAL-001 PASS receipt ships camera capture in confirm-only mode; Accept needs a receipt. | DECISION-STATUS |
+| D-2026-10-10-02 | 2026-10-10 | #86 | v1 ships as v1.0 (production API, web client, site, production wordlist) then v1.1 (native apps and qualified camera, the zzThat store launch). Sequencing only; no outcome widened. | Apple App Review 5.1.1(v) |
+| D-2026-10-10-01 | 2026-10-10 | - | Release convention: `vMAJOR.MINOR`, MAJOR equals the API contract generation; research phases `R-<topic>`; deferred items `DF-<nn>`. | [`specs/RELEASE-ROADMAP.md`](../specs/RELEASE-ROADMAP.md) |
 | D-2026-10-08-04 | 2026-10-08 | #126 | Michael's 2026-10-08 About addition, amended to his v2 the same evening and used as given (`intent/2026-10-08-michael-kathy-found-dog.md`; v2 replaces the v1 pair). Under the four real photos in "Codes written by hand", a set of three concept images in Michael's order: the zz-Kathy-found-dog-zz card with the plush corgi, a phone that scanned it, then the card on a store community board with the phone beside it. Each is about 2/3 the height of a photo above at every width [MICHAEL 2026-10-08: not too large]. From 64rem (1024 px) the three sit in one row; on phones the first two sit side by side, the board underneath, then the explainer. One explainer under the set: the code, then "Concept images. zz-code words, hand printed, for any thing or object. Then scanned, and more.", then on a new line "Every zz-code can optionally have its own zzPage (here, zzpage.com/zz/Kathy-found-dog), hosted by zzThis or in the user's own cloud storage: Google Drive or Docs, OneDrive, Dropbox, iCloud, or Box." The zzPage address is plain text, not a link, until zzpage.com is live (Michael owns zzpage.com); it reads Kathy-found-dog because that is what the phone in the images shows. All three have status `concept` and say so in the explainer, since the label above says "Real photos". The corgi's collar tag in all three images shows a capital-letter zz; these are renders Michael supplied, which Section 2.2 allows, and the card's alt text says so in words. Whether a render may show it (Section 2.2a G7, FR-019 in spec 001) is for Michael (spec 001 T053). Site only: the zzThat apps and the web client have no About page, so nothing changes there (Section 5.5). | [MICHAEL 2026-10-08 v2] |
 | D-2026-10-08-02 | 2026-10-08 | #6 | The marketing site moves from the GitHub Pages project path (`/zzthis/`) to the root of `https://zzthis.com`: `site` is `https://zzthis.com`, the default `base` is `/`, and `ASTRO_BASE` still overrides it. No `CNAME` file, because GitHub ignores it for Actions-built Pages sites; the custom domain lives in Settings > Pages. Cutover order: DNS live and verified, then the Pages custom domain, then merge the root-base change right away, then Enforce HTTPS once the certificate is issued (Section 6, Hosting; acceptance item 28). | [DANNY 2026-10-08] |
 | D-2026-10-08-01 | 2026-10-08 | #123 | Michael's 2026-10-08 header changes, used as given (`intent/2026-10-08-michael-nav-demo.md`). The top menu is How it works, Applications, Demo, About, Contact, the footer's order; `/demo` marks Demo as the current page. Menu links are about 30% larger (`calc(var(--text-sm) * 1.3)`; Michael asked for 25 to 33%), and the header stays 64 px high. The logo never shrinks (`.nav__mark { flex-shrink: 0 }`). The full menu still shows from 64rem (1024 px). Supersedes the Q5 answer that kept the demo out of the main nav (Section 3.1). The zzThat apps have no site menu and no link to `/demo` (zzThat `runtime.md`, Navigation: three tabs), so nothing changes there (Section 5.5). | [MICHAEL 2026-10-08] |
@@ -1290,9 +1310,11 @@ One running list of decisions, so every agent and advisor works from the same ru
 | D-2026-10-03-17 | 2026-10-03 | #33, #34 | Repeated in the 2026-10-03 document with no change. Rules stay as in Q48 and Q49 | [MICHAEL 2026-10-03] |
 | D-2026-10-03-00 | 2026-10-03 | #33, #34 | v1 text grammar accepted (Section 2.2a), PR #43 | Q48, Q49; Danny accepted 2026-10-03 2:52 AM PT |
 
-## 10. Architecture (proposal, not built)
+## 10. Architecture (proposal of 2026-10-02; implemented through spec 005)
 
-**Status: proposal.** Nothing in this section is built. It records the architecture direction that Danny set on 2026-10-02, plus the recommendations he accepted [OPERATOR 2026-10-02]. The marketing site and the `/demo` click-through (Sections 3 and 4) stay static and mock-only; they do not call this API. Product behavior in Section 2 still governs where the two differ. Items marked **INFERRED** are sketch details added in this spec, not operator decisions.
+**Status update 2026-10-10.** This section is the operator's 2026-10-02 proposal, kept as written for provenance. Spec 005 implements its central server as one Cloudflare Worker with D1, R2, a Durable Object limiter, and a cron; the implementation is tested and deployed to isolated staging only. Two parts are superseded: no cloud vision model reads photos in v1 (Q18), and partner authentication is decided for contract 2 (Q19). Current architecture authority is [`specs/CLOUDFLARE-RUNTIME.md`](../specs/CLOUDFLARE-RUNTIME.md) and spec 005; sequencing is [`specs/RELEASE-ROADMAP.md`](../specs/RELEASE-ROADMAP.md).
+
+**Status: proposal (2026-10-02 text).** Nothing in this section was built when it was written. It records the architecture direction that Danny set on 2026-10-02, plus the recommendations he accepted [OPERATOR 2026-10-02]. The marketing site and the `/demo` click-through (Sections 3 and 4) stay static and mock-only; they do not call this API. Product behavior in Section 2 still governs where the two differ. Items marked **INFERRED** are sketch details added in this spec, not operator decisions.
 
 ### 10.1 Topology
 
@@ -1339,7 +1361,7 @@ AI reads, grammar verifies [OPERATOR 2026-10-02].
 
 1. Recognition runs on the device with an AI vision model, preferably a small on-device model [OPERATOR 2026-10-02].
 2. Only the decoded code goes to the API. The photo stays on the device by default [OPERATOR 2026-10-02].
-3. Photos go to the server only on a retry or a hard case. There, a larger cloud vision model can read them [OPERATOR 2026-10-02].
+3. Photos go to the server only on a retry or a hard case. There, a larger cloud vision model can read them [OPERATOR 2026-10-02]. Superseded for v1 by Q18: no cloud reader, `photo_reads` false; a server read is a v2.2 research item (B12).
 4. Every model read, on device or in the cloud, is snapped to the closed wordlist, and the checksum word is verified [OPERATOR 2026-10-02].
 5. Low-confidence reads go to clarify or retry, with a human confirm step, using the decision bands in Section 2.5 [OPERATOR 2026-10-02] [PRODUCT].
 
@@ -1422,7 +1444,7 @@ The table rows are a comparison drawn up in this spec from the operator's factor
 ### 10.9 Open items
 
 - **Fine-tune a small handwriting model?** Not in v1 (Q18, decided [DELEGATED 2026-10-04, #74]). The 2-week benchmark (Section 10.8) is a v2 track.
-- **API auth for partner apps.** Not decided [OPERATOR 2026-10-02]. See Q19.
+- **API auth for partner apps.** Not decided [OPERATOR 2026-10-02]. RESOLVED since: Q19, OAuth 2.0 client credentials in contract 2 (v2.0).
 
 ## 11. Provenance
 
@@ -1445,22 +1467,26 @@ The table rows are a comparison drawn up in this spec from the operator's factor
 
 Added 2026-10-03. This section draws the v1 line from sources already in the repo. It adds no feature. INFERRED marks where the line itself is a choice.
 
+**Superseded for sequencing on 2026-10-10.** [`specs/RELEASE-ROADMAP.md`](../specs/RELEASE-ROADMAP.md) assigns every capability to v1.0, v1.1, v1.2, v1.3, v2.0, v2.1, v2.2, a research phase, or the deferred register (D-2026-10-10-01, D-2026-10-10-02). The table below is the 2026-10-03 snapshot with its state column updated.
+
 ### 12.1 What v1 is (INFERRED)
 
 v1 is the public site and demo plus an English-only prototype of the three product parts. The boundary follows Section 10.8 (ship Option A, decide Option B after a benchmark) and issue #35, which files our own trained models and any-language codes as v2.
 
-| Part | Spec | State at d721783 | v1 exit criterion |
+| Part | Spec | State at d721783, updated 2026-10-10 | v1 exit criterion |
 |---|---|---|---|
 | Site and demo | 001 | Built and live (PRs #9 to #32) | Section 8 items 1 to 31 pass; items 15 to 19 automated or recorded as manual with a date (001 T014) |
-| v1 text grammar | 003 US3, Section 2.2a | Rules accepted 2026-10-03; demo parser diverges (Section 4.4) | One library passes every G9 vector; the demo uses it (001 T029) |
-| Wordlist and check word | 003 US1, US2 (issue #14) | Not started | List v1 with a yield report; check word detects every single wrong word (Q30 minimum) |
-| Resolver prototype | 002 (issue #13) | Not started | US1 to US4 and one test per FR-010 abuse case pass in CI |
-| Capture prototype, Option A | 004 | Not started | Typed, spoken, and photographed codes go through one grammar, snap, and verify path with accept, clarify, retry, and abstain |
-| Option B benchmark | 004 T008 (Q18) | Not started | Result recorded; it opens or defers v2 track A |
+| v1 text grammar | 003 US3, Section 2.2a | Implemented in `packages/zz-core`; the demo uses it (001 T029 done) | One library passes every G9 vector; the demo uses it (001 T029) |
+| Wordlist and check word | 003 US1, US2 (issue #14) | proto-v0, check word, and issuer implemented; production list open (B6, RM-020) | List v1 with a yield report; check word detects every single wrong word (Q30 minimum) |
+| Resolver prototype | 002 (issue #13) | Implemented through spec 005; staging only | US1 to US4 and one test per FR-010 abuse case pass in CI |
+| Capture prototype, Option A | 004 | Scanner and classifier implemented in zz-core; on-device camera in zzThat, unqualified (v1.1) | Typed, spoken, and photographed codes go through one grammar, snap, and verify path with accept, clarify, retry, and abstain |
+| Option B benchmark | 004 T008 (Q18) | Not started; research phase R-B12 | Result recorded; it opens or defers v2 track A |
 
 Every OPEN question that blocks a v1 task has a GitHub issue and a default. Q50 to Q61 (issues #36 to #42, #44 to #48) were filed and answered on 2026-10-03; the answers are in Sections 2.2a and 9a.
 
 ### 12.2 v2 candidates (not committed)
+
+Each row now has a release, research phase, or deferred entry in the capability disposition table of [`specs/RELEASE-ROADMAP.md`](../specs/RELEASE-ROADMAP.md).
 
 | Candidate | Where the repo defers it |
 |---|---|

@@ -15,6 +15,15 @@ Evidence level: **INFERRED**, accepted as future compatibility policy by `intent
 7. Security fixes may accelerate deprecation, but the operator must record the compatibility impact and emergency policy.
 8. Contract-2 design must define migration for persisted data, cache keys, auth/session compatibility, client discovery, and rollback.
 
+## Proposed amendment: additive revisions and tolerant readers (2026-10-10)
+
+Status: PROPOSED (D-2026-10-10-12). Until Danny accepts it, rule 1 stands unchanged.
+
+- Contract 1 does not change through v1.1.
+- After v1.1, contract 1 may take an additive revision (new optional request fields, new response fields, new routes) only when every supported client cohort is verified as a tolerant reader: generated clients ignore unknown JSON keys and accept unknown enum values. kotlinx.serialization rejects unknown keys unless `ignoreUnknownKeys` is set, and Swift decoders fail on an unknown enum case without a fallback, so this is a real constraint, not a formality.
+- An additive revision changes OpenAPI `info.version`, keeps `X-ZZ-Contract: 1`, and advertises the feature in discovery.
+- Everything else is contract 2.
+
 ## Semantic-profile implications
 
 Evidence level: **INFERRED** future-contract constraint.

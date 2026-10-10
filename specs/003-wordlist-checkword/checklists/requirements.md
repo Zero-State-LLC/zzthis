@@ -1,6 +1,6 @@
 # Requirements checklist: 003-wordlist-checkword
 
-Checked 2026-10-04. The library is not built.
+Checked 2026-10-04. The library is not built. Status note 2026-10-10: the library is implemented in `packages/zz-core` and passes every shared vector; the production list is open (BACKLOG RM-020).
 
 ## Completeness
 

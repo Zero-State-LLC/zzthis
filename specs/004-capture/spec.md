@@ -1,7 +1,7 @@
 # Feature spec: capture by camera, typing, or voice
 
 Feature ID: 004-capture
-Status: not built. Recognition approach decided (Q18, #74): Option A on the device. Deepened 2026-10-03: grammar path, decision-band triggers, error states, and edge cases. v1 reads English (ASCII) codes with Option A; trained models and other scripts are v2 (issue #35).
+Status: shared-library parts implemented (the scanner rules and the classifier in `packages/zz-core`, with vectors); on-device recognition not built in this repository (zzThat, v1.1). Recognition approach decided (Q18, #74): Option A on the device. Engine qualification ZZ-OCR-QUAL-001 is in draft PR #89; a platform without a PASS receipt ships confirm-only (D-2026-10-10-03). Deepened 2026-10-03: grammar path, decision-band triggers, error states, and edge cases. v1 reads English (ASCII) codes with Option A; trained models and other scripts are v2 (issue #35).
 Phase: specify (what and why). The how is in [plan.md](plan.md).
 Constitution: [.specify/memory/constitution.md](../../.specify/memory/constitution.md).
 
