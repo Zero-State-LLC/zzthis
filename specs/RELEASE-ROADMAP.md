@@ -54,7 +54,7 @@ Horizon: R-B13, R-B15, R-B17, R-I18N, R-AI, R-ZZPAGE, R-VOICE; DF-01 to DF-17
 
 ## v1.0 Production web launch
 
-- **User outcome.** A person can open `https://zz.zer0state.com`, sign in with Apple or Google, create a server-chosen public code, write it on a thing, find its record later by typing it, edit and revoke it, report abuse, and delete the account, on production infrastructure with tested recovery.
+- **User outcome.** A person can open `https://zz.zer0state.com`, type a code to find its record, and report abuse, on production infrastructure with tested recovery. The web is lookup only in v1.0: public creation, edit, and revoke open in v1.1 for the web and the apps together (D-2026-10-10-21, PROPOSED; Danny agreed in chat 2026-10-09). Sign-in and account deletion stay available so the API's identity and deletion paths are proven in production.
 - **Bundles.** B1 (typed and web paths), B4, B5, B6.
 - **Prerequisites.** Security CI green (RM-003); Danny's approvals for resources, OAuth clients, spend, DNS, legal text, and deploy.
 - **Included.** Contract 1 as implemented; the web client (spec 005 US6); production wordlist (RM-020); the v1.0 backend fixes (D-2026-10-10-19); production configuration, workflow, recovery, observability, and incident runbooks; privacy policy and support address; marketing site unchanged on Pages.
@@ -81,13 +81,13 @@ Each gate needs dated evidence linked from the release packet (RM-054). A gate w
 | G9 Legal | Privacy policy published and linked; support address live; NOTICE unchanged | RM-026 |
 | G10 Security review | Threat-model rows each have automated evidence or an operator control; residual risks signed | RM-029 |
 | G11 Approval | Danny's written yes for resources, spend, DNS, and deploy | RM-042, RM-050, RM-051 |
-| G12 Canary | Production smoke within 1 hour of deploy: discovery, sign-in, mint, resolve, edit, revoke, delete; rollback target recorded | RM-052 |
+| G12 Canary | Production smoke within 1 hour of deploy: discovery, sign-in, an operator-minted synthetic code (no public mint, D-2026-10-10-21), resolve, revoke, delete; rollback target recorded | RM-052 |
 
 - **Migration and compatibility.** First production database: the migrations apply forward from empty. After the first production mint, the wordlist is permanent for those codes (spec 003 FR-017).
 
 ## v1.1 Native apps and camera capture
 
-- **User outcome.** iOS and Android users scan a handwritten code with the camera, confirm or accept it, and use every v1.0 job in the zzThat apps.
+- **User outcome.** iOS and Android users scan a handwritten code with the camera, confirm or accept it, and use every v1.0 job in the zzThat apps. Public creation, edit, and revoke open in v1.1 on the web and in the apps together (D-2026-10-10-21, PROPOSED; Danny agreed in chat 2026-10-09).
 - **Bundles.** B2, B3. Implementation lives in zzThat; this repository owns the contract pin, vectors, design files, and the qualification protocol.
 - **Prerequisites.** v1.0 production API; ZZ-OCR-QUAL-001 merged (PR #89) with a harness (PR #115) and a protected workflow; the Q34 private corpus.
 - **Included.** On-device recognition behind the shared decoder; bands from the qualification receipt; confirm-only fallback for any unqualified platform (D-2026-10-10-03); creation check (spec 004 FR-017); App Store and Play submissions; "Try zzThat" on the site (spec 001 T016); report-handling commitments for user-written pages.
@@ -95,7 +95,7 @@ Each gate needs dated evidence linked from the release packet (RM-054). A gate w
 - **Contracts and data.** None in this repository. zzThat pins the v1.0 release commit and verifies tolerant readers (RM-075).
 - **Security and privacy.** No raw photo leaves the device; store privacy labels match the data lifecycle matrix.
 - **Gates.** A signed PASS receipt per promoted engine, or confirm-only mode; store review passes; account deletion from each app verified against production.
-- **PROPOSED (D-2026-10-10-21, not adopted).** Add public community create: `ZZ_FREE_PUBLIC` turns on at the v1.1 gate after Danny's written yes, with RM-076 and RM-077 moved here from v1.2 and the prerequisites in that record (RM-028, RM-030, RM-031, RM-032, RM-033, RM-041, RM-042, RM-063, RM-068, a per-account mint cap, and a rehearsed kill switch). Until Danny decides, v1.2 below stands.
+- **PROPOSED (D-2026-10-10-21, Danny agreed in chat 2026-10-09; adopted on merge).** Add public community create for the web and the apps: `ZZ_FREE_PUBLIC` turns on at the v1.1 gate after Danny's written yes, with RM-076 and RM-077 moved here from v1.2 and the prerequisites in that record (RM-028, RM-030, RM-031, RM-032, RM-033, RM-041, RM-042, RM-063, RM-068, a per-account mint cap, and a rehearsed kill switch). Until Danny decides, v1.2 below stands.
 
 ## v1.2 Public community codes (QUEUED, B9)
 
