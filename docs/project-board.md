@@ -39,24 +39,38 @@ Repository issue/PR state is the minimum source of truth:
 
 Project field changes are manual unless the board workflow explicitly automates them.
 
-## Current convergence map (2026-10-07)
+## Release and bundle mapping
 
-| Item | Intended board status | Reason |
-|---|---|---|
-| #13, #14, #60–#67 | Done | reconciled to implementation evidence and closed |
-| #81 | Backlog | CANON-SHADOW semantic-profile specification track |
-| PR #82 | In review | semantic-profile spec assimilation |
-| #83 | Backlog | SPECULATIVE ZK research |
-| PR #84 | In review after reconciliation | S1 research PR depends on semantic parent/rebase |
-| PR #85 | Closed (superseded) | its governance artifacts are already present on main; after syncing, no file diff remained, so it was closed without merging |
-| #86 production readiness evidence | Ready | the governance baseline is present on main; numeric RTO/RPO/SLO, restore evidence, observability, key lifecycle and deploy approval remain open |
-| PR #126 Michael's 2026-10-08 About image set (v2) plus specs | In review | open PR; Danny approved the merge 2026-10-08 with T053 still open (the tag may later move to a lowercase zz). Its card (the zz-Kathy-found-dog-zz set of three concept images under the handwritten photos on About, with the explainer and the plain-text zzPage note, T054; replaces the v1 pair, T052) moves to Done when it merges. T053 (collar tag shows a capital-letter zz; keep or regenerate) is Backlog for Michael. No zzThat parity card: the apps and the web client have no About page |
-| PR #123 Michael's 2026-10-08 nav plus specs | In review | open PR; its card (Demo in the top menu, menu links about 30% larger, logo never shrinks, 64 px header) moves to Done when it merges. No zzThat parity card: the apps and the web client have no site menu or `/demo` link (`docs/SPEC.md` Section 5.5) |
-| #87 contract-2/semantic domain gate | Backlog | required before #81 can leave CANON-SHADOW |
-| PR #118 Michael's 2026-10-07 site changes plus specs | In review | open PR; its change cards (dark default, wordmarks, Omer, zzthis.com on About, Home headings, bio and Hacker Dojo text) move to Done when it merges |
-| #116 Q72, #117 Q73 | Backlog | open questions for Michael from the 2026-10-07 changes |
-| #6, PR #124 zzthis.com cutover | In review, blocked on DNS | draft PR #124 moves the site to the root of zzthis.com; it merges only after Michael's DNS records are live and Danny sets the Pages custom domain. #6 stays open until HTTPS and the redirects are verified |
-| zzThat app parity (draft card) | Backlog | the apps start dark and use the lowercase zzThat wordmark (`docs/SPEC.md` Section 5.5); lands in the zzThat specs and apps |
-| #93 B4 Cloudflare runtime | In progress | isolated staging D1, R2, Durable Object, marketing Worker, and API Worker are deployed; API contract discovery, API Worker rollback, a D1-only restore drill, private R2 30-day `reads/` lifecycle configuration, bounded discovery rate-limit check, staging token-secret rotation, marketing Worker rollback, and one zero-error staging retention Cron execution are verified with public feature flags disabled. Six-route 390×844 visual comparison is Clef-equivalent against the currently served Pages baseline; bounded initial-load Browser Run inventories found no external origins. Staging HSTS now matches Pages on all six required routes (Worker version `dd1abc3c-0052-4170-baff-91a5f25d04ce`, workflow 37585374449). These checks do not cover the post-#91 accepted baseline or full interactive network behavior. `/robots.txt` is a known Cloudflare-generated staging-host difference. R2 expiry behavior, measured recovery objectives, secret recovery, DO recovery, spend/alert thresholds, final-baseline site parity, and production approval remain open |
+Board items are grouped by release and bundle (SCOPE-GOVERNANCE, Kanban rule). The release for every item is in [`specs/BACKLOG.md`](../specs/BACKLOG.md), which gives each one a stable `RM-` id, priority, acceptance, and verification. Put the release (`v1.0`, `v1.1`, ...) and the `RM-` id in the issue title or body so the board can be filtered by it. Research (`R-`) and deferred (`DF-`) items stay in Backlog.
+
+## Current convergence map (2026-10-10)
+
+Replaces the 2026-10-07 map, which listed PRs #118, #123, #124, and #126 as in review after they merged. Project fields were not edited by this update: the available GitHub connector cannot change Project fields, so these are the intended states for a maintainer to set.
+
+| Item | Intended board status | Release / backlog | Reason |
+|---|---|---|---|
+| #13, #14, #60 to #67 | Done | v1.0 history | reconciled to implementation evidence and closed |
+| PR #118, PR #123, PR #124, PR #126; #6 | Done | v1.0 (B5) | merged 2026-10-08 and 2026-10-09; #6 closed by PR #124 |
+| #86 production readiness | In progress | v1.0; RM-022 to RM-029, RM-040 to RM-043, RM-054 | governance present; evidence gates open |
+| #93 B4 Cloudflare runtime | In progress | v1.0; RM-001, RM-002, RM-012, RM-016, RM-031, RM-042, RM-045, RM-050 to RM-052 | staging deployed; no write-path or cache evidence; production gated |
+| #92 dependency advisories | Ready | v1.0; RM-004 | dispositioned as build-only on 2026-10-10 (D-2026-10-10-14); upgrades pending |
+| PR #122 gitleaks allowlist | In review | v1.0; RM-003 | `security` is red on `main` from a branch-only false positive (D-2026-10-10-13) |
+| PR #95 manual deploy workflow | In review (to be superseded) | v1.0; RM-002 | targets the local config; replace with the reviewer-gated production workflow |
+| PR #119 B4 continuation evidence | In review | v1.0; RM-016, R2 evidence | evidence documentation |
+| PR #89 ZZ-OCR-QUAL-001 spec | In review (draft) | v1.1; RM-060 | camera qualification contract |
+| PR #115 OCR qualification harness | In progress (draft) | v1.1; RM-061 | stacked on PR #89 |
+| PR #121 README and board mirror | In review (draft) | v1.0; RM-006 | overlaps this review's README and board updates; reconcile before merge |
+| PR #91 site reconciliation, #90 | In review (draft) | v1.0 (B5); RM-044 | closes #90 |
+| PR #120 Q72 and Q73 answers; #116, #117 | In review (draft) | v1.0 (B5); RM-044 | Michael's answers |
+| PR #125 footer social icons and Omer removal | In review | v1.0 (B5); RM-044 | Michael's 2026-10-08 changes |
+| PR #128 LICENSE owner name | In review | v1.0 (legal) | legal text needs Danny's yes |
+| PR #127 location capability | In review | R-B17 | research only (D-2026-10-10-18) |
+| #87 contract-2 gate | Backlog | v2.0; RM-080 | now includes the Organization entity (D-2026-10-10-06) |
+| #81, PR #82 semantic profiles | Backlog / In review (draft) | v2.1; RM-091 | CANON-SHADOW |
+| #83, PR #84 ZK research | Backlog / In review (draft) | R-B15 | SPECULATIVE |
+| #35 any-language codes | Backlog | R-I18N | research |
+| #114, #7 site follow-ups and assets | Backlog | v1.0 (B5); RM-044 | Michael's supplied files |
+| #11, #8 xTechSearch | In progress (Danny) | RM-047, not a release item | decide by 2026-10-12 |
+| zzThat app parity (draft card) | Backlog | v1.1; RM-069, RM-071 | lands in zzThat |
 
 When repo state and Project status disagree, fix the Project field rather than changing repo truth to match the board.

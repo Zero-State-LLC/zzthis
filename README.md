@@ -24,7 +24,7 @@ Topics: `human-readable-codes` `handwritten-codes` `logistics` `astro` `github-p
 
 zzThis is a human-readable, human-writable code that works alongside barcodes and QR codes. A person writes a code such as `zz-copper-lantern-sky-zz` on tape, a crate, a parcel, or a sign, links it to a digital record, and finds that record later.
 
-This repository holds the marketing site and a scripted click-through demo, published on GitHub Pages at the root of the custom domain [zzthis.com](https://zzthis.com/). It goes live there once the DNS records and the Pages custom domain are set ([#6](https://github.com/Zero-State-LLC/zzthis/issues/6)). After that, GitHub redirects the old project-site URL `zero-state-llc.github.io/zzthis/` to it. As separate npm workspaces it also holds the shared code library, the web client, and the `/v1` API server that the specs describe.
+This repository holds the marketing site and a scripted click-through demo, published on GitHub Pages at the root of the custom domain [zzthis.com](https://zzthis.com/) ([#6](https://github.com/Zero-State-LLC/zzthis/issues/6), closed 2026-10-08 with PR #124). GitHub redirects the old project-site URL `zero-state-llc.github.io/zzthis/` to it. As separate npm workspaces it also holds the shared code library, the web client, and the `/v1` API server that the specs describe.
 
 ## Contents
 
@@ -45,7 +45,8 @@ zzThis is a **prototype**.
 - The code library ([`packages/zz-core`](packages/zz-core/)), the `/v1` API server ([`workers/api`](workers/api/)), and the web client ([`apps/web`](apps/web/)) are implemented in this repository and pass their tests ([spec 005](specs/005-v1-api/spec.md)). The API and web client are deployed only to isolated staging; production deployment remains gated by the operator requirements in [`AGENTS.md`](AGENTS.md).
 - The demo uses scripted demo data only. It runs no recognition, makes no network requests, uses no camera or microphone, and stores nothing.
 - Images labeled "Concept illustration" are AI renderings, not photos of a working system.
-- Camera and voice recognition ([spec 004](specs/004-capture/spec.md)) are not built, and the on-device reader is off in v1. Typed lookup is available in the web client. No recognition accuracy or performance result is claimed.
+- Camera and voice recognition ([spec 004](specs/004-capture/spec.md)) are not built in this repository. Camera capture is planned for the zzThat apps in v1.1, on the device only, after engine qualification; voice is research. Typed lookup is available in the web client. No recognition accuracy or performance result is claimed.
+- Nothing is in production yet. The ordered path to the first production release (v1.0) is [`specs/RELEASE-ROADMAP.md`](specs/RELEASE-ROADMAP.md) and [`specs/BACKLOG.md`](specs/BACKLOG.md).
 
 ## Quick start
 
@@ -148,6 +149,7 @@ Older names such as `--surface` and `--text` point at these tokens. The full set
 | [`.github/workflows/pages.yml`](.github/workflows/pages.yml) | Deploys to GitHub Pages after a push to `main` or a manual dispatch; pull requests never deploy |
 | [`.github/workflows/free-security-scan.yml`](.github/workflows/free-security-scan.yml) | Security scan |
 | [`.github/workflows/e2e.yml`](.github/workflows/e2e.yml) | Playwright end-to-end run, on demand or on a `run-e2e` label; not a required check |
+| [`.github/workflows/cloudflare-staging.yml`](.github/workflows/cloudflare-staging.yml), [`cloudflare-api-staging.yml`](.github/workflows/cloudflare-api-staging.yml) | Manual, `main`-only deploys of the marketing and API Workers to isolated Cloudflare staging; no production deploy workflow exists |
 | [`.github/workflows/project-collaboration.yml`](.github/workflows/project-collaboration.yml) | Adds issues and PRs to the project board |
 
 ## Architecture
@@ -184,6 +186,8 @@ flowchart LR
 
 Track work on the live [zzThis + zzThat board](https://github.com/orgs/Zero-State-LLC/projects/25). How the workflow uses it is in [`docs/project-board.md`](docs/project-board.md).
 
+The versioned plan is [`specs/RELEASE-ROADMAP.md`](specs/RELEASE-ROADMAP.md): v1.0 production web launch, v1.1 native apps and camera, v1.2 public community codes, v1.3 a single-organization enterprise pilot, v2.0 contract 2, then semantic profiles and advanced recognition. Every item has a stable id in [`specs/BACKLOG.md`](specs/BACKLOG.md). The phases below are the history that led there.
+
 ### Phase 0: Spec, site, and demo
 
 - [x] Write the spec ([#2](https://github.com/Zero-State-LLC/zzthis/issues/2))
@@ -196,9 +200,9 @@ Track work on the live [zzThis + zzThat board](https://github.com/orgs/Zero-Stat
 - [ ] Answer the open questions for Michael ([#10](https://github.com/Zero-State-LLC/zzthis/issues/10); new grammar and image questions [#36](https://github.com/Zero-State-LLC/zzthis/issues/36) to [#42](https://github.com/Zero-State-LLC/zzthis/issues/42))
 - [x] Demo: remove "did you mean" suggestions of live codes ([#12](https://github.com/Zero-State-LLC/zzthis/issues/12), [PR #19](https://github.com/Zero-State-LLC/zzthis/pull/19))
 - [x] Code rules for case, spacing, the bare mark, and `@` handles ([#33](https://github.com/Zero-State-LLC/zzthis/issues/33), [#34](https://github.com/Zero-State-LLC/zzthis/issues/34); SPEC Section 2.2a)
-- [ ] Demo follows the v1 code rules (spec 001 T029)
+- [x] Demo follows the v1 code rules (spec 001 T029)
 - [ ] Image asset curation ([#7](https://github.com/Zero-State-LLC/zzthis/issues/7))
-- [ ] Domain and DNS: serve the site from the root of zzthis.com ([#6](https://github.com/Zero-State-LLC/zzthis/issues/6)). Danny said yes on 2026-10-08. Done when the DNS records, the Pages custom domain, and HTTPS are verified.
+- [x] Domain and DNS: serve the site from the root of zzthis.com ([#6](https://github.com/Zero-State-LLC/zzthis/issues/6), closed 2026-10-08)
 - [x] Spec Kit constitution and specs 001 to 004 ([PR #17](https://github.com/Zero-State-LLC/zzthis/pull/17), [`specs/`](specs/README.md))
 - [ ] Automate the remaining manual acceptance checks: contrast, reduced motion, Lighthouse, no cross-origin requests
 
@@ -212,12 +216,12 @@ Track work on the live [zzThis + zzThat board](https://github.com/orgs/Zero-Stat
 - [x] Wordlist pipeline and check-word library ([#14](https://github.com/Zero-State-LLC/zzthis/issues/14), [`packages/zz-core`](packages/zz-core/))
 - [x] Minimal exact-match resolver ([#13](https://github.com/Zero-State-LLC/zzthis/issues/13), [`workers/api`](workers/api/))
 - [x] Typed lookup in the web client (spec 005 US6)
-- [ ] Camera and voice recognition (spec 004); on-device camera reader is off in v1
+- [ ] Camera recognition (spec 004) in the zzThat apps, v1.1; voice is research phase R-VOICE
 - [x] `/v1` API ([spec 005](specs/005-v1-api/spec.md)): contract shell ([#60](https://github.com/Zero-State-LLC/zzthis/issues/60)), data model ([#61](https://github.com/Zero-State-LLC/zzthis/issues/61)), sign-in ([#62](https://github.com/Zero-State-LLC/zzthis/issues/62)), mint and re-roll ([#63](https://github.com/Zero-State-LLC/zzthis/issues/63)), resolve and owner records ([#64](https://github.com/Zero-State-LLC/zzthis/issues/64)), retry photo ([#65](https://github.com/Zero-State-LLC/zzthis/issues/65)), rate limits ([#66](https://github.com/Zero-State-LLC/zzthis/issues/66))
 - [x] Later web client in this repo, thin client of `/v1` ([#67](https://github.com/Zero-State-LLC/zzthis/issues/67), [`apps/web`](apps/web/), spec 005 US6)
 - [ ] zzThat phone apps, specified in that repo, consume this API and [`design/`](design/README.md)
 
-v1 ends with the prototype above. Candidates for v2, such as any-language codes and a trained reader ([#35](https://github.com/Zero-State-LLC/zzthis/issues/35)), are listed in [SPEC Section 12](docs/SPEC.md).
+Production readiness work (v1.0) is tracked in [#86](https://github.com/Zero-State-LLC/zzthis/issues/86) and [#93](https://github.com/Zero-State-LLC/zzthis/issues/93). Later candidates, such as any-language codes and a trained reader ([#35](https://github.com/Zero-State-LLC/zzthis/issues/35)), have a release, research phase, or deferred entry in the [roadmap](specs/RELEASE-ROADMAP.md).
 
 ## Contributing
 

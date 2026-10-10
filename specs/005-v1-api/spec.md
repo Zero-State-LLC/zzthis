@@ -5,7 +5,7 @@ Status: implemented and tested in this repository; production deployment remains
 Phase: specify. The how is in [plan.md](plan.md). Tasks are in [tasks.md](tasks.md). The build brief is [docs/ONE-SHOT-BRIEF.md](../../docs/ONE-SHOT-BRIEF.md).
 Wire shapes: [openapi.yaml](openapi.yaml). If a field and this prose disagree, the OpenAPI file is the field and this prose is the rule. File a bug rather than guessing.
 Constitution: [.specify/memory/constitution.md](../../.specify/memory/constitution.md).
-Intent: [intent/2026-10-04-v1-api-and-design-system.md](../../intent/2026-10-04-v1-api-and-design-system.md) (contract, accepted) and [intent/2026-10-04-one-shot-build.md](../../intent/2026-10-04-one-shot-build.md) (build, draft).
+Intent: [intent/2026-10-04-v1-api-and-design-system.md](../../intent/2026-10-04-v1-api-and-design-system.md) (contract, accepted) and [intent/2026-10-04-one-shot-build.md](../../intent/2026-10-04-one-shot-build.md) (build, accepted 2026-10-05). Release placement: v1.0 ([RELEASE-ROADMAP](../RELEASE-ROADMAP.md)); open production work: [BACKLOG](../BACKLOG.md) v1.0 items.
 Deepened 2026-10-04 so the server, the web client, and both apps can be built in one pass: [analysis 2026-10-04](../analysis-2026-10-04.md). New choices are INFERRED. Danny answered Q66 directly and said yes to every other open decision on issue #74 (2026-10-04, `docs/SPEC.md` Section 9a D-2026-10-04-12). The pre-build audit (2026-10-04) added the settings rules, the refresh and D1 guard rules, the web session and CSP rules, and the test toolchain. Each of those engineering choices is INFERRED.
 
 ## Why
@@ -25,7 +25,7 @@ zzThat pins this file as `contracts/zzthis-v1.openapi.yaml`, with the zzThis com
 | Later web visitor | The same client jobs as the phone apps, in this repo | [DANNY 2026-10-04] |
 | Operator (Danny) | Suspend an account, read reports, revoke a reported code | INFERRED. App Store review guideline 1.2 asks for these on user-written pages |
 
-Partner machine auth stays OPEN (Q19). It is not a route in this contract.
+Partner machine auth is decided for contract 2 (Q19, Decisions below). It is not a route in this contract.
 
 ## User stories
 
@@ -285,7 +285,7 @@ The server does not read a redirect URI from the request. `APPLE_WEB_REDIRECT_UR
 
 ## Web client
 
-Not built here. When it is built it lives in `apps/web` in this repo, is served by the same Worker (FR-029), and is not a route of the marketing site.
+Built in `apps/web` (status note 2026-10-10; this sentence first read "Not built here"). It is served by the same Worker (FR-029) and is not a route of the marketing site.
 
 | Screen | Path | API | Pattern in design/UX.md |
 |---|---|---|---|
@@ -352,7 +352,7 @@ One mechanism sends them. `wrangler.toml` `[assets]` sets `run_worker_first = tr
 
 ## Out of scope
 
-- Implementing the Worker, the web client, or a vision vendor in this change.
+- A vision vendor. (The Worker and the web client were out of scope for the 2026-10-04 contract change and were then built under the one-shot intent.)
 - Person-chosen plain-code words (zzThat ZQ11).
 - Partner auth (Q19), suggestion policy details (Q40), no-device linking (Q25), and signing-key rotation (Q28).
 - Sign in with Apple on Android (Q67), linking two sign-in providers to one account, and admin routes.
@@ -392,5 +392,5 @@ Q66 ([#68](https://github.com/Zero-State-LLC/zzthis/issues/68), sign-in) is answ
 | Governing workflows | anti-slop-code, production-systems, google-developer-style |
 | Product owner | Michael Chung |
 | Operator | Danny |
-| CI to reuse | `.github/workflows/ci.yml` (required `build`), `site-ci.yml`, `free-security-scan.yml`. Root `npm run lint`, `typecheck`, `test`, and `build` cover the new workspaces, so `ci.yml` does not change. Do not add a deploy workflow until a human-gated deploy task. |
+| CI to reuse | `.github/workflows/ci.yml` (required `build`), `site-ci.yml`, `free-security-scan.yml`. Root `npm run lint`, `typecheck`, `test`, and `build` cover the new workspaces, so `ci.yml` does not change. Do not add a deploy workflow until a human-gated deploy task. The manual staging workflows exist under the 2026-10-06 staging intent; the production workflow is BACKLOG RM-002. |
 | Human gates | Cloudflare resources, OAuth client registration, the `NOTICE` text and the LICENSE sentence (legal, T036), production deploy, spend |
