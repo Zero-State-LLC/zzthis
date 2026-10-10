@@ -189,7 +189,7 @@ Sources read 2026-10-10 through search results quoting vendor pages; direct fetc
 | `npm audit` | Six high, none in the Worker bundle (`workers/api/dist/meta.json`) |
 | Live site, staging hosts, Cloudflare account | Not checked; the network policy blocks them. Staging facts come from committed evidence. |
 | Project 25 field values | Not changed; the available connector cannot edit project fields. `docs/project-board.md` records the intended states. |
-| New GitHub issues | Not filed: the integration returned 403 on issue creation. The five drafts are in [BACKLOG.md](BACKLOG.md), Issues to file. |
+| New GitHub issues | The first attempt returned 403; after access was restored, #130 to #134 were filed ([BACKLOG.md](BACKLOG.md), Issues filed). |
 
 ## 8. Changed files
 

@@ -34,17 +34,17 @@ Human-gated items (Principle VIII) name Danny or Michael as owner. An agent may 
 | [#116](https://github.com/Zero-State-LLC/zzthis/issues/116), [#117](https://github.com/Zero-State-LLC/zzthis/issues/117), [#114](https://github.com/Zero-State-LLC/zzthis/issues/114), [#7](https://github.com/Zero-State-LLC/zzthis/issues/7), [#90](https://github.com/Zero-State-LLC/zzthis/issues/90) site content | RM-044 |
 | [#11](https://github.com/Zero-State-LLC/zzthis/issues/11), [#8](https://github.com/Zero-State-LLC/zzthis/issues/8) xTechSearch | RM-047 (external, not a release item) |
 
-## Issues to file
+## Issues filed 2026-10-10
 
-The 2026-10-10 review tried to file these on GitHub and got `403 Resource not accessible by integration`. A maintainer files them with the labels shown; each body is the listed backlog items with their acceptance criteria. Items already covered by #86, #93, #92, or PR #122 need no new issue.
+Filed after the review once GitHub access was restored. Items already covered by #86, #93, #92, or PR #122 have no separate issue.
 
-| Title | Labels | Items |
+| Issue | Labels | Items |
 |---|---|---|
-| v1.0: backend correctness and abuse defects from the 2026-10-10 review | `bug`, `priority:high` | RM-021, RM-030, RM-032 to RM-039 |
-| v1.0: production Wrangler config with guard test, and reviewer-gated production workflow | `type:chore`, `priority:high` | RM-001, RM-002 |
-| v1.0: verify the write path, edge cache, and real sign-in on an Access-protected staging host | `type:chore`, `priority:high` | RM-011 to RM-017 |
-| v1.0 / B6: build and freeze the production wordlist with the Q35 filters and the blocklist | `type:feature`, `priority:high` | RM-020, RM-028, RM-095 |
-| v1.0: privacy policy, support address, and data-subject request runbook | `type:chore`, `priority:high` | RM-026, RM-027 |
+| [#130](https://github.com/Zero-State-LLC/zzthis/issues/130) backend correctness and abuse defects | `bug`, `priority:high` | RM-021, RM-030, RM-032 to RM-039 |
+| [#131](https://github.com/Zero-State-LLC/zzthis/issues/131) production Wrangler config and reviewer-gated workflow | `type:chore`, `priority:high` | RM-001, RM-002 |
+| [#132](https://github.com/Zero-State-LLC/zzthis/issues/132) write path, edge cache, and real sign-in on Access-protected staging | `type:chore`, `priority:high` | RM-011 to RM-017 |
+| [#133](https://github.com/Zero-State-LLC/zzthis/issues/133) production wordlist with Q35 filters and blocklist | `type:feature`, `priority:high` | RM-020, RM-028, RM-095 |
+| [#134](https://github.com/Zero-State-LLC/zzthis/issues/134) privacy policy, support address, DSR runbook | `type:chore`, `priority:high` | RM-026, RM-027 |
 
 ## Dependency order for v1.0
 
