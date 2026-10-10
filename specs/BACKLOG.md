@@ -90,8 +90,8 @@ RM-050 production resources ─> RM-053 web build ─> RM-051 deploy ─> RM-052
 
 ### RM-003 Repair the security check on main
 
-- Release v1.0 · P0 · Ready · Bundle B4 · Gate G1 · Owner: any maintainer
-- **Problem.** `security` fails on every push to `main` since 2026-10-08 because gitleaks scans every ref and finds a verified false positive on the unmerged branch `spec/zz-ocr-qual-001` (`scripts/ocr-qualification/receipt-semantics.mjs:79`, commit `ab3983ab95`).
+- Release v1.0 · P0 · Done (PR #122 merged 2026-10-10; `security` green on `main`, run 38017896510) · Bundle B4 · Gate G1 · Owner: any maintainer
+- **Problem.** `security` failed on every push to `main` since 2026-10-08 because gitleaks scans every ref and finds a verified false positive on the unmerged branch `spec/zz-ocr-qual-001` (`scripts/ocr-qualification/receipt-semantics.mjs:79`, commit `ab3983ab95`).
 - **Outcome and scope.** Land a `.gitleaks.toml` allowlist scoped to that commit, path, and line (draft PR #122). Do not narrow the scan to `main`.
 - **Depends on.** None. **Components.** gitleaks configuration, `scripts/security-scan.sh` if it needs a config flag.
 - **Acceptance.** `security` is green on `main`; a test commit with a synthetic key-shaped string on a scratch branch still fails the scan.
@@ -116,7 +116,7 @@ RM-050 production resources ─> RM-053 web build ─> RM-051 deploy ─> RM-052
 
 ### RM-006 Specification and status convergence (this review)
 
-- Release v1.0 · P1 · Done (2026-10-10, this change) · Owner: reviewer
+- Release v1.0 · P1 · Done (PR #129 merged 2026-10-10) · Owner: reviewer
 - **Outcome.** Stale "not built", "proposal", and "open" statements corrected; roadmap, backlog, decisions, traceability, and domain states added.
 - **Verification.** Link check and repository checks recorded in the [analysis](analysis-2026-10-10-architecture-review.md).
 
