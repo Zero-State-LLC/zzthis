@@ -20,9 +20,10 @@ export interface Origin {
 
 // [MICHAEL 2026-10-03 v1.0 change list] The founder title and bio supersede the Q43 lines.
 // [MICHAEL 2026-10-06 change list] The last two sentences of the bio replaced as given.
+// [MICHAEL 2026-10-07 change list] Bio replaced as given.
 export const founderOrigin: Origin = {
   heading: "Founder origin",
-  text: "I “invent” business models. If you've ever paid at the DMV with a card or used Gmail's inbox tabs, thank me. ;) In 1992–93, I pitched New York City and initiated a pilot for possibly the world's first electronic card payments by the municipal agencies for motor-vehicle fines and fees. In 1995, the NYC DMV began accepting cards, and in 1996, the first E-ZPass tolling began in New York State. In 2002, my patent application was published for sorting tagged emails into their dedicated tabs (Priority, Ads, Bills, etc.) and was cited by 158 patent applications, majority by leading tech and Fortune companies. Gmail did their tabs in 2013. My business experience includes 25 years in real estate, including federal GSA RFPs (I was awarded two office space lease-contracts, one an over $9 million 10-year fixed), and other small businesses: eateries, supermarkets, merchant credit cards, finance, and direct marketing. For the past 13 years I've been in Silicon Valley's tech startup space full time: since 2013 in and around blockchain, and since 2023 in AI, averaging 10 to 20 prompts a day across 2 to 5 AIs. A driver of my business models is the discovery and purposeful enabling of the unity of deterministic blockchain with probabilistic AI, to target today's great problematic gaps and to solve for the emerging next-phase civilizational opportunities.",
+  text: "I “invent” business models. If you've ever paid at the DMV with a card or used Gmail's inbox tabs, thank me. ;) In 1992–93, I pitched New York City and initiated a pilot for possibly the world's first electronic card payments by the municipal agencies for motor-vehicle fines and fees. In 1995, the NYC DMV began accepting cards, and in 1996, the first E-ZPass tolling began in New York State. In 2003, my patent application was published for sorting tagged emails into their dedicated tabs (Priority, Ads, Bills, etc.); the application was cited by 158 patent applications, majority by leading tech and Fortune companies. I filed the patent application in 2001, when I was barely tech- and email-literate. Gmail first did their tabs in 2013. My business experience includes 25 years in real estate, including federal GSA RFPs (I was awarded two office space lease-contracts, one for a fixed 10-year, nearly $10 million), and other small businesses: eateries, supermarkets, merchant credit cards, finance, and direct marketing. I am in the Silicon Valley's tech startup space “24/7”: since 2013 in and around blockchain, and since 2023 in AI, averaging some 10 to 20 prompts a day across 2 to 5 AIs. A driver of my business models is the discovery and purposeful enabling of the unity of deterministic blockchain with probabilistic AI to target today's great problematic gaps and to solve for the emerging next-phase civilizational opportunities.",
 };
 
 // Q24 [OPERATOR 2026-10-02]: the founder card shows Michael's founder origin
@@ -44,6 +45,10 @@ export const founder: Founder = {
 // Daniel Meyer keeps initials. [MICHAEL 2026-10-06 change list] Daniel and
 // Adam move to the first two places; Adam's photo and bio are updated.
 // Ridham Bhagat is removed from the site.
+// [MICHAEL 2026-10-07] Omer F. Yalcin added as an advisor, with photo.
+// [MICHAEL 2026-10-08] Omer is removed until his employer gives
+// permission; restore his entry and photo from #118 when it arrives,
+// using the Q72-approved bio with no closing line (D-2026-10-07-03).
 // Earlier: Profile links only where a URL
 // was supplied. The 2026-10-02 brief and wireframes drop the Future space
 // card. Michael's later 2026-10-02 answers remove Jim White and update
@@ -76,7 +81,7 @@ export const advisors: readonly Person[] = [
     },
     role: "Connected logistics and IoT",
     profileUrl: "https://www.linkedin.com/in/pmuggler",
-    bio: "Patrick leads product and strategic programs at Trackonomy. His work has connected more than 200,000 assets across over 100 airports and 40 countries. He advises zzThis on logistics workflows, connected assets, and commercialization.",
+    bio: "Patrick leads product and strategic programs at Trackonomy. His work has connected more than 200,000 assets across over 100 airports and 40 countries.",
   },
   {
     name: "Arshi Chadha",
@@ -88,7 +93,7 @@ export const advisors: readonly Person[] = [
     },
     role: "AI security",
     profileUrl: "https://www.linkedin.com/in/arshichadha/",
-    bio: "Arshi is a security engineer at Zscaler and a co-lead of the OWASP Top 10 for LLM Applications work. She earned a master’s degree in information security at Carnegie Mellon and advises zzThis on AI and application security.",
+    bio: "Arshi is a security engineer at Zscaler and a co-lead of the OWASP Top 10 for LLM Applications work. She earned a master’s degree in information security at Carnegie Mellon.",
   },
 ];
 

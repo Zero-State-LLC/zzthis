@@ -6,6 +6,7 @@ import { changes } from "../lib/db.ts";
 import { iso } from "../lib/time.ts";
 import { purgeResolve } from "../resolve/cache.ts";
 import { withDrawnCode } from "./draw.ts";
+import { checkMintScope } from "./scope.ts";
 import { CODE_COLUMNS, codeBody, type CodeRow } from "./view.ts";
 
 // The three statements in spec 005 Mint (re-roll), where ?new is a fresh
@@ -63,30 +64,24 @@ function rerollBatch(
   ];
 }
 
-// Only after the guard refused does the server read the row: no row, or
-// another owner's, is the one not-found body. The caller's own row is
-// reroll-cap: no re-rolls left (a handle always), already resolved, or no
-// longer active, such as the loser of two racing re-rolls.
-async function refusal(
-  c: AppContext,
-  callerId: string,
-  oldId: string,
-): Promise<ApiError> {
-  const row = await c.env.ZZ_DB.prepare(
-    "SELECT owner_id FROM codes WHERE id = ?",
-  )
-    .bind(oldId)
-    .first<{ owner_id: string }>();
-  return row?.owner_id === callerId
-    ? new ApiError(403, "reroll-cap")
-    : notFound();
-}
-
 // POST /v1/codes/{id}/reroll. There is no 409.
 export async function rerollCode(c: AppContext): Promise<Response> {
   const caller = await requireActive(c, "code.reroll", "mint");
-  if (!c.get("settings").mintEnabled) throw notReady();
   const oldId = c.req.param("id") as string;
+  // RM-032: a re-roll issues a code in the old code's scope, so the caller
+  // must still be allowed to mint there. Another owner's code, or no code,
+  // stays the one not-found body.
+  const owned = await c.env.ZZ_DB.prepare(
+    "SELECT scope, kind FROM codes WHERE id = ? AND owner_id = ?",
+  )
+    .bind(oldId, caller.id)
+    .first<{ scope: CodeRow["scope"]; kind: "plain" | "handle" }>();
+  if (owned === null) throw notFound();
+  // RM-039: a handle never re-rolls (FR-006), whether or not the plain-code
+  // issuer is on.
+  if (owned.kind === "handle") throw new ApiError(403, "reroll-cap");
+  if (!c.get("settings").mintEnabled) throw notReady();
+  await checkMintScope(c, caller, owned.scope, "code.reroll");
   const newId = await withDrawnCode(c, async (code) => {
     const id = crypto.randomUUID();
     const results = await c.env.ZZ_DB.batch(
@@ -94,7 +89,10 @@ export async function rerollCode(c: AppContext): Promise<Response> {
     );
     return changes(results) === 1 ? id : null;
   });
-  if (newId === null) throw await refusal(c, caller.id, oldId);
+  // The guard refused the caller's own code: no re-rolls left (a handle
+  // always), already resolved, or no longer active, such as the loser of
+  // two racing re-rolls.
+  if (newId === null) throw new ApiError(403, "reroll-cap");
   const rows = await c.env.ZZ_DB.prepare(
     `SELECT ${CODE_COLUMNS} FROM codes WHERE id IN (?, ?)`,
   )

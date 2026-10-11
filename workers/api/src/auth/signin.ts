@@ -3,10 +3,10 @@ import { readJson } from "../http/body.ts";
 import type { AppContext } from "../http/context.ts";
 import { unauthorized } from "../http/respond.ts";
 import { TokenRequest } from "../http/schemas.ts";
-import { seal } from "../lib/crypto.ts";
-import { iso } from "../lib/time.ts";
+import { open, seal } from "../lib/crypto.ts";
+import { DAY, iso } from "../lib/time.ts";
 import { limitIp } from "../limits/enforce.ts";
-import { exchangeAppleCode } from "./apple.ts";
+import { exchangeAppleCode, revokeAppleToken } from "./apple.ts";
 import { verifyIdentity, type Client, type Identity } from "./idtoken.ts";
 import { consumeNonce } from "./nonce.ts";
 import {
@@ -75,10 +75,15 @@ async function existingAccount(
   const db = c.env.ZZ_DB;
   const found = await db
     .prepare(
-      "SELECT id, account_id FROM identities WHERE provider = ? AND provider_subject = ?",
+      "SELECT id, account_id, apple_refresh_token_enc, apple_client_id FROM identities WHERE provider = ? AND provider_subject = ?",
     )
     .bind(session.identity.provider, session.identity.subject)
-    .first<{ id: string; account_id: string }>();
+    .first<{
+      id: string;
+      account_id: string;
+      apple_refresh_token_enc: string | null;
+      apple_client_id: string | null;
+    }>();
   if (found === null) return null;
   const now = iso(c.get("now"));
   const statements = [
@@ -96,7 +101,43 @@ async function existingAccount(
     );
   }
   await db.batch(statements);
+  if (session.apple !== null && found.apple_refresh_token_enc !== null) {
+    await revokeReplaced(
+      c,
+      found.apple_refresh_token_enc,
+      found.apple_client_id as string,
+    );
+  }
   return found.account_id;
+}
+
+// RM-039: a later Apple sign-in replaces the stored token, so the old one
+// is revoked, not left live. A failed revoke goes to pending_revocations,
+// which the daily run retries (FR-026), as at account deletion.
+async function revokeReplaced(
+  c: AppContext,
+  sealed: string,
+  clientId: string,
+): Promise<void> {
+  const settings = c.get("settings");
+  const revoked = await open(settings.dataKeys, sealed, clientId).then(
+    (token) =>
+      revokeAppleToken(
+        c.get("deps"),
+        settings.apple,
+        clientId,
+        token,
+        c.get("now"),
+      ),
+    () => false,
+  );
+  if (revoked) return;
+  const now = c.get("now");
+  await c.env.ZZ_DB.prepare(
+    "INSERT INTO pending_revocations (id, provider, client_id, token_enc, attempts, next_attempt_at, created_at) VALUES (?, 'apple', ?, ?, 1, ?, ?)",
+  )
+    .bind(crypto.randomUUID(), clientId, sealed, iso(now + DAY), iso(now))
+    .run();
 }
 
 // A new, empty account. No email or name is stored.
@@ -151,7 +192,19 @@ export async function exchangeToken(c: AppContext): Promise<Response> {
   const request = await readJson(c, TokenRequest);
   if (!(await consumeNonce(c, request.nonce))) throw unauthorized();
   const identity = await verifyIdentity(c, request);
-  if (identity === null) throw unauthorized();
+  if (identity === null) {
+    // RM-039: a rejected ID token is audited, with the provider as its
+    // target and no actor. Never the token.
+    await auditStatement(c.env.ZZ_DB, {
+      actorId: null,
+      action: "auth.token",
+      targetType: "provider",
+      targetId: request.provider,
+      result: "denied",
+      at: iso(c.get("now")),
+    }).run();
+    throw unauthorized();
+  }
   const session: Session = {
     identity,
     apple: await appleToken(c, identity, request.authorization_code),

@@ -7,6 +7,10 @@ Workflows for every implementing task: anti-slop-code, production-systems, googl
 
 This qualification-gated task list supersedes the earlier capture decomposition. It keeps v1 on-device and no-cloud for raw photos; unchecked tasks are planned work, not implementation evidence. Use [TRACEABILITY](../TRACEABILITY.md) and current product specs before scheduling work.
 
+This is the original capture decomposition. V1 boundaries and server/client integration were consolidated under spec 005/zzThat. Voice, trained-reader work, and the Option B benchmark remain deferred. Unchecked boxes are **not** a reliable current-status list. Use [TRACEABILITY](../TRACEABILITY.md) and current product specs before scheduling work.
+
+Reconciled 2026-10-10: T001 and T002 are decided (Q33, Q34). T003 and T009 are implemented for text in `packages/zz-core` (`classify.ts`, `scanner.ts`, vectors); their camera parts and T004, T005, and T006 belong to zzThat (v1.1, BACKLOG RM-060 to RM-065). T007 is superseded by Q18 for v1 (RM-092, v2.2). T008 is research phase R-B12.
+
 ## Phase 0: Contract and corpus
 
 - [ ] T001 Define the Swift and Kotlin `RecognitionResult` adapters from the plan, including optional terminal-fiducial boxes/roles, pair evidence, validated ROI, orientation, and crop/rotation provenance. Preserve engine ID/version, raw candidates, confidence when available, and geometry/line provenance when available. Missing confidence stays missing. The contract must represent unsupported/unsafe geometry and candidate-cap overflow without emitting payload candidates; reject perspective/projective transforms.
@@ -16,6 +20,10 @@ This qualification-gated task list supersedes the earlier capture decomposition.
 - [ ] T003A Add one documented local command for the harness (target: `npm run qual:ocr`) that accepts whole-corpus manifest, device matrix, sealed candidate bundle, gate-config, pre-run attestation and its Sigstore bundle, execution attestation and its Sigstore bundle, adapter-result, and output paths. The protected workflow must verify pre-run Rekor inclusion/timestamp before starting final-split evaluation; it captures start and finish from its trusted runner clock, not caller input. The execution attestation binds the same bundle, pre-run attestation, matrix, resulting evidence hash, and captured times. Do not upload corpus images, per-sample private corpus data, or adapter outputs; hash-only publication metadata may be published through the protected workflow. If the required verifier policy, identity allowlist, or trust material is absent, output INCOMPLETE/NO_PROMOTION only.
 
 ## Phase 1: Shared decoder path
+
+- [ ] T003 Snap-to-wordlist and check-word verification on the client, shared with spec 003. Every reading goes through the spec 003 grammar library first (FR-008); handle and field parts are not snapped (FR-010), and a part counts as a field part only after the near-word confirm step (FR-015), tested with the `docs/SPEC.md` G1a vectors.
+- [ ] T004 Decision bands: accept, clarify, retry, abstain, with a human confirm step. One test per trigger row in the spec's Decision bands table, with thresholds as parameters until Q37. The Retry row includes the "Move closer" and "Try a better angle" reasons, chosen by frame size and skew signals (D-2026-10-10-23).
+- [ ] T009 Multi-line and multi-code reads (FR-009, FR-014); bare mark, non-ASCII, and reserved-symbol handling (FR-011, FR-012); running-text scan (FR-013).
 
 - [ ] T004 Snap-to-wordlist, near-word handling, and check-word verification remain shared with spec 003. Every camera reading passes through the same grammar/vectors; recognizers cannot query live codes or resolver records.
 - [ ] T005 Decision bands: Accept, Clarify, Retry, Abstain. Preserve the accepted prototype thresholds as parameters. Add explicit tests proving a wrong-but-valid decoded code is never silently corrected by resolver lookup.
