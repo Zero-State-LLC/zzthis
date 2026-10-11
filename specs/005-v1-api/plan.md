@@ -136,6 +136,8 @@ The operator runs these with `wrangler d1 execute` against the production databa
 | Job | File |
 |---|---|
 | List open reports, and close one by setting `closed_at` (FR-026) | `ops/reports.sql` |
+| The moderation queue: open reports oldest first, with age, the overdue flag, and the code's owner (RM-102) | `ops/report-queue.sql` |
+| Reports open for more than one day; the target is zero rows (RM-102) | `ops/report-overdue.sql` |
 | Suspend an account and revoke its codes (`revoked_reason` `operator`) | `ops/suspend.sql` |
 | Lift a suspension; revoked codes stay revoked | `ops/unsuspend.sql` |
 | Revoke one reported code | `ops/revoke-code.sql` |
