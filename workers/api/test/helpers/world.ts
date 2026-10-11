@@ -1,7 +1,11 @@
 import { createExecutionContext } from "cloudflare:test";
 import { env as poolEnv } from "cloudflare:workers";
 import { cryptoUint32, type RandomUint32 } from "@zzthis/zz-core";
-import type { Deps } from "../../src/deps.ts";
+import {
+  LIMITER_TIMEOUT_MS,
+  OUTBOUND_TIMEOUT_MS,
+  type Deps,
+} from "../../src/deps.ts";
 import type { WorkerEnv } from "../../src/env.ts";
 import type { PhotoReader } from "../../src/reads/reader.ts";
 import { createWorker } from "../../src/worker.ts";
@@ -172,6 +176,8 @@ export interface WorldOptions {
   readonly settings?: Settings;
   readonly random?: RandomUint32;
   readonly photoReader?: PhotoReader | null;
+  readonly outboundTimeoutMs?: number;
+  readonly limiterTimeoutMs?: number;
 }
 
 let idps: Promise<[TestIdp, TestIdp]> | undefined;
@@ -195,6 +201,8 @@ export async function makeWorld(options: WorldOptions = {}): Promise<World> {
     appleKeys: apple.keys,
     googleKeys: google.keys,
     fetch: appleStub.fetch,
+    outboundTimeoutMs: options.outboundTimeoutMs ?? OUTBOUND_TIMEOUT_MS,
+    limiterTimeoutMs: options.limiterTimeoutMs ?? LIMITER_TIMEOUT_MS,
     photoReader: options.photoReader ?? null,
   };
   return {

@@ -46,7 +46,13 @@ const specimen = specimenParts
   </dl>
   <div class="why">
     <div class="why__text">
-      <h3 class="why__heading">{whyMarkers.heading}</h3>
+      <h3 class="why__heading">
+        {whyMarkers.heading
+          .split(/(zz)/)
+          .map((part) =>
+            part === "zz" ? <span class="why__mark">zz</span> : part,
+          )}
+      </h3>
       <p>{whyMarkers.text}</p>
     </div>
     <div class="langs">

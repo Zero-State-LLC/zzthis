@@ -127,8 +127,15 @@
   align-content: start;
 }
 
-.end__contact h2 {
+/* [MICHAEL 2026-10-07] "About and people" matches the "Contact" heading. */
+.end h2 {
   font-size: var(--text-section);
+}
+
+/* [MICHAEL 2026-10-07] The home contact email at about half its earlier size
+   (was clamp(1.4rem, 4.5vw, 2.6rem)); the floor stays readable on phones. */
+.end .mail {
+  font-size: clamp(1rem, 2.25vw, 1.3rem);
 }
 
 .app h3 a {
@@ -184,4 +191,47 @@
 
 .colophon p {
   max-width: 96ch;
+}
+
+/* [MICHAEL 2026-10-08] Small, discreet social icons: X for zzThis, then a
+   zzthat wordmark with its Discord and Instagram links. */
+.colophon__social {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0 var(--space-lg);
+}
+
+.social {
+  display: flex;
+  align-items: center;
+  gap: 0 var(--space-xs);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.social a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  color: var(--color-ink-2);
+}
+
+.social a:hover,
+.social a:focus-visible {
+  color: var(--color-ink);
+}
+
+.social svg {
+  width: 18px;
+  height: 18px;
+}
+
+.social__brand img {
+  display: block;
+  width: auto;
+  height: 16px;
 }

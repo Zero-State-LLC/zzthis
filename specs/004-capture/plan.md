@@ -10,6 +10,11 @@ anti-slop-code, production-systems, google-developer-style. CI: `ci.yml`, `site-
 
 | Item | Choice | Status |
 |---|---|---|
+| Option A | Off-the-shelf vision: on-device model first where good enough, cloud vision for retries and hard cases | Recommended to ship first [OPERATOR 2026-10-02]. The cloud part is superseded by Q18: no cloud reader in v1 |
+| Option B | Fine-tuned small model (for example TrOCR-small or a small vision-language model with LoRA) trained on the closed wordlist. The list size was settled by Q31 (the proto-v0 yield). | 2-week benchmark first [OPERATOR 2026-10-02]; research phase R-B12 |
+| Training data for B | Synthetic renders of the wordlist with blur, warping, and tape and cardboard textures, then real photos | [OPERATOR 2026-10-02] |
+| Retry photo storage | R2 (spec 002 plan) | [OPERATOR 2026-10-02] |
+| App platform | iOS and Android together in zzThat; the web client is typing only | RESOLVED (Q33) |
 | Fiducial stage | Terminal `zz` regions are detected and paired before payload OCR; pair geometry defines ROI/orientation/rectification evidence. | v1 camera requirement |
 | Recognition boundary | Engine-neutral `RecognitionResult`: candidates, confidence, geometry/line provenance when available, engine ID/version. Recognizers emit evidence only. | v1 requirement |
 | iOS baseline | Apple Vision text recognition, on device. | v1 baseline; must pass ZZ-OCR-QUAL-001 |
@@ -19,69 +24,6 @@ anti-slop-code, production-systems, google-developer-style. CI: `ci.yml`, `site-
 | Custom zz recognizer | Small model trained/fine-tuned on consented/synthetic zz examples. | v2 candidate after corpus exists |
 | Raw-photo transport | None in v1. | Raw photos stay on device |
 | Qualification corpus | Team-made, consented, private; no faces/personal data; includes handwriting/print, blur, glare, rotation, wrapping, distance, and confusable glyphs/words. | ZZ-OCR-QUAL-001 |
-| App platforms | iOS and Android together; web v1 is typed input. | Decided |
-
-## RecognitionResult contract
-
-The platform adapter normalizes vendor output before the shared capture pipeline consumes it. The contract is conceptual across Swift/Kotlin; each app may use native types internally.
-
-```text
-RecognitionResult
-  engine_id
-  engine_version
-  candidates[]
-    raw_text
-    confidence
-    regions[]? / line_provenance?
-  fiducials[]?
-    role: opening | closing
-    region
-    detection_score?
-  roi?
-  orientation? / rectification_transform?
-  capture_quality?
-```
-
-Rules:
-1. `raw_text` is recognizer evidence, not a canonical zz code.
-2. Confidence is normalized only where the engine exposes a meaningful score. Missing confidence is explicit; it is never invented.
-3. Geometry/provenance is preserved when available so multi-line/multi-code boxing remains possible.
-4. The adapter cannot query live codes or resolver records.
-5. Canonicalization, wordlist snapping, check-word verification, and decision bands happen after this boundary.
-
-## ZZ-OCR-QUAL-001
-
-The normative protocol is [qualification.md](qualification.md). Run every candidate recognizer on the same frozen corpus and expected canonical outputs.
-
-Required measures:
-- exact-code accuracy;
-- per-part/word accuracy and character error rate;
-- **false-valid-decode rate**: recognizer evidence leads the shared decoder to a different valid code than ground truth;
-- Accept / Clarify / Retry / Abstain distribution;
-- multi-code and wrapped-code detection behavior;
-- latency on representative devices;
-- package/runtime footprint where applicable.
-
-Promotion rule: false-valid-decode behavior is the primary safety metric. No engine is promoted because of generic OCR benchmark claims alone. A lower raw accuracy engine can win if it safely abstains/clarifies rather than producing wrong valid codes. Numerical release thresholds are set only from the qualification evidence; this spec does not invent them.
-
-Corpus stress buckets include ordinary handwriting and print plus 0/O, 1/I/l, 2/Z, 5/S-like confusions where applicable, poor pen contrast, glare, blur, skew/rotation, perspective, distance, two-line/wrapped codes, multiple codes, partial markers, running text, and field/handle cases.
-
-## Platform flow
-
-```text
-camera
-  -> zz fiducial detection + pairing
-  -> ROI localization / optional rectification
-  -> platform payload recognizer adapter
-  -> RecognitionResult
-  -> scanner / candidate extraction
-  -> spec 003 classify + near-word rules
-  -> check-word verification where applicable
-  -> decision band
-  -> ACCEPT | CLARIFY | RETRY | ABSTAIN
-```
-
-iOS starts with Apple Vision. Android carries ML Kit and PP-OCR as qualification candidates; only the promoted adapter ships enabled by default. Both feed the same shared semantics.
 
 ## Dependencies
 

@@ -12,11 +12,11 @@ zzThis has a deliberately broad product thesis. Product input may arrive increme
 
 ## Hierarchy
 
-1. **Product thesis** — broad universe of possible zzThis uses. May expand freely.
-2. **Canonical architecture** — long-lived boundaries, invariants, contracts, and authority. Changes deliberately.
-3. **Release train** — a versioned, frozen product outcome such as v1 or v2.
-4. **Capability bundle** — a cohesive set of related requirements promoted together.
-5. **Implementation task** — buildable/testable work belonging to exactly one approved bundle.
+1. **Product thesis**: broad universe of possible zzThis uses. May expand freely.
+2. **Canonical architecture**: long-lived boundaries, invariants, contracts, and authority. Changes deliberately.
+3. **Release train**: a versioned, frozen product outcome such as v1 or v2.
+4. **Capability bundle**: a cohesive set of related requirements promoted together.
+5. **Implementation task**: buildable/testable work belonging to exactly one approved bundle.
 
 An implementation task without a bundle and target release is invalid backlog.
 

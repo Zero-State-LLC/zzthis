@@ -6,8 +6,13 @@ export interface Blocklist {
   matches(text: string): boolean;
 }
 
+// RM-039: format characters (general category Cf, such as a zero-width
+// space) are removed before matching, so they cannot split a term.
 function fold(text: string): string {
-  return text.normalize("NFKC").toLowerCase();
+  return text
+    .normalize("NFKC")
+    .replace(/\p{Cf}/gu, "")
+    .toLowerCase();
 }
 
 function escaped(term: string): string {
