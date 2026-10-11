@@ -261,7 +261,10 @@ describe("ops/revoke-code.sql", () => {
         scope: "enterprise",
         role,
         expires_at: "",
+        org_id: "acme",
+        same_org: "enterprise",
       });
+      await runOps("set-org.sql", { account_id: subject, org_id: "acme" });
     }
     const code = await mint(w, issuer.access, { scope: "enterprise" });
     await report(w, code.canonical);

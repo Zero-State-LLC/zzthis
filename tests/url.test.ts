@@ -42,7 +42,12 @@ describe("url", () => {
     vi.unstubAllEnvs();
   });
 
-  it("uses BASE_URL", () => {
+  it("uses the root BASE_URL that zzthis.com serves from", () => {
+    vi.stubEnv("BASE_URL", "/");
+    expect(url("how-it-works")).toBe("/how-it-works");
+  });
+
+  it("uses a subpath BASE_URL when ASTRO_BASE sets one", () => {
     vi.stubEnv("BASE_URL", "/zzthis/");
     expect(url("how-it-works")).toBe("/zzthis/how-it-works");
   });

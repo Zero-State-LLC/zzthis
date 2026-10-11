@@ -107,6 +107,18 @@ describe("settings check (spec 005 Environment, T003)", () => {
       ["ZZ_DATA_KEY"],
     );
     await expectNotReady({ ZZ_DATA_KEY: "a" }, ["ZZ_DATA_KEY"]);
+    // RM-021: optional, but a set ZZ_DATA_KEY_PREVIOUS must be a key.
+    await expectNotReady(
+      {
+        ZZ_DATA_KEY_PREVIOUS: toBase64url(
+          crypto.getRandomValues(new Uint8Array(16)),
+        ),
+      },
+      ["ZZ_DATA_KEY_PREVIOUS"],
+    );
+    await expectNotReady({ ZZ_DATA_KEY_PREVIOUS: "@@@" }, [
+      "ZZ_DATA_KEY_PREVIOUS",
+    ]);
     await expectNotReady({ ZZ_RECORD_SIGNING_KEY: "@@@" }, [
       "ZZ_RECORD_SIGNING_KEY",
     ]);

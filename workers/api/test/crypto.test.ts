@@ -128,3 +128,47 @@ describe("base64 and base64url", () => {
     expect(fromBase64("")).toEqual(new Uint8Array());
   });
 });
+
+describe("data-key ids and rotation (RM-021)", () => {
+  const key = () => crypto.getRandomValues(new Uint8Array(32));
+
+  it("tags each sealed value with the key id, and the id is stable per key", async () => {
+    const a = key();
+    const keys = await deriveDataKeys(a);
+    expect(keys.id).toMatch(/^[0-9a-f]{8}$/);
+    expect((await deriveDataKeys(a)).id).toBe(keys.id);
+    expect((await deriveDataKeys(key())).id).not.toBe(keys.id);
+    const sealed = await seal(keys, "token", "client");
+    expect(sealed.startsWith(`k1.${keys.id}.`)).toBe(true);
+    expect(await open(keys, sealed, "client")).toBe("token");
+  });
+
+  it("opens a value sealed with the previous key during a rotation", async () => {
+    const a = key();
+    const b = key();
+    const old = await deriveDataKeys(a);
+    const sealed = await seal(old, "token", "client");
+    const rotated = await deriveDataKeys(b, a);
+    expect(rotated.previous?.id).toBe(old.id);
+    expect(await open(rotated, sealed, "client")).toBe("token");
+    await expect(
+      open(await deriveDataKeys(b), sealed, "client"),
+    ).rejects.toThrow("sealed with an unknown key");
+  });
+
+  it("opens an untagged value sealed before key ids, with the current or the previous key", async () => {
+    const a = key();
+    const b = key();
+    const old = await deriveDataKeys(a);
+    const untagged = (await seal(old, "token", "client")).split(
+      ".",
+    )[2] as string;
+    expect(await open(old, untagged, "client")).toBe("token");
+    expect(await open(await deriveDataKeys(b, a), untagged, "client")).toBe(
+      "token",
+    );
+    await expect(
+      open(await deriveDataKeys(b), untagged, "client"),
+    ).rejects.toThrow();
+  });
+});

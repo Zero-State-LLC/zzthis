@@ -10,11 +10,11 @@ anti-slop-code, production-systems, google-developer-style. CI: `ci.yml`, `site-
 
 | Item | Choice | Status |
 |---|---|---|
-| Option A | Off-the-shelf vision: on-device model first where good enough, cloud vision for retries and hard cases | Recommended to ship first [OPERATOR 2026-10-02] |
-| Option B | Fine-tuned small model (for example TrOCR-small or a small vision-language model with LoRA) trained on the closed wordlist. The list size is unsettled (spec 003, Q31). | 2-week benchmark first [OPERATOR 2026-10-02] |
+| Option A | Off-the-shelf vision: on-device model first where good enough, cloud vision for retries and hard cases | Recommended to ship first [OPERATOR 2026-10-02]. The cloud part is superseded by Q18: no cloud reader in v1 |
+| Option B | Fine-tuned small model (for example TrOCR-small or a small vision-language model with LoRA) trained on the closed wordlist. The list size was settled by Q31 (the proto-v0 yield). | 2-week benchmark first [OPERATOR 2026-10-02]; research phase R-B12 |
 | Training data for B | Synthetic renders of the wordlist with blur, warping, and tape and cardboard textures, then real photos | [OPERATOR 2026-10-02] |
 | Retry photo storage | R2 (spec 002 plan) | [OPERATOR 2026-10-02] |
-| App platform | Not chosen | OPEN (Q33) |
+| App platform | iOS and Android together in zzThat; the web client is typing only | RESOLVED (Q33) |
 
 ## Dependencies
 

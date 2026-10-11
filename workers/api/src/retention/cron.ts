@@ -27,20 +27,89 @@ export interface RetentionReport {
   readonly abandoned: number;
 }
 
-async function expiredPhotos(env: WorkerEnv, now: string): Promise<number> {
+// RM-035: one run does bounded work. Each step deletes in batches of at
+// most `batch` rows, for at most `rounds` batches, and the pending Apple
+// revocations take at most `revocations` outbound calls, so a backlog
+// clears over successive daily runs instead of exceeding one invocation's
+// limits. R2 takes at most 1,000 keys per delete call.
+export interface RetentionLimits {
+  readonly batch: number;
+  readonly rounds: number;
+  readonly revocations: number;
+}
+
+export const RETENTION_LIMITS: RetentionLimits = {
+  batch: 500,
+  rounds: 10,
+  revocations: 25,
+};
+
+const R2_DELETE_MAX = 1000;
+
+async function expiredPhotos(
+  env: WorkerEnv,
+  now: string,
+  limits: RetentionLimits,
+): Promise<number> {
   const db = env.ZZ_DB;
-  const rows = await db
-    .prepare("SELECT id, object_key FROM read_photos WHERE expires_at <= ?")
-    .bind(now)
-    .all<{ id: string; object_key: string }>();
-  if (rows.results.length === 0) return 0;
-  await env.ZZ_PHOTOS.delete(rows.results.map((row) => row.object_key));
-  await db.batch(
-    rows.results.map((row) =>
-      db.prepare("DELETE FROM read_photos WHERE id = ?").bind(row.id),
-    ),
-  );
-  return rows.results.length;
+  const batch = Math.min(limits.batch, R2_DELETE_MAX);
+  let total = 0;
+  for (let round = 0; round < limits.rounds; round += 1) {
+    const rows = await db
+      .prepare(
+        "SELECT id, object_key FROM read_photos WHERE expires_at <= ? LIMIT ?",
+      )
+      .bind(now, batch)
+      .all<{ id: string; object_key: string }>();
+    if (rows.results.length === 0) break;
+    await env.ZZ_PHOTOS.delete(rows.results.map((row) => row.object_key));
+    await db.batch(
+      rows.results.map((row) =>
+        db.prepare("DELETE FROM read_photos WHERE id = ?").bind(row.id),
+      ),
+    );
+    total += rows.results.length;
+    if (rows.results.length < batch) break;
+  }
+  return total;
+}
+
+// Deletes the rows `where` selects, `batch` at a time.
+async function deleteInBatches(
+  db: D1Database,
+  limits: RetentionLimits,
+  table: string,
+  where: string,
+  ...params: string[]
+): Promise<number> {
+  let total = 0;
+  for (let round = 0; round < limits.rounds; round += 1) {
+    const result = await db
+      .prepare(
+        `DELETE FROM ${table} WHERE rowid IN (SELECT rowid FROM ${table} WHERE ${where} LIMIT ?)`,
+      )
+      .bind(...params, limits.batch)
+      .run();
+    total += result.meta.changes;
+    if (result.meta.changes < limits.batch) break;
+  }
+  return total;
+}
+
+// A step that fails is logged by name and counts as zero; the other steps
+// still run.
+async function step(
+  name: string,
+  work: () => Promise<number>,
+): Promise<number> {
+  try {
+    return await work();
+  } catch {
+    console.error(
+      JSON.stringify({ event: "retention-step-fault", step: name }),
+    );
+    return 0;
+  }
 }
 
 type Outcome = "revoked" | "retried" | "abandoned";
@@ -92,6 +161,7 @@ async function retryRevocation(
 export async function runRetention(
   env: WorkerEnv,
   deps: Deps,
+  limits: RetentionLimits = RETENTION_LIMITS,
 ): Promise<RetentionReport | null> {
   const ready = await readSettings(env);
   if (!ready.ok) {
@@ -103,49 +173,84 @@ export async function runRetention(
   const nowMs = deps.now();
   const now = iso(nowMs);
   const db = env.ZZ_DB;
-  const photos = await expiredPhotos(env, now);
-  const nonces = await db
-    .prepare(
-      "DELETE FROM auth_nonces WHERE used_at IS NOT NULL OR expires_at <= ?",
-    )
-    .bind(now)
-    .run();
-  const refresh = await db
-    .prepare("DELETE FROM refresh_tokens WHERE expires_at <= ?")
-    .bind(iso(nowMs - REFRESH_KEPT_AFTER_EXPIRY))
-    .run();
+  const photos = await step("photos", () => expiredPhotos(env, now, limits));
+  // Two deletes, so each one can use its index.
+  const nonces = await step(
+    "nonces",
+    async () =>
+      (await deleteInBatches(
+        db,
+        limits,
+        "auth_nonces",
+        "used_at IS NOT NULL",
+      )) +
+      (await deleteInBatches(
+        db,
+        limits,
+        "auth_nonces",
+        "expires_at <= ?",
+        now,
+      )),
+  );
+  const refreshTokens = await step("refresh-tokens", () =>
+    deleteInBatches(
+      db,
+      limits,
+      "refresh_tokens",
+      "expires_at <= ?",
+      iso(nowMs - REFRESH_KEPT_AFTER_EXPIRY),
+    ),
+  );
   // An open report has no closed_at, so it is never deleted here. Its audit
   // rows stay.
-  const reports = await db
-    .prepare(
-      "DELETE FROM reports WHERE closed_at IS NOT NULL AND closed_at <= ?",
-    )
-    .bind(iso(nowMs - REPORT_KEPT_AFTER_CLOSE))
-    .run();
+  const reports = await step("reports", () =>
+    deleteInBatches(
+      db,
+      limits,
+      "reports",
+      "closed_at IS NOT NULL AND closed_at <= ?",
+      iso(nowMs - REPORT_KEPT_AFTER_CLOSE),
+    ),
+  );
   // Due for a retry, or past the 30-day window even if the next retry is
-  // later, so no token outlives the window by a doubled wait.
-  const due = await db
-    .prepare(
-      "SELECT id, client_id, token_enc, attempts, created_at FROM pending_revocations WHERE next_attempt_at <= ? OR created_at <= ?",
-    )
-    .bind(now, iso(nowMs - REVOCATION_WINDOW))
-    .all<PendingRow>();
+  // later, so no token outlives the window by a doubled wait. Oldest first.
   const outcomes: Outcome[] = [];
-  for (const row of due.results) {
-    outcomes.push(await retryRevocation(env, deps, ready.settings, row, nowMs));
-  }
+  await step("apple-revocations", async () => {
+    const due = await db
+      .prepare(
+        "SELECT id, client_id, token_enc, attempts, created_at FROM pending_revocations WHERE next_attempt_at <= ? OR created_at <= ? ORDER BY next_attempt_at LIMIT ?",
+      )
+      .bind(now, iso(nowMs - REVOCATION_WINDOW), limits.revocations)
+      .all<PendingRow>();
+    for (const row of due.results) {
+      outcomes.push(
+        await retryRevocation(env, deps, ready.settings, row, nowMs),
+      );
+    }
+    return outcomes.length;
+  });
   const count = (outcome: Outcome) =>
     outcomes.filter((o) => o === outcome).length;
   const report: RetentionReport = {
     photos,
-    nonces: nonces.meta.changes,
-    refreshTokens: refresh.meta.changes,
-    reports: reports.meta.changes,
+    nonces,
+    refreshTokens,
+    reports,
     revoked: count("revoked"),
     retried: count("retried"),
     abandoned: count("abandoned"),
   };
   // FR-027: counts only.
   console.log(JSON.stringify({ event: "retention", ...report }));
+  // RM-035: a token deleted unrevoked is an operator signal, logged apart
+  // from the routine report so an alert can match it.
+  if (report.abandoned > 0) {
+    console.error(
+      JSON.stringify({
+        event: "apple-revocation-abandoned",
+        count: report.abandoned,
+      }),
+    );
+  }
   return report;
 }

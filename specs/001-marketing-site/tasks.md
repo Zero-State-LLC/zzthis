@@ -91,6 +91,36 @@ Intent: `intent/2026-10-07-michael-content-changes.md`. Copy and layout: `docs/S
 - [x] T039 About: zzthis.com in place of zzthing.com with the header's theme-aware zzThis wordmarks, the commercial-use line, and the new label; the lowercase zzThat wordmark; the founder bio and Hacker Dojo paragraph replaced as given.
 - [x] T040 About: Omer F. Yalcin as the fifth advisor, with headshot, LinkedIn link, and Michael's role line; content test updated to the new order.
 - [x] T041 All pages: dark by default for every visitor; the toggle switches the current page to light; nothing stored (FR-022).
-- [ ] T042 Replace Omer's bio and closing line with Michael's wording if he sends it (Q72, issue #116).
-- [ ] T043 `/demo` "Current prototypes": swap zzthing.com for zzthis.com only if Michael says so (Q73, issue #117).
+- [x] T042 Omer's bio kept as approved; closing lines removed from every advisor bio (Q72, D-2026-10-07-03).
+- [x] T043 `/demo` "Current prototypes" keeps zzthing.com as Michael directed; revisit on or about 2026-10-31 (Q73, D-2026-10-07-03).
 - [ ] T044 zzThat app parity (FR-022, `docs/SPEC.md` Section 5.5): the apps default to dark and use the lowercase zzThat wordmark wherever one appears. The change lands in the zzThat specs and apps, tracked on the zzThis + zzThat board.
+
+## Phase 13: Michael's 2026-10-08 header changes
+
+Intent: `intent/2026-10-08-michael-nav-demo.md`. Spec: `docs/SPEC.md` Sections 3.1, 5.2, and 5.5, acceptance item 3; FR-002; decision D-2026-10-08-01.
+
+- [x] T045 Top menu: Demo between Applications and About, the footer's order (`src/content/navigation.ts`, `NavKey` gains `demo`); `/demo` passes `current="demo"`; the content test checks the new order.
+- [x] T046 Header: menu links about 30% larger (`calc(var(--text-sm) * 1.3)`), header height unchanged at 64 px; `.nav__mark { flex-shrink: 0 }` so the logo never shrinks; full menu from 64rem, checked at 1024 px.
+
+## Phase 14: zzthis.com cutover (issue #6)
+
+Decision D-2026-10-08-02 in `docs/SPEC.md`; Section 6, Hosting; acceptance item 28. Danny said yes on 2026-10-08.
+
+- [x] T047 Root base: `astro.config.mjs` sets `site` to `https://zzthis.com` and the default `base` to `/`, keeping the `ASTRO_BASE` override; `scripts/check-dist.mjs` defaults to `/` and fails on a leftover `/zzthis/` path or a `zero-state-llc.github.io` link; tests cover the config and both bases.
+- [ ] T048 Cutover: Michael's DNS records live and verified, Danny sets the Pages custom domain, the T047 PR merges right away, Enforce HTTPS once the certificate is issued, then check `https://zzthis.com`, the `www` redirect, and the `zero-state-llc.github.io/zzthis/` redirect. Owner: Danny.
+
+## Phase 15: Michael's 2026-10-08 footer and About changes
+
+Intent: `intent/2026-10-08-michael-footer-social.md`. Spec: `docs/SPEC.md` Sections 3.1, 3.1a, 3.2 (Footer), 3.5, and 5.5, acceptance items 3, 9, and 10; FR-003 and FR-009; decision D-2026-10-08-03.
+
+- [x] T049 About: remove Omer F. Yalcin's advisor card and photo (`src/content/people.ts`, `public/images/people/omer-yalcin.webp` deleted) until his employer gives permission; the content test checks the four-advisor order. Restore the entry and photo from #118 when permission arrives, using the Q72-approved bio (T042).
+- [x] T050 Footer, every page: inline-SVG social icons between the page links and the notice (`src/components/Footer.astro`, `src/content/navigation.ts`, `src/styles/b-bands.css`): X for zzThis (https://x.com/zzthisapp); the lowercase zzthat wordmark (`zzthatLogo` from `src/content/contact.ts`) with zzThat's Discord (https://discord.gg/hwXvVKYzn4 since T051) and Instagram (https://www.instagram.com/zzthatcom/). 18 px icons in 44 px tap targets, accessible names, empty links hidden; the content test checks the links and their ownership. Checked in dark and light at 1280 px and 390 px.
+- [x] T051 Discord invite: the patch gave https://discord.gg/sp7smSzq7 as permanent, but on 2026-10-08 Discord's invite API reported an expiry of 2026-11-07 (UTC). Done 2026-10-10: Michael made a new invite set to never expire with no use limit, https://discord.gg/hwXvVKYzn4, now `zzthatDiscordUrl` in `src/content/navigation.ts` [MICHAEL 2026-10-10]. The zzThat server's verification level is Medium.
+
+## Phase 16: Michael's 2026-10-08 About image set (v2)
+
+Intent: `intent/2026-10-08-michael-kathy-found-dog.md`. Spec: `docs/SPEC.md` Sections 2.1, 3.1a, 3.5, and 3.8; FR-023; decision D-2026-10-08-04. (Phase 15 is #125.)
+
+- [x] T052 About, "Codes written by hand": Michael's v1 pair under the four real photos, replaced by T054.
+- [ ] T053 Ask Michael about the collar tag: in all three Kathy images the corgi's red tag shows a capital-letter zz, carried over from the real photo `hw-dog-collar-tag`. Renders Michael supplies may show it (`docs/SPEC.md` Section 2.2), but images we generate stay lowercase (Section 2.2a G7, FR-019). If these count as generated, regenerate them with a lowercase zz on the tag. Owner: Michael.
+- [x] T054 About, Michael's v2 set (replaces the T052 pair): three concept images in order, card, phone scan, community board with the phone (`public/images/handwritten/hw-kathy-found-dog.webp`, `hw-kathy-phone.webp`, `hw-kathy-board-phone.webp`; `src/content/images.ts` entries with status `concept`; `aboutPage.handwrittenSetCaption` and `aboutPage.handwrittenSetZzPage` in `src/content/contact.ts`; `.hw-pair` in `src/pages/about.astro` and `src/styles/b-about.css`). Each about 2/3 the height of a photo above; one row from 64rem; on phones the first two side by side, the board underneath, then the explainer. The zzPage address zzpage.com/zz/Kathy-found-dog is plain text, not a link. Checked at 1280 px and 390 px, dark and light.

@@ -26,7 +26,8 @@ export interface Prototype {
 }
 
 // [MICHAEL 2026-10-06 change list] A small zzThat wordmark under zzthat.com on
-// About only. Two capitalization variants exist (GPT-Astra assets, orange zz
+// About. [MICHAEL 2026-10-08] The same wordmark also sits beside zzThat's
+// social icons in every page footer. Two capitalization variants exist (GPT-Astra assets, orange zz
 // #FF5500, deep teal #0B7480). Pick the primary here until Michael and Danny
 // finalize capitalization; show only one at a time.
 const zzthatLogos = {
@@ -44,6 +45,7 @@ const zzthatLogos = {
   },
 } as const;
 export const zzthatLogoVariant: keyof typeof zzthatLogos = "lowercase";
+export const zzthatLogo = zzthatLogos[zzthatLogoVariant];
 
 export const aboutPage = {
   title: "About zzThis",
@@ -57,6 +59,11 @@ export const aboutPage = {
     "zzThis is for commercial and government use; zzThat is our free consumer app, launching soon.",
   handwrittenHeading: "Codes written by hand",
   handwrittenLabel: "Real photos of handwritten codes.",
+  // [MICHAEL 2026-10-08] One explainer across the three Kathy images.
+  handwrittenSetCaption:
+    "Concept images. zz-code words, hand printed, for any thing or object. Then scanned, and more.",
+  handwrittenSetZzPage:
+    "Every zz-code can optionally have its own zzPage (here, zzpage.com/zz/Kathy-found-dog), hosted by zzThis or in the user's own cloud storage: Google Drive or Docs, OneDrive, Dropbox, iCloud, or Box.",
   locationHeading: "Location",
   locationText:
     "Silicon Valley (Mountain View / Santa Clara; Hacker Dojo) and New York City.",

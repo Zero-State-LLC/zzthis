@@ -7,6 +7,8 @@ Workflows for every implementing task: anti-slop-code, production-systems, googl
 ## Status reconciliation
 
 This is the original wordlist/check-word decomposition. Much of it was implemented in the one-shot/shared-core stream under spec 005 (including grammar, vectors, pipeline artifacts, proto-v0, and check-word behavior). Unchecked boxes are historical and are **not** a current backlog. Use [TRACEABILITY](../TRACEABILITY.md), spec 005 Group 0, and current main as status authority.
+
+Reconciled 2026-10-10: T003, T004, T007, T008, and T010 to T014 are implemented in `packages/zz-core` (spec 005 T026 to T029, T035). T005 and T006 (sound and shape filters) and T009 (the published production list) are BACKLOG RM-020, with empirical tuning in RM-095.
 ## Phase 0: Decisions
 
 - [x] T001 Choose the candidate word source and confirm its license (Q32). Done on #74: the EFF long wordlist, CC BY 3.0 US (spec.md, Prototype defaults).

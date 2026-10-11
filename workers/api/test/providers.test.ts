@@ -106,7 +106,9 @@ describe("Sign in with Apple (FR-020, T005)", () => {
     >();
     expect(identity?.provider).toBe("apple");
     expect(identity?.apple_client_id).toBe(APPLE_BUNDLE_ID);
-    expect(identity?.apple_refresh_token_enc).toMatch(/^[A-Za-z0-9_-]+$/);
+    expect(identity?.apple_refresh_token_enc).toMatch(
+      /^k1\.[0-9a-f]{8}\.[A-Za-z0-9_-]+$/,
+    );
   });
 
   it("exchanges a web code with the Services ID and the one redirect URI", async () => {
@@ -176,6 +178,25 @@ describe("Sign in with Apple (FR-020, T005)", () => {
       lines.filter((line) => line.includes('"apple-code-exchange"')),
     ).toHaveLength(4);
     expect(lines.join("\n")).not.toContain("authz-value-7f3a");
+  });
+
+  it("still signs in when Apple does not answer in time (RM-037)", async () => {
+    const logs = vi.spyOn(console, "log").mockImplementation(() => {});
+    const w = await makeWorld({
+      settings: { ...(await appleSettings()), ...googleSettings },
+      outboundTimeoutMs: 20,
+    });
+    w.appleStub.token = () => new Promise<Response>(() => {});
+    const started = Date.now();
+    const response = await appleSignIn(w, "ios", APPLE_BUNDLE_ID, {
+      authorization_code: "authz-slow",
+    });
+    expect(response.status).toBe(200);
+    expect(Date.now() - started).toBeLessThan(2000);
+    const lines = logs.mock.calls.map((args) => String(args[0]));
+    expect(
+      lines.filter((line) => line.includes('"apple-code-exchange"')),
+    ).toHaveLength(1);
   });
 
   it("makes no exchange without an authorization code", async () => {

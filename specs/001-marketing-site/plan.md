@@ -12,7 +12,7 @@ anti-slop-code, production-systems, google-developer-style; stop-slop for copy e
 
 | Item | Choice | Status |
 |---|---|---|
-| Framework | Astro, static output, base `/zzthis/` | OBSERVED (`astro.config.mjs`) |
+| Framework | Astro, static output, `site` `https://zzthis.com`, base `/` (`ASTRO_BASE` overrides; `/zzthis/` before the cutover, issue #6) | OBSERVED (`astro.config.mjs`) |
 | Language | TypeScript strict, `noUncheckedIndexedAccess`, no `any` | OBSERVED (`tsconfig.json`, `eslint.config.js`) |
 | Runtime for tooling | Node 24 | OBSERVED (CI) |
 | Content | Typed objects in `src/content/*.ts` | OBSERVED |
@@ -21,7 +21,7 @@ anti-slop-code, production-systems, google-developer-style; stop-slop for copy e
 | Client JavaScript | `/demo` island, plus the Home console island. Neither uses the network, camera, microphone, or storage. | FR-011, FR-020 |
 | Tests | Vitest, 100% line and branch coverage on `src/lib/**` and `src/demo/demoMachine.ts` | OBSERVED (`vitest.config.ts`) |
 | Build checks | `scripts/check-dist.mjs`: required pages, one H1, heading order, base-path links, banned phrases and unmeasured performance figures, em dash rule, footer notice, banned browser APIs, size budgets | OBSERVED |
-| Hosting | GitHub Pages through `pages.yml` on push to `main` | OBSERVED |
+| Hosting | GitHub Pages through `pages.yml` on push to `main`; custom domain zzthis.com set in Settings > Pages (no `CNAME` file for an Actions-built site), live once DNS and the custom domain are set | OBSERVED (Pages); zzthis.com pending issue #6 |
 
 ## Constitution check
 
