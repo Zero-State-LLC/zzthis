@@ -364,6 +364,8 @@ export interface components {
             wordlist_version: string;
             /** @description False until a photo reader is configured (Q18). */
             photo_reads: boolean;
+            /** @description True when Resolve carries the optional creator reference (contract 1 revision 1.1, D-2026-10-10-12 exception, RM-112). Optional, so a client reads a missing value as false. */
+            creator_refs?: boolean;
         };
         Nonce: {
             nonce: string;
@@ -507,6 +509,8 @@ export interface components {
                 /** @description Always null in contract 1. */
                 url: string | null;
             };
+            /** @description An opaque, stable reference to the record's owner, for blocking a creator on the device (RM-112, revision 1.1). The same owner gives the same value on every public code; it is never the account id and cannot be turned back into one. Null for a private record. Optional, so an older server may leave it out. */
+            creator?: string | null;
         };
         ReadResult: {
             canonical: string | null;

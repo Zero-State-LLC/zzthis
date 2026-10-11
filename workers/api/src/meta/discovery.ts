@@ -31,6 +31,8 @@ export async function getDiscovery(c: AppContext): Promise<Response> {
       : ["enterprise", "logistics"],
     wordlist_version: settings.wordlistVersion,
     photo_reads: settings.photoReads && c.get("deps").photoReader !== null,
+    // RM-112: Resolve carries `creator` (contract 1 revision 1.1).
+    creator_refs: true,
   };
   return json(200, body);
 }
