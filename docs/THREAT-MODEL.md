@@ -44,6 +44,18 @@ Status: pre-production security governance. This consolidates existing invariant
 | equivocation/version drift | pinned contracts/versions; immutable future dictionary roots |
 | future semantic disclosure | namespace/profile auth remains after resolver; non-enumerability preserved |
 | ZK statement substitution/replay | S1 policy/audience/challenge/root bindings and negative vectors before promotion |
+| IPv6 rotation around the IP limit; bulk guessing of public codes (added 2026-10-10) | /64 limiter keys (RM-030); zone rule (RM-031); growth monitor (RM-041); density trigger and residual-risk sign-off (D-2026-10-10-04, -05) |
+| scope-wide grants read another organization's private records or audit events (added 2026-10-10) | one organization per scope until contract 2 (D-2026-10-10-06, RM-063); Organization entity (RM-080) |
+| data-key rotation silently breaks Apple revocation (added 2026-10-10) | key ids on sealed values with a previous key (RM-021) |
+| restore resurrects deleted personal data (added 2026-10-10) | deletion replay after any restore (RM-023) |
+| issuer keeps re-rolling after losing its grant (added 2026-10-10) | scope check on re-roll (RM-032) |
+| mint races account deletion or suspension (added 2026-10-10) | account guard in the mint batch (RM-033) |
+| limiter or cache fault turns into an outage or a failed committed write (added 2026-10-10) | limiter timeout and per-route policy (RM-038); cache side effects off the request path (RM-034) |
+| platform request logs capture codes from resolve URLs (added 2026-10-10) | invocation logs off and pinned in configuration (RM-001); log review (G7) |
+
+## Review status (2026-10-10)
+
+The [architecture review](../specs/analysis-2026-10-10-architecture-review.md) is a design review of the code, not a penetration test or runtime verification. It found no critical defect; its high and medium findings are the rows added above and BACKLOG items RM-021 and RM-030 to RM-039. The sign-off is BACKLOG RM-029.
 
 ## Security review gate
 

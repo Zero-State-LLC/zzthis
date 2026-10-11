@@ -22,10 +22,17 @@ const { comparisonColumns, comparisonNote, comparisonRows } = comparisonModule;
 const { whyMarkers } = anatomyModule;
 const { featured, hero } = heroModule;
 const { images } = imagesModule;
-const { navItems, footerItems, footerNotice, footerNote } = navigationModule;
+const {
+  navItems,
+  footerItems,
+  footerNotice,
+  footerNote,
+  zzthisSocial,
+  zzthatSocial,
+} = navigationModule;
 const { advisors, founder, founderOrigin } = peopleModule;
 const { topWays } = usesModule;
-const { demoTitle } = demoModule;
+const { demoTitle, demoPrototypeLinks } = demoModule;
 const { technologyDraft } = technologyModule;
 const { conceptLabels } = labelsModule;
 const { coreIdentity, fieldLogistics, howItWorksPage, photoToAction } =
@@ -90,6 +97,16 @@ describe("hero and featured statement (spec 3.2)", () => {
     expect(featured.text).toBe(
       "A zz code gives people a way to create the mark themselves, wherever the work happens. Future AI-assisted workflows could help identify what a camera sees, count what remains, suggest how an item should be handled, and prepare the next task; those capabilities are explorations, not shipped v1 behavior. The same visible code connects the item, its history, and the people responsible for it. It bridges physical things and their digital control. AI may serve as an interface and connector, not as the authority that defines or resolves a zz code.",
     );
+  });
+});
+
+describe("demo prototype decisions", () => {
+  it("keeps zzthing.com in the demo pending the October 31 review", () => {
+    expect(demoPrototypeLinks.map((link) => link.name)).toEqual([
+      "zzthing.com",
+      "zzthat.com",
+    ]);
+    expect(demoPrototypeLinks[0]?.href).toBe("https://zzthing.com");
   });
 });
 
@@ -258,27 +275,63 @@ describe("applications (spec 3.2 H.7 and 3.4)", () => {
 
 describe("navigation and people", () => {
   it("lists nav items in spec order", () => {
+    // [MICHAEL 2026-10-08] Demo added between Applications and About.
     expect(navItems.map((item) => item.label)).toEqual([
       "How it works",
       "Applications",
+      "Demo",
       "About",
       "Contact",
     ]);
   });
 
-  it("lists the reconciled 2026-10-07 advisor roster with retained approved assets", () => {
+  it("lists the reconciled advisors in the 2026-10-08 order, all with initials and retained approved assets", () => {
     // [MICHAEL 2026-10-06 change list] Daniel and Adam move to first.
-    // [MICHAEL 2026-10-07] Omer F. Yalcin is added last.
+    // [MICHAEL 2026-10-08] Omer F. Yalcin is removed until his employer
+    // gives permission.
     expect(advisors.map((person) => person.name)).toEqual([
       "Daniel Meyer",
       "Adam Fry",
       "Patrick Muggler",
       "Arshi Chadha",
-      "Omer F. Yalcin",
     ]);
     expect(advisors.every((person) => person.initials !== undefined)).toBe(
       true,
     );
+  });
+
+  it("omits drafted advisory closing lines from every advisor bio", () => {
+    expect(
+      advisors.some((person) => /advises zzThis on/i.test(person.bio ?? "")),
+    ).toBe(false);
+    // Omer's Q72-approved bio returns without a closing line if he is restored.
+    expect(advisors.some((person) => person.name === "Omer F. Yalcin")).toBe(
+      false,
+    );
+  });
+
+  it("lists the footer social links with their owners", () => {
+    // [MICHAEL 2026-10-08] X belongs to zzThis; Discord and Instagram belong
+    // to zzThat and sit beside the zzthat wordmark.
+    expect(zzthisSocial).toEqual([
+      { label: "zzThis on X", href: "https://x.com/zzthisapp", icon: "x" },
+    ]);
+    expect(zzthatSocial).toEqual([
+      {
+        label: "zzThat on Discord",
+        href: "https://discord.gg/hwXvVKYzn4",
+        icon: "discord",
+      },
+      {
+        label: "zzThat on Instagram",
+        href: "https://www.instagram.com/zzthatcom/",
+        icon: "instagram",
+      },
+    ]);
+    for (const link of [...zzthisSocial, ...zzthatSocial]) {
+      expect(link.href.startsWith("https://")).toBe(true);
+      expect(link.label).not.toBe("");
+    }
   });
 
   it("applies Michael's 2026-10-02 answers", () => {

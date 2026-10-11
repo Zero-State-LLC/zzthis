@@ -1,7 +1,7 @@
 # Feature spec: zzThis marketing site and scripted demo
 
 Feature ID: 001-marketing-site
-Status: built and live (OBSERVED 2026-10-03 at https://zero-state-llc.github.io/zzthis/, `main` at d721783 after PR #32). This file restates the requirements in `docs/SPEC.md` in Spec Kit form. It is pending Danny's approval through its PR, as the constitution's Governance section requires.
+Status: built and live (OBSERVED 2026-10-03 at https://zero-state-llc.github.io/zzthis/, `main` at d721783 after PR #32). The site moves to the root of https://zzthis.com once the DNS records and the Pages custom domain are set (issue #6, [DANNY 2026-10-08]). This file restates the requirements in `docs/SPEC.md` in Spec Kit form. It is pending Danny's approval through its PR, as the constitution's Governance section requires.
 Phase: specify (what and why). The how lives in [plan.md](plan.md). Work items live in [tasks.md](tasks.md).
 Constitution: [.specify/memory/constitution.md](../../.specify/memory/constitution.md).
 
@@ -45,7 +45,7 @@ Acceptance: `/applications` and the Home applications band show the panels in `d
 
 As an investor or collaborator, I can read the founder origin, see the founder and advisors with roles and short bios, and see the current prototype explorations, so that I know who to talk to [BRIEF] [MICHAEL 2026-10-02].
 
-Acceptance: `/about` follows `docs/SPEC.md` Sections 3.5 and 3.1b. The founder card matches the advisor card and headshot size. The founder title and bio, and the single Hacker Dojo paragraph, are the v1.0 lines. The Hacker Dojo logo is not shown. Profile links appear only where a URL was supplied [MICHAEL 2026-10-02] [MICHAEL 2026-10-03 v1.0 change list]. After Michael's 2026-10-07 changes, the founder bio and the Hacker Dojo paragraph are his 2026-10-07 text, the advisors end with Omer F. Yalcin, the prototypes block lists zzthis.com (theme-aware zzThis wordmark) and zzthat.com (lowercase zzThat wordmark), and the label reads "zzThis is for commercial and government use; zzThat is our free consumer app, launching soon." [MICHAEL 2026-10-07] (`intent/2026-10-07-michael-content-changes.md`).
+Acceptance: `/about` follows `docs/SPEC.md` Sections 3.5 and 3.1b. The founder card matches the advisor card and headshot size. The founder title and bio, and the single Hacker Dojo paragraph, are the v1.0 lines. The Hacker Dojo logo is not shown. Profile links appear only where a URL was supplied [MICHAEL 2026-10-02] [MICHAEL 2026-10-03 v1.0 change list]. After Michael's 2026-10-07 changes, the founder bio and the Hacker Dojo paragraph are his 2026-10-07 text, the advisors ended with Omer F. Yalcin (removed on 2026-10-08 until his employer gives permission, so the advisors now end with Arshi Chadha [MICHAEL 2026-10-08]), the prototypes block lists zzthis.com (theme-aware zzThis wordmark) and zzthat.com (lowercase zzThat wordmark), and the label reads "zzThis is for commercial and government use; zzThat is our free consumer app, launching soon." [MICHAEL 2026-10-07] (`intent/2026-10-07-michael-content-changes.md`).
 
 ### US4. Try it safely (P2)
 
@@ -63,15 +63,15 @@ Acceptance: `/contact`, the Home contact action, the About contact card, and the
 
 | ID | Requirement | Source |
 |---|---|---|
-| FR-001 | Routes `/`, `/how-it-works`, `/applications`, `/about`, `/contact`, and `/demo` exist under the base path `/zzthis/`. | [OPERATOR 2026-10-01] |
-| FR-002 | Main navigation is How it works, Applications, About, Contact, in that order. The demo is not in the main nav. | [BRIEF] [MICHAEL 2026-10-02] |
-| FR-003 | The footer shows How it works, Applications, Demo, About, Contact, the contact email, and the words "Patent pending". | [MICHAEL 2026-10-02] |
+| FR-001 | Routes `/`, `/how-it-works`, `/applications`, `/about`, `/contact`, and `/demo` exist under the configured base path: `/`, the root of https://zzthis.com (`/zzthis/` on the project site before the cutover). | [OPERATOR 2026-10-01] [DANNY 2026-10-08] |
+| FR-002 | Main navigation is How it works, Applications, Demo, About, Contact, in that order (the footer's order); `/demo` marks Demo as the current page. Menu links are about 30% larger than `--text-sm` (`calc(var(--text-sm) * 1.3)`), the header stays 64 px high, and the logo never shrinks. The full menu shows from 64rem (1024 px); below that, the "Menu" button opens it. This supersedes the 2026-10-02 rule that kept the demo out of the main nav (Q5). | [BRIEF] [MICHAEL 2026-10-02] [MICHAEL 2026-10-08] |
+| FR-003 | The footer shows How it works, Applications, Demo, About, Contact, the contact email, and the words "Patent pending". Between the page links and the notice, every page shows small inline-SVG social icons (18 px in 44 px tap targets, muted ink that brightens on hover and focus, an accessible name on each link): X for zzThis (https://x.com/zzthisapp), then the lowercase zzthat wordmark with zzThat's Discord (https://discord.gg/hwXvVKYzn4) and Instagram (https://www.instagram.com/zzthatcom/). Only X belongs to zzThis; Discord and Instagram belong to zzThat. A link left empty is not shown. | [MICHAEL 2026-10-02] [MICHAEL 2026-10-08] |
 | FR-004 | Each page has exactly one H1; headings follow content hierarchy without skipping levels. | [BRIEF] |
 | FR-005 | Copy in `copy` blocks of `docs/SPEC.md` ships verbatim. Copy lives in typed content objects so that it can change without layout edits. | [BRIEF] |
 | FR-006 | No rendered em dash, with no exceptions. The hero H1 uses a spaced hyphen: "readable-writable - and smart." (Q47, Q62). | [MICHAEL 2026-10-02]; [DANNY 2026-10-03, revised: "Fix the em dashes"] |
 | FR-007 | No research target or unmeasured performance figures, and no claims of pilots, customers, endorsement, or adoption, appear on any page. | [MICHAEL 2026-10-02] [PRODUCT] |
 | FR-008 | Standalone AI-render panels carry "Concept illustration". Each grouped gallery carries one label above its panels. Captions name the workflow. | [MICHAEL 2026-10-02] |
-| FR-009 | Founder and advisor cards show a supplied headshot where one exists (Michael, Patrick, Arshi, Adam, Omer) and initials otherwise (Q46). No LinkedIn scraping. Ridham Bhagat removed from the site (Danny approved 2026-10-07). Omer F. Yalcin added as the fifth advisor; his bio and closing line wait on Michael (Q72, issue #116). | [MICHAEL 2026-10-06] [MICHAEL 2026-10-07] [WIRE] |
+| FR-009 | Founder and advisor cards show a supplied headshot where one exists (Michael, Patrick, Arshi, Adam) and initials otherwise (Q46). No LinkedIn scraping. Ridham Bhagat removed from the site (Danny approved 2026-10-07). Omer F. Yalcin, added as the fifth advisor on 2026-10-07, is removed with his photo until his employer gives permission; restore his entry and photo from #118 when it does. When he returns, his card uses the Q72-approved bio with no closing line (D-2026-10-07-03). | [MICHAEL 2026-10-06] [MICHAEL 2026-10-07] [MICHAEL 2026-10-08] [WIRE] |
 | FR-010 | `/technology` is not built and nothing links to it until it has Michael's draft explanation plus a supporting example. | [MICHAEL 2026-10-02] |
 | FR-011 | The demo is scripted: no recognition, no backend, no camera, microphone, network calls, or storage. Every step shows "Demo · demo data". User-facing labels say demo instead of mock. | [OPERATOR 2026-10-01]; override [MICHAEL 2026-10-03 #54] [DANNY 2026-10-04] |
 | FR-012 | The demo is fully usable by keyboard. Drag is never required. Reduced motion removes transitions. Without JavaScript, a static list of steps appears. | INFERRED (`docs/SPEC.md` Section 4.5) |
@@ -80,6 +80,7 @@ Acceptance: `/contact`, the Home contact action, the About contact card, and the
 | FR-020 | The Home console uses the v1 grammar in `src/lib/grammar.ts` (T029) and `src/lib/resolver.ts`, against the existing mock records. A miss never suggests another code (FR-013). A letter outside A–Z shows the H.1c coming-later note, not an error, even when the grammar would report `unsupported-script`. Camera and voice on Home are simulated and do not call `getUserMedia`, the network, or storage. | [DANNY 2026-10-03]; issue #12 |
 | FR-021 | Header, footer, theme toggle, and color and type tokens use the direction B system on every page. How it works, `/demo`, `/contact`, and the 404 keep their current content. | [JEV 2026-10-03] |
 | FR-022 | Every page starts in the dark theme for every visitor, whatever the device setting. The header toggle switches the current page to light; nothing is stored, so the next page load starts dark. The zzThat apps match: dark by default, light available (`docs/SPEC.md` Section 5.5). | [MICHAEL 2026-10-07]; app parity [DANNY 2026-10-07] |
+| FR-023 | About, "Codes written by hand": under the four real photos, the zz-Kathy-found-dog-zz set of three concept images in this order: `hw-kathy-found-dog` (the card), `hw-kathy-phone` (the phone scan), `hw-kathy-board-phone` (the community board with the phone). Each is about 2/3 the height of a photo above at every width. From 64rem (1024 px) all three sit in one row; on phones the first two sit side by side and the board goes underneath. One explainer follows the set: the code, then "Concept images. zz-code words, hand printed, for any thing or object. Then scanned, and more.", then on a new line "Every zz-code can optionally have its own zzPage (here, zzpage.com/zz/Kathy-found-dog), hosted by zzThis or in the user's own cloud storage: Google Drive or Docs, OneDrive, Dropbox, iCloud, or Box." The zzPage address is plain text, not a link. The explainer marks them as concept images, since the label above says "Real photos". | [MICHAEL 2026-10-08 v2] |
 | FR-015 | Light and dark themes both meet text contrast of at least 4.5:1. | `docs/SPEC.md` Section 8, item 16 |
 | FR-016 | At the first public release on both iOS and Android stores, the main navigation gains a prominent "Try zzThat" action linking to the zzThat section of the marketing page with both store badges and the web-client link. | Q39 RESOLVED [DELEGATED 2026-10-04, #74] |
 | FR-017 | Site copy (text, headings, captions, titles) writes every zz code in lowercase and never writes a standalone capital "ZZ". Photos and renders may show a capital ZZ mark or uppercase letters inside a code; alt text describes them in words or quotes the code as shown. | [MICHAEL 2026-10-02] |
@@ -101,11 +102,11 @@ The accepted acceptance criteria are `docs/SPEC.md` Section 8, items 1 to 31 (it
 - A visitor on a phone without JavaScript opens `/demo`. Expected result: the static step list (FR-012).
 - A visitor types `zz-구리-등불-하늘-zz` in the Home console. Expected result: the coming-later note, not "This is not a zz code", and the field is not marked invalid (FR-020).
 - A visitor types `zz-river-maple-sky-zz` with one letter changed. Expected result: "No match" and no other code (FR-013, FR-020).
-- An unknown path under `/zzthis/`. Expected result: `404.html` with working links.
+- An unknown path under the site root. Expected result: `404.html` with working links.
 
 ## Out of scope
 
-Real recognition, a real resolver, accounts, forms or email backends, analytics, a custom domain or DNS, the Technology page, the long founder history page, and the zzthing.com and zzthat.com apps [BRIEF] [OPERATOR 2026-10-01].
+Real recognition, a real resolver, accounts, forms or email backends, analytics, any domain or DNS beyond the zzthis.com records (issue #6), the Technology page, the long founder history page, and the zzthing.com and zzthat.com apps [BRIEF] [OPERATOR 2026-10-01].
 
 ## Open questions
 
