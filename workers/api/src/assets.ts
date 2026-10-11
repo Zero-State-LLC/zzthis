@@ -1,5 +1,11 @@
 import { readSettings, type WorkerEnv } from "./env.ts";
-import { colo, logConfigError, writeLog } from "./http/log.ts";
+import {
+  colo,
+  logConfigError,
+  rayId,
+  workerVersion,
+  writeLog,
+} from "./http/log.ts";
 import { json } from "./http/respond.ts";
 
 // spec 005 Security headers: one mechanism sends them. Every request that
@@ -57,6 +63,9 @@ export async function serveAsset(
     cache: null,
     limiter: null,
     colo: colo(request),
+    request_id: null,
+    ray: rayId(request),
+    version: workerVersion(env),
   });
   return response;
 }

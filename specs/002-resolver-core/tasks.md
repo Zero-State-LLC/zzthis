@@ -7,6 +7,8 @@ Workflows for every implementing task: anti-slop-code, production-systems, googl
 ## Status reconciliation
 
 This is the original resolver decomposition. Do **not** interpret unchecked boxes as current implementation status. The V1 resolver/API implementation was consolidated under spec 005 and current main. Use [TRACEABILITY](../TRACEABILITY.md) and spec 005 tasks for observed status. Remaining items here are either historical decomposition, production deployment gates, or V2/deferred work.
+
+Reconciled 2026-10-10: T001 to T012 and T017 to T018 are implemented through spec 005 Groups A to G. T013 is BACKLOG RM-001, RM-002, and RM-051. T014 is RM-084 (v2.0), T015 is RM-083 (v2.0), and T016 is deferred DF-07.
 ## Phase 0: Decisions (blocking)
 
 - [ ] T001 Decide where the resolver code lives (Q29) and the signing-key approach (Q28). Owner: Danny.

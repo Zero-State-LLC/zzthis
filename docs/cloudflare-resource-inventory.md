@@ -74,4 +74,4 @@ Staging uses distinct D1/R2 state and secrets. No preview/staging Worker may bin
 
 ## Remote-resource creation gate
 
-Completed under explicit authorization: creation and health verification of `zzthis-staging`, creation of `zzthis-photos-staging`, and deployment plus contract-level smoke verification of the isolated marketing and API staging Workers on workers.dev URLs. Every future remote resource change—including broader endpoint testing, routes/custom domains, paid features, and all production changes—remains separately operator-gated.
+Completed under explicit authorization: creation and health verification of `zzthis-staging`, creation of `zzthis-photos-staging`, and deployment plus contract-level smoke verification of the isolated marketing and API staging Workers on workers.dev URLs. Every future remote resource change (including broader endpoint testing, routes/custom domains, paid features, and all production changes) remains separately operator-gated.

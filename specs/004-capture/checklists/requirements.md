@@ -2,6 +2,8 @@
 
 Checked 2026-10-04. Capture is not built.
 
+Status note 2026-10-10: the scanner and classifier are implemented in `packages/zz-core` and pass the shared vectors; on-device recognition lives in zzThat and is unqualified. ZZ-OCR-QUAL-001 is in draft PR #89, not on `main`. Release: v1.1 ([RELEASE-ROADMAP](../../RELEASE-ROADMAP.md)).
+
 ## Completeness
 
 - [x] Spec has a `## Workflows` section.

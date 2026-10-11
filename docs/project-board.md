@@ -39,27 +39,39 @@ Repository issue/PR state is the minimum source of truth:
 
 Project field changes are manual unless the board workflow explicitly automates them.
 
-## Current convergence map (2026-10-07)
+## Release and bundle mapping
 
-| Item | Intended board status | Reason |
-|---|---|---|
-| #13, #14, #60–#67 | Done | reconciled to implementation evidence and closed |
-| #81 | Backlog | CANON-SHADOW semantic-profile specification track |
-| PR #82 | In review | semantic-profile spec assimilation |
-| #83 | Backlog | SPECULATIVE ZK research |
-| PR #84 | In review after reconciliation | S1 research PR depends on semantic parent/rebase |
-| PR #85 | Closed (superseded) | its governance artifacts are already present on main; after syncing, no file diff remained, so it was closed without merging |
-| #86 production readiness evidence | Ready | the governance baseline is present on main; numeric RTO/RPO/SLO, restore evidence, observability, key lifecycle and deploy approval remain open |
-| #87 contract-2/semantic domain gate | Backlog | required before #81 can leave CANON-SHADOW |
-| PR #118 Michael's 2026-10-07 site changes plus specs | Done | merged to main as `f78edb6` |
-| #116 Q72, #117 Q73 | In review | Michael answered both; draft PR #120 applies the advisor-card and demo decisions. Keep issue items open until the PR merges. |
-| PR #120 Q72/Q73 content follow-through | In review | draft; CI/site checks passed per current notes, but the security scan flags the pre-existing `max_p95_latency_ms` false positive in main history. Do not waive the security gate; resolve via the dedicated allowlist path or documented maintainer decision. |
-| PR #91 site claim corrections | In review | draft and behind main after #118. The head distinguishes typed lookup (available), on-device camera recognition (planned v1, not built), and voice (future). Rebase preserving #118, rerun checks, then complete route/interactive/network review; no Clef sign-off from low-confidence comparisons. |
-| PR #89 OCR qualification spec | In review | draft; engine-neutral evidence boundary, Apple Vision iOS baseline, Android engine qualification on one frozen corpus, false-valid-decode as primary safety metric, raw photos stay on-device, no cloud/server fallback. Not implemented; do not promote to Done until reviewed, merged, and acceptance evidence exists. |
-| PR #115 OCR qualification preflight | In review | draft; preflight/harness must fail closed and stay tied to PR #89's qualification contract. It is tooling, not camera-recognition implementation or accuracy evidence. |
-| PR #119 B4 staging checkpoint | In review | current staging-evidence reconciliation; staging-only. Keep R2 expiry, final #91 baseline, recovery objectives, alerts, and production gates open until independently verified. |
-| PR #121 README/spec/board reconciliation | In review | this documentation PR; CI and site checks passed, but full-history Gitleaks still fails on the previously identified generic-key false positive in main history. |
-| zzThat app parity (draft card) | Backlog | the apps start dark and use the lowercase zzThat wordmark (`docs/SPEC.md` Section 5.5); lands in the zzThat specs and apps |
-| #93 B4 Cloudflare runtime | In progress | isolated staging D1, R2, Durable Object, marketing Worker, and API Worker are deployed. API contract discovery, Worker rollbacks, D1-only restore drill, private R2 lifecycle configuration, bounded rate-limit check, staging token-secret rotation, and HSTS parity on six routes are recorded as verified. The retention probe was absent before its expected expiry, so actual R2 expiration is unverified. Clef visual comparison was mixed/low confidence and is not sign-off; `/robots.txt` remains a staging-host difference. Final #91 baseline and full interactive network checks, measured recovery objectives, secret/DO recovery, spend/alert thresholds, and production approval remain open.
+Board items are grouped by release and bundle (SCOPE-GOVERNANCE, Kanban rule). The release for every item is in [`specs/BACKLOG.md`](../specs/BACKLOG.md), which gives each one a stable `RM-` id, priority, acceptance, and verification. Put the release (`v1.0`, `v1.1`, ...) and the `RM-` id in the issue title or body so the board can be filtered by it. Research (`R-`) and deferred (`DF-`) items stay in Backlog.
+
+## Current convergence map (2026-10-10)
+
+Replaces the 2026-10-07 map, which listed PRs #118, #123, #124, and #126 as in review after they merged. Project fields were not edited by this update: the available GitHub connector cannot change Project fields, so these are the intended states for a maintainer to set.
+
+| Item | Intended board status | Release / backlog | Reason |
+|---|---|---|---|
+| #13, #14, #60 to #67 | Done | v1.0 history | reconciled to implementation evidence and closed |
+| PR #118, PR #123, PR #124, PR #126; #6 | Done | v1.0 (B5) | merged 2026-10-08 and 2026-10-09; #6 closed by PR #124 |
+| #86 production readiness | In progress | v1.0; RM-022 to RM-029, RM-040 to RM-043, RM-054 | governance present; evidence gates open |
+| #93 B4 Cloudflare runtime | In progress | v1.0; RM-001, RM-002, RM-012, RM-016, RM-031, RM-042, RM-045, RM-050 to RM-052 | staging deployed; no write-path or cache evidence; production gated |
+| #92 dependency advisories | Ready | v1.0; RM-004 | dispositioned as build-only on 2026-10-10 (D-2026-10-10-14); upgrades pending |
+| PR #122 gitleaks allowlist | In review | v1.0; RM-003 | `security` is red on `main` from a branch-only false positive (D-2026-10-10-13) |
+| PR #95 manual deploy workflow | In review (to be superseded) | v1.0; RM-002 | targets the local config; replace with the reviewer-gated production workflow |
+| PR #119 B4 continuation evidence | In review | v1.0; RM-016, R2 evidence | evidence documentation |
+| PR #89 ZZ-OCR-QUAL-001 spec | In review (draft) | v1.1; RM-060 | camera qualification contract |
+| PR #115 OCR qualification harness | In progress (draft) | v1.1; RM-061 | stacked on PR #89 |
+| PR #121 README and board mirror | In review (draft) | v1.0; RM-006 | overlaps this review's README and board updates; reconcile before merge |
+| PR #85 governance artifacts | Closed (superseded) | v1.0 (governance) | artifacts already present on main; after syncing, no file diff remained, so it was closed without merging |
+| PR #91 site reconciliation, #90 | In review (draft) | v1.0 (B5); RM-044 | closes #90 |
+| PR #120 Q72 and Q73 answers; #116, #117 | Done | v1.0 (B5); RM-044 | Michael's answers |
+| PR #125 footer social icons and Omer removal | Done | v1.0 (B5); RM-044 | Michael's 2026-10-08 changes |
+| PR #128 LICENSE owner name | In review | v1.0 (legal) | legal text needs Danny's yes |
+| PR #127 location capability | In review | R-B17 | research only (D-2026-10-10-18) |
+| #87 contract-2 gate | Backlog | v2.0; RM-080 | now includes the Organization entity (D-2026-10-10-06) |
+| #81, PR #82 semantic profiles | Backlog / In review (draft) | v2.1; RM-091 | CANON-SHADOW |
+| #83, PR #84 ZK research | Backlog / In review (draft) | R-B15 | SPECULATIVE |
+| #35 any-language codes | Backlog | R-I18N | research |
+| #114, #7 site follow-ups and assets | Backlog | v1.0 (B5); RM-044 | Michael's supplied files |
+| #11, #8 xTechSearch | In progress (Danny) | RM-047, not a release item | decide by 2026-10-12 |
+| zzThat app parity (draft card) | Backlog | v1.1; RM-069, RM-071 | lands in zzThat |
 
 When repo state and Project status disagree, fix the Project field rather than changing repo truth to match the board. This file is a status mirror; the live project field is still the canonical status.

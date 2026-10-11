@@ -105,5 +105,5 @@ Done when: `test/ops.test.ts` runs each file against the migrated local D1 schem
 
 ## Human gate
 
-- [ ] T023 Danny's yes before any Cloudflare resource, OAuth client, or deploy workflow. His legal yes on the `NOTICE` text and the LICENSE sentence (T036) was given on #78.
-- [ ] T037 Required before the first production mint: re-run the spec 003 pipeline with `ZZ_BLOCKLIST`, check the yield report (the removed words and the new N), and commit the new list. The mint itself needs Danny's deploy yes, and after it proto-v0 is permanent.
+- [ ] T023 Danny's yes before any Cloudflare resource, OAuth client, or deploy workflow. Staging resources and manual staging workflows exist under `intent/2026-10-06-cloudflare-github-staging.md`; production remains open as BACKLOG RM-011, RM-042, RM-050, and RM-051. His legal yes on the `NOTICE` text and the LICENSE sentence (T036) was given on #78.
+- [ ] T037 (BACKLOG RM-020, which adds the Q35 filters) Required before the first production mint: re-run the spec 003 pipeline with `ZZ_BLOCKLIST`, check the yield report (the removed words and the new N), and commit the new list. The mint itself needs Danny's deploy yes, and after it proto-v0 is permanent.

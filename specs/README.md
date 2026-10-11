@@ -2,21 +2,23 @@
 
 zzThis uses [Spec Kit](https://github.com/github/spec-kit) order: constitution, specify, clarify, plan, checklist, tasks, analyze, implement, converge. The rules for every spec are in [`.specify/memory/constitution.md`](../.specify/memory/constitution.md) (v1.1.2, ratified 2026-10-05).
 
+Start with [`RELEASE-ROADMAP.md`](RELEASE-ROADMAP.md) (what ships in which release), [`BACKLOG.md`](BACKLOG.md) (the actionable items), and the latest review, [`analysis-2026-10-10-architecture-review.md`](analysis-2026-10-10-architecture-review.md).
+
 `docs/SPEC.md` stays as the source for verbatim copy, source tags, and the decision log (Section 9). [`DECISION-STATUS.md`](DECISION-STATUS.md) is the current convergence index: use it before treating OPEN text in historical analyses as current. [`SCOPE-GOVERNANCE.md`](SCOPE-GOVERNANCE.md) controls intake/promotion, [`CAPABILITY-ROADMAP.md`](CAPABILITY-ROADMAP.md) assigns work to release bundles, and [`CLOUDFLARE-RUNTIME.md`](CLOUDFLARE-RUNTIME.md) is the canonical runtime/substrate architecture. Its banner maps each section to the artifact that now holds it.
 
 ## Features
 
 | ID | Feature | Built? | specify | clarify | plan | checklist | tasks | analyze |
 |---|---|---|---|---|---|---|---|---|
-| [001](001-marketing-site/spec.md) | Marketing site and scripted demo | Yes, live on GitHub Pages | Done | Decided 2026-10-04 (#74) | Done | [Done](001-marketing-site/checklists/requirements.md) | [Open: T029, T030](001-marketing-site/tasks.md) | Done |
-| [002](002-resolver-core/spec.md) | Resolver core | Implemented through 005; production deploy gated | Done, deepened 2026-10-03 | Decided 2026-10-04 (#74). Q29: this repo. | Proposal | [Done](002-resolver-core/checklists/requirements.md) | [Draft](002-resolver-core/tasks.md) | Done |
-| [003](003-wordlist-checkword/spec.md) | Wordlist, check word, and v1 text grammar | Implemented through 005/shared core | Done, deepened 2026-10-03 (US3 grammar accepted) | Decided 2026-10-04 (#74) | Proposal | [Done](003-wordlist-checkword/checklists/requirements.md) | [Draft](003-wordlist-checkword/tasks.md) | Done |
-| [004](004-capture/spec.md) | Capture by camera, typing, or voice | V1 client/server boundaries implemented; trained/voice paths deferred | Done, deepened 2026-10-03 | Decided 2026-10-04 (#74) | Proposal | [Done](004-capture/checklists/requirements.md) | [Draft](004-capture/tasks.md) | Done |
+| [001](001-marketing-site/spec.md) | Marketing site and scripted demo | Yes, live on GitHub Pages at zzthis.com | Done | Decided 2026-10-04 (#74) | Done | [Done](001-marketing-site/checklists/requirements.md) | [Open: content tasks (BACKLOG RM-044); T029 done](001-marketing-site/tasks.md) | Done |
+| [002](002-resolver-core/spec.md) | Resolver core | Implemented through 005; production deploy gated | Done, deepened 2026-10-03 | Decided 2026-10-04 (#74). Q29: this repo. | Implemented through 005 | [Done](002-resolver-core/checklists/requirements.md) | [Draft](002-resolver-core/tasks.md) | Done |
+| [003](003-wordlist-checkword/spec.md) | Wordlist, check word, and v1 text grammar | Implemented through 005/shared core; production list open (RM-020) | Done, deepened 2026-10-03 (US3 grammar accepted) | Decided 2026-10-04 (#74) | Implemented through 005 | [Done](003-wordlist-checkword/checklists/requirements.md) | [Draft](003-wordlist-checkword/tasks.md) | Done |
+| [004](004-capture/spec.md) | Capture by camera, typing, or voice | Scanner and classifier implemented in zz-core; camera in zzThat, unqualified (v1.1); trained/voice paths deferred | Done, deepened 2026-10-03 | Decided 2026-10-04 (#74) | Proposal | [Done](004-capture/checklists/requirements.md) | [Draft](004-capture/tasks.md) | Done |
 | [005](005-v1-api/spec.md) | `/v1` API and web client | Implemented/tested on main; production deploy gated | Done, deepened 2026-10-04 for a one-shot build | Decided 2026-10-04: Danny answered Q26, Q29, and Q66; the rest by best practice with his yes on #74 (Q18, Q19, Q25 to Q28, Q36, Q67 to Q71) | [Done](005-v1-api/plan.md) | [Done](005-v1-api/checklists/requirements.md) | [Build order](005-v1-api/tasks.md) | [Done 2026-10-04](analysis-2026-10-04.md) |
 
 v1 scope, exit criteria, and v2 candidates: [`docs/SPEC.md` Section 12](../docs/SPEC.md). The v1 text grammar: [`docs/SPEC.md` Section 2.2a](../docs/SPEC.md).
 
-The `/v1` API and the later web client are [spec 005](005-v1-api/spec.md). The zzThat phone apps are specified in that repo. zzThing is still unspecified. Q33 tracks app scope.
+The `/v1` API and the web client are [spec 005](005-v1-api/spec.md). The zzThat phone apps are specified in that repo. zzThing is still unspecified (DF-12). Q33 decided app scope.
 
 ## Artifact map
 
@@ -27,8 +29,11 @@ The `/v1` API and the later web client are [spec 005](005-v1-api/spec.md). The z
 | Plan (how and stack) | `specs/NNN-name/plan.md` |
 | Requirement checklist | `specs/NNN-name/checklists/requirements.md` |
 | Tasks | `specs/NNN-name/tasks.md` |
-| Cross-artifact analysis | [`analysis-2026-10-02.md`](analysis-2026-10-02.md), [`analysis-2026-10-03.md`](analysis-2026-10-03.md), [`analysis-2026-10-04.md`](analysis-2026-10-04.md), [`analysis-2026-10-05-completeness-audit.md`](analysis-2026-10-05-completeness-audit.md) |
-| Domain model | [`DOMAIN-MODEL.md`](DOMAIN-MODEL.md) |
+| Cross-artifact analysis | [`analysis-2026-10-02.md`](analysis-2026-10-02.md), [`analysis-2026-10-03.md`](analysis-2026-10-03.md), [`analysis-2026-10-04.md`](analysis-2026-10-04.md), [`analysis-2026-10-05-completeness-audit.md`](analysis-2026-10-05-completeness-audit.md), [`analysis-2026-10-10-architecture-review.md`](analysis-2026-10-10-architecture-review.md) |
+| Release roadmap | [`RELEASE-ROADMAP.md`](RELEASE-ROADMAP.md) |
+| Delivery backlog | [`BACKLOG.md`](BACKLOG.md) |
+| Decision records (2026-10-10) | [`decisions-2026-10-10.md`](decisions-2026-10-10.md) |
+| Domain model and state machines | [`DOMAIN-MODEL.md`](DOMAIN-MODEL.md) |
 | Cross-spec traceability | [`TRACEABILITY.md`](TRACEABILITY.md) |
 | Operations | [`../docs/OPERATIONS.md`](../docs/OPERATIONS.md) |
 | Data lifecycle | [`../docs/DATA-LIFECYCLE.md`](../docs/DATA-LIFECYCLE.md) |
@@ -57,7 +62,8 @@ The `/v1` API and the later web client are [spec 005](005-v1-api/spec.md). The z
 | [#44](https://github.com/Zero-State-LLC/zzthis/issues/44) to [#48](https://github.com/Zero-State-LLC/zzthis/issues/48) Q57 to Q61 (answered 2026-10-03) | SPEC 2.2a G3, G10, G11; 002 FR-019 to FR-021; 003 FR-009, FR-022, FR-024; 004 FR-016, FR-017 |
 | [#60](https://github.com/Zero-State-LLC/zzthis/issues/60) to [#67](https://github.com/Zero-State-LLC/zzthis/issues/67) spec 005 task groups | Implemented; reconciled closed from checked task groups and runtime evidence |
 | [#68](https://github.com/Zero-State-LLC/zzthis/issues/68) Q66 (answered [DANNY 2026-10-04]) | 005 FR-020, FR-021 |
-| [#69](https://github.com/Zero-State-LLC/zzthis/issues/69) to [#71](https://github.com/Zero-State-LLC/zzthis/issues/71) Q67 to Q69, one-shot build questions (open) | 005 Open questions; [analysis 2026-10-04](analysis-2026-10-04.md) |
+| [#69](https://github.com/Zero-State-LLC/zzthis/issues/69) to [#71](https://github.com/Zero-State-LLC/zzthis/issues/71) Q67 to Q69, one-shot build questions (resolved [DELEGATED 2026-10-04, #74]) | 005 Decisions; [analysis 2026-10-04](analysis-2026-10-04.md) |
+| [#86](https://github.com/Zero-State-LLC/zzthis/issues/86), [#93](https://github.com/Zero-State-LLC/zzthis/issues/93), [#92](https://github.com/Zero-State-LLC/zzthis/issues/92), [#87](https://github.com/Zero-State-LLC/zzthis/issues/87) production and contract-2 gates | [BACKLOG](BACKLOG.md), Existing issues mapped to items |
 
 ## Labels
 
