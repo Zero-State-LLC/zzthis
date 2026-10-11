@@ -193,7 +193,7 @@ RM-050 production resources ─> RM-053 web build ─> RM-051 deploy ─> RM-052
 
 ### RM-021 Key ids for `ZZ_DATA_KEY` sealed values and tags
 
-- Release v1.0 · P0 · In review (part B of #130) · Bundle B4 · Gate G5 · Journeys J7
+- Release v1.0 · P0 · Done (PR #142 merged 2026-10-10) · Bundle B4 · Gate G5 · Journeys J7
 - **Problem.** Sealed Apple tokens and HMAC tags carry no key id and use fixed `v1` HKDF labels (`workers/api/src/lib/crypto.ts:9-10,97-112`), so a rotation silently breaks Apple revocation at deletion (`account/me.ts:48-62`).
 - **Scope.** Prefix new sealed values with a key id; accept an optional `ZZ_DATA_KEY_PREVIOUS` for decryption; treat unprefixed values as the first key; add a re-encrypt step in the cron.
 - **Acceptance.** A test seals with key A, rotates to key B with A as previous, and still revokes; a test with no previous key fails closed with a logged class.
@@ -289,14 +289,14 @@ RM-050 production resources ─> RM-053 web build ─> RM-051 deploy ─> RM-052
 
 ### RM-035 Bound retention and deletion work; add cron indexes
 
-- Release v1.0 · P0 · In review (part B of #130) · Bundle B1, B4 · Gate G6 · Journeys J7, J8
+- Release v1.0 · P0 · Done (PR #142 merged 2026-10-10) · Bundle B1, B4 · Gate G6 · Journeys J7, J8
 - **Problem.** The cron selects and deletes without limits (`workers/api/src/retention/cron.ts`); account deletion purges every revoked code and deletes all photos in one call (`account/me.ts:155-163`); retention queries scan without indexes.
 - **Scope.** Limited loops with a time budget and per-step isolation; purge only codes that were cacheable; chunk R2 deletes at 1,000 keys; indexes on `auth_nonces(expires_at)`, `refresh_tokens(expires_at)`, `pending_revocations(next_attempt_at)`, `reports(closed_at)`; a log class for abandoned Apple revocations.
 - **Acceptance.** Deleting an account with 5,000 codes returns 204; a cron run with 10,000 expired nonces finishes over successive runs without exceeding one invocation's limits.
 
 ### RM-036 Request, version, and error-class logging
 
-- Release v1.0 · P0 · In review (part B of #130) · Bundle B4 · Gate G7
+- Release v1.0 · P0 · Done (PR #142 merged 2026-10-10) · Bundle B4 · Gate G7
 - **Scope.** Log the request id and `cf-ray` and return `X-Request-Id`; log the deployed version from version metadata; log D1, R2, and Durable Object error classes; keep FR-027 exclusions.
 - **Acceptance.** A log-line test asserts the fields and the absence of code, token, text, and IP.
 
@@ -315,7 +315,7 @@ RM-050 production resources ─> RM-053 web build ─> RM-051 deploy ─> RM-052
 
 ### RM-039 Low-severity hardening
 
-- Release v1.0 · P2 · In review (part B of #130) · Bundle B1
+- Release v1.0 · P2 · Done (PR #142 merged 2026-10-10) · Bundle B1
 - **Scope.** Strip Unicode format characters before the blocklist check (`workers/api/src/lib/text.ts:5`); check JSON body size while streaming (`http/body.ts:21-22`); revoke the previous Apple token when a new one replaces it (`auth/signin.ts:88-96`); audit a rejected ID token; return `reroll-cap` for a handle re-roll even when mint is disabled (`codes/reroll.ts:88`); document whether reports and reads from suspended accounts are allowed (FR-025).
 - **Acceptance.** One test per change.
 
@@ -416,21 +416,21 @@ RM-050 production resources ─> RM-053 web build ─> RM-051 deploy ─> RM-052
 
 ### RM-098 Grant organization must match the holder's and the scope's
 
-- Release v1.3 (prerequisite, before the pilot onboards) · P1 · Ready · Bundle B7 · Owner: kneelbeforez0D
+- Release v1.3 (prerequisite, before the pilot onboards) · P1 · Done (PR #155, closes #148) · Bundle B7 · Owner: kneelbeforez0D
 - **Scope.** `workers/api/ops/grant.sql` writes no grant and no audit row when `:org_id` differs from the subject's `accounts.org_id` (empty matches null), and, for `enterprise` and `logistics`, `:same_org` lets a grant through only when its `org_id` equals the non-null `org_id` of every other active grant in the scope. Header and plan.md Operator work say to run `ops/set-org.sql` first.
 - **Acceptance.** `test/ops-grants.test.ts`: a mismatched `:org_id` writes nothing, including for an existing holder; a matching one, and empty for an account with no organization, succeed; `:same_org` with a different or null `org_id` than the scope's active grants writes nothing; existing grant tests pass after their fixtures run `set-org.sql` first.
 - **Governing.** D-2026-10-10-24 items 1 to 3; D-2026-10-10-22.
 
 ### RM-099 set-org.sql guards for moved accounts
 
-- Release v1.3 (prerequisite, before the pilot onboards) · P1 · Ready · Bundle B7 · Owner: kneelbeforez0D
+- Release v1.3 (prerequisite, before the pilot onboards) · P1 · Done (PR #155, closes #148) · Bundle B7 · Owner: kneelbeforez0D
 - **Scope.** `workers/api/ops/set-org.sql` writes nothing (no update, no audit row) when the account holds an active grant whose `org_id` differs from the new one, unless `:revoke_grants` is set, in which case those grants are revoked in the same batch with `grant.remove` events. It also writes nothing when the account owns `enterprise` or `logistics` codes, unless `:move_owner` equals `yes`. plan.md Operator work gains the runbook note: a moved owner takes its history, including the old organization's actor ids, to the new organization's auditors, and the old organization loses it; to keep history, create a new account.
 - **Acceptance.** `test/ops-org.test.ts`: a holder with a different-org grant is not moved; with `:revoke_grants` it is moved and the grants stop reaching (viewer 404, auditor list empty); an owner of an `enterprise` code is not moved without `:move_owner`, and is with it; a first assignment from null with no grants and no codes still works.
 - **Governing.** D-2026-10-10-24 item 4.
 
 ### RM-100 Deleted accounts' audit visibility
 
-- Release v1.3 (prerequisite, before the pilot onboards) · P2 · Ready · Bundle B7 · Owner: kneelbeforez0D
+- Release v1.3 (prerequisite, before the pilot onboards) · P2 · Done (PR #155, closes #148) · Bundle B7 · Owner: kneelbeforez0D
 - **Scope.** Spec 005 FR-016 states what an auditor sees after an owner in its organization deletes the account (whether that owner's code and record events stay listed or drop out when their code rows are purged); a test pins the behavior.
 - **Acceptance.** `test/org-grants.test.ts` or `test/audit.test.ts`: after `DELETE /v1/me` by an owner in `acme`, the `acme` auditor's list matches the FR-016 sentence.
 - **Governing.** D-2026-10-10-24 item 4.
