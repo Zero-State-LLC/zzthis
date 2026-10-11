@@ -256,6 +256,7 @@ describe("ops/revoke-code.sql", () => {
       [issuer.accountId, "issuer"],
       [auditor.accountId, "auditor"],
     ] as const) {
+      await runOps("set-org.sql", { account_id: subject, org_id: "acme" });
       await runOps("grant.sql", {
         subject_id: subject,
         scope: "enterprise",
@@ -264,7 +265,6 @@ describe("ops/revoke-code.sql", () => {
         org_id: "acme",
         same_org: "enterprise",
       });
-      await runOps("set-org.sql", { account_id: subject, org_id: "acme" });
     }
     const code = await mint(w, issuer.access, { scope: "enterprise" });
     await report(w, code.canonical);
