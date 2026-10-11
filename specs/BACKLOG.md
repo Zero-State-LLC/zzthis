@@ -521,7 +521,7 @@ RM-050 production resources ─> RM-053 web build ─> RM-051 deploy ─> RM-052
 
 ### RM-102 Moderation tooling: triage SLA, suspend, and runbook
 
-- Release v1.1 · P0 · Ready · Bundle B9 · Owner: kneelbeforez0D (tooling), Danny (moderator name)
+- Release v1.1 · P0 · In review (PR #157) · Bundle B9 · Owner: kneelbeforez0D (tooling), Danny (moderator name)
 - **Scope.** Extends RM-077. `workers/api/ops/` SQL: open reports by age and code, a query for reports open longer than 24 hours, suspend and unsuspend an account with audit rows (FR-025), and revoke a reported code. `docs/OPERATIONS.md` gains the moderator runbook: named moderator and backup, 24-hour response, and the escalation to `ZZ_FREE_PUBLIC=false`.
 - **Acceptance.** Tests on the ops SQL: a report older than 24 hours appears in the breach query; suspend blocks mint, re-roll, and record writes with 403 `forbidden` and writes an audit row; unsuspend restores them. The runbook is rehearsed once on staging.
 - **Governing.** D-2026-10-10-25 item 2; Apple 1.2 "timely responses"; Play UGC.
