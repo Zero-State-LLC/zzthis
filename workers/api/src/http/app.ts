@@ -18,7 +18,14 @@ import { getRecord } from "../records/read.ts";
 import { createReport } from "../reports/route.ts";
 import { resolveCode } from "../resolve/resolve.ts";
 import type { AppContext, AppEnv } from "./context.ts";
-import { colo, logConfigError, writeLog } from "./log.ts";
+import {
+  colo,
+  errorClass,
+  logConfigError,
+  rayId,
+  workerVersion,
+  writeLog,
+} from "./log.ts";
 import { ApiError, failed, notFound, notReady } from "./respond.ts";
 
 type Handler = (c: AppContext) => Promise<Response>;
@@ -65,6 +72,10 @@ const finalize: MiddlewareHandler<AppEnv> = async (c, next) => {
     cache: c.get("cache"),
     limiter: c.get("limiter"),
     colo: colo(c.req.raw),
+    // Unset when the settings check failed before the id was made.
+    request_id: (c.get("requestId") as string | undefined) ?? null,
+    ray: rayId(c.req.raw),
+    version: workerVersion(c.env),
   });
 };
 
@@ -105,7 +116,13 @@ export function buildApi(deps: Deps): Hono<AppEnv> {
   // failed, logged by name only, since a message can carry request data.
   app.onError((error) => {
     if (error instanceof ApiError) return error.toResponse();
-    console.error(JSON.stringify({ event: "unhandled", error: error.name }));
+    console.error(
+      JSON.stringify({
+        event: "unhandled",
+        error: error.name,
+        class: errorClass(error),
+      }),
+    );
     return failed().toResponse();
   });
   return app;

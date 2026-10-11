@@ -1,6 +1,6 @@
 # Plan: wordlist and check word
 
-Feature: [spec.md](spec.md). Status: not started.
+Feature: [spec.md](spec.md). Status: not started on 2026-10-03; implemented in `packages/zz-core` through spec 005 Group 0 (status note 2026-10-10). The production list is BACKLOG RM-020.
 
 ## Workflows (copied from the spec)
 

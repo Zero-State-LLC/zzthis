@@ -87,8 +87,8 @@ Source: Michael's 2026-10-07 changes (`intent/2026-10-07-michael-content-changes
 
 | path | status | source | notes |
 |---|---|---|---|
-| public/images/people/omer-yalcin.webp | headshot | Michael's 2026-10-07 changes | Headshot, Omer F. Yalcin, 400 by 400. About advisor card. |
-| public/images/logos/zzthat-lowercase.webp | logo, replaced | Michael's 2026-10-07 lowercase "zzthat" logo file | 356 by 96. Now the zzThat wordmark shown on About under zzthat.com. The camel-case file stays, unused. |
+| public/images/people/omer-yalcin.webp | removed | Michael's 2026-10-07 changes | Headshot, Omer F. Yalcin, 400 by 400. Removed 2026-10-08 until his employer gives permission [MICHAEL 2026-10-08]; restore from #118. |
+| public/images/logos/zzthat-lowercase.webp | logo, replaced | Michael's 2026-10-07 lowercase "zzthat" logo file | 356 by 96. Now the zzThat wordmark shown on About under zzthat.com, and from 2026-10-08 also in every page footer, 16 px high, beside zzThat's Discord and Instagram icons [MICHAEL 2026-10-08]. The camel-case file stays, unused. |
 | public/images/logos/zzthis-logo-on-dark.webp, zzthis-logo-on-light.webp | logo, reused | existing header logos | Also shown on About under zzthis.com, swapped by theme (white "this" on dark, black "this" on light). |
 
 ## Wireframes
