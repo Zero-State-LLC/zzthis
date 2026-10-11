@@ -1,0 +1,382 @@
+---
+// [MICHAEL 2026-10-11] Two five-image walkthroughs, side by side on wide
+// screens and stacked on phones. Order inside each: header, lead, explainer,
+// thumbnail strip, then the large image. The images carry their own caption
+// text, so nothing is printed under them.
+//
+// Without JavaScript the large image is a horizontal, swipeable strip
+// (scroll snap). The script adds thumbnail jumps, previous / next buttons,
+// arrow keys, and the "2 / 5" counter. No browser storage is used.
+import { walkthroughs } from "../content/walkthroughs";
+import { url } from "../lib/url";
+---
+
+<section class="app-sec wt-pair" aria-label="Walkthroughs">
+  {walkthroughs.map((walk) => (
+    <article class="wt" id={walk.id} aria-labelledby={`${walk.id}-title`}>
+      <h2 id={`${walk.id}-title`}>{walk.title}</h2>
+      <p class="wt__lead">{walk.lead}</p>
+      <p class="wt__explainer">{walk.explainer}</p>
+      <div class="wt__viewer" data-wt>
+        <ol class="wt__thumbs" aria-label={`${walk.title}: choose an image`}>
+          {walk.frames.map((frame, index) => (
+            <li>
+              <button
+                type="button"
+                class="wt__thumb"
+                data-wt-thumb={index}
+                aria-label={`Image ${index + 1} of ${walk.frames.length}: ${frame.label}`}
+                aria-current={index === 0 ? "true" : "false"}
+              >
+                <img
+                  src={url(frame.thumb)}
+                  width="64"
+                  height="36"
+                  alt=""
+                  loading="lazy"
+                  decoding="async"
+                />
+              </button>
+            </li>
+          ))}
+        </ol>
+        <div class="wt__stage">
+          <div
+            class="wt__track"
+            role="region"
+            aria-label={`${walk.title}: ${walk.frames.length} images`}
+            tabindex="0"
+            data-wt-track
+          >
+            {walk.frames.map((frame, index) => (
+              <figure class="wt__frame">
+                <img
+                  src={url(frame.src)}
+                  width={frame.width}
+                  height={frame.height}
+                  alt={frame.alt}
+                  loading={index === 0 ? "eager" : "lazy"}
+                  decoding="async"
+                />
+              </figure>
+            ))}
+          </div>
+          <button
+            type="button"
+            class="wt__nav wt__nav--prev"
+            aria-label="Previous image"
+            data-wt-prev
+            hidden
+          >
+            <span aria-hidden="true">‹</span>
+          </button>
+          <button
+            type="button"
+            class="wt__nav wt__nav--next"
+            aria-label="Next image"
+            data-wt-next
+            hidden
+          >
+            <span aria-hidden="true">›</span>
+          </button>
+        </div>
+        <p class="wt__count" aria-live="polite" data-wt-count>
+          {`1 / ${walk.frames.length} · ${walk.frames[0]?.label ?? ""}`}
+        </p>
+      </div>
+    </article>
+  ))}
+</section>
+
+<script is:inline>
+  document.querySelectorAll("[data-wt]").forEach((root) => {
+    const track = root.querySelector("[data-wt-track]");
+    const thumbs = [...root.querySelectorAll("[data-wt-thumb]")];
+    const prev = root.querySelector("[data-wt-prev]");
+    const next = root.querySelector("[data-wt-next]");
+    const count = root.querySelector("[data-wt-count]");
+    if (!track || !prev || !next || !count || thumbs.length === 0) return;
+    const total = thumbs.length;
+    const labels = thumbs.map((thumb) =>
+      (thumb.getAttribute("aria-label") || "").replace(
+        /^Image \d+ of \d+: /,
+        "",
+      ),
+    );
+    let current = 0;
+    // While a button-driven scroll is animating, hold the counter on the
+    // target instead of stepping through the frames in between.
+    let lock = -1;
+    let lockTimer = 0;
+
+    const show = (index) => {
+      const target = Math.max(0, Math.min(total - 1, index));
+      const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+      lock = target;
+      clearTimeout(lockTimer);
+      lockTimer = setTimeout(() => {
+        lock = -1;
+      }, 1000);
+      track.scrollTo({
+        left: target * track.clientWidth,
+        behavior: reduce ? "auto" : "smooth",
+      });
+      mark(target);
+    };
+
+    const mark = (index) => {
+      if (index === current && count.dataset.ready) return;
+      current = index;
+      count.dataset.ready = "1";
+      thumbs.forEach((thumb, i) =>
+        thumb.setAttribute("aria-current", String(i === index)),
+      );
+      prev.disabled = index === 0;
+      next.disabled = index === total - 1;
+      count.textContent = `${index + 1} / ${total} · ${labels[index]}`;
+    };
+
+    let pending = 0;
+    track.addEventListener(
+      "scroll",
+      () => {
+        cancelAnimationFrame(pending);
+        pending = requestAnimationFrame(() => {
+          const width = track.clientWidth || 1;
+          const at = Math.round(track.scrollLeft / width);
+          if (lock !== -1 && at !== lock) return;
+          lock = -1;
+          mark(at);
+        });
+      },
+      { passive: true },
+    );
+
+    thumbs.forEach((thumb, i) =>
+      thumb.addEventListener("click", () => show(i)),
+    );
+    prev.addEventListener("click", () => show(current - 1));
+    next.addEventListener("click", () => show(current + 1));
+    track.addEventListener("keydown", (event) => {
+      if (event.key === "ArrowRight") {
+        event.preventDefault();
+        show(current + 1);
+      } else if (event.key === "ArrowLeft") {
+        event.preventDefault();
+        show(current - 1);
+      }
+    });
+
+    // Keep the current image in place when the layout width changes
+    // (rotation, window resize).
+    if ("ResizeObserver" in window) {
+      new ResizeObserver(() => {
+        lock = current;
+        track.scrollTo({ left: current * track.clientWidth, behavior: "auto" });
+      }).observe(track);
+    }
+
+    prev.hidden = false;
+    next.hidden = false;
+    mark(0);
+  });
+</script>
+
+<style>
+  .wt-pair {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--space-xl);
+  }
+
+  .wt {
+    display: grid;
+    gap: var(--space-sm);
+    align-content: start;
+    min-width: 0;
+  }
+
+  .wt > h2 {
+    font-size: var(--text-section);
+  }
+
+  .wt__lead {
+    font-size: var(--text-md);
+    font-weight: 600;
+    line-height: 1.45;
+  }
+
+  .wt__explainer {
+    color: var(--color-ink-2);
+    line-height: 1.55;
+  }
+
+  .wt__viewer {
+    display: grid;
+    gap: var(--space-xs);
+    padding-block-start: var(--space-xs);
+  }
+
+  /* Five thumbnails about 3/8 inch (36px) high. They shrink together on the
+     narrowest phones so all five stay on one row with room at the sides. */
+  .wt__thumbs {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    gap: var(--space-2xs);
+  }
+
+  .wt__thumbs li {
+    flex: 0 1 64px;
+    min-width: 0;
+  }
+
+  .wt__thumb {
+    display: block;
+    width: 100%;
+    padding: 0;
+    border: 2px solid transparent;
+    border-radius: var(--radius-chip);
+    background: var(--color-panel);
+    cursor: pointer;
+    opacity: 0.7;
+    transition:
+      opacity var(--dur-micro) var(--ease-out),
+      border-color var(--dur-micro) var(--ease-out);
+  }
+
+  .wt__thumb img {
+    display: block;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 16 / 9;
+    border-radius: 1px;
+  }
+
+  .wt__thumb:hover {
+    opacity: 1;
+  }
+
+  .wt__thumb[aria-current="true"] {
+    opacity: 1;
+    border-color: var(--color-accent);
+  }
+
+  .wt__thumb:focus-visible {
+    outline: 2px solid var(--color-focus);
+    outline-offset: 2px;
+  }
+
+  .wt__stage {
+    position: relative;
+  }
+
+  .wt__track {
+    display: flex;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    overscroll-behavior-x: contain;
+    scrollbar-width: none;
+    border: var(--rule-hair) solid var(--color-rule);
+    background: var(--color-panel);
+  }
+
+  .wt__track::-webkit-scrollbar {
+    display: none;
+  }
+
+  .wt__track:focus-visible {
+    outline: 2px solid var(--color-focus);
+    outline-offset: 2px;
+  }
+
+  .wt__frame {
+    flex: 0 0 100%;
+    margin: 0;
+    scroll-snap-align: start;
+  }
+
+  .wt__frame img {
+    display: block;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 16 / 9;
+  }
+
+  .wt__nav {
+    position: absolute;
+    top: 50%;
+    translate: 0 -50%;
+    display: grid;
+    place-items: center;
+    width: 40px;
+    height: 40px;
+    padding: 0;
+    /* [MICHAEL 2026-10-11] Orange outline on a see-through dark fill, not a
+       solid orange disc. */
+    border: 2px solid var(--color-accent);
+    border-radius: 999px;
+    font-size: 1.6rem;
+    line-height: 1;
+    color: var(--color-accent);
+    background: color-mix(in oklch, var(--mask-solid) 35%, transparent);
+    cursor: pointer;
+    opacity: 0.85;
+    transition:
+      opacity var(--dur-micro) var(--ease-out),
+      background var(--dur-micro) var(--ease-out);
+  }
+
+  .wt__nav:hover {
+    opacity: 1;
+    background: color-mix(in oklch, var(--mask-solid) 55%, transparent);
+  }
+
+  .wt__nav:disabled {
+    opacity: 0.3;
+    cursor: default;
+  }
+
+  .wt__nav:focus-visible {
+    outline: 2px solid var(--color-focus);
+    outline-offset: 2px;
+  }
+
+  .wt__nav--prev {
+    left: var(--space-xs);
+  }
+
+  .wt__nav--next {
+    right: var(--space-xs);
+  }
+
+  @media (pointer: coarse) {
+    .wt__nav {
+      width: 44px;
+      height: 44px;
+    }
+  }
+
+  .wt__count {
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    color: var(--color-ink-3);
+  }
+
+  /* Side by side: a subgrid keeps the two thumbnail strips and the two large
+     images on the same line even when one explainer is longer. */
+  @media (min-width: 64rem) {
+    .wt-pair {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      column-gap: var(--space-lg);
+      row-gap: var(--space-sm);
+    }
+
+    .wt {
+      grid-row: span 4;
+      grid-template-rows: subgrid;
+      gap: inherit;
+    }
+  }
+</style>

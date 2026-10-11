@@ -15,6 +15,7 @@ import * as navigationModule from "../src/content/navigation";
 import * as peopleModule from "../src/content/people";
 import * as technologyModule from "../src/content/technology";
 import * as usesModule from "../src/content/uses";
+import * as walkthroughsModule from "../src/content/walkthroughs";
 import * as workflowsModule from "../src/content/workflows";
 
 const { applications, applicationsPage } = applicationsModule;
@@ -45,6 +46,7 @@ const modules: readonly unknown[] = [
   peopleModule,
   technologyModule,
   usesModule,
+  walkthroughsModule,
   workflowsModule,
 ];
 
@@ -465,5 +467,29 @@ describe("content hygiene across all content modules", () => {
         banned.some((term) => text.toLowerCase().includes(term)),
       ),
     ).toEqual([]);
+  });
+});
+
+describe("applications walkthroughs [MICHAEL 2026-10-11]", () => {
+  const { walkthroughs } = walkthroughsModule;
+
+  it("has the pallet and household walkthroughs, five images each", () => {
+    expect(walkthroughs.map((walk) => walk.title)).toEqual([
+      "Smart force-multiplier automation",
+      "Smart packing and handling",
+    ]);
+    for (const walk of walkthroughs) {
+      expect(walk.frames).toHaveLength(5);
+    }
+  });
+
+  it("ships every walkthrough image and thumbnail under public, each at most 2 MB", () => {
+    for (const frame of walkthroughs.flatMap((walk) => walk.frames)) {
+      for (const src of [frame.src, frame.thumb]) {
+        const path = join("public", src);
+        expect(existsSync(path), path).toBe(true);
+        expect(statSync(path).size).toBeLessThanOrEqual(2 * 1024 * 1024);
+      }
+    }
   });
 });
