@@ -81,3 +81,9 @@ Resolved since 2026-10-06: the six high npm audit findings (#92) are disposition
 ## Hygiene rule
 
 A new OPEN item must name owner, safe default if one exists, evidence needed, blocking artifact, and canonical decision location. Do not add bare TODO/TBD/OPEN prose to active specs.
+
+## 2026-10-11
+
+| ID | Status | Topic |
+|---|---|---|
+| D-2026-10-11-01 | ACCEPTED | Michael MVP dispositions; person-made plan (C) v1.1 + (A) v2.0 |
