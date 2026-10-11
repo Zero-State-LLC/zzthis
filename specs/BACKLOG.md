@@ -592,6 +592,20 @@ RM-050 production resources ─> RM-053 web build ─> RM-051 deploy ─> RM-052
 - **Acceptance.** Worker tests: two public codes from one owner resolve with the same `creator`; codes from different owners differ; a private record gives null; the raw account id never appears; the cached public response keeps the field. zzThat tolerant-reader tests pass on both apps.
 - **Governing.** D-2026-10-10-25 item 1; D-2026-10-10-12; Apple 1.2; Play UGC.
 
+### RM-113 Suggested-word picker on Create (server-chosen codes)
+
+- Release v1.1 · P1 · Ready · Bundle B3 · Owner: kneelbeforez0D · External (zzThat; web create may mirror)
+- **Scope.** Option (C) from D-2026-10-11-01. Create keeps `POST /v1/codes` and re-roll: the server still chooses words and the check word (zzThat FR-017, ZQ11). The UI offers a clearer way to pick among suggested or re-rolled server words (for example show the candidate set and "Get different words") so creators feel they chose a code without sending a person-written string. No wire change. Cap remains 3 re-rolls (spec 005 FR-006).
+- **Acceptance.** zzThat (and web if create is shown) tests: mint still sends no canonical; re-roll to cap; picker copy uses `design/copy.json` keys; Unavailable when `free_public` is false.
+- **Governing.** D-2026-10-11-01; D-2026-10-10-21.
+
+### RM-115 Local Saved list in zzThat (device-only)
+
+- Release v1.1 · P2 · Ready · Bundle B3 · Owner: kneelbeforez0D · External (zzThat)
+- **Scope.** Row 17 ASSIMILATE from D-2026-10-11-01. Add a device-only "Saved" list of codes the person scanned and chose to save (canonical + optional local thumbnail). No server sync, no photo upload. Cleared on account deletion and by a Settings reset (same pattern as hide/block lists). Cloud sync of Saved stays QUEUE with RM-117 / v2.2.
+- **Acceptance.** Spec and runtime name Saved; tests show save/unsave without network; list survives process restart; deletion and reset clear it; no new API calls.
+- **Governing.** D-2026-10-11-01.
+
 ## v1.2 and v1.3 items
 
 ### RM-076 Public community codes review
@@ -619,15 +633,38 @@ RM-050 production resources ─> RM-053 web build ─> RM-051 deploy ─> RM-052
 
 - Release v1.3 · P2 · Backlog · Bundle B7 · Index `codes(scope)` and record each event's scope at insert so auditor queries stop scanning.
 
+
+### RM-114 Owner-only renew for expired codes
+
+- Release v1.3 · P2 · Backlog (QUEUED) · Bundle B7 · Owner: kneelbeforez0D
+- **Scope.** Row 9 from D-2026-10-11-01. Public resolve keeps one not-found shape for unknown, expired, used, and revoked (spec 002 FR-011, spec 005 FR-009). The signed-in owner (My codes / owner resolve) may see that a code expired and renew it (update `expires_at`) without a public "this code expired" message. Rolling renew-on-scan by arbitrary scanners is out of scope.
+- **Acceptance.** Spec and tests: public expired → not-found; owner sees expired and can renew; scanner cannot keep another person's code alive by scanning.
+- **Governing.** D-2026-10-11-01; pairs with RM-078 expiring-code UI.
+
 ## v2.0 to v2.2 items
 
 | ID | Release | Pri | Status | Item | Governing |
 |---|---|---|---|---|---|
+
+### RM-116 Person-made code claim (contract 2)
+
+- Release v2.0 · P1 · Backlog · Bundle with RM-084 / RM-087 · Owner: kneelbeforez0D
+- **Scope.** Option (A) from D-2026-10-11-01. Design and implement a signed-in **claim** of a person-made (or no-device field) code under contract 2: first-come on global `match_key` (FR-032 unchanged), minimum entropy (for example three parts or words plus digits), blocklist and trademark filter on code parts (extend RM-028), no fuzzy live-code match (Q40), and a new OCR qualification corpus for open vocabulary. Align with Q25 / RM-084. Option (B) (additive contract-1 slice) is not planned. Add a threat-model row for phrase squatting and guessable person-made codes.
+- **Acceptance.** Design record reviewed by Danny; OpenAPI contract 2 + dual-contract tests (RM-087); Worker and zzThat claim flows; threat-model row with controls; qualification plan named.
+- **Governing.** D-2026-10-11-01; CONTRACT-EVOLUTION; THREAT-MODEL.
+
+### RM-117 Cloud photo and training consent (before photo reads)
+
+- Release v2.2 · P1 · Backlog (RESEARCH) · Bundle B12 · Owner: Danny (legal) / kneelbeforez0D (eng)
+- **Scope.** Row 8 from D-2026-10-11-01. Before RM-092 photo reads or RM-097 image matching: in-app explicit consent (purpose, retention, training yes/no), privacy policy and store-label updates, zzThat FR-005 consent text revision, EXIF strip and downscale rules, and DATA-LIFECYCLE rows. Training use is a separate opt-in from upload-for-read.
+- **Acceptance.** Consent copy approved by Danny; drafts and manifests match; no upload path enabled until this RM and R-B12 exit.
+- **Governing.** D-2026-10-11-01; Q34; Apple App Privacy / 5.1.2 norms; THREAT-MODEL photo row.
+
 | RM-080 | v2.0 | P0 | Backlog | #87 gate extended with an Organization entity: Scope, Namespace, Organization cardinality, ownership, grants, migration | #87; D-2026-10-10-06; DOMAIN-MODEL |
 | RM-081 | v2.0 | P1 | Backlog | Multi-list verification and per-scope dictionaries; discovery lists versions | spec 003 FR-017, FR-022; D-2026-10-10-04 |
 | RM-082 | v2.0 | P1 | Backlog | `GET /v1/keys` and client signature verification | Q28 |
 | RM-083 | v2.0 | P1 | Backlog | Partner OAuth 2.0 client credentials, one client per partner | Q19; B11 |
-| RM-084 | v2.0 | P2 | Backlog | No-device field-code claim and scope-aware handles | Q25, Q56, Q71 |
+| RM-084 | v2.0 | P2 | Backlog | No-device field-code claim and scope-aware handles | Q25, Q56, Q71; align with RM-116 |
 | RM-085 | v2.0 | P2 | Backlog | Self-service data export | D-2026-10-10-16 |
 | RM-086 | v2.0 | P2 | Backlog | Mint idempotency key; reuse grace evaluation (DF-10) | backend review M1 |
 | RM-087 | v2.0 | P0 | Backlog | Contract negotiation, dual-contract tests, deprecation record | CONTRACT-EVOLUTION |
@@ -637,3 +674,9 @@ RM-050 production resources ─> RM-053 web build ─> RM-051 deploy ─> RM-052
 | RM-092 | v2.2 | P1 | Backlog (RESEARCH) | Advanced recognition and photo reads after R-B12; R2 joins recovery scope | B12; spec 005 US5 |
 | RM-097 | v2.2 | P3 | Backlog (RESEARCH) | Image matching of scans against the creator's photos (Michael 2026-10-09); needs reference photos, consent wording, and a retention limit | D-2026-10-10-23; `docs/SPEC.md` 12.2 |
 | RM-095 | R-B6 | P1 | Backlog | Human and OCR confusion evaluation of the production list on the Q34 corpus | spec 003 FR-001, FR-002 |
+| RM-113 | v1.1 | P1 | Ready | Suggested-word picker on Create (server-chosen; option C) | D-2026-10-11-01 |
+| RM-114 | v1.3 | P2 | Backlog (QUEUED) | Owner-only renew for expired codes; no public expired message | D-2026-10-11-01 |
+| RM-115 | v1.1 | P2 | Ready | Local Saved list in zzThat (device-only) | D-2026-10-11-01 |
+| RM-116 | v2.0 | P1 | Backlog | Person-made code claim design (contract 2; option A) | D-2026-10-11-01; RM-084 |
+| RM-117 | v2.2 | P1 | Backlog (RESEARCH) | Cloud photo and training consent before photo reads | D-2026-10-11-01; B12 |
+

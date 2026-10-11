@@ -2,11 +2,11 @@
 
 Author: Claude (for Michael and Danny)
 Date: 2026-10-09
-Status: intake. Needs Danny's disposition for each claim. Not implementation authority.
+Status: dispositions set by Danny 2026-10-11 (D-2026-10-11-01). Not implementation authority until RMs land.
 Product: zzThat apps (iOS, Android, web) on the zzThis v1 API (`Zero-State-LLC/zzthis`)
 
 Process: `specs/SCOPE-GOVERNANCE.md` and `intent/_PRODUCT-INPUT-TEMPLATE.md`.
-Danny sets the disposition of every row. Do not implement from this file.
+Danny set dispositions in D-2026-10-11-01. Do not implement from this file; implement from BACKLOG RMs.
 Recognition rules and thresholds are Danny's call; Michael's numbers are proposals [MICHAEL 2026-10-08].
 
 ## For attention first
@@ -60,27 +60,27 @@ Claude's check of these claims against `main` (8189ce1), for Danny and his agent
 
 ## Disposition
 
-Michael's request is the target he asked for. Danny sets the disposition (ASSIMILATE, QUEUE, SHADOW, RESEARCH, REJECT).
+Michael's request is the target he asked for. Danny set each disposition on 2026-10-11 PT (D-2026-10-11-01), after the research pass. SCOPE-GOVERNANCE values: ASSIMILATE, QUEUE, SHADOW, RESEARCH, REJECT. Person-made codes plan: (C) suggested/re-roll server words at v1.1 with `ZZ_FREE_PUBLIC` (RM-113); (A) real person-made claim at v2.0 under contract 2 (RM-116, Q25/RM-084 shape). (B) earliest c1 additive slice is **not planned**.
 
 | # | Michael's request | Disposition | Bundle | Target release | Reason |
 |---|---|---|---|---|---|
-| 1 | zzThat MVP | Danny | | | |
-| 2 | zzThat MVP | Danny | | | |
-| 3 | zzThat MVP | Danny | | | |
-| 4 | zzThat MVP | Danny | | | |
-| 5 | zzThat MVP | Danny | | | |
-| 6 | zzThat MVP | Danny | | | |
-| 7 | zzThat MVP | Danny | | | |
-| 8 | zzThat MVP | Danny | | | |
-| 9 | zzThat MVP | Danny | | | |
-| 10 | zzThat MVP (UI shows greyed options) | Danny | | | |
-| 11 | zzThat MVP | Danny | | | |
-| 12 | zzThat MVP | Danny | | | |
-| 13 | zzThat MVP | Danny | | | |
-| 14 | Already true for matching; display per the 2026-10-06 intent | Danny | | | |
-| 15 | zzThat MVP (defaults only) | Danny | | | |
-| 16 | zzThat MVP | Danny | | | |
-| 17 | zzThat MVP | Danny | | | |
+| 1 | Person-made codes (user writes 1–3 words) | QUEUE | B9→contract 2 | v2.0 (RM-116) | Contract 2 claim; keep FR-032. Near-term: suggested words (C) at v1.1 (RM-113). |
+| 2 | Optional numbers field after words | QUEUE | with RM-116 | v2.0 | Rides on row 1; needs G10 digit rule. |
+| 3 | Duplicates; reuse after expiry; newest wins | QUEUE | R-B17, R-B13 | Horizon (not v1.x) | Roadmap excludes duplicate public codes; hijack risk. |
+| 4 | Match list with %; Nearest/Newest/Best | QUEUE | with row 3, R-B17 | Horizon | Exact match only until row 3 + location research exit. |
+| 5 | Close-match against live registered codes | REJECT | — | — | Q40 / threat model: never live-code hints. |
+| 6 | No near-word prompt for person-made | QUEUE | with RM-116 | v2.0 | Only after person-made codes exist. |
+| 7 | Creation photo check; reference photos | ASSIMILATE (check) / QUEUE (refs) | B2 / B12 | v1.1 (RM-070) / v2.2 | On-device create check stays; stored refs with row 8. |
+| 8 | Photos to cloud for training/matching | QUEUE | B12 | v2.2 (RM-117, then RM-092/097) | RESEARCH-gated; explicit consent; contradicts current no-train text. |
+| 9 | Rolling liveness; public expired message | QUEUE (owner renew) / REJECT (public msg) | B7 | v1.3 (RM-114) | Keep uniform not-found; owner-only renew. |
+| 10 | Create menu; Personal option | ASSIMILATE (Public+greyed) / QUEUE (Personal) | B3 / RM-080 | v1.1 / v2.0 | free_public always public (FR-035). |
+| 11 | Links / zzPages | QUEUE | R-ZZPAGE | v2.x or rejection | FR-007 link safety first (D-2026-10-10-17). |
+| 12 | Blocklist/trademark on person-made strings | QUEUE | with RM-116 | v2.0 | Extend RM-028 application when row 1 lands; pages already filtered. |
+| 13 | Points UI | QUEUE | — | No release until purpose | Undefined; no store need. |
+| 14 | Case-insensitive; capitals in create examples | ASSIMILATE | B5 | v1.x | Matching already case-folds; finish display intent. |
+| 15 | Hidden fields; `consumer` namespace | QUEUE | RM-080, RM-081 | v2.0 | Avoid parallel namespace on contract 1. |
+| 16 | Phone numbers in public codes | REJECT | — | — | FR-007 / D-2026-10-03-11. |
+| 17 | My codes + Saved; cloud sync | ASSIMILATE (local Saved) / QUEUE (cloud) | B3 / B12 | v1.1 (RM-115) / v2.2 | Local Saved only; cloud sync with row 8. |
 
 ## Scope-change test
 
@@ -122,7 +122,7 @@ Per `specs/SCOPE-GOVERNANCE.md` any new journey, entity, or behavior is expansio
 
 ## Implementation authorization
 
-- Implementation authorized: no. Pending Danny's dispositions.
+- Implementation authorized: no from this file. Authorized only via BACKLOG RMs under D-2026-10-11-01 (RM-113 to RM-117 and existing RM-070, RM-084).
 
 ## Audit against main 0e9b025 (2026-10-09)
 
@@ -174,7 +174,7 @@ Rows that conflict with the current spec: 1, 3, 4, 5, 6, 8, 9, 10 (Personal), 11
 | 16 | REJECT | Directly contradicts FR-007 and D-2026-10-03-11 (personal data in codes). |
 | 17 | QUEUE | "Saved" local-only list is small, but cloud sync depends on row 8. |
 
-Process calls (SCOPE-GOVERNANCE classification, bundle assignment) are Prabu's; dispositions are Danny's.
+Process calls (SCOPE-GOVERNANCE classification, bundle assignment) are Prabu's. Dispositions below were proposals; **Danny adopted the researched table in D-2026-10-11-01** (see Disposition section).
 
 ### Future integration path (proposal, per conflicting row)
 
