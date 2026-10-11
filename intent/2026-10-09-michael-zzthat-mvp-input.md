@@ -93,7 +93,11 @@ Rows 1, 3, 4, 7, 8, 9, and 11 expand the current release:
 - New sensitive-data class? yes (photos stored in the cloud; optional location).
 - New deploy dependency? possibly (photo storage).
 
-Under the policy these presume QUEUE unless Danny re-scopes the zzThat MVP. Michael's input is a request to re-scope the zzThat MVP around person-made codes. That is Danny's decision.
+Rows 13 (persistent points plus UI) and 17 (Saved journey and entity) are new features on the same test.
+
+Rows 2, 10, 12, and 15 add fields or behavior.
+
+Per `specs/SCOPE-GOVERNANCE.md` any new journey, entity, or behavior is expansion, so the QUEUE presumption applies to all of these rows unless Danny re-scopes the zzThat MVP. Michael's input is a request to re-scope the zzThat MVP around person-made codes. That is Danny's decision.
 
 ## Michael's reasoning on the conflicts
 
@@ -135,11 +139,11 @@ Cross-cutting finding: zzThat create depends on `free_public` (zzThat FR-018), a
 | 5 | CONFIRMED, ALREADY-PLACED | Suggestions are off everywhere in v1 (Q40, spec 005); per-tenant suggestions are DF-07. Matching against live registered codes is what Q40 forbids ("never a live code"). |
 | 6 | CONFIRMED | G1 near-word check (edit distance 2, `confirm`) applies to any letters-only part off the list, so `kathy`, `lost`, `cat` each prompt today. |
 | 7 | CORRECTED, ALREADY-PLACED | Creation check is spec 004 FR-017, placed in v1.1 as RM-070 (in-app, on device, passes on canonical equality, not a threshold). Only 0.80 matches spec 004 Accept; 0.70 is Clarify. D-2026-10-10-03: without a PASS receipt the camera is confirm-only. Stored reference photos are new and imply upload (row 8). |
-| 8 | CORRECTED, ALREADY-PLACED | Photo upload is v2.2 (B12, RESEARCH-gated, R-B12) and excluded from v1.1 ("No raw photo leaves the device"). `ZZ_PHOTO_READS` false is enforced by the RM-001 config test. Also conflicts with Q34 (measure-only, no training absent consent) and zzThat FR-005, whose consent sentence says "It is not used to train a model." |
+| 8 | CORRECTED, ALREADY-PLACED | Photo upload is v2.2 (B12, RESEARCH-gated, R-B12) and excluded from v1.1 ("No raw photo leaves the device"). RM-001 is a Ready backlog item; its production-config/repository test is planned and does not yet enforce `ZZ_PHOTO_READS=false` (the existing settings test only rejects the unparsable value "1"). Also conflicts with Q34 (measure-only, no training absent consent) and zzThat FR-005, whose consent sentence says "It is not used to train a model." |
 | 9 | CONFIRMED | Spec 005 Resolve step 6 and spec 002 FR-011: one not-found shape; zzThat FR-010 and SC-3. No rolling renewal exists; `expires_at` is fixed per mint, and expiring codes in the UI are v1.3 (RM-078). |
 | 10 | CORRECTED | Personal conflicts: spec 005 FR-035 allows `private` only in `enterprise` and `logistics`; `free_public` is always public. Dictionary choice is RM-081 (v2.0); ranks map to grants (v1.3, RM-063, RM-080). |
 | 11 | CORRECTED, ALREADY-PLACED | Conflict, not just a new field: FR-007 forbids tappable links. zzPages are research R-ZZPAGE (D-2026-10-10-17). |
-| 12 | CONFIRMED | RM-028 blocklist covers the issued wordlist only; no filter for person-made text. |
+| 12 | CONFIRMED | RM-028 is not an issued-wordlist-only control: the shared `ZZ_BLOCKLIST` already applies to record titles and bodies (spec 005 FR-024) and to offensive or reserved handles (spec 002 FR-019). The actual gap is applying that existing list and the trademark policy to arbitrary person-made plain code strings, so extend RM-028's application rather than create a new list. |
 | 13 | CONFIRMED | No points anywhere in either repo. |
 | 14 | CONFIRMED | Case-fold in 2.2a; G3 markers in any case, circled `(zz)` needs no separator; Q48 spaces. The display intent `2026-10-06-v1-display-in-capitals.md` is still draft. |
 | 15 | CONFIRMED, ALREADY-PLACED | Namespace and Organization model is RM-080 (v2.0, #87 gate); dictionaries RM-081. `consumer` is not a defined scope; the closest is `free_public`. |
@@ -163,7 +167,7 @@ Rows that conflict with the current spec: 1, 3, 4, 5, 6, 8, 9, 10 (Personal), 11
 | 9 | QUEUE | Rolling renewal is new; keep the uniform not-found shape (anti-probing). An owner-only expired view is safer than a public message. |
 | 10 | ACCEPT (Public only, greyed rest) | Public matches today; Personal needs FR-035 change; greyed controls add UI only. |
 | 11 | QUEUE | R-ZZPAGE must resolve FR-007 link safety first. |
-| 12 | ACCEPT | Needed for any person-made text; extend RM-028 when row 1 lands. |
+| 12 | QUEUE | Applying the existing blocklist (RM-028) and trademark policy to arbitrary person-made plain code strings is new behavior, so it presumes QUEUE; extend RM-028's application when row 1 lands. |
 | 13 | QUEUE | No spec or purpose defined. |
 | 14 | ACCEPT | Already true for matching; finish the 2026-10-06 display intent. |
 | 15 | QUEUE | RM-080 (v2.0) owns the model; avoid a parallel `consumer` namespace. |
