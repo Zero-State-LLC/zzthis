@@ -67,7 +67,7 @@ Thresholds stay OPEN (Q37). The triggers below say which band applies; they set 
 |---|---|---|
 | Accept | Grammar passes, every snapped word is above the accept threshold, and the check word verifies (word codes) | The canonical code, then the record view |
 | Clarify | Grammar passes, but one or more words fall between the thresholds, the check word fails with one uncertain word, or the classifier returns `confirm` (a near-word, FR-015) | The uncertain word with wordlist candidates and the part as written; confirm or type it |
-| Retry | A marker is missing or cut off, the photo is blurred, or glare hides part of the code | "Take another photo" with the reason; after a set number of retries, offer the server read (US3) |
+| Retry | A marker is missing or cut off, the photo is blurred, glare hides part of the code, the code is small in the frame, or the code is skewed or seen at a steep angle | "Take another photo" with the reason: marker cut off, blur, glare, "Move closer" (the code is small in the frame), or "Try a better angle" (skew or perspective) (D-2026-10-10-23); after a set number of retries, offer the server read (US3) |
 | Abstain | Grammar fails for any reason other than a missing or cut-off marker (that is Retry), including `unsupported-script` and `reserved-symbol` (FR-012). A bare mark also lands here in v1 (FR-011), and so does a word code whose check-word verify returns `wrong-length` (FR-016) | The reason in plain words, and typed entry |
 
 Handles and field codes never reach Accept without a person confirming them (FR-010).
@@ -130,8 +130,10 @@ Thresholds stay parameters (Q37). These values let the apps ship. They are not m
 |---|---|---|
 | Accept | A word code whose check word verifies, with every word at 0.80 confidence or more | A word code whose check word verifies, or a field code, handle, or name as typed |
 | Clarify | Any word between 0.50 and 0.80; a near-word (confirm); a check-word mismatch; any field code, handle, or name (FR-010) | A near-word, or a check-word mismatch |
-| Retry | A partial candidate, no candidate at all, or a word below 0.50 in a candidate that otherwise passes (Q37) | Not used |
+| Retry | A partial candidate, no candidate at all, or a word below 0.50 in a candidate that otherwise passes (Q37). The 0.50 value stays until real scan data tunes it; 0.60 was considered and not adopted (D-2026-10-10-23) | Not used |
 | Abstain | An invalid candidate, a word code whose verify returns `wrong-length` (`scan.wrong_length`), or a bare mark (FR-011) | A parser failure (with its reason), a word code whose verify returns `wrong-length` (`scan.wrong_length`), or a bare mark |
+
+Retry reasons (D-2026-10-10-23, [MICHAEL 2026-10-09]). A Retry names one reason, chosen by signal, never by the confidence number alone. A partial marker gives "marker cut off"; blur or glare gives that reason; a code box that is small in the frame gives "Move closer"; a code box with skew or perspective distortion gives "Try a better angle". The size and skew limits are parameters, tuned with the thresholds on real scan data. A retake replaces the earlier photo in v1; combining readings across frames is later (BACKLOG RM-096).
 
 Bands use the local verify only when step 4 ran. When the list versions differ, the server's 400 `wrong-length` maps to `scan.wrong_length` (zzThat spec.md Errors).
 

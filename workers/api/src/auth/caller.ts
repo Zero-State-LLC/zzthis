@@ -85,3 +85,29 @@ export async function requireActive(
   }
   return caller;
 }
+
+// RM-033: a guarded write found its account deleted or suspended after
+// requireActive passed. Answer as if the request had arrived after: a
+// deleted account is 401, a suspended one is 403 with the
+// same once-per-window audit as requireActive.
+export async function refuseInactive(
+  c: AppContext,
+  accountId: string,
+  action: string,
+  rule: UserRule,
+): Promise<never> {
+  // Accounts are never removed, only marked deleted, so the row exists.
+  const row = (await c.env.ZZ_DB.prepare(
+    "SELECT deleted_at IS NOT NULL AS deleted FROM accounts WHERE id = ?",
+  )
+    .bind(accountId)
+    .first<{ deleted: number }>()) as { deleted: number };
+  if (row.deleted === 1) throw unauthorized();
+  if (await firstRefusal(c, rule, accountId)) {
+    await auditDenied(c, accountId, action, {
+      type: "account",
+      id: accountId,
+    });
+  }
+  throw forbidden();
+}

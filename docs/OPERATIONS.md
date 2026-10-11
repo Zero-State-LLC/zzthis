@@ -87,6 +87,9 @@ Apple/Google outage must fail closed for new token exchange while existing valid
 
 ## Key and secret lifecycle
 
+`ZZ_DATA_KEY` rotation (RM-021): set the old key as `ZZ_DATA_KEY_PREVIOUS` and the new key as `ZZ_DATA_KEY`, then deploy. New sealed Apple tokens name the new key. Keep `ZZ_DATA_KEY_PREVIOUS` set until no row still uses the old key id: `SELECT count(*) FROM identities WHERE apple_refresh_token_enc IS NOT NULL AND apple_refresh_token_enc NOT LIKE 'k1.<new id>.%'` and the same for `pending_revocations.token_enc` both return 0, or 30 days pass and the pending rows expire. HMAC tags are not migrated: rotation resets rate-limit windows and old not-found and nonce audit targets stop matching new ones.
+
+
 Before production define owner, storage system, rotation cadence, emergency revoke/replace procedure, key identifiers, and verification overlap. Compromise response must include invalidation scope and evidence that old material is no longer accepted.
 
 ## Capacity and spend

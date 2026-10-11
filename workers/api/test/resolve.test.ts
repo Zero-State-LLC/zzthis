@@ -9,7 +9,7 @@ import {
   signIn,
   type Session,
 } from "./helpers/http.ts";
-import { fixture7Codes, repeating } from "./helpers/random.ts";
+import { repeating, unknownCode } from "./helpers/random.ts";
 import { expectMatchesSchema } from "./helpers/schema.ts";
 import { makeWorld, testDataKeys, type World } from "./helpers/world.ts";
 
@@ -24,32 +24,28 @@ function resolve(w: World, code: string, token?: string): Promise<Response> {
   );
 }
 
+// Every account in these tests is in one organization, as the operator's
+// set-org.sql and grant.sql would bind it (D-2026-10-10-22).
 async function grant(
   accountId: string,
   scope: string,
   role: string,
   expiresAt: string | null = null,
 ) {
-  await env.ZZ_DB.prepare(
-    "INSERT INTO grants (id, subject_id, scope, role, expires_at) VALUES (?, ?, ?, ?, ?)",
-  )
-    .bind(crypto.randomUUID(), accountId, scope, role, expiresAt)
-    .run();
+  await env.ZZ_DB.batch([
+    env.ZZ_DB.prepare(
+      "INSERT INTO grants (id, subject_id, scope, role, org_id, expires_at) VALUES (?, ?, ?, ?, 'acme', ?)",
+    ).bind(crypto.randomUUID(), accountId, scope, role, expiresAt),
+    env.ZZ_DB.prepare("UPDATE accounts SET org_id = 'acme' WHERE id = ?").bind(
+      accountId,
+    ),
+  ]);
 }
 
 async function enterprise(w: World, name: string): Promise<Session> {
   const session = await signIn(w, name);
   await grant(session.accountId, "enterprise", "issuer");
   return session;
-}
-
-// An issuable fixture-7 code that this database has never stored.
-async function unknownCode(): Promise<string> {
-  const rows = await env.ZZ_DB.prepare("SELECT canonical FROM codes").all<{
-    canonical: string;
-  }>();
-  const taken = new Set(rows.results.map((row) => row.canonical));
-  return fixture7Codes().find((code) => !taken.has(code)) as string;
 }
 
 function headersOf(response: Response): Record<string, string> {

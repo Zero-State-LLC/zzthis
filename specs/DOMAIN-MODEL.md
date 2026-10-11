@@ -14,17 +14,18 @@ Status: current V1 model plus reserved future terms. Deepened 2026-10-10 with st
 | Check word | The last word of an issued word code, computed from the data words | Capacity; it adds detection only |
 | Scope | A product partition: `enterprise`, `logistics`, `free_public` | A tenant or organization (see below) |
 | Record | Owner-linked content a code addresses, with versions | The code |
-| Grant | A role (`issuer`, `viewer`, `auditor`) for one account in one scope | An organization membership |
+| Grant | A role (`issuer`, `viewer`, `auditor`) for one account in one scope, bound to one `org_id` or to none | An organization membership |
+| org_id | The interim tenant key on accounts and grants, set by the operator (D-2026-10-10-22) | The Organization entity, which replaces it in contract 2 (RM-080) |
 
 ## V1 entities (OBSERVED)
 
-- **Account**: authenticated subject; no email or name stored.
+- **Account**: authenticated subject; no email or name stored; optional operator-set `org_id`.
 - **Identity**: provider and subject bound to an account; holds the sealed Apple refresh token for deletion-time revocation.
 - **Scope**: one of three fixed values; not an entity table.
 - **Code**: public identifier with lifecycle state, scope, kind (`plain`, `handle`), list version, and owner.
 - **Record**: owner-linked, `public` or `private`.
 - **RecordVersion**: append-only for ordinary history. Account deletion is the explicit privacy-erasure exception: title, body, and signature are erased and `erased_at` is set (spec 005 FR-023).
-- **Grant**: role in a scope, optional expiry.
+- **Grant**: role in a scope, optional expiry, optional `org_id`.
 - **AuditEvent**: append-only evidence; update and delete are blocked by triggers.
 - **Report**: safety report; open until the operator closes it.
 - **AuthNonce**, **RefreshToken** (with family), **PendingRevocation**, **ReadPhoto** (disabled in normal V1).
@@ -80,14 +81,14 @@ Terminal: C2, C3, C4. Words of a code in any terminal state are never issued aga
 
 ## Scope, Organization, and Namespace
 
-**Scope controls V1 product behavior; it is not a tenant.** A `viewer` or `auditor` grant covers every record or event in its scope, across every account (spec 005 FR-034, FR-035). Until contract 2:
+**Scope controls V1 product behavior; it is not a tenant.** Within its scope, a `viewer` or `auditor` grant reaches only accounts with the grant's `org_id`; a grant with no `org_id` reaches only its holder's own rows (spec 005 FR-016, FR-034, FR-035; D-2026-10-10-22, RM-074, #135). `org_id` is the interim tenant key: a nullable text column on `accounts` and `grants` (migration 0003), with no table of its own. Until contract 2:
 
-- each of `enterprise` and `logistics` serves at most one organization, and the operator grants roles only to that organization's accounts (D-2026-10-10-06, RM-063);
-- Organization (tenant) is a missing entity. Its relation to Scope and Namespace is part of the #87 gate (RM-080).
+- each of `enterprise` and `logistics` serves at most one organization, and the operator grants roles only to that organization's accounts (D-2026-10-10-06, RM-063); `ops/grant.sql` refuses a grant to a second account in the scope unless the operator states it is the same organization (RM-073);
+- Organization (tenant) is a missing entity. `org_id` is its migration source. Its relation to Scope and Namespace is part of the #87 gate (RM-080).
 
 Future terms, reserved and not persisted under contract 1:
 
-- **Organization** (INFERRED, 2026-10-10): the customer boundary that grants and private records must respect.
+- **Organization** (INFERRED, 2026-10-10): the customer boundary that grants and private records must respect. Its interim key, `org_id`, is persisted under contract 1 (D-2026-10-10-22).
 - **Namespace**: future authority/domain binding for semantic interpretation. It is not automatically the same thing as V1 Scope.
 - **SemanticProfile**: versioned schema that assigns meaning rules to an explicitly profile-bound code.
 - **SemanticDictionaryVersion**: immutable versioned semantic mappings used by a profile.
