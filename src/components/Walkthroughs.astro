@@ -18,7 +18,12 @@ import { url } from "../lib/url";
       <p class="wt__lead">{walk.lead}</p>
       <p class="wt__explainer">{walk.explainer}</p>
       <div class="wt__viewer" data-wt>
-        <ol class="wt__thumbs" aria-label={`${walk.title}: choose an image`}>
+        <ol
+          class="wt__thumbs"
+          data-wt-thumbs
+          hidden
+          aria-label={`${walk.title}: choose an image`}
+        >
           {walk.frames.map((frame, index) => (
             <li>
               <button
@@ -95,6 +100,7 @@ import { url } from "../lib/url";
     const prev = root.querySelector("[data-wt-prev]");
     const next = root.querySelector("[data-wt-next]");
     const count = root.querySelector("[data-wt-count]");
+    const thumbsList = root.querySelector("[data-wt-thumbs]");
     if (!track || !prev || !next || !count || thumbs.length === 0) return;
     const total = thumbs.length;
     const labels = thumbs.map((thumb) =>
@@ -105,24 +111,12 @@ import { url } from "../lib/url";
     );
     let current = 0;
     // While a button-driven scroll is animating, hold the counter on the
-    // target instead of stepping through the frames in between.
+    // target instead of stepping through the frames in between. The lock is
+    // always released via settle(), so state ends synced to the real position.
     let lock = -1;
     let lockTimer = 0;
-
-    const show = (index) => {
-      const target = Math.max(0, Math.min(total - 1, index));
-      const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
-      lock = target;
-      clearTimeout(lockTimer);
-      lockTimer = setTimeout(() => {
-        lock = -1;
-      }, 1000);
-      track.scrollTo({
-        left: target * track.clientWidth,
-        behavior: reduce ? "auto" : "smooth",
-      });
-      mark(target);
-    };
+    let settleTimer = 0;
+    let pending = 0;
 
     const mark = (index) => {
       if (index === current && count.dataset.ready) return;
@@ -136,21 +130,69 @@ import { url } from "../lib/url";
       count.textContent = `${index + 1} / ${total} · ${labels[index]}`;
     };
 
-    let pending = 0;
+    const settle = () => {
+      const width = track.clientWidth || 1;
+      mark(Math.round(track.scrollLeft / width));
+    };
+
+    const show = (index) => {
+      const target = Math.max(0, Math.min(total - 1, index));
+      const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+      lock = target;
+      clearTimeout(lockTimer);
+      lockTimer = setTimeout(() => {
+        lock = -1;
+        settle();
+      }, 1000);
+      track.scrollTo({
+        left: target * track.clientWidth,
+        behavior: reduce ? "auto" : "smooth",
+      });
+      mark(target);
+    };
+
+    const release = () => {
+      lock = -1;
+      clearTimeout(lockTimer);
+    };
+
     track.addEventListener(
       "scroll",
       () => {
         cancelAnimationFrame(pending);
+        clearTimeout(settleTimer);
         pending = requestAnimationFrame(() => {
           const width = track.clientWidth || 1;
           const at = Math.round(track.scrollLeft / width);
           if (lock !== -1 && at !== lock) return;
           lock = -1;
+          clearTimeout(lockTimer);
           mark(at);
         });
+        // Fallback for browsers without "scrollend": re-sync once scrolling
+        // has actually stopped.
+        settleTimer = setTimeout(() => {
+          lock = -1;
+          clearTimeout(lockTimer);
+          settle();
+        }, 150);
       },
       { passive: true },
     );
+
+    if ("onscrollend" in track) {
+      track.addEventListener("scrollend", () => {
+        cancelAnimationFrame(pending);
+        clearTimeout(settleTimer);
+        lock = -1;
+        clearTimeout(lockTimer);
+        settle();
+      });
+    }
+
+    track.addEventListener("pointerdown", release, { passive: true });
+    track.addEventListener("touchstart", release, { passive: true });
+    track.addEventListener("wheel", release, { passive: true });
 
     thumbs.forEach((thumb, i) =>
       thumb.addEventListener("click", () => show(i)),
@@ -176,6 +218,7 @@ import { url } from "../lib/url";
       }).observe(track);
     }
 
+    if (thumbsList) thumbsList.hidden = false;
     prev.hidden = false;
     next.hidden = false;
     mark(0);
