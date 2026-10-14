@@ -58,6 +58,30 @@ Minimum incident classes:
 
 The operator owns declaration and closure. Every P0/P1 needs a preserved timeline, affected data/services, containment, recovery evidence, and follow-up actions.
 
+## Moderation
+
+Required before `ZZ_FREE_PUBLIC` turns on (D-2026-10-10-25 item 2, RM-102; Apple App Review Guideline 1.2, Google Play user-generated content policy). Spec 005 records the target: every report is triaged within one day, and a confirmed abusive code is revoked and its owner suspended within that window.
+
+| Role | Who |
+|---|---|
+| Moderator | Danny (D-2026-10-11-08 answer 17) |
+| Backup moderator | Michael (D-2026-10-11-08 answer 17) |
+
+Each day, and whenever a report arrives during a launch:
+
+1. Run `ops/report-overdue.sql`. The target is zero rows. A row is a missed target: handle it first.
+2. Run `ops/report-queue.sql`. It lists every open report oldest first, with its age, the overdue flag, how many open reports name the same code, the code's status, its owner, and whether the owner is already suspended. Both files are read only.
+3. Decide each report:
+   - Not abusive: close it with `ops/reports.sql`.
+   - One abusive code: revoke it with `ops/revoke-code.sql`, then close the report.
+   - An abusive creator (several reported codes, or a single severe one): suspend the owner with `ops/suspend.sql`, which revokes all of their active codes and refuses their writes (FR-025), then close the report. `ops/unsuspend.sql` lifts a suspension on appeal; revoked codes stay revoked.
+   - A report of a code that was never issued has no code or owner: close it.
+4. Every action writes its own audit row (`code.revoke`, `account.suspend`, `account.unsuspend`, `report.close`), so no separate log is kept. A cached resolve of a revoked code can last 60 seconds (FR-018).
+
+Escalation: when the queue cannot be kept within one day, or a wave of abuse arrives faster than it can be handled, turn create off for everyone by setting `ZZ_FREE_PUBLIC` to `false` (spec 005 FR-005). That is a production config change, so it needs Danny's yes (AGENTS.md), and it is the first thing to ask for. Turn it back on when the queue is clear.
+
+Before launch: rehearse steps 1 to 3 once on staging with a seeded report, and record the date here. _Not yet rehearsed._
+
 ## Observability
 
 Production logging must be purpose-limited and redact:
@@ -87,7 +111,7 @@ Apple/Google outage must fail closed for new token exchange while existing valid
 
 ## Key and secret lifecycle
 
-`ZZ_DATA_KEY` rotation (RM-021): set the old key as `ZZ_DATA_KEY_PREVIOUS` and the new key as `ZZ_DATA_KEY`, then deploy. New sealed Apple tokens name the new key. Keep `ZZ_DATA_KEY_PREVIOUS` set until no row still uses the old key id: `SELECT count(*) FROM identities WHERE apple_refresh_token_enc IS NOT NULL AND apple_refresh_token_enc NOT LIKE 'k1.<new id>.%'` and the same for `pending_revocations.token_enc` both return 0, or 30 days pass and the pending rows expire. HMAC tags are not migrated: rotation resets rate-limit windows and old not-found and nonce audit targets stop matching new ones.
+`ZZ_DATA_KEY` rotation (RM-021): set the old key as `ZZ_DATA_KEY_PREVIOUS` and the new key as `ZZ_DATA_KEY`, then deploy. New sealed Apple tokens name the new key. Keep `ZZ_DATA_KEY_PREVIOUS` set until no row still uses the old key id: `SELECT count(*) FROM identities WHERE apple_refresh_token_enc IS NOT NULL AND apple_refresh_token_enc NOT LIKE 'k1.<new id>.%'` and the same for `pending_revocations.token_enc` both return 0, or 30 days pass and the pending rows expire. HMAC tags are not migrated: rotation resets rate-limit windows and old not-found and nonce audit targets stop matching new ones. It also changes every Resolve `creator` value (RM-112), so creators that people blocked in the apps show again until they block them again; rotate only when the key is at risk.
 
 
 Before production define owner, storage system, rotation cadence, emergency revoke/replace procedure, key identifiers, and verification overlap. Compromise response must include invalidation scope and evidence that old material is no longer accepted.

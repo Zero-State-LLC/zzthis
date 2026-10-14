@@ -8,7 +8,7 @@ import {
   signIn,
   type Session,
 } from "./helpers/http.ts";
-import { fixture7Codes } from "./helpers/random.ts";
+import { unknownCode } from "./helpers/random.ts";
 import { expectMatchesSchema } from "./helpers/schema.ts";
 import { makeWorld, type World } from "./helpers/world.ts";
 
@@ -131,7 +131,7 @@ describe("GET /v1/audit (FR-016, T015)", () => {
   it("lists no event whose target has no scope: accounts, nonces, reports, and not-found resolves", async () => {
     const w = await makeWorld();
     await twoScopes(w);
-    const unknown = fixture7Codes()[29] as string;
+    const unknown = await unknownCode();
     await call(w, "GET", resolvePath(unknown));
     await call(w, "POST", "/v1/reports", {
       body: { canonical: unknown, reason: "spam" },
