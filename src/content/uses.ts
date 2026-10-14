@@ -4,6 +4,7 @@ export interface TopWay {
   numeral: string;
   title: string;
   codes: readonly string[];
+  status: string;
   text: string;
 }
 
@@ -13,43 +14,55 @@ export interface TopWaysContent {
 }
 
 export const topWays: TopWaysContent = {
-  heading: "Top ways zzThis is used",
+  heading: "Potential use cases and explorations",
   items: [
     {
       numeral: "01",
       title: "Logistics",
       codes: ["zz-copper-lantern-sky-zz", "zz-fastfreight-c4821-123-zz"],
-      text: "Easier handling: mark crates, bags, and parts, then read, link, and hand them off with a phone camera or a few spoken words. For shipping, including across borders, the zz-code can be the shipment's shared identity and hub, where customs, carriers, and payment services find the same information, and its ID on the shared ledger used by every service that handles the goods.",
+      status:
+        "Exploration: field/enterprise workflows are queued in B7; carrier and ledger integrations are not v1 features.",
+      text: "A future workflow could use a handwritten code to help identify and hand off items. The pictured shipping, customs, payment-service, and shared-ledger connections are concepts, not available integrations.",
     },
     {
       numeral: "02",
       title: "Postal",
       codes: ["zz-post-rock-river-sky-zz"],
-      text: "A handwritten zz-code can serve as proof of postage and a trackable reference: write it in the stamp corner of a letter or parcel, and it links to postage, routing, and tracking.",
+      status:
+        "Exploration: postal/parcel workflows are queued in B8; postage, carrier, routing, and tracking integrations are not v1 services.",
+      text: "A future postal or parcel workflow could use a handwritten code as a reference. This concept is not proof of postage and does not provide routing or tracking.",
     },
     {
       numeral: "03",
       title: "Everyday use: zzThat",
       codes: ["zz-kathy-lost-cat-zz", "zz-moving-box-kitchen-3-zz"],
-      text: "Free for everyone. Write a code on a lost-pet flyer, a moving box, a garage-sale item, or a note, and anyone can scan it, like a QR code you can write by hand. Endless imaginative uses. The zzThat app is coming to Android, iOS, and the web at zzthat.com.",
+      status:
+        "Consumer/community uses are queued in B9. zzThat is a working prototype; Android, iOS, and web releases are planned, not shipped.",
+      text: "Community examples include a lost-pet flyer, a moving box, or a garage-sale item. The zzThat scanner/creator is a working prototype; its consumer releases remain planned.",
     },
     {
       numeral: "04",
       title: "AI agents",
       codes: ["zz-acme-support-agent-zz", "zz-@agentsmith-zz"],
-      text: "AI agents need identities people can easily know and recognize by name, and enterprises need to name and brand their agents, on the everyday web as well as on blockchains. A zz-code gives an agent a short name people can write, say, and verify, linked to who runs it and what it is allowed to do.",
+      status:
+        "Exploration: agent/ledger integrations are shadowed in B16; no v1 agent identity or authorization integration.",
+      text: "A future integration could give an agent a short, readable alias. Linking that alias to an operator or permissions is not a v1 capability.",
     },
     {
       numeral: "05",
       title: "Blockchain addresses",
       codes: ["zz-btc-harbor-violet-nine-zz", "zz-harbor-violet-nine-zz"],
-      text: "Wallet, account, smart-contract, and agent addresses on networks such as Bitcoin and Ethereum are long strings of random characters. A zz-code is a readable alias for any of them: easier to write, say, and check on screen before you send.",
+      status:
+        "Exploration: blockchain integration is shadowed in B16 for v2+; it is not a v1 dependency or capability.",
+      text: "A future integration could map a readable code to a wallet, account, smart-contract, or agent address. No blockchain alias integration is available in v1.",
     },
     {
       numeral: "06",
       title: "Macros",
       codes: ["zz-fn-pay-agentsmith-zz", "zz-run-reorder-water-zz"],
-      text: "A zz-code can also call a function: a short, human-writable command that asks a system to do something, such as reorder supplies, pay an agent, or open a work order. A macro runs only for an authenticated, authorized user who confirms it; the code itself carries no authority.",
+      status:
+        "Exploration: authorized actions/macros are shadowed in B14; code-triggered actions are not a v1 feature.",
+      text: "A future authorized-actions design could let a code refer to a command, subject to separate authentication, authorization, and confirmation. The code itself carries no authority, and v1 does not execute macros.",
     },
   ],
 };

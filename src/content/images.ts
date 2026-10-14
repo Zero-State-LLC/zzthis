@@ -223,7 +223,8 @@ export const images = {
     title: "Touch first",
     shortCopy: "Drag an identified item to an action.",
     alt: "Phone screen with a recognized item being dragged onto large action buttons.",
-    caption: "Drag an identified item to an action; offer voice input.",
+    caption:
+      "Concept illustration: review an identified item and a suggested action.",
     focal: { x: 0.5, y: 0.5 },
     destination: ["home", "how", "applications"],
     status: "concept",

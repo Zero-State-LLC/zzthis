@@ -29,6 +29,7 @@ describe("home application entries", () => {
     const empty: Application = {
       id: "community",
       title: "Empty",
+      status: "Exploration",
       story: "None",
       homeImages: [],
       pageImages: [],
@@ -40,6 +41,11 @@ describe("home application entries", () => {
 
 describe("home application presentation", () => {
   const template = readFileSync("src/components/AppIndex.astro", "utf8");
+  const topWaysTemplate = readFileSync("src/components/TopWays.astro", "utf8");
+  const appSectionTemplate = readFileSync(
+    "src/components/AppSection.astro",
+    "utf8",
+  );
   const css = readFileSync("src/styles/b-bands.css", "utf8");
 
   it("renders every entry image and the wide-only class", () => {
@@ -54,5 +60,10 @@ describe("home application presentation", () => {
     expect(css).toMatch(
       /@media \(min-width: 600px\)\s*\{[^}]*\.app--wide-only\s*\{[^}]*display:\s*grid/,
     );
+  });
+
+  it("renders roadmap status labels beside the Home and Applications examples", () => {
+    expect(topWaysTemplate).toContain("{item.status}");
+    expect(appSectionTemplate).toContain("{app.status}");
   });
 });
