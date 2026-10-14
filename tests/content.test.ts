@@ -1,3 +1,5 @@
+import { existsSync, statSync } from "node:fs";
+import { join } from "node:path";
 import { describe, expect, it } from "vitest";
 import * as anatomyModule from "../src/content/anatomy";
 import * as applicationsModule from "../src/content/applications";
@@ -20,7 +22,12 @@ const { applications, applicationsPage } = applicationsModule;
 const { comparisonColumns, comparisonNote, comparisonRows } = comparisonModule;
 const { whyMarkers } = anatomyModule;
 const { featured, hero } = heroModule;
-const { demoPrototypeLinks } = demoModule;
+const { navItems, footerItems, footerNotice, zzthisSocial, zzthatSocial } =
+  navigationModule;
+const { advisors, founder, founderOrigin } = peopleModule;
+const { demoTitle, demoPrototypeLinks } = demoModule;
+const { technologyDraft } = technologyModule;
+const { conceptLabels } = labelsModule;
 const { topWays } = usesModule;
 const { coreIdentity, fieldLogistics, howItWorksPage, photoToAction } =
   workflowsModule;
