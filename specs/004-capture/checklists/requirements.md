@@ -2,7 +2,7 @@
 
 Checked 2026-10-07. Capture is not built. Recognition architecture refined by the accepted 2026-10-06 v1 recognizer-qualification intent.
 
-Status note 2026-10-10: the scanner and classifier are implemented in `packages/zz-core` and pass the shared vectors; on-device recognition lives in zzThat and is unqualified. ZZ-OCR-QUAL-001 is in draft PR #89, not on `main`. Release: v1.1 ([RELEASE-ROADMAP](../../RELEASE-ROADMAP.md)).
+Status note 2026-10-14: the scanner and classifier are implemented in `packages/zz-core` and pass the shared vectors; on-device recognition lives in zzThat and is unqualified. ZZ-OCR-QUAL-001 merged in #89. The harness preflight merged in #115 and does not by itself authorize camera Accept. Release: v1.1 ([RELEASE-ROADMAP](../../RELEASE-ROADMAP.md)).
 
 ## Completeness
 

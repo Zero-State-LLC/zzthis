@@ -1,6 +1,6 @@
 # Current decision status
 
-Date: 2026-10-06, updated 2026-10-10 by the [architecture review](analysis-2026-10-10-architecture-review.md) and 2026-10-13 to match `main` at 8873ce1
+Date: 2026-10-06, updated 2026-10-10 by the [architecture review](analysis-2026-10-10-architecture-review.md), 2026-10-13 to match `main` at 8873ce1, and 2026-10-14 to match `main` at b20b212. Dated decision records and analysis files keep the status they had when written.
 Authority: docs/SPEC.md Section 9 and 9a plus later accepted intents. This file is a convergence index, not a new decision source.
 
 ## Reading rule
@@ -13,7 +13,7 @@ A source marked "draft PR" is not on `main`. It informs planning but is not yet 
 
 | ID | Current disposition | Canonical source |
 |---|---|---|
-| Q18 | v1 on-device recognition only; no cloud reader. Refinement in review: an engine-neutral RecognitionResult boundary and engine qualification (ZZ-OCR-QUAL-001). | docs/SPEC.md; recognizer-qualification intent and spec in draft PR [#89](https://github.com/Zero-State-LLC/zzthis/pull/89) |
+| Q18 | v1 on-device recognition only; no cloud reader. Refined in #89: an engine-neutral RecognitionResult boundary and engine qualification (ZZ-OCR-QUAL-001). | docs/SPEC.md; ZZ-OCR-QUAL-001 merged in [#89](https://github.com/Zero-State-LLC/zzthis/pull/89) |
 | Q19 | No partner route in contract 1. v2 uses OAuth 2.0 client credentials, one client per partner. | docs/SPEC.md / spec 005 |
 | Q28 | Ed25519 signing for contract 1; production key lifecycle remains a deploy gate. | docs/SPEC.md / spec 005 |
 | Q29 | API/resolver implementation lives in this repo; shared grammar in packages/zz-core. | docs/SPEC.md; observed implementation |
@@ -23,7 +23,7 @@ A source marked "draft PR" is not on `main`. It informs planning but is not yet 
 | Q34 | Team-made governed private photo corpus; no faces/PII/location metadata; measurement-only absent training consent. | docs/SPEC.md |
 | Q35 | proto-v0 skips shape/sound filters; production list adds confusable-shape and phonetic filtering validated empirically. | docs/SPEC.md / spec 003 |
 | Q36 | Retired words are never reissued. | docs/SPEC.md |
-| Q37 | 0.80 accept / below 0.50 retry are prototype parameters. ZZ-OCR-QUAL-001 may replace them from frozen tuning evidence; without a PASS receipt a platform ships confirm-only (D-2026-10-10-03). | docs/SPEC.md; draft PR #89; decisions-2026-10-10 |
+| Q37 | 0.80 accept / below 0.50 retry are prototype parameters. ZZ-OCR-QUAL-001 may replace them from frozen tuning evidence; without a PASS receipt a platform ships confirm-only (D-2026-10-10-03). | docs/SPEC.md; #89 merged; decisions-2026-10-10 |
 | Q38 | No voice in v1; future voice recognition stays on device. | docs/SPEC.md |
 | Q39 | zzThat launch trigger is first public release on both app stores. | docs/SPEC.md |
 | Q66-Q71 | Resolved/delegated for the one-shot build. | docs/SPEC.md / spec 005 |
@@ -87,7 +87,7 @@ Full records: [decisions-2026-10-11.md](decisions-2026-10-11.md). Rows in docs/S
 | Item | Owner/evidence | Blocking effect |
 |---|---|---|
 | B17 consumer location capability | Operator disposition; consumer journey and privacy decisions in `specs/006-location/spec.md` | No contract-1 schema change or implementation until release/scope and privacy decisions are accepted |
-| OCR/fiducial release thresholds | ZZ-OCR-QUAL-001 tuning/final corpus (draft PR #89, harness draft PR #115) | blocks camera Accept promotion, not typed entry |
+| OCR/fiducial release thresholds | ZZ-OCR-QUAL-001 tuning/final corpus. #89 and the #115 preflight are merged; the private corpus and a PASS receipt are still open | blocks camera Accept promotion, not typed entry |
 | production wordlist human-confusion thresholds | R-B6 on the Q34 corpus; fallback in D-2026-10-10-04 | blocks freezing the production wordlist unless Danny records risk acceptance |
 | product SLO, end-to-end RPO, RTO | proposed values in D-2026-10-10-10; drill RM-024 (#86) | blocks production authorization |
 | six high npm audit findings | clean Node 24 npm audit JSON plus dependency-path reachability (#92) | blocks dependency-security disposition |
@@ -101,8 +101,8 @@ Resolved since 2026-10-06: the six high npm audit findings (#92) are disposition
 
 ## Closed by dependent PR
 
-- #90 closes when website reconciliation draft PR #91 merges.
-- zzThat recognition convergence waits for zzThis draft PR #89 to merge, then exact pin advance and zzThat #44 reconciliation.
+- #90 closed when website reconciliation #91 merged (2026-10-14).
+- #89 merged, zzThat #76 advanced the pin, and zzThat #44 reconciled the adapter spec. Building the RecognitionResult adapter waits on zzThat #77.
 
 ## Hygiene rule
 

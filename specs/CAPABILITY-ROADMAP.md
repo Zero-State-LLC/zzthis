@@ -32,7 +32,7 @@ This roadmap groups fragmented product input into promotable capability bundles.
 | Bundle | Release | Note |
 |---|---|---|
 | B1 | v1.0 (typed and web); v1.1 (apps); issuer, viewer, auditor UI in v1.3 | server implemented |
-| B2 | v1.1 | the fiducial and qualification terms come from draft PR #89 and are not yet in spec 004 on `main`; without a PASS receipt a platform ships confirm-only (D-2026-10-10-03) |
+| B2 | v1.1 | fiducial and qualification terms are on `main` in spec 004 (#89) and the harness preflight is #115; without a PASS receipt a platform ships confirm-only (D-2026-10-10-03) |
 | B3 | v1.1 | zzThat repository |
 | B4 | v1.0 | the site Worker migration is proposed as optional, not a v1.0 gate (D-2026-10-10-15) |
 | B5 | v1.0, continuing | |
@@ -47,7 +47,7 @@ This roadmap groups fragmented product input into promotable capability bundles.
 | B14 | DF-02 | |
 | B15 | R-B15 | |
 | B16 | DF-03 | |
-| B17 (proposed in PR #127) | R-B17 | not on `main`; D-2026-10-10-18 |
+| B17 (research spec merged in #127) | R-B17 | on `main` as research only; no contract-1 change (D-2026-10-10-18) |
 
 ## Current release boundary
 
