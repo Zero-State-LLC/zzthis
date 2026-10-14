@@ -28,6 +28,7 @@ Chain: **Journey -> Workflow -> State transition -> Contract -> Acceptance test 
 | J15 | Recover from an incident | declare -> contain -> restore D1 to bookmark -> replay deletions -> restore secrets -> verify | service degraded -> restored | OPERATIONS; D-2026-10-10-10 | staging: empty-table D1 restore 2026-10-07 | RM-022 to RM-025 | v1.0. Runbooks missing |
 | J16 | Structured semantic resolution | canonical code -> resolver authorization -> profile and dictionary binding -> disclosure | V1 identifier -> profile-bound interpretation | #81; PR #82 | semantic-profile acceptance checklist (planned) | RM-080, RM-091 | v2.1. CANON-SHADOW, no runtime authority |
 | J17 | ZK predicate verification | authorized semantic resolution -> committed predicate proof -> verifier | proof absent -> generated -> accepted / rejected | #83; PR #84 S1 | 20 negative vectors (planned) | R-B15 | Research. SPECULATIVE, no runtime authority |
+| J18 | Attach a location to a consumer record | owner selects place and disclosure -> versioned record update -> public preview | absent -> attached -> updated/removed; disclosure scope stays explicit | B17; proposed spec 006 | permission, disclosure, signature, cache, erasure, and cross-client tests (planned) | B17 | Research. No contract-1 authority |
 
 ## Release-gate trace
 

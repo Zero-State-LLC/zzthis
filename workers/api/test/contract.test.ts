@@ -75,6 +75,7 @@ describe("GET /v1 (T002)", () => {
       scopes: ["enterprise", "logistics", "free_public"],
       wordlist_version: "fixture-7",
       photo_reads: false,
+      creator_refs: true,
     });
     expect(response.headers.get("Cache-Control")).toBe("no-store");
   });
