@@ -62,6 +62,7 @@ Replaces the 2026-10-07 map, which listed PRs #118, #123, #124, and #126 as in r
 | PR #89 ZZ-OCR-QUAL-001 spec | In review (draft) | v1.1; RM-060 | camera qualification contract |
 | PR #115 OCR qualification harness | In progress (draft) | v1.1; RM-061 | stacked on PR #89 |
 | PR #121 README and board mirror | In review (draft) | v1.0; RM-006 | overlaps this review's README and board updates; reconcile before merge |
+| PR #85 governance artifacts | Closed (superseded) | v1.0 (governance) | artifacts already present on main; after syncing, no file diff remained, so it was closed without merging |
 | PR #91 site reconciliation, #90 | In review (draft) | v1.0 (B5); RM-044 | closes #90; rebased/merged with main at head `f97458a`; CI and site typecheck/test pass, security is blocked only by the exact historical Gitleaks OCR threshold false positive (isolated draft fix PR #122), and E2E is skipped. Keep draft for mobile/interactive verification and the #89 architecture-claim gate |
 | PR #120 Q72 and Q73 answers; #116, #117 | Done | v1.0 (B5); RM-044 | Michael's answers; Q72 and Q73 were answered by Michael and applied in draft PR #120 |
 | PR #125 footer social icons and Omer removal | Done | v1.0 (B5); RM-044 | Michael's 2026-10-08 changes |
@@ -75,4 +76,4 @@ Replaces the 2026-10-07 map, which listed PRs #118, #123, #124, and #126 as in r
 | #11, #8 xTechSearch | In progress (Danny) | RM-047, not a release item | decide by 2026-10-12 |
 | zzThat app parity (draft card) | Backlog | v1.1; RM-069, RM-071 | the apps start dark and use the lowercase zzThat wordmark (`docs/SPEC.md` Section 5.5); lands in the zzThat specs and apps |
 
-When repo state and Project status disagree, fix the Project field rather than changing repo truth to match the board.
+When repo state and Project status disagree, fix the Project field rather than changing repo truth to match the board. This file is a status mirror; the live project field is still the canonical status.
