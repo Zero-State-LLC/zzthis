@@ -602,7 +602,7 @@ RM-050 production resources ─> RM-053 web build ─> RM-051 deploy ─> RM-052
 ### RM-115 Local Saved list in zzThat (device-only)
 
 - Release v1.1 · P2 · Ready · Bundle B3 · Owner: kneelbeforez0D · External (zzThat)
-- **Scope.** Row 17 ASSIMILATE from D-2026-10-11-01. Add a device-only "Saved" list of codes the person scanned and chose to save (canonical + optional local thumbnail). No server sync, no photo upload. Cleared on account deletion and by its own Account action (`account.clear_saved`), not by `account.unhide_all`. Cloud sync of Saved stays QUEUE with RM-117 / v2.2.
+- **Scope.** Row 17 ASSIMILATE from D-2026-10-11-01. Add a device-only "Saved" list of codes the person scanned and chose to save (canonical codes only, no thumbnail, as built in zzThat #65 and `design/UX.md` Saved). No server sync, no photo upload. Cleared on account deletion and by its own Account action (`account.clear_saved`), not by `account.unhide_all`. Cloud sync of Saved stays QUEUE with RM-117 / v2.2.
 - **Acceptance.** Spec and runtime name Saved; tests show save/unsave without network; list survives process restart; deletion and reset clear it; no new API calls.
 - **Governing.** D-2026-10-11-01.
 

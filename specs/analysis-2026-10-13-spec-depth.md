@@ -1,6 +1,6 @@
 # Spec-depth audit, 2026-10-13
 
-Question: from the current tip, are the specs deep enough to build each release without guessing, upstream (zzThis) and downstream (zzThat)? Audited at zzThis `main` 8873ce1 (after #161 and #162) and zzThat `main` ae21fcd (after #62 and #63), including open PRs (zzThis #164, #167; zzThat #64, #65, #72) and Danny's issues zzThat #66 to #71. Four read-only passes: v1.0 release path, v1.1 product, cross-document consistency, and zzThat per version.
+Question: from the current tip, are the specs deep enough to build each release without guessing, upstream (zzThis) and downstream (zzThat)? Audited at zzThis `main` 8873ce1 (after #161 and #162) and zzThat `main` ae21fcd (after #62 and #63), with open PRs at the time (zzThis #164 and #167; zzThat #64, #65, #72) and Danny's issues zzThat #66 to #71. Rebased on 2026-10-14 onto zzThis `main` ed5b0bd, after #164 merged (Michael's answers; D-2026-10-11-15 still OPEN in the record) and zzThat #64 (Hide) merged. Four read-only passes: v1.0 release path, v1.1 product, cross-document consistency, and zzThat per version.
 
 **Answer: not yet.** v1.0 has executable gaps in staging, the production wordlist, and operator deletion. v1.1 has three open product mechanisms (idle expiry and revive, word count and re-rolls, terms and 18+) that need decisions. v1.2 and later are fine as QUEUED. This pull request fixes everything that is fact at the tip, and records every gap that needs a human as a PROPOSED decision in [decisions-2026-10-13.md](decisions-2026-10-13.md) with a recommendation.
 
@@ -52,7 +52,7 @@ Proposed text for the v1.0 majors that need no decision (to apply to BACKLOG whe
 | major | RM-075 | The enum half fails on both apps; it must gate the first store build. | D-2026-10-13-09 |
 | major | D-2026-10-10-23 | The five retry reasons had no copy keys. | **Fixed here:** `scan.retry_marker_cut`, `scan.retry_blur`, `scan.retry_glare`, `scan.retry_closer`, `scan.retry_angle` |
 | major | D-2026-10-10-21 | Header PROPOSED, text says adopted on merge, merged in #139. | Danny confirms |
-| major | RM-118 to RM-126 (#164) | Table rows only: no Scope, Acceptance, or Governing sections. | Add when #164 merges, taking acceptance from D-2026-10-13-01 to -04 |
+| major | RM-118 to RM-126 (#164, merged 2026-10-14) | Table rows only: no Scope, Acceptance, or Governing sections. | This pull request moves the v1.1 rows into their own table with status notes; full sections follow once D-2026-10-13-01 to -04 are decided |
 | minor | #161 | Rotating `ZZ_DATA_KEY` changes every `creator`, so device blocks lapse. | OPERATIONS records it; do not rotate in v1.x except after a compromise |
 
 Adequate for v1.1: RM-062, RM-066, RM-067, RM-069 to RM-071, RM-096, RM-101, RM-102, RM-104 to RM-108, RM-111, RM-112, RM-115, RM-118, RM-119, RM-121 to RM-123, RM-126.

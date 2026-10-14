@@ -82,4 +82,4 @@ Format follows [decisions-2026-10-10.md](decisions-2026-10-10.md): question, evi
 ## Also needs Danny, not a new record
 
 - **D-2026-10-10-21 status.** Its header says PROPOSED, but its text says the status changes when the record merges, and PR #139 merged it on 2026-10-10. Please confirm on GitHub that public create opens at v1.1. Until then RELEASE-ROADMAP keeps both readings visible.
-- **D-2026-10-11-15 lock.** The option B lock is a comment on #164 (2026-10-12); the record on the #164 branch still says OPEN. Please update the record to ACCEPTED (option B) before #164 merges, so D-2026-10-13-01 has a decided base.
+- **D-2026-10-11-15 lock.** The option B lock is a comment on #164 (2026-10-12), but #164 merged on 2026-10-14 with the record still OPEN. Please record option B as ACCEPTED in `decisions-2026-10-11.md`, so D-2026-10-13-01 has a decided base.
