@@ -57,6 +57,7 @@ Replaces the 2026-10-07 map, which listed PRs #118, #123, #124, and #126 as in r
 | #92 dependency advisories | Ready | v1.0; RM-004 | dispositioned as build-only on 2026-10-10 (D-2026-10-10-14); upgrades pending |
 | PR #122 gitleaks allowlist | In review | v1.0; RM-003 | `security` is red on `main` from a branch-only false positive (D-2026-10-10-13) |
 | PR #95 manual deploy workflow | In review (to be superseded) | v1.0; RM-002 | targets the local config; replace with the reviewer-gated production workflow |
+| PR #85 governance artifacts | Closed (superseded) | — | its governance artifacts are already present on main; after syncing, no file diff remained, so it was closed without merging |
 | PR #119 B4 continuation evidence | In review | v1.0; RM-016, R2 evidence | evidence documentation |
 | PR #89 ZZ-OCR-QUAL-001 spec | In review (draft) | v1.1; RM-060 | camera qualification contract |
 | PR #115 OCR qualification harness | In progress (draft) | v1.1; RM-061 | stacked on PR #89 |
