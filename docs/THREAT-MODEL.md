@@ -45,15 +45,16 @@ Status: pre-production security governance. This consolidates existing invariant
 | future semantic disclosure | namespace/profile auth remains after resolver; non-enumerability preserved |
 | ZK statement substitution/replay | S1 policy/audience/challenge/root bindings and negative vectors before promotion |
 | IPv6 rotation around the IP limit; bulk guessing of public codes (added 2026-10-10) | /64 limiter keys (RM-030); zone rule (RM-031); growth monitor (RM-041); density trigger and residual-risk sign-off (D-2026-10-10-04, -05) |
-| scope-wide grants read another organization's private records or audit events (added 2026-10-10) | one organization per scope until contract 2 (D-2026-10-10-06, RM-063); Organization entity (RM-080) |
+| scope-wide grants read another organization's private records or audit events (added 2026-10-10) | one organization per scope until contract 2 (D-2026-10-10-06, RM-063); org-bound grants: a viewer or auditor grant reaches only its own `org_id` (RM-074, migration 0003); `ops/grant.sql` and `ops/set-org.sql` guards (RM-073, RM-098, RM-099). Residual: a moved owner carries its history to the new organization (D-2026-10-10-24); the Organization entity replaces `org_id` (RM-080) |
 | data-key rotation silently breaks Apple revocation (added 2026-10-10) | key ids on sealed values with a previous key (RM-021) |
 | restore resurrects deleted personal data (added 2026-10-10) | deletion replay after any restore (RM-023) |
 | issuer keeps re-rolling after losing its grant (added 2026-10-10) | scope check on re-roll (RM-032) |
 | mint races account deletion or suspension (added 2026-10-10) | account guard in the mint batch (RM-033) |
 | limiter or cache fault turns into an outage or a failed committed write (added 2026-10-10) | limiter timeout and per-route policy (RM-038); cache side effects off the request path (RM-034) |
 | platform request logs capture codes from resolve URLs (added 2026-10-10) | invocation logs off and pinned in configuration (RM-001); log review (G7) |
-
 | guessable person-made code claim and phrase squatting (added 2026-10-11) | contract-2 claim only (RM-116); first-come global match_key (FR-032); min entropy; blocklist/trademark on parts; no fuzzy live match (Q40); rate limits; OCR qualification for open vocabulary; residual-risk sign-off |
+| abusive public record text once `free_public` is on (added 2026-10-13) | FR-024 blocklist on title and body with the production list (RM-028); reports reviewed within one day (RM-102, `ops/report-overdue.sql`); terms of use and content policy accepted before first create (RM-103); operator suspension (FR-025); `ZZ_FREE_PUBLIC` shutoff by redeploy |
+| the creator reference links one person's public codes (added 2026-10-13) | opaque keyed HMAC, never the account id; null for private records; rotating `ZZ_DATA_KEY` changes every value (RM-112) |
 
 ## Review status (2026-10-10)
 
