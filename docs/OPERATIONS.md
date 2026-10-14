@@ -64,8 +64,8 @@ Required before `ZZ_FREE_PUBLIC` turns on (D-2026-10-10-25 item 2, RM-102; Apple
 
 | Role | Who |
 |---|---|
-| Moderator | _Danny names_ |
-| Backup moderator | _Danny names_ |
+| Moderator | Danny (D-2026-10-11-08 answer 17) |
+| Backup moderator | Michael (D-2026-10-11-08 answer 17) |
 
 Each day, and whenever a report arrives during a launch:
 
