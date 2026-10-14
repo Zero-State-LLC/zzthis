@@ -1,0 +1,95 @@
+{
+  "schema_version": 1,
+  "qualification_id": "ZZ-OCR-QUAL-001",
+  "manifest_sha256": "a4de21e6a6c7ec8d5bbfbeac428f1e54403ee2e0667b9dd904d0e3d9a3e154b9",
+  "candidate_id": "synthetic-fixture-ios-001",
+  "candidate_bundle_sha256": "b4df37a02696c03adbe752695d8c0707b6b6e17cb1db07053dd7b08f5ace0d4d",
+  "adapter": {
+    "commit": "1111111111111111111111111111111111111111",
+    "platform": "ios",
+    "engine_id": "synthetic-fixture",
+    "engine_version": "0.0.0-fixture",
+    "artifact_sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+    "config_sha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+    "preprocessing_sha256": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+    "confidence_mapping_sha256": "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+    "device_matrix_sha256": "d0f29243fb657abda08f79586cf4d98cd0c323a1f5c31d799625ca5b081bc3c4"
+  },
+  "results": [
+    {
+      "sample_id": "synthetic-one-code",
+      "split": "tuning",
+      "input_image_sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+      "device_matrix_entry_id": "synthetic-ios-simulator",
+      "os_version": "fixture",
+      "device_class": "simulator-fixture",
+      "elapsed_ms": 12.5,
+      "fiducials": [
+        {
+          "detection_id": "d-open-1",
+          "baseline_id": "baseline-1",
+          "role": "opening",
+          "pair_id": "predicted-1",
+          "score": 0.99,
+          "box": { "x": 0.05, "y": 0.4, "width": 0.1, "height": 0.2 }
+        },
+        {
+          "detection_id": "d-close-1",
+          "baseline_id": "baseline-1",
+          "role": "closing",
+          "pair_id": "predicted-1",
+          "score": 0.98,
+          "box": { "x": 0.85, "y": 0.4, "width": 0.1, "height": 0.2 }
+        }
+      ],
+      "rois": [
+        {
+          "pair_id": "predicted-1",
+          "opening_detection_id": "d-open-1",
+          "closing_detection_id": "d-close-1",
+          "baseline_id": "baseline-1",
+          "polygon": [
+            { "x": 0.18, "y": 0.35 },
+            { "x": 0.72, "y": 0.35 },
+            { "x": 0.72, "y": 0.65 },
+            { "x": 0.18, "y": 0.65 }
+          ],
+          "orientation_degrees": 0,
+          "rectification_succeeded": true
+        }
+      ],
+      "candidates": [
+        {
+          "candidate_id": "text-1",
+          "pair_id": "predicted-1",
+          "raw_text": "copper lantern sky",
+          "confidence_status": "available",
+          "confidence": 0.95,
+          "regions": [{ "x": 0.2, "y": 0.4, "width": 0.5, "height": 0.1 }]
+        }
+      ],
+      "reason_codes": []
+    },
+    {
+      "sample_id": "synthetic-missing-close",
+      "split": "final",
+      "input_image_sha256": "1111111111111111111111111111111111111111111111111111111111111111",
+      "device_matrix_entry_id": "synthetic-ios-simulator",
+      "os_version": "fixture",
+      "device_class": "simulator-fixture",
+      "elapsed_ms": 8,
+      "fiducials": [
+        {
+          "detection_id": "d-open-2",
+          "baseline_id": "baseline-2",
+          "role": "opening",
+          "pair_id": null,
+          "box": { "x": 0.05, "y": 0.4, "width": 0.1, "height": 0.2 }
+        }
+      ],
+      "rois": [],
+      "candidates": [],
+      "reason_codes": ["missing-closing-fiducial"]
+    }
+  ]
+}

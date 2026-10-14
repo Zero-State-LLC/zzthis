@@ -1,0 +1,14 @@
+{
+  "schema_version": 1,
+  "qualification_id": "ZZ-OCR-QUAL-001",
+  "candidate_id": "synthetic-fixture-ios-001",
+  "platform": "ios",
+  "entries": [
+    {
+      "device_matrix_entry_id": "synthetic-ios-simulator",
+      "os_version": "fixture",
+      "device_class": "simulator-fixture",
+      "minimum_sample_count": 1
+    }
+  ]
+}

@@ -581,13 +581,13 @@ RM-050 production resources ─> RM-053 web build ─> RM-051 deploy ─> RM-052
 
 ### RM-111 zzThat Discord and Instagram links in the apps (external)
 
-- Release v1.1 · P3 · Backlog (after spec 001 T051) · Owner: kneelbeforez0D
+- Release v1.1 · P3 · Ready (T051 done 2026-10-10) · Owner: kneelbeforez0D
 - **Scope.** Account shows zzThat's Discord and Instagram with the `design/UX.md` URLs only after T051 confirms a never-expiring invite.
 - **Governing.** D-2026-10-10-25 item 11.
 
 ### RM-112 Optional creator reference on Resolve for creator blocking
 
-- Release v1.1 · P0 · In review (PR #161; exception accepted by Danny, 2026-10-09 PT; ships after RM-075) · Bundle B9 · Owner: kneelbeforez0D
+- Release v1.1 · P0 · Done (PR #161 merged 2026-10-14; exception accepted by Danny, 2026-10-09 PT; RM-075 unknown-key half passes, zzThat PR #58) · Bundle B9 · Owner: kneelbeforez0D
 - **Scope.** Resolve gains an optional response field `creator`: an opaque, stable HMAC of the owner account id (keyed with a server secret, never the raw id), null for private records. OpenAPI `info.version` changes and discovery advertises it. Old clients must ignore it (RM-075).
 - **Acceptance.** Worker tests: two public codes from one owner resolve with the same `creator`; codes from different owners differ; a private record gives null; the raw account id never appears; the cached public response keeps the field. zzThat tolerant-reader tests pass on both apps.
 - **Governing.** D-2026-10-10-25 item 1; D-2026-10-10-12; Apple 1.2; Play UGC.
@@ -602,7 +602,7 @@ RM-050 production resources ─> RM-053 web build ─> RM-051 deploy ─> RM-052
 ### RM-115 Local Saved list in zzThat (device-only)
 
 - Release v1.1 · P2 · In review (zzThat #65, draft) · Bundle B3 · Owner: kneelbeforez0D · External (zzThat)
-- **Scope.** Row 17 ASSIMILATE from D-2026-10-11-01. Add a device-only "Saved" list of codes the person scanned and chose to save (canonical + optional local thumbnail). No server sync, no photo upload. Cleared on account deletion and by a Settings reset (same pattern as hide/block lists). Cloud sync of Saved stays QUEUE with RM-117 / v2.2.
+- **Scope.** Row 17 ASSIMILATE from D-2026-10-11-01. Add a device-only "Saved" list of codes the person scanned and chose to save (canonical codes only, no thumbnail, as built in zzThat #65 and `design/UX.md` Saved). No server sync, no photo upload. Cleared on account deletion and by its own Account action (`account.clear_saved`), not by `account.unhide_all`. Cloud sync of Saved stays QUEUE with RM-117 / v2.2.
 - **Acceptance.** Spec and runtime name Saved; tests show save/unsave without network; list survives process restart; deletion and reset clear it; no new API calls.
 - **Governing.** D-2026-10-11-01.
 
@@ -616,7 +616,7 @@ RM-050 production resources ─> RM-053 web build ─> RM-051 deploy ─> RM-052
 
 ### RM-077 Report triage tooling
 
-- Release v1.2 · P2 · Backlog · Bundle B9 · Operator SQL views for open reports by age and code.
+- Release v1.1 · P2 · Done (report-queue.sql and report-overdue.sql in PR #157, with RM-102) · Bundle B9 · Operator SQL views for open reports by age and code.
 - **PROPOSED (D-2026-10-10-21, Danny agreed in chat 2026-10-09; adopted on merge).** Release v1.1 · P1, required before `ZZ_FREE_PUBLIC` turns on.
 
 ### RM-078 Web issuer controls
@@ -645,6 +645,24 @@ RM-050 production resources ─> RM-053 web build ─> RM-051 deploy ─> RM-052
 
 | ID | Release | Pri | Status | Item | Governing |
 |---|---|---|---|---|---|
+| RM-080 | v2.0 | P0 | Backlog | #87 gate extended with an Organization entity: Scope, Namespace, Organization cardinality, ownership, grants, migration | #87; D-2026-10-10-06; DOMAIN-MODEL |
+| RM-081 | v2.0 | P1 | Backlog | Multi-list verification and per-scope dictionaries; discovery lists versions | spec 003 FR-017, FR-022; D-2026-10-10-04 |
+| RM-082 | v2.0 | P1 | Backlog | `GET /v1/keys` and client signature verification | Q28 |
+| RM-083 | v2.0 | P1 | Backlog | Partner OAuth 2.0 client credentials, one client per partner | Q19; B11 |
+| RM-084 | v2.0 | P2 | Backlog | No-device field-code claim and scope-aware handles | Q25, Q56, Q71; align with RM-116 |
+| RM-085 | v2.0 | P2 | Backlog | Self-service data export | D-2026-10-10-16 |
+| RM-086 | v2.0 | P2 | Backlog | Mint idempotency key; reuse grace evaluation (DF-10) | backend review M1 |
+| RM-087 | v2.0 | P0 | Backlog | Contract negotiation, dual-contract tests, deprecation record | CONTRACT-EVOLUTION |
+| RM-089 | v2.0 | P3 | Backlog | Audit cursor across equal timestamps | backend review M8 |
+| RM-090 | v2.0 | P3 | Backlog | Name suffixes beyond `.eth` | spec 003 FR-023 |
+| RM-091 | v2.1 | P1 | Backlog (SHADOW) | Semantic profiles after RM-080 and PR #82 | #81 |
+| RM-092 | v2.2 | P1 | Backlog (RESEARCH) | Advanced recognition and photo reads after R-B12; R2 joins recovery scope | B12; spec 005 US5 |
+| RM-097 | v2.2 | P3 | Backlog (RESEARCH) | Image matching of scans against the creator's photos (Michael 2026-10-09); needs reference photos, consent wording, and a retention limit | D-2026-10-10-23; `docs/SPEC.md` 12.2 |
+| RM-095 | R-B6 | P1 | Backlog | Human and OCR confusion evaluation of the production list on the Q34 corpus | spec 003 FR-001, FR-002 |
+| RM-114 | v1.3 | P2 | Backlog (QUEUED) | Owner-only renew for expired codes; no public expired message | D-2026-10-11-01 |
+| RM-116 | v2.0 | P1 | Backlog | Person-made code claim design (contract 2; option A) | D-2026-10-11-01; RM-084 |
+| RM-117 | v2.2 | P1 | Backlog (RESEARCH) | Cloud photo and training consent before photo reads | D-2026-10-11-01; B12 |
+| RM-126 | Horizon | P3 | Backlog | Links and zzPages safety requirements | D-2026-10-11-13 |
 
 ### RM-116 Person-made code claim (contract 2)
 
@@ -660,31 +678,17 @@ RM-050 production resources ─> RM-053 web build ─> RM-051 deploy ─> RM-052
 - **Acceptance.** Consent copy approved by Danny; drafts and manifests match; no upload path enabled until this RM and R-B12 exit.
 - **Governing.** D-2026-10-11-01; Q34; Apple App Privacy / 5.1.2 norms; THREAT-MODEL photo row.
 
-| RM-080 | v2.0 | P0 | Backlog | #87 gate extended with an Organization entity: Scope, Namespace, Organization cardinality, ownership, grants, migration | #87; D-2026-10-10-06; DOMAIN-MODEL |
-| RM-081 | v2.0 | P1 | Backlog | Multi-list verification and per-scope dictionaries; discovery lists versions | spec 003 FR-017, FR-022; D-2026-10-10-04 |
-| RM-082 | v2.0 | P1 | Backlog | `GET /v1/keys` and client signature verification | Q28 |
-| RM-083 | v2.0 | P1 | Backlog | Partner OAuth 2.0 client credentials, one client per partner | Q19; B11 |
-| RM-084 | v2.0 | P2 | Backlog | No-device field-code claim and scope-aware handles | Q25, Q56, Q71; align with RM-116 |
-| RM-085 | v2.0 | P2 | Backlog | Self-service data export | D-2026-10-10-16 |
-| RM-086 | v2.0 | P2 | Backlog | Mint idempotency key; reuse grace evaluation (DF-10) | backend review M1 |
-| RM-087 | v2.0 | P0 | Backlog | Contract negotiation, dual-contract tests, deprecation record | CONTRACT-EVOLUTION |
-| RM-089 | v2.0 | P3 | Backlog | Audit cursor across equal timestamps | backend review M8 |
-| RM-090 | v2.0 | P3 | Backlog | Name suffixes beyond `.eth` | spec 003 FR-023 |
-| RM-091 | v2.1 | P1 | Backlog (SHADOW) | Semantic profiles after RM-080 and PR #82 | #81 |
-| RM-092 | v2.2 | P1 | Backlog (RESEARCH) | Advanced recognition and photo reads after R-B12; R2 joins recovery scope | B12; spec 005 US5 |
-| RM-097 | v2.2 | P3 | Backlog (RESEARCH) | Image matching of scans against the creator's photos (Michael 2026-10-09); needs reference photos, consent wording, and a retention limit | D-2026-10-10-23; `docs/SPEC.md` 12.2 |
-| RM-095 | R-B6 | P1 | Backlog | Human and OCR confusion evaluation of the production list on the Q34 corpus | spec 003 FR-001, FR-002 |
-| RM-113 | v1.1 | P1 | Ready | Suggested-word picker on Create (server-chosen; option C) | D-2026-10-11-01 |
-| RM-114 | v1.3 | P2 | Backlog (QUEUED) | Owner-only renew for expired codes; no public expired message | D-2026-10-11-01 |
-| RM-115 | v1.1 | P2 | Ready | Local Saved list in zzThat (device-only) | D-2026-10-11-01 |
-| RM-116 | v2.0 | P1 | Backlog | Person-made code claim design (contract 2; option A) | D-2026-10-11-01; RM-084 |
-| RM-117 | v2.2 | P1 | Backlog (RESEARCH) | Cloud photo and training consent before photo reads | D-2026-10-11-01; B12 |
-| RM-118 | v1.1 | P0 | Ready | iOS Sign in with Apple beside Google | D-2026-10-11-02; Guideline 4.8 |
-| RM-119 | v1.1 | P0 | Ready | iOS in-app account deletion with Apple token revocation | D-2026-10-11-03; spec 005 FR-023 |
-| RM-120 | v1.1 | P0 | Ready | 18+ gating, Terms clause, store age-rating questionnaires | D-2026-10-11-05 |
+## v1.1 items from Michael's answers (D-2026-10-11-02 to -14)
+
+Added by #164. Scope and acceptance for RM-120, RM-124, and RM-125 depend on the PROPOSED records in [decisions-2026-10-13.md](decisions-2026-10-13.md) (D-2026-10-13-02 and -04); idle expiry under D-2026-10-11-15 is D-2026-10-13-01.
+
+| ID | Release | Pri | Status | Item | Governing |
+|---|---|---|---|---|---|
+| RM-118 | v1.1 | P0 | Built in zzThat #43 (evidence on zzThat #66) | iOS Sign in with Apple beside Google | D-2026-10-11-02; Guideline 4.8 |
+| RM-119 | v1.1 | P0 | Built in zzThat #43 (evidence on zzThat #67) | iOS in-app account deletion with Apple token revocation | D-2026-10-11-03; spec 005 FR-023 |
+| RM-120 | v1.1 | P0 | Ready; client-only per D-2026-10-13-04 (PROPOSED) | 18+ gating, Terms clause, store age-rating questionnaires | D-2026-10-11-05 |
 | RM-121 | v1.1 | P1 | Ready | "Early release" labeling; no alpha/beta/test; no zzThis mention on zzThat surfaces | D-2026-10-11-06, -07 |
 | RM-122 | v1.1 | P1 | Backlog | zzsupport@zer0state.com in app, listings, policy, site footer (mailbox first) | D-2026-10-11-04 |
 | RM-123 | v1.1 | P0 | Backlog | Publish privacy policy (answers 1-19) at proposed zzthat.com/privacy | D-2026-10-11-08, -09; zzThat #47 |
-| RM-124 | v1.1 | P0 | Backlog | Terms of Use and content policy draft for Michael's review | D-2026-10-11-10; D-2026-10-11-15 |
-| RM-125 | v1.1 | P1 | Ready | Create: 1/2/3 word length, 5 re-rolls per creation, server rate limit, no phone numbers | D-2026-10-11-11, -12; extends RM-113 |
-| RM-126 | Horizon | P3 | Backlog | Links and zzPages safety requirements | D-2026-10-11-13 |
+| RM-124 | v1.1 | P0 | Backlog; draft in zzThat #72 | Terms of Use and content policy draft for Michael's review | D-2026-10-11-10; D-2026-10-11-15 |
+| RM-125 | v1.1 | P1 | Blocked on D-2026-10-13-02 (word count, contract freeze) | Create: 1/2/3 word length, 5 re-rolls per creation, server rate limit, no phone numbers | D-2026-10-11-11, -12; extends RM-113 |
