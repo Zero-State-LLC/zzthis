@@ -18,7 +18,7 @@ Rules:
 2. A capability that needs a breaking wire change cannot be in a v1.x release ([CONTRACT-EVOLUTION.md](../docs/CONTRACT-EVOLUTION.md)). Contract 1 is frozen through v1.1 (D-2026-10-10-12).
 3. Dates are not set here. Order follows dependencies, then user value.
 
-## Current readiness (OBSERVED 2026-10-10, `main` 8189ce1)
+## Current readiness (OBSERVED 2026-10-10, `main` 8189ce1; CI row updated 2026-10-13)
 
 | Area | State | Evidence |
 |---|---|---|
@@ -28,7 +28,7 @@ Rules:
 | Web client | Implemented (9 screens, typed lookup); 78 unit tests and a local Playwright flow; not reachable for sign-in on staging | `apps/web` |
 | Native iOS and Android apps | Not in this repository (zzThat); camera engine unqualified | PR #89, PR #115 (drafts) |
 | Production | No production configuration, resource, OAuth client, privacy policy, or deploy approval | B4 issue [#93](https://github.com/Zero-State-LLC/zzthis/issues/93), [#86](https://github.com/Zero-State-LLC/zzthis/issues/86) |
-| CI | `build` and site tests green; `security` red on `main` since 2026-10-08 from a branch-only false positive | D-2026-10-10-13 |
+| CI | `build` and site tests green; `security` green on `main` since PR #122 (RM-003, run 38017896510) | D-2026-10-10-13 |
 
 Verdict: implementation-complete prototype; not production-ready. The shortest path to a usable production release is v1.0 below.
 
@@ -92,10 +92,10 @@ Each gate needs dated evidence linked from the release packet (RM-054). A gate w
 - **Prerequisites.** v1.0 production API; ZZ-OCR-QUAL-001 merged (PR #89) with a harness (PR #115) and a protected workflow; the Q34 private corpus.
 - **Included.** On-device recognition behind the shared decoder; bands from the qualification receipt; confirm-only fallback for any unqualified platform (D-2026-10-10-03); creation check (spec 004 FR-017); App Store and Play submissions; "Try zzThat" on the site (spec 001 T016); report-handling commitments for user-written pages. Retry reasons "Move closer" and "Try a better angle" (D-2026-10-10-23). Live multi-frame reading with word-by-word voting may ship if ready (RM-096, P3). Suggested-word picker on Create while codes stay server-chosen (RM-113, D-2026-10-11-01 option C). Local Saved list in zzThat, device-only (RM-115).
 - **Excluded.** Cloud or server vision, photo upload, voice, custom models, web camera. Person-made (client-written) code claim (v2.0, RM-116); additive contract-1 person-made slice is not planned (D-2026-10-11-01).
-- **Contracts and data.** None in this repository. zzThat pins the v1.0 release commit and verifies tolerant readers (RM-075).
+- **Contracts and data.** One additive optional Resolve field, `creator` (RM-112; D-2026-10-10-12 exception accepted 2026-10-09 PT; merged in PR #161, OpenAPI `info.version` 1.1, discovery `creator_refs`). zzThat pins the v1.0 release commit and verifies tolerant readers (RM-075).
 - **Security and privacy.** No raw photo leaves the device; store privacy labels match the data lifecycle matrix.
 - **Gates.** A signed PASS receipt per promoted engine, or confirm-only mode; store review passes; account deletion from each app verified against production.
-- **Store compliance prerequisites (D-2026-10-10-25).** Before submission: RM-101 hide and report flow, RM-104 Data safety with ML Kit diagnostics, RM-105 age rating 13+ and Teen, RM-106 signed AAB and Play App Signing, RM-107 privacy manifest, RM-108 store forms, RM-109 EU trader status, RM-110 one support address, the published privacy policy (RM-026, Danny's B2 fields), and the v1.0 web deletion link live. Before `ZZ_FREE_PUBLIC` turns on: RM-112 creator reference (D-2026-10-10-12 exception accepted by Danny, 2026-10-09 PT; ships after RM-075), RM-102 moderation tooling with a 24-hour report response, RM-103 terms and content policy, and the RM-028 blocklist.
+- **Store compliance prerequisites (D-2026-10-10-25).** Before submission: RM-101 hide, block, and report flow, RM-104 Data safety with ML Kit diagnostics, RM-105 age rating 13+ and Teen, RM-106 signed AAB and Play App Signing, RM-107 privacy manifest, RM-108 store forms, RM-109 EU trader status, RM-110 one support address, RM-111 Discord and Instagram links in the apps, the published privacy policy (RM-026, Danny's B2 fields), and the v1.0 web deletion link live. Before `ZZ_FREE_PUBLIC` turns on: RM-112 creator reference (D-2026-10-10-12 exception accepted by Danny, 2026-10-09 PT; merged in PR #161; the RM-075 unknown-key check passes on both apps, zzThat PR #58), RM-102 moderation tooling with a 24-hour report response, RM-103 terms and content policy, and the RM-028 blocklist.
 - **PROPOSED (D-2026-10-10-21, Danny agreed in chat 2026-10-09; adopted on merge).** Add public community create for the web and the apps: `ZZ_FREE_PUBLIC` turns on at the v1.1 gate after Danny's written yes, with RM-076 and RM-077 moved here from v1.2 and the prerequisites in that record (RM-028, RM-030, RM-031, RM-032, RM-033, RM-041, RM-042, RM-063, RM-068, RM-072 durable-key mint cap, and a rehearsed shutoff redeploy with a target time). Until Danny decides, v1.2 below stands.
 
 Store-readiness additions from Michael's 2026-10-11 answers (D-2026-10-11-02 to -14): RM-118 Sign in with Apple, RM-119 in-app deletion with Apple token revoke, RM-120 18+ gating, RM-121 "early release" labeling and no zzThis mention, RM-122 zzsupport@zer0state.com, RM-123 privacy policy (host PROPOSED zzthat.com), RM-124 Terms draft for Michael, RM-125 1/2/3-word create with 5 re-rolls. Launch is US-only. Code reuse after expiry is OPEN (D-2026-10-11-15); uniqueness stays.
@@ -112,7 +112,7 @@ Store-readiness additions from Michael's 2026-10-11 answers (D-2026-10-11-02 to 
 ## v1.3 Single-organization enterprise pilot (QUEUED, B7 phase 1)
 
 - **Outcome.** One pilot organization issues private, single-use, or expiring codes and audits them.
-- **Prerequisites.** v1.0; the one-organization-per-scope grant rule (RM-063) enforced in the grant script (RM-073); org-bound grants for viewer resolve and the auditor filter (RM-074, D-2026-10-10-22, closes #135); audit scope index (RM-088).
+- **Prerequisites.** v1.0; the one-organization-per-scope grant rule (RM-063) enforced in the grant script (RM-073, Done, PR #146); org-bound grants for viewer resolve and the auditor filter (RM-074, D-2026-10-10-22, closed #135; Done, PR #146); the D-2026-10-10-24 follow-ups, grant and set-org organization guards and deleted-account audit visibility (RM-098 to RM-100, Done, PR #155); audit scope index (RM-088).
 - **Included.** Web issuer controls for `visibility`, `single_use`, and `expires_at`, which contract 1 already accepts (RM-078); signed-in resolve for viewers; an auditor view of `GET /v1/audit` (RM-079); onboarding runbook; owner-only renew for expired codes with public not-found unchanged (RM-114, D-2026-10-11-01).
 - **Excluded.** More than one organization per scope (v2.0); links to external identifiers as structured fields (v2.0); AI photo-to-action (R-AI).
 
@@ -184,7 +184,7 @@ Every capability the repository describes or implies has one row. "Code" is the 
 | Running-text scanner | spec 004 Scanner rules | Implemented in zz-core | v1.1 |
 | proto-v0 list, check word, issuer | spec 003 Prototype defaults | Implemented | v1.0 via the production list (RM-020) |
 | Resolve with one not-found body, edge cache | spec 005 Resolve, FR-018, FR-019 | Implemented; cache unverified on Cloudflare | v1.0 |
-| Mint, re-roll, handles, `.eth` names | US2, FR-032 | Implemented; re-roll scope defect | v1.0 (RM-032) |
+| Mint, re-roll, handles, `.eth` names | US2, FR-032 | Implemented (RM-032 Done) | v1.0 |
 | Record versions, signatures | US3 | Implemented; no client verification | v1.0; verification v2.0 |
 | Owner revoke; operator SQL revoke, suspend, grant | US3, US7 | Implemented | v1.0 |
 | Private records, viewer grants | FR-035 | Implemented server; no web UI | v1.3 |
@@ -192,11 +192,17 @@ Every capability the repository describes or implies has one row. "Code" is the 
 | Audit read for auditors | FR-016 | Implemented server; no UI | v1.3 |
 | Reports and moderation blocklist | FR-017, FR-024 | Implemented; production list content missing | v1.0 (RM-028) |
 | Apple, Google, and developer sign-in; refresh rotation | FR-020 to FR-022 | Implemented; real providers unverified | v1.0 (RM-011, RM-017) |
-| Account deletion with Apple revoke | FR-023 | Implemented; fan-out defect | v1.0 (RM-035) |
-| Retention cron | FR-026 | Implemented; unbounded | v1.0 (RM-035) |
-| Global rate limits | FR-011 | Implemented; IPv6 defect | v1.0 (RM-030) |
+| Account deletion with Apple revoke | FR-023 | Implemented (RM-035 Done) | v1.0 |
+| Retention cron | FR-026 | Implemented (RM-035 Done) | v1.0 |
+| Global rate limits | FR-011 | Implemented (RM-030 Done) | v1.0 |
 | Web client, typed lookup | US6 | Implemented | v1.0 |
 | `free_public` scope | FR-005 | Implemented behind a flag | v1.2 |
+| Creator reference on Resolve | spec 005 Resolve step 10, FR-033; RM-112 | Implemented (PR #161) | v1.1 |
+| Moderation queue SQL | spec 005 US7, FR-025; RM-102 | Implemented (PR #157: `ops/report-queue.sql`, `ops/report-overdue.sql`) | v1.1 |
+| Device hide and block | D-2026-10-10-25; RM-101 | zzThat: hide merged (zzThat PR #64); block in draft zzThat PR #65 | v1.1 |
+| Suggested-word picker on Create | D-2026-10-11-01 option C; RM-113 | zzThat draft PR #65 (web may mirror); copy keys merged (PR #162) | v1.1 |
+| Saved list on the device | D-2026-10-11-01; RM-115 | zzThat draft PR #65; copy keys merged (PR #162) | v1.1 |
+| Owner-only renew of expired codes | D-2026-10-11-01; RM-114 | None | v1.3 |
 | Retry photo upload and server read | US5, FR-013 | Server path implemented, disabled | v2.2 |
 | On-device camera capture | spec 004 US1; B2 | zzThat; unqualified | v1.1 |
 | Creation check | spec 004 FR-017 | zzThat | v1.1 |
@@ -206,8 +212,9 @@ Every capability the repository describes or implies has one row. "Code" is the 
 | Marketing site Worker migration | B4 | Staging parity partial | Optional, any release (D-2026-10-10-15) |
 | Marketing site and demo | B5 | Live | v1.0 (continuing) |
 | Production wordlist qualification | B6 | Not started | v1.0 gate (RM-020); R-B6 |
-| Organizations, tenant isolation | Backend review H2 | Not designed | v2.0 (RM-080) |
+| Organizations, tenant isolation | Backend review H2 | Interim key implemented (`org_id`, migration 0003; RM-074); Organization entity not designed | v2.0 (RM-080) |
 | No-device field-code claim | Q25 | None | v2.0 |
+| Person-made code claim | D-2026-10-11-01 option A; RM-116 | None | v2.0 |
 | Per-scope dictionaries, list succession | FR-022 (003) | None | v2.0 |
 | Partner machine API | Q19, B11 | None | v2.0 |
 | Published signing keys | Q28 | None | v2.0 |

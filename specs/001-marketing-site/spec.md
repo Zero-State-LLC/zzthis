@@ -1,7 +1,7 @@
 # Feature spec: zzThis marketing site and scripted demo
 
 Feature ID: 001-marketing-site
-Status: built and live (OBSERVED 2026-10-03 at https://zero-state-llc.github.io/zzthis/, `main` at d721783 after PR #32). The site moves to the root of https://zzthis.com once the DNS records and the Pages custom domain are set (issue #6, [DANNY 2026-10-08]). This file restates the requirements in `docs/SPEC.md` in Spec Kit form. It is pending Danny's approval through its PR, as the constitution's Governance section requires.
+Status: built and live at https://zzthis.com, served from the root of the GitHub Pages custom domain since PR #124 (issue #6, [DANNY 2026-10-08]). First observed live 2026-10-03 at https://zero-state-llc.github.io/zzthis/ (`main` at d721783 after PR #32). This file restates the requirements in `docs/SPEC.md` in Spec Kit form. Danny approved it through its PR, as the constitution's Governance section requires.
 Phase: specify (what and why). The how lives in [plan.md](plan.md). Work items live in [tasks.md](tasks.md).
 Constitution: [.specify/memory/constitution.md](../../.specify/memory/constitution.md).
 
