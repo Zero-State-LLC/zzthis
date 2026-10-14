@@ -53,6 +53,8 @@ Status: pre-production security governance. This consolidates existing invariant
 | limiter or cache fault turns into an outage or a failed committed write (added 2026-10-10) | limiter timeout and per-route policy (RM-038); cache side effects off the request path (RM-034) |
 | platform request logs capture codes from resolve URLs (added 2026-10-10) | invocation logs off and pinned in configuration (RM-001); log review (G7) |
 
+| guessable person-made code claim and phrase squatting (added 2026-10-11) | contract-2 claim only (RM-116); first-come global match_key (FR-032); min entropy; blocklist/trademark on parts; no fuzzy live match (Q40); rate limits; OCR qualification for open vocabulary; residual-risk sign-off |
+
 ## Review status (2026-10-10)
 
 The [architecture review](../specs/analysis-2026-10-10-architecture-review.md) is a design review of the code, not a penetration test or runtime verification. It found no critical defect; its high and medium findings are the rows added above and BACKLOG items RM-021 and RM-030 to RM-039. The sign-off is BACKLOG RM-029.
