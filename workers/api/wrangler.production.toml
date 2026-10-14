@@ -1,0 +1,65 @@
+# Human-gated production API Worker (RM-001, D-2026-10-10-08).
+# Resource ids stay the unassigned sentinel until Danny creates them (RM-050).
+# The production workflow refuses remote migrate/deploy while that sentinel remains.
+# This file never names a non-production resource and never holds a secret value.
+name = "zzthis-api"
+main = "src/index.ts"
+compatibility_date = "2026-08-15"
+compatibility_flags = ["nodejs_compat"]
+workers_dev = false
+preview_urls = false
+
+[assets]
+directory = "../../apps/web/dist"
+binding = "ASSETS"
+run_worker_first = true
+
+[version_metadata]
+binding = "CF_VERSION_METADATA"
+
+[[d1_databases]]
+binding = "ZZ_DB"
+database_name = "zzthis"
+database_id = "00000000-0000-0000-0000-000000000000"
+migrations_dir = "migrations"
+
+[[r2_buckets]]
+binding = "ZZ_PHOTOS"
+bucket_name = "zzthis-photos"
+
+[[durable_objects.bindings]]
+name = "ZZ_LIMITER"
+class_name = "Limiter"
+
+[[migrations]]
+tag = "v1"
+new_sqlite_classes = ["Limiter"]
+
+# Q69: one Worker on zz.zer0state.com. DNS attachment waits for RM-050.
+[[routes]]
+pattern = "zz.zer0state.com"
+custom_domain = true
+
+[triggers]
+crons = ["17 3 * * *"]
+
+# Invocation logs stay off (FR-027). Resolve URLs can carry codes.
+[observability]
+enabled = false
+
+[observability.logs]
+enabled = false
+invocation_logs = false
+
+# Non-secret production flags. ZZ_MINT_ENABLED stays false until launch.
+# Production refuses fixture-7 (spec 005 Environment).
+[vars]
+ZZ_ENV = "production"
+ZZ_CONTRACT = "1"
+ZZ_FREE_PUBLIC = "false"
+ZZ_MINT_ENABLED = "false"
+ZZ_PHOTO_READS = "false"
+ZZ_DEV_AUTH = "false"
+ZZ_WORDLIST_VERSION = "proto-v0"
+ZZ_RECORD_SIGNING_KEY_ID = "unassigned"
+ZZ_BLOCKLIST = ""
