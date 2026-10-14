@@ -249,14 +249,14 @@ describe("navigation and people", () => {
     ]);
   });
 
-  it("lists the advisors in the 2026-10-08 order, all with initials", () => {
-    // [MICHAEL 2026-10-06 change list] Daniel and Adam move to first.
-    // [MICHAEL 2026-10-08] Omer F. Yalcin is removed until his employer
-    // gives permission.
+  it("lists the advisors in the 2026-10-13 order, all with initials", () => {
+    // [MICHAEL 2026-10-06] Daniel and Adam first. [2026-10-08] Omer removed.
+    // [MICHAEL 2026-10-13] Aaron Godbout is the fourth advisor.
     expect(advisors.map((person) => person.name)).toEqual([
       "Daniel Meyer",
       "Adam Fry",
       "Patrick Muggler",
+      "Aaron Godbout",
       "Arshi Chadha",
     ]);
     expect(advisors.every((person) => person.initials !== undefined)).toBe(
@@ -325,7 +325,7 @@ describe("navigation and people", () => {
       expect(byName(name)?.bio).toBeTruthy();
     }
     expect(founder.role).toBe(
-      "Founder, business-model architect, and project lead",
+      "Founder, new products and business model architect, project lead",
     );
     expect(founder.bio.startsWith("I “invent” business models.")).toBe(true);
     expect(founderOrigin.text).toBe(founder.bio);
