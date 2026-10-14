@@ -62,9 +62,11 @@ Full records: [decisions-2026-10-10.md](decisions-2026-10-10.md). Rows in docs/S
 
 | Item | Owner/evidence | Blocking effect |
 |---|---|---|
+| B17 consumer location capability | Operator disposition; consumer journey and privacy decisions in `specs/006-location/spec.md` | No contract-1 schema change or implementation until release/scope and privacy decisions are accepted |
 | OCR/fiducial release thresholds | ZZ-OCR-QUAL-001 tuning/final corpus (draft PR #89, harness draft PR #115) | blocks camera Accept promotion, not typed entry |
 | production wordlist human-confusion thresholds | R-B6 on the Q34 corpus; fallback in D-2026-10-10-04 | blocks freezing the production wordlist unless Danny records risk acceptance |
 | product SLO, end-to-end RPO, RTO | proposed values in D-2026-10-10-10; drill RM-024 (#86) | blocks production authorization |
+| six high npm audit findings | clean Node 24 npm audit JSON plus dependency-path reachability (#92) | blocks dependency-security disposition |
 | contract-2 Scope/Namespace/Organization model | #87 plus D-2026-10-10-06 | blocks promotion of #81 semantic-profile work and multi-organization pilots |
 | ZK proof-system promotion | #87/#81 plus S1 negative vectors and trust/lifecycle decisions | #83 remains CANON-SHADOW |
 | audit retention and minimization | Danny, at 1 GB or 6 months after launch (D-2026-10-10-10) | none before then |
