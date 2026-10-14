@@ -417,6 +417,22 @@
       "text": "Developer",
       "source": "INFERRED 2026-10-04, for Michael's review"
     },
+    "terms.version": {
+      "text": "draft-2026-10-14",
+      "source": "INFERRED 2026-10-14 (D-2026-10-13-04 / -08), for Michael's review"
+    },
+    "terms.accept": {
+      "text": "I accept the Terms of Use",
+      "source": "INFERRED 2026-10-14 (D-2026-10-13-04 / -08), for Michael's review"
+    },
+    "terms.age_confirm": {
+      "text": "I am 18 or older",
+      "source": "INFERRED 2026-10-14 (D-2026-10-13-04 / -08), for Michael's review"
+    },
+    "terms.link": {
+      "text": "Terms of Use",
+      "source": "INFERRED 2026-10-14 (D-2026-10-13-04 / -08), for Michael's review"
+    },
     "account.title": {
       "text": "Account",
       "source": "INFERRED 2026-10-04, for Michael's review"
@@ -460,6 +476,14 @@
     "account.clear_saved_done": {
       "text": "Saved codes on this device are cleared.",
       "source": "INFERRED 2026-10-11 (D-2026-10-11-01, RM-115), for Michael's review"
+    },
+    "account.terms": {
+      "text": "Terms of Use",
+      "source": "INFERRED 2026-10-14 (D-2026-10-13-04 / -08), for Michael's review"
+    },
+    "account.id": {
+      "text": "Your account ID",
+      "source": "INFERRED 2026-10-14 (D-2026-10-13-04 / -08), for Michael's review"
     },
     "delete.title": {
       "text": "Delete your account?",

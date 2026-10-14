@@ -15,7 +15,7 @@ Evidence labels follow the constitution: OBSERVED, INFERRED, SPECULATIVE, OPEN. 
 Rules:
 
 1. A release outcome becomes append-closed when its first implementation item starts (SCOPE-GOVERNANCE). Today v1.0 and v1.1 are inside the ACTIVE v1 bundles B1 to B6. v1.2 and later are QUEUED: only the operator promotes them.
-2. A capability that needs a breaking wire change cannot be in a v1.x release ([CONTRACT-EVOLUTION.md](../docs/CONTRACT-EVOLUTION.md)). Contract 1 is frozen through v1.1 (D-2026-10-10-12).
+2. A capability that needs a breaking wire change cannot be in a v1.x release ([CONTRACT-EVOLUTION.md](../docs/CONTRACT-EVOLUTION.md)). Contract 1 is frozen through v1.1 (D-2026-10-10-12), with two named exceptions: the Resolve `creator` field (RM-112) and five re-rolls (D-2026-10-13-02). No new response enum value until zzThat's enum tolerance passes (D-2026-10-13-09).
 3. Dates are not set here. Order follows dependencies, then user value.
 
 ## Current readiness (OBSERVED 2026-10-10, `main` 8189ce1; CI row updated 2026-10-13; citation rows updated 2026-10-14)
@@ -38,9 +38,9 @@ Verdict: implementation-complete prototype; not production-ready. The shortest p
 v1.0 Production web launch (contract 1)  <- active, append-closed
   |
   v
-v1.1 Native apps and camera capture (zzThat store launch)
+v1.1 Native apps, camera capture, and public create (zzThat store launch; free_public, D-2026-10-10-21)
   |
-  +--> v1.2 Public community codes (free_public)       [QUEUED]
+  +--> v1.2 (no items since D-2026-10-10-21 moved them to v1.1)
   +--> v1.3 Single-organization enterprise pilot       [QUEUED]
           |
           v
@@ -54,11 +54,11 @@ Horizon: R-B13, R-B15, R-B17, R-I18N, R-AI, R-ZZPAGE, R-VOICE; DF-01 to DF-17
 
 ## v1.0 Production web launch
 
-- **User outcome.** A person can open `https://zz.zer0state.com`, type a code to find its record, and report abuse, on production infrastructure with tested recovery. The web is lookup only in v1.0: public creation, edit, and revoke open in v1.1 for the web and the apps together (D-2026-10-10-21, PROPOSED; Danny agreed in chat 2026-10-09). Sign-in and account deletion stay available so the API's identity and deletion paths are proven in production.
+- **User outcome.** A person can open `https://zz.zer0state.com`, type a code to find its record, and report abuse, on production infrastructure with tested recovery. The web is lookup only in v1.0: public creation, edit, and revoke open in v1.1 for the web and the apps together (D-2026-10-10-21, ADOPTED by Danny 2026-10-14, [#170](https://github.com/Zero-State-LLC/zzthis/issues/170#issuecomment-6175348667)). Sign-in and account deletion stay available so the API's identity and deletion paths are proven in production.
 - **Bundles.** B1 (typed and web paths), B4, B5, B6.
 - **Prerequisites.** Security CI green (RM-003); Danny's approvals for resources, OAuth clients, spend, DNS, legal text, and deploy.
 - **Included.** Contract 1 as implemented; the web client (spec 005 US6); production wordlist (RM-020); the v1.0 backend fixes (D-2026-10-10-19); production configuration, workflow, recovery, observability, and incident runbooks; privacy policy and support address; marketing site unchanged on Pages.
-- **Excluded.** Native apps and camera (v1.1); `free_public` (v1.2); private, single-use, and expiring codes in the web UI (v1.3); photo reads (v2.2); any contract change; the site Worker migration (optional, D-2026-10-10-15).
+- **Excluded.** Native apps and camera (v1.1); `free_public` (v1.1, D-2026-10-10-21); private, single-use, and expiring codes in the web UI (v1.3); photo reads (v2.2); any contract change; the site Worker migration (optional, D-2026-10-10-15).
 - **Contracts and data.** No wire change. Data changes: indexes for retention queries and a key id prefix on sealed values (RM-021, RM-035), both forward-compatible migrations.
 - **Operations.** Production Worker, D1, R2 (empty while photo reads are off), limiter namespace, cron, secrets with escrow, custom domain, invocation logs off, synthetic probe, zone rate rule.
 - **Security and privacy.** Threat-model review with signed residual risks, including enumeration of public records (D-2026-10-10-04) and the one-organization-per-scope rule (D-2026-10-10-06). Logs carry no code, token, text, or IP (FR-027).
@@ -77,7 +77,7 @@ Each gate needs dated evidence linked from the release packet (RM-054). A gate w
 | G5 Recovery | Seeded D1 restore drill with integrity checks and deletion replay; secret restore from escrow; measured times meet the accepted RTO and RPO | RM-022 to RM-024 |
 | G6 Retention | A staging cron run that deletes seeded expired nonces, refresh tokens, and closed reports, within one invocation's limits | RM-035 |
 | G7 Observability | Log sample review shows no code, token, record text, or IP; probe alert fires on a forced failure | RM-036, RM-040 |
-| G8 Wordlist | Production list committed with its yield report (N at least 1,000), blocklist applied, Danny's freeze record | RM-020 |
+| G8 Wordlist | `prod-v1` committed with its yield report (N at least 1,000), blocklist applied from outside the repository with only its count and hash reported, the CI subsequence check green, production accepting only `prod-v1`, and Danny's freeze record citing the D-2026-10-10-04 risk acceptance (D-2026-10-13-07). Blocked on Michael's letter groups | RM-020, RM-028 |
 | G9 Legal | Privacy policy published and linked; support address live; NOTICE unchanged | RM-026 |
 | G10 Security review | Threat-model rows each have automated evidence or an operator control; residual risks signed | RM-029 |
 | G11 Approval | Danny's written yes for resources, spend, DNS, and deploy | RM-042, RM-050, RM-051 |
@@ -85,42 +85,37 @@ Each gate needs dated evidence linked from the release packet (RM-054). A gate w
 
 - **Migration and compatibility.** First production database: the migrations apply forward from empty. After the first production mint, the wordlist is permanent for those codes (spec 003 FR-017).
 
-## v1.1 Native apps and camera capture
+## v1.1 Native apps, camera capture, and public create
 
-- **User outcome.** iOS and Android users scan a handwritten code with the camera, confirm or accept it, and use every v1.0 job in the zzThat apps. Public creation, edit, and revoke open in v1.1 on the web and in the apps together (D-2026-10-10-21, PROPOSED; Danny agreed in chat 2026-10-09).
-- **Bundles.** B2, B3. Implementation lives in zzThat; this repository owns the contract pin, vectors, design files, and the qualification protocol.
+- **User outcome.** iOS and Android users scan a handwritten code with the camera, confirm or accept it, and use every v1.0 job in the zzThat apps. Signed-in people create public codes (`free_public`), edit, and revoke them, on the web and in the apps together (D-2026-10-10-21, ADOPTED by Danny 2026-10-14, [#170](https://github.com/Zero-State-LLC/zzthis/issues/170#issuecomment-6175348667)).
+- **Bundles.** B2, B3, and the B9 v1.1 slice (D-2026-10-10-21). App implementation lives in zzThat; this repository owns the contract pin, vectors, design files, and the qualification protocol.
 - **Prerequisites.** v1.0 production API; ZZ-OCR-QUAL-001 merged (PR #89) with a harness (PR #115) and a protected workflow; the Q34 private corpus.
-- **Included.** On-device recognition behind the shared decoder; bands from the qualification receipt; confirm-only fallback for any unqualified platform (D-2026-10-10-03); creation check (spec 004 FR-017); App Store and Play submissions; "Try zzThat" on the site (spec 001 T016); report-handling commitments for user-written pages. Retry reasons "Move closer" and "Try a better angle" (D-2026-10-10-23). Live multi-frame reading with word-by-word voting may ship if ready (RM-096, P3). Suggested-word picker on Create while codes stay server-chosen (RM-113, D-2026-10-11-01 option C). Local Saved list in zzThat, device-only (RM-115).
-- **Excluded.** Cloud or server vision, photo upload, voice, custom models, web camera. Person-made (client-written) code claim (v2.0, RM-116); additive contract-1 person-made slice is not planned (D-2026-10-11-01).
-- **Contracts and data.** One additive optional Resolve field, `creator` (RM-112; D-2026-10-10-12 exception accepted 2026-10-09 PT; merged in PR #161, OpenAPI `info.version` 1.1, discovery `creator_refs`). zzThat pins the v1.0 release commit and verifies tolerant readers (RM-075).
+- **Included.** On-device recognition behind the shared decoder; bands from the qualification receipt; confirm-only fallback for any unqualified platform (D-2026-10-10-03); creation check (spec 004 FR-017); App Store and Play submissions; "Try zzThat" on the site (spec 001 T016); report-handling commitments for user-written pages. Retry reasons "Move closer" and "Try a better angle" (D-2026-10-10-23). Live multi-frame reading with word-by-word voting may ship if ready (RM-096, P3). Suggested-word picker on Create while codes stay server-chosen (RM-113, D-2026-10-11-01 option C). Local Saved list in zzThat, device-only (RM-115). Five re-rolls on two-word codes (RM-125, D-2026-10-13-02). Public community create with the daily mint cap (RM-072), idle expiry and revive (RM-127), and the Terms step before the first create (RM-103, RM-120, client-only, D-2026-10-13-04).
+- **Excluded.** Cloud or server vision, photo upload, voice, custom models, web camera. One-word codes (not in contract 1) and three-word codes (v2.0) (D-2026-10-13-02). Person-made (client-written) code claim (v2.0, RM-116); additive contract-1 person-made slice is not planned (D-2026-10-11-01).
+- **Contracts and data.** One additive optional Resolve field, `creator` (RM-112; D-2026-10-10-12 exception accepted 2026-10-09 PT; merged in PR #161, OpenAPI `info.version` 1.1, discovery `creator_refs`). A narrow D-2026-10-10-12 exception: `rerolls_remaining` 5, with the OpenAPI `maximum` raised to 5 (RM-125, D-2026-10-13-02). Data: migration 0004 adds `accounts.last_active_at` and `codes.idle_expired_at` with no wire change (RM-127, D-2026-10-13-01); the daily mint cap adds limiter rows keyed to an HMAC subject (RM-072). zzThat pins the v1.0 release commit and verifies tolerant readers (RM-075); the unknown-enum half is a gate on the first store build (D-2026-10-13-09).
 - **Security and privacy.** No raw photo leaves the device; store privacy labels match the data lifecycle matrix.
-- **Gates.** A signed PASS receipt per promoted engine, or confirm-only mode; store review passes; account deletion from each app verified against production.
+- **Gates.** v1.1 ships camera capture confirm-only on both platforms unless a signed PASS receipt exists at store submission (D-2026-10-13-05, spec 004 FR-023); the RM-075 enum tolerance passes before the first store build (D-2026-10-13-09); store review passes; account deletion from each app verified against production.
 - **Store compliance prerequisites (D-2026-10-10-25).** Before submission: RM-101 hide, block, and report flow, RM-104 Data safety with ML Kit diagnostics, RM-105 age rating 13+ and Teen, RM-106 signed AAB and Play App Signing, RM-107 privacy manifest, RM-108 store forms, RM-109 EU trader status, RM-110 one support address, RM-111 Discord and Instagram links in the apps, the published privacy policy (RM-026, Danny's B2 fields), and the v1.0 web deletion link live. Before `ZZ_FREE_PUBLIC` turns on: RM-112 creator reference (D-2026-10-10-12 exception accepted by Danny, 2026-10-09 PT; merged in PR #161; the RM-075 unknown-key check passes on both apps, zzThat PR #58), RM-102 moderation tooling with a 24-hour report response, RM-103 terms and content policy, and the RM-028 blocklist.
-- **PROPOSED (D-2026-10-10-21, Danny agreed in chat 2026-10-09; adopted on merge).** Add public community create for the web and the apps: `ZZ_FREE_PUBLIC` turns on at the v1.1 gate after Danny's written yes, with RM-076 and RM-077 moved here from v1.2 and the prerequisites in that record (RM-028, RM-030, RM-031, RM-032, RM-033, RM-041, RM-042, RM-063, RM-068, RM-072 durable-key mint cap, and a rehearsed shutoff redeploy with a target time). Until Danny decides, v1.2 below stands.
+- **Public community create (D-2026-10-10-21, ADOPTED by Danny 2026-10-14, [#170](https://github.com/Zero-State-LLC/zzthis/issues/170#issuecomment-6175348667)).** `ZZ_FREE_PUBLIC` turns on in production at the v1.1 gate, only after Danny's written yes, for the web and the apps together. RM-076 and RM-077 moved here from v1.2 as gate items. Prerequisites, each with release-packet evidence: RM-028, RM-030, RM-031, RM-032, RM-033, RM-041, RM-042, RM-063, RM-068, RM-102, RM-103; the RM-072 daily mint cap (30 per subject and 60 per IP per UTC day, D-2026-10-13-03); the shutoff triggers (a report open more than 48 hours, more than 2,000 `free_public` codes drawn in a UTC day, or the month's Cloudflare usage alert past $50) with a staging-rehearsed shutoff redeploy measured against the 30-minute target (OPERATIONS Moderation); and RM-127 idle expiry, which must ship within 80 days of the flag turning on.
 
-Store-readiness additions from Michael's 2026-10-11 answers (D-2026-10-11-02 to -14): RM-118 Sign in with Apple, RM-119 in-app deletion with Apple token revoke, RM-120 18+ gating, RM-121 "early release" labeling and no zzThis mention, RM-122 zzsupport@zer0state.com, RM-123 privacy policy (host PROPOSED zzthat.com), RM-124 Terms draft for Michael, RM-125 1/2/3-word create with 5 re-rolls. Launch is US-only. Code reuse after expiry is OPEN (D-2026-10-11-15); uniqueness stays.
+Store-readiness additions from Michael's 2026-10-11 answers (D-2026-10-11-02 to -14): RM-118 Sign in with Apple, RM-119 in-app deletion with Apple token revoke, RM-120 18+ gating, RM-121 "early release" labeling and no zzThis mention, RM-122 zzsupport@zer0state.com, RM-123 privacy policy (host PROPOSED zzthat.com), RM-124 Terms draft for Michael, RM-125 five re-rolls on two-word codes (the length choice moves to v2.0, D-2026-10-13-02). Launch is US-only. Code reuse after expiry: D-2026-10-11-15 option B ACCEPTED (Danny, 2026-10-14): idle `free_public` codes expire after 90 days without the owner signing in, revive at the next sign-in, and are never reissued (RM-127). Pending Michael: the Terms wording, the confusable letter groups, and hearing why one-word codes are out.
 
-## v1.2 Public community codes (QUEUED, B9)
+## v1.2 (no items)
 
-- **Outcome.** Signed-in people mint `free_public` codes for signs, lost-and-found, and community posts.
-- **Prerequisites.** v1.0 in production for at least one review cycle; moderation capacity and report triage (RM-077); abuse evidence from v1.0 logs and audit growth.
-- **Included.** Turning on `ZZ_FREE_PUBLIC` (no code or contract change); content policy; report triage cadence.
-- **Excluded.** Duplicate public codes with local priority (R-B17, R-B13); premium handles (DF-01).
-- **Gate.** Operator promotion after a written abuse review.
-- **PROPOSED (D-2026-10-10-21, not adopted).** If Danny adopts it, this release's items move to v1.1 and v1.2 is left empty.
+D-2026-10-10-21 (ADOPTED by Danny, 2026-10-14) moved public community codes (`free_public`, RM-076, RM-077) into v1.1. The record leaves v1.2 with only what remains: nothing, unless Danny adds items. Duplicate public codes with local priority stay with R-B17 and R-B13, and premium handles stay DF-01.
 
 ## v1.3 Single-organization enterprise pilot (QUEUED, B7 phase 1)
 
 - **Outcome.** One pilot organization issues private, single-use, or expiring codes and audits them.
 - **Prerequisites.** v1.0; the one-organization-per-scope grant rule (RM-063) enforced in the grant script (RM-073, Done, PR #146); org-bound grants for viewer resolve and the auditor filter (RM-074, D-2026-10-10-22, closed #135; Done, PR #146); the D-2026-10-10-24 follow-ups, grant and set-org organization guards and deleted-account audit visibility (RM-098 to RM-100, Done, PR #155); audit scope index (RM-088).
-- **Included.** Web issuer controls for `visibility`, `single_use`, and `expires_at`, which contract 1 already accepts (RM-078); signed-in resolve for viewers; an auditor view of `GET /v1/audit` (RM-079); onboarding runbook; owner-only renew for expired codes with public not-found unchanged (RM-114, D-2026-10-11-01).
+- **Included.** Web issuer controls for `visibility`, `single_use`, and `expires_at`, which contract 1 already accepts (RM-078); signed-in resolve for viewers; an auditor view of `GET /v1/audit` (RM-079); onboarding runbook; owner-only renew of issuer-set `expires_at` with public not-found unchanged (RM-114, D-2026-10-11-01); idle expiry of `free_public` codes is RM-127 in v1.1.
 - **Excluded.** More than one organization per scope (v2.0); links to external identifiers as structured fields (v2.0); AI photo-to-action (R-AI).
 
 ## v2.0 Contract 2 foundation (QUEUED)
 
 - **Outcome.** A versioned contract that adds organizations, scope-aware resolution, published signing keys, partner clients, and multiple word lists without breaking contract-1 clients.
 - **Prerequisites.** The #87 gate extended with the Organization entity (RM-080); tolerant-reader evidence; a deprecation record (CONTRACT-EVOLUTION).
-- **Included.** RM-080 to RM-087, RM-089, RM-090: Organization, Scope, and Namespace model; `GET /v1/keys` and client signature checks (Q28); partner OAuth 2.0 client credentials (Q19, B11); multi-list verification and per-scope dictionaries (spec 003 FR-022); no-device claim (Q25); person-made code claim under contract 2 (RM-116, D-2026-10-11-01 option A; first-come, FR-032, min entropy, part blocklist, no fuzzy live match, new OCR qualification); scope-aware handle duplicates (Q56, Q71); self-service export; mint idempotency key; audit cursor; new name suffixes.
+- **Included.** RM-080 to RM-087, RM-089, RM-090: Organization, Scope, and Namespace model; `GET /v1/keys` and client signature checks (Q28); partner OAuth 2.0 client credentials (Q19, B11); multi-list verification and per-scope dictionaries (spec 003 FR-022); no-device claim (Q25); three-word codes with a new check formula (D-2026-10-13-02); person-made code claim under contract 2 (RM-116, D-2026-10-11-01 option A; first-come, FR-032, min entropy, part blocklist, no fuzzy live match, new OCR qualification); scope-aware handle duplicates (Q56, Q71); self-service export; mint idempotency key; audit cursor; new name suffixes.
 - **Compatibility.** Contract 1 keeps serving until every pinned cohort has an upgrade path; both contracts are tested independently.
 
 ## v2.1 Semantic profiles (SHADOW until #87, B10)
@@ -196,13 +191,17 @@ Every capability the repository describes or implies has one row. "Code" is the 
 | Retention cron | FR-026 | Implemented (RM-035 Done) | v1.0 |
 | Global rate limits | FR-011 | Implemented (RM-030 Done) | v1.0 |
 | Web client, typed lookup | US6 | Implemented | v1.0 |
-| `free_public` scope | FR-005 | Implemented behind a flag | v1.2 |
+| `free_public` scope | FR-005 | Implemented behind a flag | v1.1 (D-2026-10-10-21, ADOPTED) |
+| Daily mint cap for `free_public` | spec 005 FR-011; RM-072 | None | v1.1 |
+| Idle expiry and revive | spec 005 FR-036; RM-127 | None | v1.1 |
+| Confirm-only camera mode | spec 004 FR-023; RM-065 | zzThat; vectors to add | v1.1 |
+| Terms and 18+ step before the first create (client-only) | D-2026-10-13-04; RM-103, RM-120 | Copy keys added 2026-10-14; Terms wording pending Michael | v1.1 |
 | Creator reference on Resolve | spec 005 Resolve step 10, FR-033; RM-112 | Implemented (PR #161) | v1.1 |
 | Moderation queue SQL | spec 005 US7, FR-025; RM-102 | Implemented (PR #157: `ops/report-queue.sql`, `ops/report-overdue.sql`) | v1.1 |
 | Device hide and block | D-2026-10-10-25; RM-101 | zzThat: hide merged (#64); block merged (#65); terms acceptance still open (RM-103) | v1.1 |
-| Suggested-word picker on Create | D-2026-10-11-01 option C; RM-113 | zzThat #65 merged 2026-10-14 (web may mirror); copy keys merged (PR #162); cap remains 3 until D-2026-10-13-02 | v1.1 |
+| Suggested-word picker on Create | D-2026-10-11-01 option C; RM-113 | zzThat #65 merged 2026-10-14 (web may mirror); copy keys merged (PR #162); 5 re-rolls accepted (D-2026-10-13-02), server change in RM-125 | v1.1 |
 | Saved list on the device | D-2026-10-11-01; RM-115 | zzThat #65 merged 2026-10-14; canonical codes only, no thumbnail; copy keys merged (PR #162) | v1.1 |
-| Owner-only renew of expired codes | D-2026-10-11-01; RM-114 | None | v1.3 |
+| Owner-only renew of issuer-set expiry | D-2026-10-11-01; RM-114 | None | v1.3 |
 | Retry photo upload and server read | US5, FR-013 | Server path implemented, disabled | v2.2 |
 | On-device camera capture | spec 004 US1; B2 | zzThat; unqualified | v1.1 |
 | Creation check | spec 004 FR-017 | zzThat | v1.1 |
@@ -211,7 +210,7 @@ Every capability the repository describes or implies has one row. "Code" is the 
 | Production operations, recovery, observability | B4 | Partial staging evidence | v1.0 |
 | Marketing site Worker migration | B4 | Staging parity partial | Optional, any release (D-2026-10-10-15) |
 | Marketing site and demo | B5 | Live | v1.0 (continuing) |
-| Production wordlist qualification | B6 | Not started | v1.0 gate (RM-020); R-B6 |
+| Production wordlist qualification | B6 | `prod-v1` build defined (D-2026-10-13-07); letter groups pending Michael | v1.0 gate (RM-020); R-B6 |
 | Organizations, tenant isolation | Backend review H2 | Interim key implemented (`org_id`, migration 0003; RM-074); Organization entity not designed | v2.0 (RM-080) |
 | No-device field-code claim | Q25 | None | v2.0 |
 | Person-made code claim | D-2026-10-11-01 option A; RM-116 | None | v2.0 |

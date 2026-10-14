@@ -1,6 +1,6 @@
 # Decision records, 2026-10-13: spec-depth gaps
 
-Status: every record here is **ACCEPTED** as recommended (Danny, 2026-10-14, [#170](https://github.com/Zero-State-LLC/zzthis/issues/170#issuecomment-6175348667)). Michael still owns the confusable letter groups (D-2026-10-13-07), the Terms wording (D-2026-10-13-04), and hearing why one-word codes are out (D-2026-10-13-02). It was written as PROPOSED; Each one closes a gap that the 2026-10-13 spec-depth audit ([analysis](analysis-2026-10-13-spec-depth.md)) found: a builder would otherwise have to guess. Each record gives a recommendation and the alternatives. Danny decides (Michael where marked). Until a record is accepted, the current spec text stands and the backlog item stays where it is.
+Status: every record here is **ACCEPTED** as recommended (Danny, 2026-10-14, [#170](https://github.com/Zero-State-LLC/zzthis/issues/170#issuecomment-6175348667)). Michael still owns the confusable letter groups (D-2026-10-13-07), the Terms wording (D-2026-10-13-04), and hearing why one-word codes are out (D-2026-10-13-02). It was written as PROPOSED. Each one closes a gap that the 2026-10-13 spec-depth audit ([analysis](analysis-2026-10-13-spec-depth.md)) found: a builder would otherwise have to guess. Each record gives a recommendation and the alternatives. Danny decides (Michael where marked). Until a record is accepted, the current spec text stands and the backlog item stays where it is.
 
 Format follows [decisions-2026-10-10.md](decisions-2026-10-10.md): question, evidence, alternatives and recommendation, consequences, revisit.
 
@@ -80,6 +80,8 @@ Format follows [decisions-2026-10-10.md](decisions-2026-10-10.md): question, evi
 - **Consequences.** zzThat #54 becomes P0 for v1.1.
 
 ## Also needs Danny, not a new record
+
+Resolved 2026-10-14 on [#170](https://github.com/Zero-State-LLC/zzthis/issues/170#issuecomment-6175348667): D-2026-10-10-21 is ADOPTED and D-2026-10-11-15 is ACCEPTED as option B. The two items below are kept as written. The accepted text is now in the specs (spec 003, spec 004, spec 005, BACKLOG, roadmaps, OPERATIONS, and the design files).
 
 - **D-2026-10-10-21 status.** Its header says PROPOSED, but its text says the status changes when the record merges, and PR #139 merged it on 2026-10-10. Please confirm on GitHub that public create opens at v1.1. Until then RELEASE-ROADMAP keeps both readings visible.
 - **D-2026-10-11-15 lock.** The option B lock is a comment on #164 (2026-10-12), but #164 merged on 2026-10-14 with the record still OPEN. Please record option B as ACCEPTED in `decisions-2026-10-11.md`, so D-2026-10-13-01 has a decided base.

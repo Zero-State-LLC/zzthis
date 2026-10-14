@@ -2,7 +2,7 @@
 
 Evidence classification: **OBSERVED** for statements describing current repository code/tests; **INFERRED** for governance, production gates, or design choices accepted by the convergence intent; **SPECULATIVE** only where explicitly marked as future research.
 
-Status: current V1 model plus reserved future terms. Deepened 2026-10-10 with state ids, guards, and the Organization gap from the [architecture review](analysis-2026-10-10-architecture-review.md). The persisted schema is `workers/api/migrations/` 0001 to 0003: `0001_init.sql` (tables and audit triggers), `0002_retention_indexes.sql` (indexes for the daily retention run, RM-035), and `0003_org_bound_grants.sql` (nullable `org_id` on accounts and grants, RM-074); spec 005 Data model is the column list.
+Status: current V1 model plus reserved future terms. Deepened 2026-10-10 with state ids, guards, and the Organization gap from the [architecture review](analysis-2026-10-10-architecture-review.md). The persisted schema is `workers/api/migrations/` 0001 to 0003: `0001_init.sql` (tables and audit triggers), `0002_retention_indexes.sql` (indexes for the daily retention run, RM-035), and `0003_org_bound_grants.sql` (nullable `org_id` on accounts and grants, RM-074); spec 005 Data model is the column list. Accepted and not yet built: migration 0004 (`accounts.last_active_at`, `codes.idle_expired_at`, RM-127, D-2026-10-13-01).
 
 ## Ubiquitous language
 
@@ -21,7 +21,7 @@ Status: current V1 model plus reserved future terms. Deepened 2026-10-10 with st
 
 ## V1 entities (OBSERVED)
 
-- **Account**: authenticated subject; no email or name stored; optional operator-set `org_id`.
+- **Account**: authenticated subject; no email or name stored; optional operator-set `org_id`; `last_active_at` from sign-in and refresh (accepted, RM-127).
 - **Identity**: provider and subject bound to an account; holds the sealed Apple refresh token for deletion-time revocation.
 - **Scope**: one of three fixed values; not an entity table.
 - **Code**: public identifier with lifecycle state, scope, kind (`plain`, `handle`), list version, and owner.
@@ -41,6 +41,7 @@ Status: current V1 model plus reserved future terms. Deepened 2026-10-10 with st
 | C1 | active | `status = 'active'`, `expires_at` null or in the future |
 | C2 | used | `status = 'used'` |
 | C3 | expired | Derived at read time: `status = 'active'` and `expires_at <= now` (`workers/api/src/codes/view.ts:21-28`); never written |
+| C3a | idle-expired (INFERRED: accepted 2026-10-14, not built) | `status = 'active'` and `idle_expired_at` set; `free_public` only. Read as `expired` by the owner list and as not-found by the public (spec 005 FR-036, D-2026-10-13-01) |
 | C4 | revoked | `status = 'revoked'` with `revoked_reason` |
 
 | Transition | Trigger | Guard | Effects |
@@ -49,12 +50,14 @@ Status: current V1 model plus reserved future terms. Deepened 2026-10-10 with st
 | C1 -> C1 | first reusable resolve | `first_resolved_at IS NULL` | sets `first_resolved_at`; re-roll no longer allowed |
 | C1 -> C2 | resolve of a single-use code | guarded update wins the race | audit `ok`; loser gets 404 |
 | C1 -> C3 | time passes `expires_at` | none | resolve returns 404; never cached |
+| C1 -> C3a | daily run (FR-026, FR-036) | `free_public` code; owner's `last_active_at` more than 90 days old | sets `idle_expired_at`; `code.expire` audit event; cache key purged as FR-023 step 3 does; resolve returns 404; owner sees `expired` |
+| C3a -> C1 | owner's sign-in or refresh | account not suspended | clears `idle_expired_at` on all the owner's codes in the same batch; one `code.revive` audit event each. A scan never revives |
 | C1 -> C4 `reroll` | re-roll | owner, `rerolls_remaining > 0`, never resolved, scope still allowed (RM-032) | successor code C1 with budget minus one |
 | C1 -> C4 `owner` | owner revoke | owner | audit; cache purge |
 | C1 -> C4 `operator` | `revoke-code.sql` or `suspend.sql` | operator | audit; cache ages out (up to 60 s) |
 | C1 -> C4 `account-deleted` | `DELETE /v1/me` | account owner | part of the deletion batch |
 
-Terminal: C2, C3, C4. Words of a code in any terminal state are never issued again (Q36), because the match key stays unique across retired rows.
+Terminal: C2, C3, C4. C3a is not terminal: only its owner can leave it, by signing in, and re-roll refuses it. Words of a code in any state are never issued again (Q36), because the match key stays unique across retired rows.
 
 ### Record
 

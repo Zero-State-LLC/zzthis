@@ -15,7 +15,7 @@ This roadmap groups fragmented product input into promotable capability bundles.
 | B6 Production Wordlist | v1 launch | RESEARCH -> READY | freeze a human/OCR-qualified production wordlist before first production mint | changing a list after first production mint |
 | B7 Field & Enterprise Workflows | v1.x | QUEUED | cohesive logistics/inventory/enterprise workflows around the core identifier | redefining core grammar per customer |
 | B8 Postal / Parcel | v1.x | QUEUED | postal/parcel workflow integration as a bounded application bundle | claiming carrier integration before evidence |
-| B9 Community / Public Uses | v1.x | QUEUED | bounded free/community use cases and policies | weakening abuse/non-enumerability controls |
+| B9 Community / Public Uses | v1.x | QUEUED; v1.1 slice promoted by D-2026-10-10-21 (ADOPTED 2026-10-14) | bounded free/community use cases and policies | weakening abuse/non-enumerability controls |
 | B10 Semantic Profiles | v2 / Contract 2 | SHADOW, blocked by #87 | versioned X1/X2/X3-style semantic profiles, namespaces and dictionaries after canonical resolution | tenant-dependent meaning in contract 1 |
 | B11 Partner Machine API | v2 / Contract 2 | QUEUED | partner auth/contract negotiation and machine resolution | partner route in contract 1 |
 | B12 Advanced Recognition | v2 | RESEARCH | custom zz recognizer and/or VLM hard-case verification behind the evidence boundary | v1 cloud fallback |
@@ -32,14 +32,14 @@ This roadmap groups fragmented product input into promotable capability bundles.
 | Bundle | Release | Note |
 |---|---|---|
 | B1 | v1.0 (typed and web); v1.1 (apps); issuer, viewer, auditor UI in v1.3 | server implemented |
-| B2 | v1.1 | fiducial and qualification terms are on `main` in spec 004 (#89) and the harness preflight is #115; without a PASS receipt a platform ships confirm-only (D-2026-10-10-03) |
+| B2 | v1.1 | fiducial and qualification terms are on `main` in spec 004 (#89) and the harness preflight is #115; without a PASS receipt a platform ships confirm-only (D-2026-10-10-03), and v1.1 ships confirm-only on both platforms unless a signed PASS receipt exists at store submission (D-2026-10-13-05, spec 004 FR-023) |
 | B3 | v1.1 | zzThat repository |
 | B4 | v1.0 | the site Worker migration is proposed as optional, not a v1.0 gate (D-2026-10-10-15) |
 | B5 | v1.0, continuing | |
-| B6 | v1.0 gate | D-2026-10-10-04 |
+| B6 | v1.0 gate | D-2026-10-10-04; the `prod-v1` build is D-2026-10-13-07 (letter groups pending Michael) |
 | B7 | v1.3 (one-organization pilot), then v2.0 | D-2026-10-10-06 |
 | B8 | behind v2.0; payments deferred (DF-01) | |
-| B9 | v1.2 | `free_public` flag only |
+| B9 | v1.1 slice (D-2026-10-10-21, ADOPTED 2026-10-14); v1.2 has no items | the v1.1 slice: `free_public` on at the v1.1 gate after Danny's written yes (RM-076), report triage (RM-077), the daily mint cap (RM-072), idle expiry and revive (RM-127), moderation tooling (RM-102), Terms (RM-103); later B9 uses stay QUEUED |
 | B10 | v2.1 | after #87 |
 | B11 | v2.0 | |
 | B12 | v2.2 after R-B12 | |
@@ -51,7 +51,7 @@ This roadmap groups fragmented product input into promotable capability bundles.
 
 ## Current release boundary
 
-v1 implementation authority is limited to B1-B5 plus evidence needed to promote B6 and production gates in B4. B7-B16 may inform interfaces and compatibility but do not create v1 implementation tasks unless explicitly promoted under SCOPE-GOVERNANCE.
+v1 implementation authority is limited to B1-B5 plus evidence needed to promote B6 and production gates in B4, and the B9 v1.1 slice that D-2026-10-10-21 promoted (2026-10-14). Other B9 work and B7-B16 may inform interfaces and compatibility but do not create v1 implementation tasks unless explicitly promoted under SCOPE-GOVERNANCE.
 
 ## Intake examples
 
