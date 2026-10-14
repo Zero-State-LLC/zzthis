@@ -11,7 +11,7 @@ const thresholds = {
   min_pair_accuracy: 1,
   min_exact_code_accuracy: 1,
   max_character_error_rate: 0,
-  min_rectification_success_rate: 1,
+  min_roi_normalization_success_rate: 1,
   max_p95_latency_ms: 100,
 };
 const ids = [
@@ -21,7 +21,7 @@ const ids = [
   "pair-accuracy",
   "exact-code-accuracy",
   "character-error-rate",
-  "rectification-success-rate",
+  "roi-normalization-success-rate",
   "p95-latency-ms",
 ];
 

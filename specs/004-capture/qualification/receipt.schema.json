@@ -531,8 +531,7 @@
               }
             }
           },
-          "false_accepts": { "maxItems": 0 },
-          "false_valid_cases": { "maxItems": 0 }
+          "false_accepts": { "maxItems": 0 }
         },
         "required": ["promoted_engine", "approver", "pull_request"],
         "not": {

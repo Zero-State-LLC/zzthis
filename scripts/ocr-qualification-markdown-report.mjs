@@ -7,7 +7,7 @@ const GATE_LABELS = {
   "pair-accuracy": "Pair accuracy",
   "exact-code-accuracy": "Exact-code accuracy",
   "character-error-rate": "Character error rate",
-  "rectification-success-rate": "Rectification success rate",
+  "roi-normalization-success-rate": "ROI normalization success rate",
   "p95-latency-ms": "p95 latency (ms)",
 };
 

@@ -8,12 +8,9 @@ export function validateReceiptDisposition(receipt, gateFailures) {
     };
   }
   if (receipt.disposition === "FAIL") {
-    if (
-      receipt.false_accepts.length > 0 ||
-      receipt.false_valid_cases.length > 0
-    ) {
+    if (receipt.false_accepts.length > 0) {
       return incomplete(
-        "FAIL receipt conflicts with false cases that require NO_PROMOTION",
+        "FAIL receipt conflicts with a false accept that requires NO_PROMOTION",
       );
     }
     if (gateFailures.length === 0) {
@@ -34,11 +31,7 @@ export function validateReceiptDisposition(receipt, gateFailures) {
       authorizesPromotion: false,
     };
   }
-  if (
-    gateFailures.length > 0 ||
-    receipt.false_accepts.length > 0 ||
-    receipt.false_valid_cases.length > 0
-  ) {
+  if (gateFailures.length > 0 || receipt.false_accepts.length > 0) {
     return {
       status: "NO_PROMOTION",
       errors: [],

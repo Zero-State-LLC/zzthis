@@ -5,7 +5,7 @@ const GATE_DEFINITIONS = [
   ["pair-accuracy", "min_pair_accuracy", "gte"],
   ["exact-code-accuracy", "min_exact_code_accuracy", "gte"],
   ["character-error-rate", "max_character_error_rate", "lte"],
-  ["rectification-success-rate", "min_rectification_success_rate", "gte"],
+  ["roi-normalization-success-rate", "min_roi_normalization_success_rate", "gte"],
   ["p95-latency-ms", "max_p95_latency_ms", "lte"],
 ];
 
@@ -88,7 +88,7 @@ function computeGateResults(
     ["pair-accuracy", finalFiducial.pair_accuracy.rate],
     ["exact-code-accuracy", finalText.exact_code_accuracy.rate],
     ["character-error-rate", finalText.character_error_rate.rate],
-    ["rectification-success-rate", finalRoi.rectification_success_rate],
+    ["roi-normalization-success-rate", finalRoi.rectification_success_rate],
     [
       "p95-latency-ms",
       observedP95ByDevice(aggregates.roi_latency, deviceMatrix),
