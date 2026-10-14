@@ -1,5 +1,6 @@
 import { auditStatement } from "../audit/writer.ts";
 import type { AppContext } from "../http/context.ts";
+import { changes } from "../lib/db.ts";
 import { iso } from "../lib/time.ts";
 import type { EverydayText } from "../lib/text.ts";
 import { signVersion } from "../records/signing.ts";
@@ -53,17 +54,22 @@ export async function newRecord(
 
 // Mint step 5: the record, version 1, the code, and the audit event in one
 // batch. A match_key conflict fails the batch, so nothing is stored.
+//
+// RM-033: statement 1 is the guard. It writes the record only while the
+// owner is neither deleted nor suspended, and every later statement selects
+// through the new record (FR-031), so a mint that races account deletion
+// or suspension stores nothing. null means the guard refused.
 export async function writeMint(
   c: AppContext,
   record: NewRecord,
   code: NewCode,
-): Promise<CodeRow> {
+): Promise<CodeRow | null> {
   const db = c.env.ZZ_DB;
   const id = crypto.randomUUID();
-  await db.batch([
+  const results = await db.batch([
     db
       .prepare(
-        "INSERT INTO records (id, owner_id, visibility, current_version_id, created_at, deleted_at) VALUES (?, ?, ?, ?, ?, NULL)",
+        "INSERT INTO records (id, owner_id, visibility, current_version_id, created_at, deleted_at) SELECT ?, ?, ?, ?, ?, NULL WHERE EXISTS (SELECT 1 FROM accounts WHERE id = ? AND deleted_at IS NULL AND suspended_at IS NULL)",
       )
       .bind(
         record.id,
@@ -71,10 +77,11 @@ export async function writeMint(
         record.visibility,
         record.versionId,
         record.at,
+        record.ownerId,
       ),
     db
       .prepare(
-        "INSERT INTO record_versions (id, record_id, version, title, body, signature, signing_key_id, created_by, created_at, erased_at) VALUES (?, ?, 1, ?, ?, ?, ?, ?, ?, NULL)",
+        "INSERT INTO record_versions (id, record_id, version, title, body, signature, signing_key_id, created_by, created_at, erased_at) SELECT ?, ?, 1, ?, ?, ?, ?, ?, ?, NULL WHERE EXISTS (SELECT 1 FROM records WHERE id = ?)",
       )
       .bind(
         record.versionId,
@@ -85,10 +92,11 @@ export async function writeMint(
         record.signingKeyId,
         record.ownerId,
         record.at,
+        record.id,
       ),
     db
       .prepare(
-        "INSERT INTO codes (id, scope, canonical, match_key, kind, check_word, list_version, status, revoked_reason, single_use, expires_at, record_id, owner_id, first_resolved_at, rerolls_remaining, replaced_by, write_id, created_at) VALUES (?, ?, ?, ?, ?, ?, ?, 'active', NULL, ?, ?, ?, ?, NULL, ?, NULL, NULL, ?)",
+        "INSERT INTO codes (id, scope, canonical, match_key, kind, check_word, list_version, status, revoked_reason, single_use, expires_at, record_id, owner_id, first_resolved_at, rerolls_remaining, replaced_by, write_id, created_at) SELECT ?, ?, ?, ?, ?, ?, ?, 'active', NULL, ?, ?, ?, ?, NULL, ?, NULL, NULL, ? WHERE EXISTS (SELECT 1 FROM records WHERE id = ?)",
       )
       .bind(
         id,
@@ -104,16 +112,22 @@ export async function writeMint(
         record.ownerId,
         code.rerolls,
         record.at,
+        record.id,
       ),
-    auditStatement(db, {
-      actorId: record.ownerId,
-      action: "code.mint",
-      targetType: "code",
-      targetId: id,
-      result: "ok",
-      at: record.at,
-    }),
+    auditStatement(
+      db,
+      {
+        actorId: record.ownerId,
+        action: "code.mint",
+        targetType: "code",
+        targetId: id,
+        result: "ok",
+        at: record.at,
+      },
+      { sql: "SELECT 1 FROM codes WHERE id = ?", params: [id] },
+    ),
   ]);
+  if (changes(results) === 0) return null;
   return {
     id,
     canonical: code.canonical,

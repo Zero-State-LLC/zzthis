@@ -37,8 +37,10 @@ export const applications: readonly Application[] = [
     title: "Field logistics",
     story:
       "Hand-mark bags, crates, pallets, and mixed goods; read or relay a code; connect it to existing identifiers. Then photograph loose items, prepare a turn-in, compare inventory, and use touch-first actions.",
+    pageExtra:
+      "Under the hood, the mark stays simple while its meaning is controlled. In a planned structured profile, zz-X1-X2-X3-zz, the first word selects a schema that sets how the other two are read: X2 as a place or target, X3 as a state or discriminator. Each organization keeps its own versioned dictionary, so the same three words can mean electrical equipment, Building 4, inspection required to authorized users and nothing to anyone else. Recognition runs on the device first and is kept separate from interpretation, which the resolver grants only after authentication and authorization. Each resolution can return a signed receipt, and handoff events can be anchored to a distributed ledger for chain of custody. Merkle-committed dictionaries and zero-knowledge proofs are on the research roadmap.",
     homeImages: ["j"],
-    pageImages: ["a", "alt-b", "c", "d", "e", "f", "j", "k", "l", "m", "n"],
+    pageImages: ["a", "c", "alt-b", "d", "e", "f", "j", "k", "l", "m", "n"],
     homeWideOnly: true,
   },
   {
@@ -46,15 +48,20 @@ export const applications: readonly Application[] = [
     title: "Postal and parcel",
     story:
       "Write a reference directly on a parcel; photograph loose items and receive packing guidance before choosing a parcel code.",
-    homeImages: ["g", "o"],
-    pageImages: ["g", "o"],
+    homeImages: ["o", "g"],
+    pageImages: ["o", "g"],
     homeWideOnly: false,
     pageGalleries: [
       {
+        // [MICHAEL 2026-10-06 change list] Same size as the two photos above,
+        // with the three-letter postage image added beside it.
         label: "standalone",
         columns: "2",
         frame: "268 / 200",
-        items: [{ image: "app-super-identifier" }],
+        items: [
+          { image: "app-super-identifier" },
+          { image: "app-postage-letters" },
+        ],
         closing: [
           "By appending a single 'super identifier' to legacy systems, we create a unified data node system to give current analog logistics the new digital-smart AI solutions and network. In the above, in theory, a FedEx overnight shipper can only put the zz-Code ID on the package and its deliverer in the fulfillment chain in anonymous, until the final touch with the receiver.",
         ],
@@ -191,6 +198,7 @@ export const applicationsHome = {
 
 export const applicationsPage = {
   title: "Applications",
+  // [MICHAEL 2026-10-06 change list] Lead with the kinds of use, then the AI principles.
   intro:
-    "AI belongs across field logistics and parcel workflows. Digital aliases are a separate application.",
+    "One writable code serves five kinds of use: field and enterprise logistics, postal and parcel, free everyday use with zzThat, digital aliases for blockchain addresses and AI agents, and AI-assisted work across all of them. Three AI principles guide the design. AI is the new UI: a photo, a few spoken words, or a tap replaces forms. AI is the new connector: agents link systems on the fly where a formal integration was once needed. AI flattens the stack: a phone and a marker can do work that once took printers, scanners, and back-office software.",
 };

@@ -1,3 +1,5 @@
+> **Historical build brief.** This document records the completed marketing-site build stream. It is not current server/web/app build authority. Use `intent/2026-10-04-one-shot-build.md`, `docs/ONE-SHOT-BRIEF.md`, and the active specs for current work.
+
 ## Goal
 Build the zzThis marketing site and scripted click-through demo as a static Astro site for GitHub Pages, per `docs/SPEC.md`, and open a DRAFT PR into `main`.
 

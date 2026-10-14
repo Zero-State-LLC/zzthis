@@ -1,6 +1,6 @@
 # Plan: v1 API and web client
 
-Feature: [spec.md](spec.md). Status: not built. This plan names the stack, the files, and the tests. Deepened 2026-10-04 for a one-shot build ([analysis](../analysis-2026-10-04.md), [brief](../../docs/ONE-SHOT-BRIEF.md)).
+Feature: [spec.md](spec.md). Status: implemented/tested in repository; production deployment remains gated. Runtime authority: [CLOUDFLARE-RUNTIME.md](../CLOUDFLARE-RUNTIME.md). This plan names the stack, the files, and the tests. Deepened 2026-10-04 for a one-shot build ([analysis](../analysis-2026-10-04.md), [brief](../../docs/ONE-SHOT-BRIEF.md)).
 
 ## Workflows (copied from the spec)
 
@@ -10,7 +10,7 @@ anti-slop-code, production-systems, google-developer-style. CI: `ci.yml`, `site-
 
 | Item | Choice | Status |
 |---|---|---|
-| Where the server lives | This repo | [DANNY 2026-10-04]. Answers Q29 for the v1 API. |
+| Source / runtime | Source, specs and CI live in GitHub; the application runtime is Cloudflare Workers. | [DANNY 2026-10-06]; CLOUDFLARE-RUNTIME.md |
 | Runtime | Cloudflare Workers, TypeScript strict, Node 24 tooling, `wrangler` pinned in devDependencies | spec 002 plan [OPERATOR 2026-10-02] |
 | Router | Hono | INFERRED |
 | Tokens and ID-token checks | `jose` (HS256 sign and verify, remote JWKS for Apple and Google, ES256 for the Apple client secret) | INFERRED |
@@ -131,15 +131,22 @@ The Playwright run needs a Worker process, so it lives in a new workflow, `.gith
 
 ## Operator work without an admin route
 
-The operator runs these with `wrangler d1 execute` against the production database. Each SQL file in `workers/api/ops/` writes its audit row in the same statement batch. `wrangler d1 execute` binds no parameters, so each file names its inputs as quoted placeholders, such as `':account_id'`. The operator replaces them, for example with `sed`, and passes the result as `--command="..."`. Use that `=` form: each file starts with a `--` comment, and wrangler reads a separate value that starts with `--` as an option. A placeholder left as written matches no row, so the file changes nothing. Each change and its audit event happen together or not at all: most files check one condition in both statements, and `grant.sql` writes its event only for the row its insert added (`changes()` and `last_insert_rowid()`). The audit events have no actor: `report.close` (target the report), `account.suspend` and `account.unsuspend` (the account), `code.revoke` (the code), and `grant.add` and `grant.remove` (the grant). A grant event takes the grant's scope, so that scope's auditors list it (FR-016). The audit row has no column for the role; the grant row holds it. `remove-grant.sql` ends a grant by setting `expires_at` to now and keeps the row, so its scope still resolves for both events. Every grant check already treats an expired grant as absent. SQL cannot purge the edge cache, so a revoke from SQL has the FR-018 worst case of 60 seconds. Codes revoked during a suspension stay revoked after `unsuspend.sql`. These files are T038, decided in D-2026-10-05-07 [DELEGATED 2026-10-05, zzThis #78].
+The operator runs these with `wrangler d1 execute` against the production database. Each SQL file in `workers/api/ops/` writes its audit row in the same statement batch. `wrangler d1 execute` binds no parameters, so each file names its inputs as quoted placeholders, such as `':account_id'`. The operator replaces them, for example with `sed`, and passes the result as `--command="..."`. Use that `=` form: each file starts with a `--` comment, and wrangler reads a separate value that starts with `--` as an option. A placeholder left as written matches no row, so the file changes nothing. Each change and its audit event happen together or not at all: most files check one condition in both statements, and `grant.sql` writes its event only for the row its insert added (`changes()` and `last_insert_rowid()`). The audit events have no actor: `report.close` (target the report), `account.suspend` and `account.unsuspend` (the account), `code.revoke` (the code), `account.org.set` (the account), and `grant.add` and `grant.remove` (the grant). A grant event takes the grant's scope, so that scope's auditors list it (FR-016). The audit row has no column for the role; the grant row holds it. `remove-grant.sql` ends a grant by setting `expires_at` to now and keeps the row, so its scope still resolves for both events. Every grant check already treats an expired grant as absent. SQL cannot purge the edge cache, so a revoke from SQL has the FR-018 worst case of 60 seconds. Codes revoked during a suspension stay revoked after `unsuspend.sql`. These files are T038, decided in D-2026-10-05-07 [DELEGATED 2026-10-05, zzThis #78]. `grant.sql` enforces one organization per `enterprise` or `logistics` scope (D-2026-10-10-06, D-2026-10-10-22, RM-073): it refuses, with no grant and no audit row, a grant to an account that holds no active grant in the scope while another account that is not deleted does, unless the operator sets `:same_org` to the scope name after checking that both accounts belong to one organization (RM-063). `:same_org` is checked, not trusted: the grant goes ahead only when its `org_id` is not empty and equals the `org_id` of every active grant in the scope (D-2026-10-10-24, RM-098). Its header gives the check. Grants and accounts carry a nullable `org_id` (migration 0003, D-2026-10-10-22, RM-074): `grant.sql` takes `:org_id`, `set-org.sql` sets the account's, and a viewer or auditor grant reaches only accounts with its `org_id` (FR-016, FR-035). An `org_id` is 1 to 64 characters of `a-z`, `0-9`, and `-`; empty means none.
+
+Run `set-org.sql` before `grant.sql` (RM-098). `grant.sql` refuses an `:org_id` that is not the holder's own `accounts.org_id`, and empty matches only an account with no organization. This holds for an account that already has grants too.
+
+Moving an account to another organization (D-2026-10-10-24, RM-099). `set-org.sql` writes nothing when the account holds an active grant, in any scope, whose `org_id` is not the new one; with `:revoke_grants` set to `yes`, those grants end in the same batch, each with a `grant.remove` event, and the account moves. It also writes nothing when the account owns an `enterprise` or `logistics` code, revoked or not, unless `:move_owner` is `yes`. Runbook note: membership is read live, so a moved owner takes its history, including the old organization's actor ids on its codes (for example its viewers' resolves), to the new organization's auditors, and the old organization loses it. To keep that history with the old organization, create a new account instead of moving it.
 
 | Job | File |
 |---|---|
 | List open reports, and close one by setting `closed_at` (FR-026) | `ops/reports.sql` |
+| The moderation queue: open reports oldest first, with age, the overdue flag, and the code's owner (RM-102) | `ops/report-queue.sql` |
+| Reports open for more than one day; the target is zero rows (RM-102) | `ops/report-overdue.sql` |
 | Suspend an account and revoke its codes (`revoked_reason` `operator`) | `ops/suspend.sql` |
 | Lift a suspension; revoked codes stay revoked | `ops/unsuspend.sql` |
 | Revoke one reported code | `ops/revoke-code.sql` |
-| Add an issuer, viewer, or auditor grant (FR-034) | `ops/grant.sql` |
+| Add an issuer, viewer, or auditor grant, bound to an organization (FR-034) | `ops/grant.sql` |
+| Set or clear an account's organization (FR-034, D-2026-10-10-22) | `ops/set-org.sql` |
 | Remove one grant | `ops/remove-grant.sql` |
 
 ## Human-gated setup (not part of the build)

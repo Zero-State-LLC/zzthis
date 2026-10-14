@@ -4,8 +4,34 @@ import {
   footerItems,
   footerNote,
   footerNotice,
+  zzthatSocial,
+  zzthisSocial,
 } from "../content/navigation";
+import type { SocialIcon } from "../content/navigation";
+import { zzthatLogo } from "../content/contact";
+import { images } from "../content/images";
 import { url } from "../lib/url";
+
+const zzthisDark = images["logo-dark"];
+const zzthisLight = images["logo-light"];
+
+// Brand glyphs drawn inline (no third-party requests), 24-unit grid.
+const glyphs: Record<SocialIcon, string> = {
+  twitter:
+    '<path fill="currentColor" d="M23.95 4.57a10 10 0 0 1-2.82.77 4.96 4.96 0 0 0 2.16-2.72c-.95.55-2 .96-3.13 1.18a4.92 4.92 0 0 0-8.38 4.48A13.98 13.98 0 0 1 1.64 3.16a4.82 4.82 0 0 0-.67 2.48c0 1.71.87 3.21 2.19 4.1a4.9 4.9 0 0 1-2.23-.62v.06a4.92 4.92 0 0 0 3.95 4.83 5 5 0 0 1-2.21.08 4.94 4.94 0 0 0 4.6 3.42A9.87 9.87 0 0 1 0 19.54a13.99 13.99 0 0 0 7.56 2.21c9.05 0 14-7.5 14-13.99l-.01-.63A9.94 9.94 0 0 0 24 4.59z"/>',
+  linkedin:
+    '<path fill="currentColor" d="M20.45 20.45h-3.56v-5.57c0-1.33-.02-3.04-1.85-3.04-1.85 0-2.14 1.45-2.14 2.94v5.67H9.35V9h3.41v1.56h.05c.48-.9 1.64-1.85 3.37-1.85 3.6 0 4.27 2.37 4.27 5.46v6.28zM5.34 7.43a2.06 2.06 0 1 1 0-4.13 2.06 2.06 0 0 1 0 4.13zm1.78 13.02H3.56V9h3.56v11.45zM22.23 0H1.77C.79 0 0 .77 0 1.73v20.54C0 23.23.79 24 1.77 24h20.45c.98 0 1.78-.77 1.78-1.73V1.73C24 .77 23.2 0 22.22 0h.01z"/>',
+  youtube:
+    '<path fill="currentColor" d="M23.5 6.19a3.02 3.02 0 0 0-2.12-2.14C19.5 3.55 12 3.55 12 3.55s-7.5 0-9.38.5A3.02 3.02 0 0 0 .5 6.19C0 8.07 0 12 0 12s0 3.93.5 5.81a3.02 3.02 0 0 0 2.12 2.14c1.88.5 9.38.5 9.38.5s7.5 0 9.38-.5a3.02 3.02 0 0 0 2.12-2.14C24 15.93 24 12 24 12s0-3.93-.5-5.81zM9.55 15.57V8.43L15.82 12l-6.27 3.57z"/>',
+  telegram:
+    '<path fill="currentColor" d="M11.94 0A12 12 0 1 0 12 24a12 12 0 0 0-.06-24zm4.97 7.22c.1 0 .32.02.46.14.12.1.15.23.17.33.02.09.04.3.02.47-.18 1.9-.96 6.5-1.36 8.63-.17.9-.5 1.2-.82 1.23-.7.06-1.22-.46-1.9-.9-1.05-.7-1.65-1.13-2.67-1.8-1.19-.78-.42-1.21.26-1.91.17-.19 3.25-2.98 3.3-3.23.01-.03.02-.15-.05-.21-.07-.06-.18-.04-.25-.03-.1.03-1.8 1.14-5.06 3.35-.48.33-.91.49-1.3.48-.43-.01-1.25-.24-1.87-.44-.75-.25-1.35-.37-1.3-.79.03-.22.33-.44.9-.66 3.5-1.53 5.83-2.53 7-3.02 3.33-1.38 4.02-1.63 4.48-1.64z"/>',
+  tiktok:
+    '<path fill="currentColor" d="M12.53.02C13.84 0 15.14.01 16.44 0c.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03a10.6 10.6 0 0 1-5.82-1.9c-.01 2.92.01 5.84-.02 8.75a7.66 7.66 0 0 1-1.35 3.94 7.47 7.47 0 0 1-5.91 3.21 7.3 7.3 0 0 1-4.08-1.03 7.55 7.55 0 0 1-3.65-5.71c-.02-.5-.03-1-.01-1.49a7.5 7.5 0 0 1 8.73-6.68c.02 1.48-.04 2.96-.04 4.44a3.42 3.42 0 0 0-4.38 2.12c-.21.51-.15 1.07-.14 1.61.24 1.64 1.82 3.02 3.5 2.87a3.3 3.3 0 0 0 2.77-1.61c.19-.33.4-.67.41-1.06.1-1.79.06-3.57.07-5.36.01-4.03-.01-8.05.02-12.07z"/>',
+  discord:
+    '<path fill="currentColor" d="M20.32 4.37a19.8 19.8 0 0 0-4.89-1.52.07.07 0 0 0-.08.04c-.21.38-.44.87-.6 1.25a18.27 18.27 0 0 0-5.49 0 12.64 12.64 0 0 0-.62-1.25.08.08 0 0 0-.08-.04 19.74 19.74 0 0 0-4.88 1.52.07.07 0 0 0-.03.03C.53 9.05-.32 13.58.1 18.06a.08.08 0 0 0 .03.06 19.9 19.9 0 0 0 5.99 3.03.08.08 0 0 0 .09-.03c.46-.63.87-1.3 1.22-1.99a.08.08 0 0 0-.04-.11 13.1 13.1 0 0 1-1.87-.89.08.08 0 0 1-.01-.13l.37-.29a.07.07 0 0 1 .08-.01c3.93 1.79 8.18 1.79 12.06 0a.07.07 0 0 1 .08.01l.37.29a.08.08 0 0 1-.01.13 12.3 12.3 0 0 1-1.87.89.08.08 0 0 0-.04.11c.36.7.77 1.36 1.22 1.99a.08.08 0 0 0 .09.03 19.84 19.84 0 0 0 6-3.03.08.08 0 0 0 .03-.06c.5-5.18-.84-9.67-3.55-13.66a.06.06 0 0 0-.03-.03zM8.02 15.33c-1.18 0-2.16-1.09-2.16-2.42 0-1.33.96-2.42 2.16-2.42 1.21 0 2.18 1.1 2.16 2.42 0 1.33-.96 2.42-2.16 2.42zm7.97 0c-1.18 0-2.15-1.09-2.15-2.42 0-1.33.95-2.42 2.15-2.42 1.21 0 2.18 1.1 2.16 2.42 0 1.33-.95 2.42-2.16 2.42z"/>',
+  instagram:
+    '<rect x="2.5" y="2.5" width="19" height="19" rx="5.5" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="12" r="4.4" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="17.6" cy="6.4" r="1.3" fill="currentColor"/>',
+};
 ---
 
 <footer class="colophon">
@@ -14,6 +40,68 @@ import { url } from "../lib/url";
       <a href={url(item.path)}>{item.label}</a>
     ))}
   </nav>
+  <div class="colophon__social">
+    {zzthisSocial.length > 0 && (
+      <ul class="social" aria-label="zzThis social links">
+        <li class="social__brand">
+          <img
+            class="only-dark"
+            src={url(zzthisDark.src)}
+            width={zzthisDark.width}
+            height={zzthisDark.height}
+            alt="zzThis"
+            loading="lazy"
+            decoding="async"
+          />
+          <img
+            class="only-light"
+            src={url(zzthisLight.src)}
+            width={zzthisLight.width}
+            height={zzthisLight.height}
+            alt="zzThis"
+            loading="lazy"
+            decoding="async"
+          />
+        </li>
+        {zzthisSocial.map((link) => (
+          <li>
+            <a href={link.href} aria-label={link.label} title={link.label}>
+              <svg
+                viewBox="0 0 24 24"
+                aria-hidden="true"
+                set:html={glyphs[link.icon]}
+              />
+            </a>
+          </li>
+        ))}
+      </ul>
+    )}
+    {zzthatSocial.length > 0 && (
+      <ul class="social social--zzthat" aria-label="zzThat social links">
+        <li class="social__brand">
+          <img
+            src={url(zzthatLogo.src)}
+            width={zzthatLogo.width}
+            height={zzthatLogo.height}
+            alt={zzthatLogo.alt}
+            loading="lazy"
+            decoding="async"
+          />
+        </li>
+        {zzthatSocial.map((link) => (
+          <li>
+            <a href={link.href} aria-label={link.label} title={link.label}>
+              <svg
+                viewBox="0 0 24 24"
+                aria-hidden="true"
+                set:html={glyphs[link.icon]}
+              />
+            </a>
+          </li>
+        ))}
+      </ul>
+    )}
+  </div>
   <p>
     zzThis. Contact: <a href={`mailto:${contactEmail}`}>{contactEmail}</a>.{" "}
     {footerNotice}. {footerNote}
