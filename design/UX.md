@@ -135,7 +135,7 @@ Loading keeps the previous content on screen and shows a small progress mark, ne
 
 ### Minted code
 
-The code is the largest text on the screen, in the mono font, in lowercase, never truncated. The check word sits in place inside the code and has its own label below (`minted.check_word_label`, `minted.check_word_help`) and its own accessibility label. `minted.reroll` shows while `rerolls_remaining` is above 0. At `reroll-cap` the button goes away and `minted.reroll_cap` shows. `minted.write_check` opens Write check.
+The code is the largest text on the screen, in the mono font, in lowercase, never truncated. The check word sits in place inside the code and has its own label below (`minted.check_word_label`, `minted.check_word_help`) and its own accessibility label. `minted.reroll` shows while `rerolls_remaining` is above 0. At `reroll-cap` the button goes away and `minted.reroll_cap` shows. The suggested-word picker (D-2026-10-11-01 option C, RM-113): while re-rolls remain, `minted.pick_help` sits under the code with `minted.reroll` and `minted.keep`. The server still chooses every word, and the client sends no code string. `minted.keep` keeps the current words: the picker closes, `minted.reroll_cap` shows, and Write check follows. A re-roll retires the old words for good, so the picker never shows earlier ones. `minted.write_check` opens Write check.
 
 ### Write check
 
@@ -144,6 +144,10 @@ The person photographs what they wrote. The spec 004 pipeline runs on the phone 
 ### My codes
 
 A list of rows: the code in mono, the record title, and a status word (`codes.status_*`) when the code is not active. Codes retired by a re-roll do not appear. Empty: `codes.empty`. Signed out: `codes.signed_out` with a sign-in button.
+
+### Saved
+
+A device-only list (D-2026-10-11-01 row 17, RM-115; zzThat FR-050), reached from My codes, signed in or out: `saved.title`, then one row per saved code in mono, newest first; a row opens Resolve. Empty: `saved.empty`. Resolve offers `resolve.save`, or `resolve.unsave` for a saved code. Saving calls no server and keeps only the canonical code on the device. Account deletion and `account.clear_saved` (then `account.clear_saved_done`) empty the list.
 
 ### Code detail
 
