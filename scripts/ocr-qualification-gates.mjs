@@ -5,7 +5,11 @@ const GATE_DEFINITIONS = [
   ["pair-accuracy", "min_pair_accuracy", "gte"],
   ["exact-code-accuracy", "min_exact_code_accuracy", "gte"],
   ["character-error-rate", "max_character_error_rate", "lte"],
-  ["roi-normalization-success-rate", "min_roi_normalization_success_rate", "gte"],
+  [
+    "roi-normalization-success-rate",
+    "min_roi_normalization_success_rate",
+    "gte",
+  ],
   ["p95-latency-ms", "max_p95_latency_ms", "lte"],
 ];
 

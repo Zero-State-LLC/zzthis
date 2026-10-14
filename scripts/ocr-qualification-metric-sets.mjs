@@ -74,8 +74,8 @@ function observationKeys(rows) {
 function notMeasuredReasons(rows, metrics, noCodeFalsePositives) {
   const reasons = [];
   if (metrics.roi_mean_iou === null) reasons.push("roi_mean_iou:no_roi_truth");
-  if (metrics.rectification_success_rate.rate === null) {
-    reasons.push("rectification_success_rate:missing_measurement");
+  if (metrics.roi_normalization_success_rate.rate === null) {
+    reasons.push("roi_normalization_success_rate:missing_measurement");
   }
   if (metrics.character_error_rate === null) {
     reasons.push("character_error_rate:no_truth_payload");
@@ -164,7 +164,7 @@ function metricSet(rows, { fiducial, roiLatency, text, bands }, caseMetrics) {
     false_pair_count: fiducial.false_pair_count,
     false_pair_rate: fiducial.false_pair_rate,
     roi_mean_iou: roiLatency.roi_mean_iou,
-    rectification_success_rate: rectificationRate,
+    roi_normalization_success_rate: rectificationRate,
     exact_code_accuracy: text.exact_code_accuracy,
     part_word_accuracy: text.part_word_accuracy,
     character_error_rate: text.character_error_rate.rate,

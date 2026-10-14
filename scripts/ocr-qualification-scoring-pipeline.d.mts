@@ -81,7 +81,7 @@ type QualificationMetricSet = {
   false_pair_count: number;
   false_pair_rate: RateMetric;
   roi_mean_iou: number | null;
-  rectification_success_rate: RateMetric;
+  roi_normalization_success_rate: RateMetric;
   exact_code_accuracy: RateMetric;
   part_word_accuracy: RateMetric;
   character_error_rate: number | null;

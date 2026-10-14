@@ -31,7 +31,7 @@ describe("OCR qualification diagnostic Markdown report", () => {
                 rate: 0.5,
               },
               false_accept_rate: { numerator: 0, denominator: 2, rate: 0 },
-              rectification_success_rate: {
+              roi_normalization_success_rate: {
                 numerator: 1,
                 denominator: 2,
                 rate: 0.5,

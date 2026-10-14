@@ -30,7 +30,10 @@ function metricTable(metrics) {
     metricRow("Exact-code accuracy", metrics.exact_code_accuracy),
     metricRow("False-valid decode rate", metrics.false_valid_decode_rate),
     metricRow("False Accept rate", metrics.false_accept_rate),
-    metricRow("Rectification success", metrics.rectification_success_rate),
+    metricRow(
+      "ROI normalization success",
+      metrics.roi_normalization_success_rate,
+    ),
     `| Character error rate | — | ${display(metrics.character_error_rate)} |`,
     `| Latency p50 / p95 (ms) | — | ${display(metrics.latency_ms?.p50)} / ${display(metrics.latency_ms?.p95)} |`,
     `| Crash / exception count | — | ${display(metrics.crash_count)} / ${display(metrics.exception_count)} |`,
