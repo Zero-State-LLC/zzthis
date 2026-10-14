@@ -35,22 +35,15 @@ const lookupHref = url("#lookup");
 ---
 
 <!doctype html>
-<html lang="en" data-home={home ? "true" : undefined}>
+<!-- [MICHAEL 2026-10-07] Dark is the default for every visitor; the header
+     toggle still switches the current page to light. -->
+<html lang="en" data-theme="dark" data-home={home ? "true" : undefined}>
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="description" content={description} />
     <meta name="color-scheme" content="dark light" />
-    <meta
-      name="theme-color"
-      content="#F4EFE4"
-      media="(prefers-color-scheme: light)"
-    />
-    <meta
-      name="theme-color"
-      content="#1C1B19"
-      media="(prefers-color-scheme: dark)"
-    />
+    <meta name="theme-color" content="#1C1B19" />
     <title>{title}</title>
   </head>
   <body>

@@ -209,6 +209,13 @@ async function readSettingsNow(env: WorkerEnv): Promise<SettingsResult> {
     googleClientIds: googleClientIds(reader),
   };
   const dataKey = reader.secret("ZZ_DATA_KEY", (length) => length === 32);
+  // RM-021: optional during a rotation; when set it must be a valid key.
+  const previousText = reader.text("ZZ_DATA_KEY_PREVIOUS");
+  const previousKey =
+    previousText === undefined ? null : fromBase64url(previousText);
+  if (previousText !== undefined) {
+    reader.check("ZZ_DATA_KEY_PREVIOUS", previousKey?.length === 32);
+  }
   const key = await signingKey(reader);
   const apple = await appleSettings(reader);
   if (key === null || reader.problems.size > 0) {
@@ -218,7 +225,7 @@ async function readSettingsNow(env: WorkerEnv): Promise<SettingsResult> {
     ok: true,
     settings: {
       ...settings,
-      dataKeys: await deriveDataKeys(dataKey),
+      dataKeys: await deriveDataKeys(dataKey, previousKey),
       signingKey: key,
       apple,
     },

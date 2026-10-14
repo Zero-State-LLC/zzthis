@@ -8,7 +8,7 @@ import {
   signIn,
   type Session,
 } from "./helpers/http.ts";
-import { fixture7Codes } from "./helpers/random.ts";
+import { unknownCode } from "./helpers/random.ts";
 import { expectMatchesSchema } from "./helpers/schema.ts";
 import { makeWorld, type World } from "./helpers/world.ts";
 
@@ -22,17 +22,22 @@ interface Event {
   created_at: string;
 }
 
+// Every account in these tests is in one organization, as the operator's
+// set-org.sql and grant.sql would bind it (D-2026-10-10-22).
 async function grant(
   accountId: string,
   scope: string,
   role: string,
   expiresAt: string | null = null,
 ) {
-  await env.ZZ_DB.prepare(
-    "INSERT INTO grants (id, subject_id, scope, role, expires_at) VALUES (?, ?, ?, ?, ?)",
-  )
-    .bind(crypto.randomUUID(), accountId, scope, role, expiresAt)
-    .run();
+  await env.ZZ_DB.batch([
+    env.ZZ_DB.prepare(
+      "INSERT INTO grants (id, subject_id, scope, role, org_id, expires_at) VALUES (?, ?, ?, ?, 'acme', ?)",
+    ).bind(crypto.randomUUID(), accountId, scope, role, expiresAt),
+    env.ZZ_DB.prepare("UPDATE accounts SET org_id = 'acme' WHERE id = ?").bind(
+      accountId,
+    ),
+  ]);
 }
 
 async function events(w: World, token: string, query = ""): Promise<Event[]> {
@@ -126,7 +131,7 @@ describe("GET /v1/audit (FR-016, T015)", () => {
   it("lists no event whose target has no scope: accounts, nonces, reports, and not-found resolves", async () => {
     const w = await makeWorld();
     await twoScopes(w);
-    const unknown = fixture7Codes()[29] as string;
+    const unknown = await unknownCode();
     await call(w, "GET", resolvePath(unknown));
     await call(w, "POST", "/v1/reports", {
       body: { canonical: unknown, reason: "spam" },

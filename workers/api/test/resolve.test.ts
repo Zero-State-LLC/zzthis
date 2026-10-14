@@ -9,7 +9,7 @@ import {
   signIn,
   type Session,
 } from "./helpers/http.ts";
-import { fixture7Codes, repeating } from "./helpers/random.ts";
+import { repeating, unknownCode } from "./helpers/random.ts";
 import { expectMatchesSchema } from "./helpers/schema.ts";
 import { makeWorld, testDataKeys, type World } from "./helpers/world.ts";
 
@@ -24,32 +24,28 @@ function resolve(w: World, code: string, token?: string): Promise<Response> {
   );
 }
 
+// Every account in these tests is in one organization, as the operator's
+// set-org.sql and grant.sql would bind it (D-2026-10-10-22).
 async function grant(
   accountId: string,
   scope: string,
   role: string,
   expiresAt: string | null = null,
 ) {
-  await env.ZZ_DB.prepare(
-    "INSERT INTO grants (id, subject_id, scope, role, expires_at) VALUES (?, ?, ?, ?, ?)",
-  )
-    .bind(crypto.randomUUID(), accountId, scope, role, expiresAt)
-    .run();
+  await env.ZZ_DB.batch([
+    env.ZZ_DB.prepare(
+      "INSERT INTO grants (id, subject_id, scope, role, org_id, expires_at) VALUES (?, ?, ?, ?, 'acme', ?)",
+    ).bind(crypto.randomUUID(), accountId, scope, role, expiresAt),
+    env.ZZ_DB.prepare("UPDATE accounts SET org_id = 'acme' WHERE id = ?").bind(
+      accountId,
+    ),
+  ]);
 }
 
 async function enterprise(w: World, name: string): Promise<Session> {
   const session = await signIn(w, name);
   await grant(session.accountId, "enterprise", "issuer");
   return session;
-}
-
-// An issuable fixture-7 code that this database has never stored.
-async function unknownCode(): Promise<string> {
-  const rows = await env.ZZ_DB.prepare("SELECT canonical FROM codes").all<{
-    canonical: string;
-  }>();
-  const taken = new Set(rows.results.map((row) => row.canonical));
-  return fixture7Codes().find((code) => !taken.has(code)) as string;
 }
 
 function headersOf(response: Response): Record<string, string> {
@@ -78,6 +74,7 @@ describe("GET /v1/resolve/{code} (spec 005 Resolve, T012)", () => {
         updated_at: code.created_at,
       },
       share: { text: code.canonical, url: null },
+      creator: await hmacTag(await testDataKeys(), "creator", alice.accountId),
     });
     expect(response.headers.get("Cache-Control")).toBe(PUBLIC);
     const row = await env.ZZ_DB.prepare(
@@ -361,5 +358,86 @@ describe("bearer tokens on resolve (FR-008, FR-021)", () => {
     const response = await resolve(w, code.canonical, alice.access);
     expect((await response.json<{ view: string }>()).view).toBe("public");
     expect(response.headers.get("Cache-Control")).toBe("no-store");
+  });
+});
+
+describe("the creator reference (RM-112, contract 1 revision 1.1)", () => {
+  const creatorOf = async (response: Response) =>
+    (
+      await expectMatchesSchema<{ creator?: string | null }>(
+        response,
+        "resolveCode",
+        200,
+      )
+    ).creator;
+
+  it("gives every public code of one owner the same creator, and other owners another", async () => {
+    const w = await makeWorld();
+    const alice = await signIn(w, "alice");
+    const bob = await signIn(w, "bob");
+    const first = await mint(w, alice.access);
+    const second = await mint(w, alice.access);
+    const bobs = await mint(w, bob.access);
+    const a1 = await creatorOf(await resolve(w, first.canonical));
+    const a2 = await creatorOf(await resolve(w, second.canonical));
+    const b1 = await creatorOf(await resolve(w, bobs.canonical));
+    expect(a1).toMatch(/^[A-Za-z0-9_-]{43}$/);
+    expect(a2).toBe(a1);
+    expect(b1).not.toBe(a1);
+    // A signed-in reader of a public record gets the same value.
+    const signedIn = await resolve(w, first.canonical, bob.access);
+    expect(await creatorOf(signedIn)).toBe(a1);
+  });
+
+  it("never carries the account id, and differs from the server's other HMAC uses", async () => {
+    const w = await makeWorld();
+    const alice = await signIn(w);
+    const code = await mint(w, alice.access);
+    const response = await resolve(w, code.canonical);
+    const text = await response.clone().text();
+    expect(text).not.toContain(alice.accountId);
+    const creator = await creatorOf(response);
+    const keys = await testDataKeys();
+    for (const label of ["limiter-ip", "nonce", "match-key"]) {
+      expect(creator).not.toBe(await hmacTag(keys, label, alice.accountId));
+    }
+  });
+
+  it("is null for a private record, for the owner and a viewer", async () => {
+    const w = await makeWorld();
+    const alice = await enterprise(w, "alice");
+    const code = await mint(w, alice.access, {
+      scope: "enterprise",
+      visibility: "private",
+    });
+    const viewer = await signIn(w, "viewer");
+    await grant(viewer.accountId, "enterprise", "viewer");
+    for (const token of [alice.access, viewer.access]) {
+      expect(
+        await creatorOf(await resolve(w, code.canonical, token)),
+      ).toBeNull();
+    }
+  });
+
+  it("is kept in the cached public response", async () => {
+    const w = await makeWorld();
+    const alice = await signIn(w);
+    const code = await mint(w, alice.access);
+    const fresh = await resolve(w, code.canonical);
+    expect(fresh.headers.get("Cache-Control")).toBe(PUBLIC);
+    const expected = await creatorOf(fresh);
+    const before = await count(
+      w,
+      "SELECT count(*) AS n FROM audit_events WHERE action = 'code.resolve'",
+    );
+    const cached = await resolve(w, code.canonical);
+    // A cache hit answers before the lookup, so it writes no resolve event.
+    expect(
+      await count(
+        w,
+        "SELECT count(*) AS n FROM audit_events WHERE action = 'code.resolve'",
+      ),
+    ).toBe(before);
+    expect(await creatorOf(cached)).toBe(expected);
   });
 });

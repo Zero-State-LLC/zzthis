@@ -8,12 +8,19 @@ const DERIVED_KEY_BYTES = 32;
 // one key for AES-GCM and one for HMAC.
 export const AES_KEY_INFO = "zzthis ZZ_DATA_KEY aes-gcm v1";
 export const HMAC_KEY_INFO = "zzthis ZZ_DATA_KEY hmac-sha256 v1";
+// RM-021: a public label for one ZZ_DATA_KEY, derived the same way, so a
+// sealed value names the key that sealed it without revealing the key.
+export const KEY_ID_INFO = "zzthis ZZ_DATA_KEY key-id v1";
 
 export interface DataKeys {
+  // Eight hex characters naming this ZZ_DATA_KEY (RM-021).
+  readonly id: string;
   // The stored Apple refresh tokens.
   readonly aes: CryptoKey;
   // Limiter keys, not-found audit targets, and nonce audit targets.
   readonly hmac: CryptoKey;
+  // ZZ_DATA_KEY_PREVIOUS during a rotation: it only opens older values.
+  readonly previous: { readonly id: string; readonly aes: CryptoKey } | null;
 }
 
 function hex(bytes: ArrayBuffer): string {
@@ -56,16 +63,38 @@ export function derivedKeyBytes(
   return hkdfSha256(dataKey, new Uint8Array(), utf8(info), DERIVED_KEY_BYTES);
 }
 
-export async function deriveDataKeys(dataKey: Uint8Array): Promise<DataKeys> {
+async function keyId(dataKey: Uint8Array): Promise<string> {
+  const bytes = await derivedKeyBytes(dataKey, KEY_ID_INFO);
+  return hex(bytes.slice(0, 4).buffer);
+}
+
+function importAes(bytes: Uint8Array): Promise<CryptoKey> {
+  return crypto.subtle.importKey("raw", bytes, "AES-GCM", false, [
+    "encrypt",
+    "decrypt",
+  ]);
+}
+
+export async function deriveDataKeys(
+  dataKey: Uint8Array,
+  previousKey: Uint8Array | null = null,
+): Promise<DataKeys> {
   const [aes, hmac] = await Promise.all([
     derivedKeyBytes(dataKey, AES_KEY_INFO),
     derivedKeyBytes(dataKey, HMAC_KEY_INFO),
   ]);
   return {
-    aes: await crypto.subtle.importKey("raw", aes, "AES-GCM", false, [
-      "encrypt",
-      "decrypt",
-    ]),
+    id: await keyId(dataKey),
+    previous:
+      previousKey === null
+        ? null
+        : {
+            id: await keyId(previousKey),
+            aes: await importAes(
+              await derivedKeyBytes(previousKey, AES_KEY_INFO),
+            ),
+          },
+    aes: await importAes(aes),
     hmac: await crypto.subtle.importKey(
       "raw",
       hmac,
@@ -92,8 +121,8 @@ export async function hmacTag(
 
 // AES-GCM with the derived AES key, for the stored Apple refresh token. The
 // client id is the additional data, so a token only decrypts with the
-// client it was issued to. Output: base64url of the IV, then the
-// ciphertext and tag.
+// client it was issued to. Output: `k1.<key id>.` and then base64url of
+// the IV, then the ciphertext and tag (RM-021).
 export async function seal(
   keys: DataKeys,
   plaintext: string,
@@ -108,11 +137,11 @@ export async function seal(
   const out = new Uint8Array(IV_BYTES + sealed.byteLength);
   out.set(iv);
   out.set(new Uint8Array(sealed), IV_BYTES);
-  return toBase64url(out);
+  return `k1.${keys.id}.${toBase64url(out)}`;
 }
 
-export async function open(
-  keys: DataKeys,
+async function decrypt(
+  aes: CryptoKey,
   sealed: string,
   context: string,
 ): Promise<string> {
@@ -126,8 +155,35 @@ export async function open(
       iv: bytes.slice(0, IV_BYTES),
       additionalData: utf8(context),
     },
-    keys.aes,
+    aes,
     bytes.slice(IV_BYTES),
   );
   return new TextDecoder().decode(plain);
+}
+
+const TAGGED = /^k1\.([0-9a-f]{8})\.(.+)$/;
+
+// RM-021: a tagged value opens with the key it names, current or previous.
+// A value sealed before key ids existed has no tag: it is tried with the
+// current key, then the previous one.
+export async function open(
+  keys: DataKeys,
+  sealed: string,
+  context: string,
+): Promise<string> {
+  const tagged = TAGGED.exec(sealed);
+  if (tagged !== null) {
+    const [, id, body] = tagged as unknown as [string, string, string];
+    if (id === keys.id) return decrypt(keys.aes, body, context);
+    if (keys.previous !== null && id === keys.previous.id) {
+      return decrypt(keys.previous.aes, body, context);
+    }
+    throw new Error("sealed with an unknown key");
+  }
+  try {
+    return await decrypt(keys.aes, sealed, context);
+  } catch (error) {
+    if (keys.previous === null) throw error;
+    return decrypt(keys.previous.aes, sealed, context);
+  }
 }

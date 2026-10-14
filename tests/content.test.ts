@@ -15,16 +15,18 @@ import * as navigationModule from "../src/content/navigation";
 import * as peopleModule from "../src/content/people";
 import * as technologyModule from "../src/content/technology";
 import * as usesModule from "../src/content/uses";
+import * as walkthroughsModule from "../src/content/walkthroughs";
 import * as workflowsModule from "../src/content/workflows";
 
 const { applications, applicationsPage } = applicationsModule;
 const { comparisonColumns, comparisonNote, comparisonRows } = comparisonModule;
 const { featured, hero } = heroModule;
 const { images } = imagesModule;
-const { navItems, footerItems, footerNotice } = navigationModule;
+const { navItems, footerItems, footerNotice, zzthisSocial, zzthatSocial } =
+  navigationModule;
 const { advisors, founder, founderOrigin } = peopleModule;
 const { topWays } = usesModule;
-const { demoTitle } = demoModule;
+const { demoTitle, demoPrototypeLinks } = demoModule;
 const { technologyDraft } = technologyModule;
 const { conceptLabels } = labelsModule;
 const { coreIdentity, fieldLogistics, photoToAction } = workflowsModule;
@@ -44,6 +46,7 @@ const modules: readonly unknown[] = [
   peopleModule,
   technologyModule,
   usesModule,
+  walkthroughsModule,
   workflowsModule,
 ];
 
@@ -88,6 +91,16 @@ describe("hero and featured statement (spec 3.2)", () => {
     expect(featured.text).toBe(
       "A zz code gives people a way to create the mark themselves, wherever the work happens. AI can help identify what a camera sees, count what remains, suggest how an item should be handled, and prepare the next task. The same visible code connects the item, its history, and the people responsible for it. It bridges physical things and their digital control: the easiest, smartest way to identify, manage, and act on them. zzThis is designed AI-first, on the principle that AI is the new UI, and the great connector and leveler across big tech stacks.",
     );
+  });
+});
+
+describe("demo prototype decisions", () => {
+  it("keeps zzthing.com in the demo pending the October 31 review", () => {
+    expect(demoPrototypeLinks.map((link) => link.name)).toEqual([
+      "zzthing.com",
+      "zzthat.com",
+    ]);
+    expect(demoPrototypeLinks[0]?.href).toBe("https://zzthing.com");
   });
 });
 
@@ -213,9 +226,11 @@ describe("applications (spec 3.2 H.7 and 3.4)", () => {
   });
 
   it("matches the page intro and the aliases extra sentence", () => {
-    expect(applicationsPage.intro).toBe(
-      "AI belongs across field logistics and parcel workflows. Digital aliases are a separate application.",
+    // [MICHAEL 2026-10-06 change list] The intro leads with the kinds of use.
+    expect(applicationsPage.intro).toMatch(
+      /^One writable code serves five kinds of use:/,
     );
+    expect(applicationsPage.intro).toContain("AI is the new UI");
     expect(
       applications.find((entry) => entry.id === "aliases")?.pageExtra,
     ).toBe("Deeper blockchain/AI architecture can grow into a later page.");
@@ -224,53 +239,93 @@ describe("applications (spec 3.2 H.7 and 3.4)", () => {
 
 describe("navigation and people", () => {
   it("lists nav items in spec order", () => {
+    // [MICHAEL 2026-10-08] Demo added between Applications and About.
     expect(navItems.map((item) => item.label)).toEqual([
       "How it works",
       "Applications",
+      "Demo",
       "About",
       "Contact",
     ]);
   });
 
-  it("lists the advisors in the 2026-10-02 order, all with initials", () => {
+  it("lists the advisors in the 2026-10-13 order, all with initials", () => {
+    // [MICHAEL 2026-10-06] Daniel and Adam first. [2026-10-08] Omer removed.
+    // [MICHAEL 2026-10-13] Aaron Godbout is the fourth advisor.
     expect(advisors.map((person) => person.name)).toEqual([
-      "Patrick Muggler",
-      "Arshi Chadha",
-      "Ridham Bhagat",
       "Daniel Meyer",
       "Adam Fry",
+      "Patrick Muggler",
+      "Aaron Godbout",
+      "Arshi Chadha",
     ]);
     expect(advisors.every((person) => person.initials !== undefined)).toBe(
       true,
     );
   });
 
+  it("omits drafted advisory closing lines from every advisor bio", () => {
+    expect(
+      advisors.some((person) => /advises zzThis on/i.test(person.bio ?? "")),
+    ).toBe(false);
+    // Omer's Q72-approved bio returns without a closing line if he is restored.
+    expect(advisors.some((person) => person.name === "Omer F. Yalcin")).toBe(
+      false,
+    );
+  });
+
+  it("lists the footer social links with their owners", () => {
+    // [MICHAEL 2026-10-13] Each brand has its own group, led by its logo.
+    // Twitter keeps the bird icon and twitter.com addresses.
+    expect(zzthisSocial.map((link) => [link.icon, link.href])).toEqual([
+      ["twitter", "https://twitter.com/zzthiscom"],
+      ["linkedin", "https://www.linkedin.com/company/zzthis"],
+      ["youtube", "https://www.youtube.com/@zzthiscom"],
+      ["telegram", "https://t.me/zzthisapp"],
+    ]);
+    expect(zzthatSocial.map((link) => [link.icon, link.href])).toEqual([
+      ["twitter", "https://twitter.com/zzthatcom"],
+      ["instagram", "https://www.instagram.com/zzthatcom/"],
+      ["tiktok", "https://www.tiktok.com/@zzthatcom"],
+      ["youtube", "https://www.youtube.com/@zzthat"],
+      ["discord", "https://discord.gg/hwXvVKYzn4"],
+      ["telegram", "https://t.me/zzthat"],
+    ]);
+    for (const link of zzthisSocial) {
+      expect(link.label.startsWith("zzThis on ")).toBe(true);
+    }
+    for (const link of zzthatSocial) {
+      expect(link.label.startsWith("zzThat on ")).toBe(true);
+    }
+    for (const link of [...zzthisSocial, ...zzthatSocial]) {
+      expect(link.href.startsWith("https://")).toBe(true);
+    }
+  });
+
   it("applies Michael's 2026-10-02 answers", () => {
     const byName = (name: string) =>
       advisors.find((person) => person.name === name);
     expect(advisors.some((person) => person.name === "Jim White")).toBe(false);
-    expect(byName("Ridham Bhagat")?.role).toBe(
-      "Cybersecurity, cryptography and research methods",
-    );
-    expect(byName("Ridham Bhagat")?.bio).toMatch(
-      /^Ridham Bhagat will contribute/,
+    // [MICHAEL 2026-10-06 change list] Ridham Bhagat is removed from the site.
+    expect(advisors.some((person) => person.name === "Ridham Bhagat")).toBe(
+      false,
     );
     expect(byName("Adam Fry")?.role).toBe(
       "AI agents, infrastructure and deployment",
     );
-    expect(byName("Adam Fry")?.bio).toMatch(/^Adam Fry will contribute/);
+    // [MICHAEL 2026-10-06 change list] Adam's bio now reads "has".
+    expect(byName("Adam Fry")?.bio).toMatch(/^Adam Fry has AI-agent/);
     expect(byName("Adam Fry")?.profileUrl).toBeUndefined();
     for (const name of [
       "Patrick Muggler",
       "Arshi Chadha",
-      "Ridham Bhagat",
       "Daniel Meyer",
       "Adam Fry",
     ]) {
       expect(byName(name)?.bio).toBeTruthy();
     }
     expect(founder.role).toBe(
-      "Founder, business-model architect, and project lead",
+      "Founder, new products and business model architect, project lead",
     );
     expect(founder.bio.startsWith("I “invent” business models.")).toBe(true);
     expect(founderOrigin.text).toBe(founder.bio);
@@ -281,11 +336,9 @@ describe("navigation and people", () => {
     expect(byName("Arshi Chadha")?.photo?.src).toBe(
       "images/people/arshi-chadha.webp",
     );
-    expect(byName("Ridham Bhagat")?.photo?.src).toBe(
-      "images/people/ridham-bhagat.webp",
-    );
     expect(byName("Daniel Meyer")?.photo).toBeUndefined();
-    expect(byName("Adam Fry")?.photo).toBeUndefined();
+    // [MICHAEL 2026-10-06 change list] Adam now has a headshot.
+    expect(byName("Adam Fry")?.photo?.src).toBe("images/people/adam-fry.webp");
     expect(footerNotice).toBe("Patent pending");
     expect(footerItems.map((item) => item.label)).toEqual([
       "How it works",
@@ -297,7 +350,8 @@ describe("navigation and people", () => {
     expect(demoTitle).toBe("See zzThis in action.");
     expect(conceptLabels.standalone).toBe("Concept illustration");
     expect(technologyDraft.status).toBe("unpublished");
-    expect(fieldLogistics.images).toEqual(["a", "alt-b", "c"]);
+    // [MICHAEL 2026-10-06 change list] The batched pallet moves to second.
+    expect(fieldLogistics.images).toEqual(["a", "c", "alt-b"]);
   });
 });
 
@@ -349,7 +403,7 @@ describe("application galleries", () => {
 
   it("keeps parcel, community, and aliases galleries in order", () => {
     expect(ids("parcel")).toEqual([
-      ["app-super-identifier"],
+      ["app-super-identifier", "app-postage-letters"],
       ["app-delivery-1", "app-delivery-2", "app-delivery-3", "app-delivery-4"],
     ]);
     expect(ids("community")).toEqual([
@@ -417,5 +471,29 @@ describe("content hygiene across all content modules", () => {
         banned.some((term) => text.toLowerCase().includes(term)),
       ),
     ).toEqual([]);
+  });
+});
+
+describe("applications walkthroughs [MICHAEL 2026-10-11]", () => {
+  const { walkthroughs } = walkthroughsModule;
+
+  it("has the pallet and household walkthroughs, five images each", () => {
+    expect(walkthroughs.map((walk) => walk.title)).toEqual([
+      "Smart force-multiplier automation",
+      "Smart packing and handling",
+    ]);
+    for (const walk of walkthroughs) {
+      expect(walk.frames).toHaveLength(5);
+    }
+  });
+
+  it("ships every walkthrough image and thumbnail under public, each at most 2 MB", () => {
+    for (const frame of walkthroughs.flatMap((walk) => walk.frames)) {
+      for (const src of [frame.src, frame.thumb]) {
+        const path = join("public", src);
+        expect(existsSync(path), path).toBe(true);
+        expect(statSync(path).size).toBeLessThanOrEqual(2 * 1024 * 1024);
+      }
+    }
   });
 });

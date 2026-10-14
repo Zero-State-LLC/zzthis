@@ -6,7 +6,7 @@ import {
 } from "@zzthis/zz-core";
 import { optionalCaller, type Caller } from "../auth/caller.ts";
 import { auditStatement, type AuditEvent } from "../audit/writer.ts";
-import { hasScopeGrant } from "../codes/scope.ts";
+import { viewerReaches } from "../codes/scope.ts";
 import type { components } from "../generated/api.ts";
 import type { AppContext } from "../http/context.ts";
 import { ApiError, json, malformed, notFound } from "../http/respond.ts";
@@ -71,7 +71,8 @@ async function lookup(
 }
 
 // Step 7 (FR-035): a private record resolves only for its owner or for an
-// account with a viewer grant on the code's scope.
+// account with a viewer grant on the code's scope bound to the owner's
+// organization (D-2026-10-10-22).
 async function viewFor(
   c: AppContext,
   caller: Caller | null,
@@ -80,7 +81,7 @@ async function viewFor(
   if (row.visibility === "public") return "public";
   if (caller === null) return null;
   if (caller.id === row.owner_id) return "owner";
-  return (await hasScopeGrant(c, caller.id, row.scope, "viewer"))
+  return (await viewerReaches(c, caller.id, row.scope, row.owner_id))
     ? "viewer"
     : null;
 }
@@ -194,6 +195,12 @@ export async function resolveCode(c: AppContext): Promise<Response> {
       canonical: row.canonical,
       record: { title: row.title, body: row.body, updated_at: row.updated_at },
       share: { text: row.canonical, url: null },
+      // RM-112: an HMAC of the owner id, so a device can block a creator
+      // without learning who it is. Null for a private record.
+      creator:
+        view === "public"
+          ? await hmacTag(c.get("settings").dataKeys, "creator", row.owner_id)
+          : null,
     },
     {
       "Cache-Control": cacheable ? PUBLIC_CACHE_CONTROL : "no-store",
