@@ -514,7 +514,7 @@ RM-050 production resources ─> RM-053 web build ─> RM-051 deploy ─> RM-052
 
 ### RM-101 Hide this code and the expanded report flow in the apps (external)
 
-- Release v1.1 · P0 · In review (zzThat #64 Hide; #65 Block, draft) · Bundle B3 · Owner: kneelbeforez0D
+- Release v1.1 · P0 · In progress (Hide merged in zzThat #64; Block in zzThat #65, draft) · Bundle B3 · Owner: kneelbeforez0D
 - **Scope.** zzThat FR-035 replaces "No block list" (D-2026-10-10-25 item 1). Resolve and the Report sheet offer "Hide this code" and, once RM-112 ships, "Block this creator": a device-only list of hidden canonical codes and blocked creator references (no server call), shown afterwards as a hidden state with Unhide or Unblock; cleared on account deletion and by a Settings reset. Create asks for terms acceptance before the first create and again when the terms version changes (RM-103). The Report sheet's sent state says the creator is reviewed within 24 hours and can be suspended. Copy keys go through zzThis `design/copy.json`.
 - **Acceptance.** iOS and Android tests: hide a code, resolve it again (scan and typed) and see the hidden state without its title or body; unhide restores it; block a creator and another code with the same `creator` shows the hidden state; delete the account, or run the Settings reset, and both lists are empty; no network call is made by hide, block, unhide, or unblock; Create refuses until the current terms version is accepted.
 - **Governing.** D-2026-10-10-25; Apple 1.2; Play UGC.
