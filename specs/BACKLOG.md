@@ -514,7 +514,7 @@ RM-050 production resources ─> RM-053 web build ─> RM-051 deploy ─> RM-052
 
 ### RM-101 Hide this code and the expanded report flow in the apps (external)
 
-- Release v1.1 · P0 · In progress (Hide merged in zzThat #64; Block in zzThat #65, draft) · Bundle B3 · Owner: kneelbeforez0D
+- Release v1.1 · P0 · In progress (Hide merged in zzThat #64 and Block in zzThat #65; terms acceptance before the first create waits on RM-103, RM-124, and D-2026-10-13-04) · Bundle B3 · Owner: kneelbeforez0D
 - **Scope.** zzThat FR-035 replaces "No block list" (D-2026-10-10-25 item 1). Resolve and the Report sheet offer "Hide this code" and, once RM-112 ships, "Block this creator": a device-only list of hidden canonical codes and blocked creator references (no server call), shown afterwards as a hidden state with Unhide or Unblock; cleared on account deletion and by a Settings reset. Create asks for terms acceptance before the first create and again when the terms version changes (RM-103). The Report sheet's sent state says the creator is reviewed within 24 hours and can be suspended. Copy keys go through zzThis `design/copy.json`.
 - **Acceptance.** iOS and Android tests: hide a code, resolve it again (scan and typed) and see the hidden state without its title or body; unhide restores it; block a creator and another code with the same `creator` shows the hidden state; delete the account, or run the Settings reset, and both lists are empty; no network call is made by hide, block, unhide, or unblock; Create refuses until the current terms version is accepted.
 - **Governing.** D-2026-10-10-25; Apple 1.2; Play UGC.
@@ -594,14 +594,14 @@ RM-050 production resources ─> RM-053 web build ─> RM-051 deploy ─> RM-052
 
 ### RM-113 Suggested-word picker on Create (server-chosen codes)
 
-- Release v1.1 · P1 · In review (zzThat #65, draft; RM-125 extends it) · Bundle B3 · Owner: kneelbeforez0D · External (zzThat; web create may mirror)
+- Release v1.1 · P1 · Done (zzThat #65 merged 2026-10-14; RM-125 extends it) · Bundle B3 · Owner: kneelbeforez0D · External (zzThat; web create may mirror)
 - **Scope.** Option (C) from D-2026-10-11-01. Create keeps `POST /v1/codes` and re-roll: the server still chooses words and the check word (zzThat FR-017, ZQ11). The UI offers a clearer way to pick among suggested or re-rolled server words (for example show the candidate set and "Get different words") so creators feel they chose a code without sending a person-written string. No wire change. Cap remains 3 re-rolls (spec 005 FR-006).
 - **Acceptance.** zzThat (and web if create is shown) tests: mint still sends no canonical; re-roll to cap; picker copy uses `design/copy.json` keys; Unavailable when `free_public` is false.
 - **Governing.** D-2026-10-11-01; D-2026-10-10-21.
 
 ### RM-115 Local Saved list in zzThat (device-only)
 
-- Release v1.1 · P2 · In review (zzThat #65, draft) · Bundle B3 · Owner: kneelbeforez0D · External (zzThat)
+- Release v1.1 · P2 · Done (zzThat #65 merged 2026-10-14) · Bundle B3 · Owner: kneelbeforez0D · External (zzThat)
 - **Scope.** Row 17 ASSIMILATE from D-2026-10-11-01. Add a device-only "Saved" list of codes the person scanned and chose to save (canonical codes only, no thumbnail, as built in zzThat #65 and `design/UX.md` Saved). No server sync, no photo upload. Cleared on account deletion and by its own Account action (`account.clear_saved`), not by `account.unhide_all`. Cloud sync of Saved stays QUEUE with RM-117 / v2.2.
 - **Acceptance.** Spec and runtime name Saved; tests show save/unsave without network; list survives process restart; deletion and reset clear it; no new API calls.
 - **Governing.** D-2026-10-11-01.
