@@ -61,19 +61,21 @@ Sigstore's documented flow uses short-lived identity-bound certificates and a tr
 
 ## Stress matrix
 
-The final set covers terminal-fiducial localization and pairing plus ordinary handwriting and print, low contrast, glare, blur, motion blur, perspective, rotation, distance, two-line/wrapped codes, multiple codes, partial/occluded fiducials, false `zz` marks in surrounding text, ambiguous endpoint pairing, unequal endpoint size, curved/wrapped surfaces, running text, confusable characters, near-word cases, invalid/reserved characters, no-code images, handles, and field-code parts. `manifest.schema.json` defines canonical stress tags; `clean` and `single-code` are descriptive coverage tags, not stress requirements. `gate-config.schema.json` requires every canonical stress bucket and freezes a positive minimum sample count for each before the final split; the receipt records each minimum and observed count. A missing or under-count bucket makes the run incomplete, not passing.
+The final set covers terminal-fiducial localization and pairing plus ordinary handwriting and print, low contrast, glare, blur, motion blur, rotation, distance, flat two-line payloads, multiple codes, partial/occluded fiducials, false `zz` marks in surrounding text, ambiguous endpoint pairing, unequal endpoint size, running text, confusable characters, near-word cases, invalid/reserved characters, no-code images, handles, and field-code parts. Pairing is same-baseline-only; the versioned candidate bundle freezes the baseline tolerance and hard maximum counts for fiducial and pair candidates before final evaluation. Exceeding a cap must produce a whole-frame fail-closed result: no truncation/ranking and no payload OCR. The v1 adapter may crop and rotate an ROI, but perspective/projective rectification is unsupported. Perspective-dependent, curved/wrapped-surface, and candidate-overflow samples are required **fail-closed safety probes**, not supported-geometry OCR accuracy cases. Their safe-refusal/no-OCR evidence is scored separately; they remain in the corpus. Any probe that invokes payload OCR, emits payload candidates, or reaches Accept makes the result `NO_PROMOTION`, independent of other aggregate metrics; any False Accept on them also blocks the run. They do not inflate or reduce supported-geometry OCR accuracy denominators. Flat two-line payloads remain supported when both markers form a valid same-baseline pair and the interior ROI is safe. `manifest.schema.json` defines canonical stress tags; `clean` and `single-code` are descriptive coverage tags, not stress requirements. `gate-config.schema.json` requires every canonical stress bucket and freezes a positive minimum sample count for each before the final split; the receipt records each minimum and observed count. A missing or under-count bucket makes the run incomplete, not passing.
 
 ## Adapter input and output
 
-Input is one still image plus immutable adapter configuration. Camera qualification measures two separable stages: (A) terminal-`zz` fiducial detection/pairing and ROI localization/rectification, then (B) payload recognition. Native platform types are serialized at the harness boundary using [adapter-result.schema.json](qualification/adapter-result.schema.json); [fixture-adapter-results.json](qualification/fixture-adapter-results.json) demonstrates the wire shape. Each result binds to `sample_id`, its tuning/final split, the manifest's image hash, and one frozen device-matrix entry. The whole-manifest and matrix hashes must match exactly, and every required `(device_matrix_entry_id, sample_id)` pair must occur exactly once; missing, duplicate, extra, split-mismatched, environment-mismatched, or hash-mismatched results make the run INCOMPLETE. Coordinates are normalized to the original image after orientation normalization, with origin at top-left. The adapter emits evidence only: fiducials, geometry, raw payload candidates, confidence evidence, and timing. It must not supply decoded codes, canonical codes, validity, or product state. The harness derives those outputs through the pinned shared local decoder and band mapping.
+Input is one still image plus immutable adapter configuration. Camera qualification measures two separable stages: (A) terminal-`zz` fiducial detection/pairing and safe ROI localization/crop-or-rotation normalization, then (B) payload recognition. Same-baseline tolerance, candidate caps, and any permitted orientation-normalization parameters are immutable candidate-bundle inputs and must be frozen before the final split. The adapter must not apply perspective/projective rectification. Native platform types are serialized at the harness boundary using [adapter-result.schema.json](qualification/adapter-result.schema.json); [fixture-adapter-results.json](qualification/fixture-adapter-results.json) demonstrates the wire shape. Each result binds to `sample_id`, its tuning/final split, the manifest's image hash, and one frozen device-matrix entry. The whole-manifest and matrix hashes must match exactly, and every required `(device_matrix_entry_id, sample_id)` pair must occur exactly once; missing, duplicate, extra, split-mismatched, environment-mismatched, or hash-mismatched results make the run INCOMPLETE. Coordinates are normalized to the original image after orientation normalization, with origin at top-left. The adapter emits evidence only: fiducials, geometry, raw payload candidates, confidence evidence, and timing. It must not supply decoded codes, canonical codes, validity, or product state. For a safety-probe sample or a frame over a candidate cap, it must record the unsupported/overflow disposition and produce no payload candidates. The harness derives decoder outputs through the pinned shared local decoder and band mapping.
+
+Qualification exercises the recognizer on every complete **predicted** pair independently, keyed to the adapter's `pair_id`, including all predicted pairs in multi-code samples. Each marker observation records its baseline group; a serialized pair names its opening and closing detection IDs and is eligible for payload OCR only when both refer to exact detections on the same non-null baseline group and the ROI repeats that baseline ID. Cross-baseline pairs remain measurable false-pair evidence but must not produce payload OCR or candidates. This is measurement coverage, not runtime behavior: in the app, payload OCR waits for a human selection whenever more than one plausible complete pair remains, as required by FR-020/FR-021. Qualification must not use ground-truth pair identity to choose which ROI to OCR, and runtime must not use qualification's all-pair reads to bypass selection. A pair with unusable or unsafe geometry is recorded as such and is not payload-OCRed.
 
 The adapter-result contract must record:
 
 - engine id and exact engine/model/runtime version;
 - platform and OS version;
 - preprocessing version and parameters;
-- detected fiducial regions, endpoint role/pairing evidence, and detection score when meaningful;
-- ROI/polygon, orientation/baseline, and rectification transform when used;
+- detected fiducial regions, baseline-group ID (null when unestablished), endpoint role/pair linkage, and detection score when meaningful; each ROI names its opening/closing detection IDs and must match both detections' shared non-null baseline group;
+- ROI/polygon, orientation/baseline, and crop/rotation normalization provenance when used; any transform must be non-projective (a perspective/projective transform is invalid for this v1 contract);
 - candidate payload text in original recognizer order;
 - confidence semantics, including "not available";
 - geometry/line provenance when exposed;
@@ -97,7 +99,7 @@ CAPTURED
 CAPTURED -> RETRY        no usable endpoint evidence
 FIDUCIALS_DETECTED -> RETRY   one/cut/occluded endpoint or unusable geometry
 FIDUCIALS_DETECTED -> CLARIFY multiple plausible pairings requiring selection
-ROI_LOCALIZED -> RETRY        rectification/crop unusable
+ROI_LOCALIZED -> RETRY        ROI unsafe or crop/rotation normalization unsupported
 RECOGNIZED -> ABSTAIN    unsupported/invalid evidence
 DECODED -> CLARIFY       ambiguity or confirmation required
 DECODED -> RETRY         incomplete/low-quality recoverable read
@@ -115,7 +117,7 @@ For every engine and stress bucket report:
 - complete-pair detection rate;
 - endpoint pairing accuracy;
 - false-finder and false-pair counts/rates, including prose `zz` distractors;
-- ROI localization overlap/error and rectification success where ground truth exists;
+- ROI localization overlap/error and safe crop/rotation normalization success where ground truth exists;
 - exact canonical-code accuracy;
 - part/word accuracy;
 - character error rate;
@@ -149,6 +151,8 @@ A False Accept is always counted even if the wrong record does not exist on the 
 ## Promotion rule
 
 The final numerical release gates are frozen in a separate `gate-config.json` validated by `gate-config.schema.json`, then bound by a signed pre-run attestation before final-split execution. It includes the exact required gate-id set, thresholds, the fiducial IoU threshold, CER normalization, minimum tuning/final sample counts, and minimum counts for every required bucket. The receipt has exactly one final-split result for each required gate id and no others. Gates may be derived from pilot/tuning evidence but may not be relaxed after seeing final results. A post-result edit requires a new config hash, a new pre-run attestation, and a new candidate run; a caller-supplied or backdated timestamp is not evidence.
+
+The false-valid-decode gate is quantitative: every wrong-but-valid top-1 observation is counted under the frozen scoring denominator, and every reported false-valid case requires a non-empty reviewer disposition. A dispositioned case does not independently force NO_PROMOTION when the measured final rate is within the frozen threshold; exceeding that threshold fails the gate and prevents promotion. The false-Accept limit remains zero.
 
 An engine is ineligible if:
 

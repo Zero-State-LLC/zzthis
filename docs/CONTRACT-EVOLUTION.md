@@ -24,6 +24,15 @@ Status: PROPOSED (D-2026-10-10-12). Until Danny accepts it, rule 1 stands unchan
 - An additive revision changes OpenAPI `info.version`, keeps `X-ZZ-Contract: 1`, and advertises the feature in discovery.
 - Everything else is contract 2.
 
+## Accepted exception: RM-112 (2026-10-09 PT, D-2026-10-10-25)
+
+Status: ACCEPTED (Danny, 2026-10-09 PT) as a named exception to D-2026-10-10-12.
+
+- One additive, optional Resolve response field, `creator`, inside contract 1: an opaque HMAC of the owner's account id, null for private records.
+- Shipped in PR #161 with OpenAPI `info.version` 1.1, `X-ZZ-Contract: 1` unchanged, and discovery `creator_refs: true`.
+- RM-075 tolerant readers: the unknown-key half passes on both apps (zzThat PR #58), which covers the new keys `creator` and `creator_refs`; the unknown-enum half is open (zzThat issue #54) and this field adds no enum value.
+- No other contract-1 change is allowed under rule 1 until D-2026-10-10-12 is decided.
+
 ## Semantic-profile implications
 
 Evidence level: **INFERRED** future-contract constraint.

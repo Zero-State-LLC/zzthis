@@ -1,6 +1,9 @@
 /* eslint-disable max-lines -- The schema-valid receipt fixture is kept beside its regression tests. */
 import { describe, expect, it } from "vitest";
-import { validateQualificationReceipt } from "../scripts/ocr-qualification/receipt-semantics.mjs";
+import {
+  validateQualificationReceipt,
+  validateReceiptSemantics,
+} from "../scripts/ocr-qualification/receipt-semantics.mjs";
 import { buildQualificationReceiptArtifact } from "../scripts/ocr-qualification-receipt-report.mjs";
 import { createIncompleteQualificationReceiptArtifact } from "../scripts/ocr-qualification-receipt-assembly.mjs";
 
@@ -21,6 +24,7 @@ const bucketIds = [
   "ambiguous-pairing",
   "unequal-fiducial-size",
   "curved-surface",
+  "candidate-overflow",
   "running-text",
   "confusable-character",
   "near-word",
@@ -37,7 +41,7 @@ const gateIds = [
   "pair-accuracy",
   "exact-code-accuracy",
   "character-error-rate",
-  "rectification-success-rate",
+  "roi-normalization-success-rate",
   "p95-latency-ms",
 ] as const;
 
@@ -162,7 +166,7 @@ function metricSet({
     false_pair_count: 0,
     false_pair_rate: rate(0),
     roi_mean_iou: 1,
-    rectification_success_rate: rate(),
+    roi_normalization_success_rate: rate(),
     exact_code_accuracy: rate(),
     part_word_accuracy: rate(),
     character_error_rate: 0,
@@ -196,7 +200,7 @@ function buildInputs(): FixtureInputs {
     min_pair_accuracy: 1,
     min_exact_code_accuracy: 1,
     max_character_error_rate: 0,
-    min_rectification_success_rate: 1,
+    min_roi_normalization_success_rate: 1,
     max_p95_latency_ms: 100,
     accept_min_confidence: 0.8,
     retry_below_confidence: 0.5,
@@ -383,9 +387,9 @@ function buildInputs(): FixtureInputs {
       threshold: thresholds.max_character_error_rate,
       observed: 0,
     },
-    "rectification-success-rate": {
+    "roi-normalization-success-rate": {
       operator: "gte",
-      threshold: thresholds.min_rectification_success_rate,
+      threshold: thresholds.min_roi_normalization_success_rate,
       observed: 1,
     },
     "p95-latency-ms": {
@@ -698,6 +702,18 @@ describe("OCR qualification receipt semantic guard", () => {
     expect(result.authorizesPromotion).toBe(false);
   });
 
+  it("rejects missing device coverage", () => {
+    const inputs = buildInputs();
+    inputs.receipt.device_coverage.splice(1, 1);
+
+    const result = evaluate(inputs);
+
+    expect(result.schemaValid).toBe(true);
+    expect(result.status).toBe("INCOMPLETE");
+    expect(result.errors).toContain("missing device coverage: ios-legacy");
+    expect(result.authorizesPromotion).toBe(false);
+  });
+
   it("rejects schema-valid missing per-device final p95 latency", () => {
     const inputs = buildInputs();
     inputs.receipt.device_coverage[1]!.metrics_by_split.final.latency_ms.p95 =
@@ -766,6 +782,92 @@ describe("OCR qualification receipt semantic guard", () => {
     expect(result.errors.join("\n")).toContain(
       "must NOT have more than 0 items",
     );
+    expect(result.authorizesPromotion).toBe(false);
+  });
+
+  it("rejects missing per-device final p95 latency in semantic validation", () => {
+    const inputs = buildInputs();
+    const legacyCoverage = inputs.receipt.device_coverage[1]!;
+    delete (
+      legacyCoverage.metrics_by_split.final.latency_ms as Partial<{
+        p95: number;
+      }>
+    ).p95;
+
+    const result = validateReceiptSemantics(inputs.receipt, {
+      gateConfig: inputs.gateConfig,
+      deviceMatrix: inputs.deviceMatrix,
+    });
+
+    expect(result.status).toBe("INCOMPLETE");
+    expect(result.errors).toContain(
+      "missing per-device final p95 latency: ios-legacy",
+    );
+    expect(result.authorizesPromotion).toBe(false);
+  });
+
+  it("honors the frozen false-valid rate when dispositioned cases are within threshold", () => {
+    const inputs = buildInputs();
+    inputs.gateConfig.thresholds.max_false_valid_decode_rate = 0.5;
+    inputs.receipt.release_gates.thresholds.max_false_valid_decode_rate = 0.5;
+    inputs.receipt.metrics_by_split.final.false_valid_decode_count = 1;
+    inputs.receipt.metrics_by_split.final.false_valid_decode_rate = {
+      numerator: 1,
+      denominator: 2,
+      rate: 0.5,
+    };
+    inputs.receipt.false_valid_cases.push({
+      device_matrix_entry_id: "ios-current",
+      sample_id: "sample-1",
+      pair_id: "pair-1",
+      expected_codes: ["zz-copper-lantern-sky-zz"],
+      observed_codes: ["zz-copper-lantern-maple-zz"],
+      disposition: "investigated wrong valid decode",
+      reviewer: "fixture-reviewer",
+    });
+    const falseValidGate = inputs.receipt.release_gates.gate_results.find(
+      ({ gate_id }) => gate_id === "false-valid-decode-rate",
+    )!;
+    falseValidGate.threshold = 0.5;
+    falseValidGate.observed = 0.5;
+
+    const result = evaluate(inputs);
+
+    expect(result.schemaValid, result.errors.join("\n")).toBe(true);
+    expect(result.status).toBe("SEMANTIC_CHECKS_PASS");
+    expect(result.authorizesPromotion).toBe(false);
+  });
+
+  it("returns no-promotion when the false-valid rate exceeds the frozen threshold", () => {
+    const inputs = buildInputs();
+    inputs.receipt.metrics_by_split.final.false_valid_decode_count = 1;
+    inputs.receipt.metrics_by_split.final.false_valid_decode_rate = {
+      numerator: 1,
+      denominator: 2,
+      rate: 0.5,
+    };
+    inputs.receipt.false_valid_cases.push({
+      device_matrix_entry_id: "ios-current",
+      sample_id: "sample-1",
+      pair_id: "pair-1",
+      expected_codes: ["zz-copper-lantern-sky-zz"],
+      observed_codes: ["zz-copper-lantern-maple-zz"],
+      disposition: "investigated wrong valid decode",
+      reviewer: "fixture-reviewer",
+    });
+    const falseValidGate = inputs.receipt.release_gates.gate_results.find(
+      ({ gate_id }) => gate_id === "false-valid-decode-rate",
+    )!;
+    falseValidGate.observed = 0.5;
+    falseValidGate.result = "fail";
+
+    const result = validateReceiptSemantics(inputs.receipt, {
+      gateConfig: inputs.gateConfig,
+      deviceMatrix: inputs.deviceMatrix,
+    });
+
+    expect(result.status).toBe("NO_PROMOTION");
+    expect(result.gateFailures).toContain("false-valid-decode-rate");
     expect(result.authorizesPromotion).toBe(false);
   });
 

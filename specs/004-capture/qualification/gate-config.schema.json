@@ -25,7 +25,7 @@
         "pair-accuracy",
         "exact-code-accuracy",
         "character-error-rate",
-        "rectification-success-rate",
+        "roi-normalization-success-rate",
         "p95-latency-ms"
       ]
     },
@@ -40,8 +40,8 @@
     },
     "required_buckets": {
       "type": "array",
-      "minItems": 23,
-      "maxItems": 23,
+      "minItems": 24,
+      "maxItems": 24,
       "items": { "$ref": "#/$defs/bucketRequirement" }
     },
     "thresholds": {
@@ -54,7 +54,7 @@
         "min_pair_accuracy",
         "min_exact_code_accuracy",
         "max_character_error_rate",
-        "min_rectification_success_rate",
+        "min_roi_normalization_success_rate",
         "max_p95_latency_ms",
         "fiducial_iou_threshold",
         "cer_normalization",
@@ -76,7 +76,7 @@
           "maximum": 1
         },
         "max_character_error_rate": { "type": "number", "minimum": 0 },
-        "min_rectification_success_rate": {
+        "min_roi_normalization_success_rate": {
           "type": "number",
           "minimum": 0,
           "maximum": 1
@@ -127,6 +127,7 @@
             "ambiguous-pairing",
             "unequal-fiducial-size",
             "curved-surface",
+            "candidate-overflow",
             "running-text",
             "confusable-character",
             "near-word",
@@ -240,6 +241,14 @@
             {
               "contains": {
                 "properties": { "bucket_id": { "const": "curved-surface" } },
+                "required": ["bucket_id"]
+              }
+            },
+            {
+              "contains": {
+                "properties": {
+                  "bucket_id": { "const": "candidate-overflow" }
+                },
                 "required": ["bucket_id"]
               }
             },
