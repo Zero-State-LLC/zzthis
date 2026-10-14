@@ -1,6 +1,6 @@
 # Current decision status
 
-Date: 2026-10-06, updated 2026-10-10 by the [architecture review](analysis-2026-10-10-architecture-review.md)
+Date: 2026-10-06, updated 2026-10-10 by the [architecture review](analysis-2026-10-10-architecture-review.md) and 2026-10-13 to match `main` at 8873ce1
 Authority: docs/SPEC.md Section 9 and 9a plus later accepted intents. This file is a convergence index, not a new decision source.
 
 ## Reading rule
@@ -54,9 +54,33 @@ Full records: [decisions-2026-10-10.md](decisions-2026-10-10.md). Rows in docs/S
 | D-2026-10-10-18 | Location (PR #127) is research | ADOPTED | - |
 | D-2026-10-10-19 | Backend defects enter v1.0 | ASSIMILATED | - |
 | D-2026-10-10-20 | Tests become a required check | PROPOSED | Danny |
+| D-2026-10-10-21 | `free_public` at v1.1 for zzThat create | PROPOSED in header; its text says the status changes when the record merges; PR #139 merged it 2026-10-10 | Danny to confirm |
 | D-2026-10-10-22 | One organization per scope now; org-bound grants before v1.3 | ADOPTED; built in PR #146 | - |
+| D-2026-10-10-23 | Retake guidance now, combining retakes later | ADOPTED; retry reasons now, multi-frame reading later (RM-096) | - |
 | D-2026-10-10-24 | Follow-ups from the org-bound grants build | ACCEPTED (Danny, 2026-10-09 PT); RM-098 to RM-100 | - |
 | D-2026-10-10-25 | App Store and Google Play compliance gaps for v1.1 | ACCEPTED (Danny, chat 2026-10-09 23:21 PT); RM-101 to RM-112; RM-112 exception to D-2026-10-10-12 accepted (Danny, 2026-10-09 PT) | - |
+
+## Decisions recorded 2026-10-11
+
+Full records: [decisions-2026-10-11.md](decisions-2026-10-11.md). Rows in docs/SPEC.md Section 9a.
+
+| ID | Subject | Status | Owner of any pending yes |
+|---|---|---|---|
+| D-2026-10-11-01 | Michael's zzThat MVP input: dispositions and person-made plan, (C) suggested words at v1.1 and (A) claim at v2.0 | ACCEPTED (Danny, 2026-10-11 PT); PR #138; RM-113 to RM-117 | - |
+| D-2026-10-11-02 | iOS v1 Sign in with Apple beside Google (4.8) | ACCEPTED | - |
+| D-2026-10-11-03 | iOS in-app account deletion with Apple token revocation (5.1.1) | ACCEPTED | - |
+| D-2026-10-11-04 | Public contact zzsupport@zer0state.com (app + site footer) | ACCEPTED | - |
+| D-2026-10-11-05 | 18+ for early release | ACCEPTED | - |
+| D-2026-10-11-06 | Label "early release", never alpha/beta/test | ACCEPTED | - |
+| D-2026-10-11-07 | No zzThis/zzthis.com on zzThat surfaces | ACCEPTED | - |
+| D-2026-10-11-08 | Store and privacy answers 1-19 | ACCEPTED | - |
+| D-2026-10-11-09 | Privacy policy and Terms at zzthat.com (Danny) | PROPOSED | Danny |
+| D-2026-10-11-10 | Terms clauses; draft to Michael before publishing | ACCEPTED | - |
+| D-2026-10-11-11 | v1.1 create: 1/2/3 words, suggested words, 5 re-rolls | ACCEPTED | - |
+| D-2026-10-11-12 | Rejects: near-miss, public expired message, phone numbers | ACCEPTED | - |
+| D-2026-10-11-13 | Links/zzPages requirements (unscheduled) | ACCEPTED | - |
+| D-2026-10-11-14 | Points unscheduled; photo training v2.2 opt-in | ACCEPTED | - |
+| D-2026-10-11-15 | Code reuse after 2 months vs. uniqueness | OPEN in the record; option B (never reissue, 60 days idle plus 30 days grace, owner revives) locked in a #164 comment on 2026-10-12; mechanics proposed in D-2026-10-13-01 | Danny |
 
 ## Genuinely open or evidence-gated
 
@@ -83,23 +107,3 @@ Resolved since 2026-10-06: the six high npm audit findings (#92) are disposition
 ## Hygiene rule
 
 A new OPEN item must name owner, safe default if one exists, evidence needed, blocking artifact, and canonical decision location. Do not add bare TODO/TBD/OPEN prose to active specs.
-
-## 2026-10-11
-
-| ID | Status | Topic |
-|---|---|---|
-| D-2026-10-11-01 | ACCEPTED | Michael MVP dispositions; person-made plan (C) v1.1 + (A) v2.0 |
-| D-2026-10-11-02 | ACCEPTED | iOS v1 Sign in with Apple beside Google (4.8) |
-| D-2026-10-11-03 | ACCEPTED | iOS in-app account deletion with Apple token revocation (5.1.1) |
-| D-2026-10-11-04 | ACCEPTED | Public contact zzsupport@zer0state.com (app + site footer) |
-| D-2026-10-11-05 | ACCEPTED | 18+ for early release |
-| D-2026-10-11-06 | ACCEPTED | Label "early release", never alpha/beta/test |
-| D-2026-10-11-07 | ACCEPTED | No zzThis/zzthis.com on zzThat surfaces |
-| D-2026-10-11-08 | ACCEPTED | Store and privacy answers 1-19 |
-| D-2026-10-11-09 | PROPOSED | Privacy policy and Terms at zzthat.com (Danny) |
-| D-2026-10-11-10 | ACCEPTED | Terms clauses; draft to Michael before publishing |
-| D-2026-10-11-11 | ACCEPTED | v1.1 create: 1/2/3 words, suggested words, 5 re-rolls |
-| D-2026-10-11-12 | ACCEPTED | Rejects: near-miss, public expired message, phone numbers |
-| D-2026-10-11-13 | ACCEPTED | Links/zzPages requirements (unscheduled) |
-| D-2026-10-11-14 | ACCEPTED | Points unscheduled; photo training v2.2 opt-in |
-| D-2026-10-11-15 | OPEN | Code reuse after 2 months vs. uniqueness (Danny) |
