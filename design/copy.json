@@ -89,6 +89,26 @@
       "text": "Take another photo",
       "source": "specs/004-capture Decision bands"
     },
+    "scan.retry_marker_cut": {
+      "text": "A marker is cut off.",
+      "source": "INFERRED 2026-10-13 (specs/004-capture Retry reasons, D-2026-10-10-23), for Michael's review"
+    },
+    "scan.retry_blur": {
+      "text": "The photo is blurred.",
+      "source": "INFERRED 2026-10-13 (specs/004-capture Retry reasons, D-2026-10-10-23), for Michael's review"
+    },
+    "scan.retry_glare": {
+      "text": "Glare hides part of the code.",
+      "source": "INFERRED 2026-10-13 (specs/004-capture Retry reasons, D-2026-10-10-23), for Michael's review"
+    },
+    "scan.retry_closer": {
+      "text": "Move closer",
+      "source": "specs/004-capture Retry reasons, D-2026-10-10-23 [MICHAEL 2026-10-09]"
+    },
+    "scan.retry_angle": {
+      "text": "Try a better angle",
+      "source": "specs/004-capture Retry reasons, D-2026-10-10-23 [MICHAEL 2026-10-09]"
+    },
     "scan.clarify_title": {
       "text": "Is this word right?",
       "source": "INFERRED 2026-10-04, for Michael's review"
