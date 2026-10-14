@@ -195,6 +195,12 @@ export async function resolveCode(c: AppContext): Promise<Response> {
       canonical: row.canonical,
       record: { title: row.title, body: row.body, updated_at: row.updated_at },
       share: { text: row.canonical, url: null },
+      // RM-112: an HMAC of the owner id, so a device can block a creator
+      // without learning who it is. Null for a private record.
+      creator:
+        view === "public"
+          ? await hmacTag(c.get("settings").dataKeys, "creator", row.owner_id)
+          : null,
     },
     {
       "Cache-Control": cacheable ? PUBLIC_CACHE_CONTROL : "no-store",

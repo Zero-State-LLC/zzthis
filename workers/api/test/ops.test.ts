@@ -19,6 +19,7 @@ import {
   type Row,
   runOps,
 } from "./helpers/ops.ts";
+import { fixture7Codes } from "./helpers/random.ts";
 import { makeWorld } from "./helpers/world.ts";
 
 // The report, suspension, and revoke files in workers/api/ops (spec 005
@@ -256,6 +257,7 @@ describe("ops/revoke-code.sql", () => {
       [issuer.accountId, "issuer"],
       [auditor.accountId, "auditor"],
     ] as const) {
+      await runOps("set-org.sql", { account_id: subject, org_id: "acme" });
       await runOps("grant.sql", {
         subject_id: subject,
         scope: "enterprise",
@@ -264,7 +266,6 @@ describe("ops/revoke-code.sql", () => {
         org_id: "acme",
         same_org: "enterprise",
       });
-      await runOps("set-org.sql", { account_id: subject, org_id: "acme" });
     }
     const code = await mint(w, issuer.access, { scope: "enterprise" });
     await report(w, code.canonical);
@@ -325,5 +326,158 @@ describe("ops/revoke-code.sql", () => {
         "SELECT count(*) AS n FROM audit_events WHERE action = 'code.revoke' AND actor_id IS NULL",
       ),
     ).toBe(0);
+  });
+});
+
+describe("moderation (RM-102, FR-025, D-2026-10-10-25)", () => {
+  // Sets a report's arrival time, so the queue's age columns can be checked
+  // against SQLite's clock, which the operator files read.
+  async function arrivedHoursAgo(id: string, hours: number): Promise<string> {
+    const at = new Date(Date.now() - hours * 60 * 60 * 1000).toISOString();
+    await env.ZZ_DB.prepare("UPDATE reports SET created_at = ? WHERE id = ?")
+      .bind(at, id)
+      .run();
+    return at;
+  }
+
+  it("lists every open report oldest first, with its age, the overdue flag, and the owner", async () => {
+    const w = await makeWorld();
+    const alice = await signIn(w, "alice");
+    const bob = await signIn(w, "bob");
+    const aliceCode = await mint(w, alice.access);
+    const bobCode = await mint(w, bob.access);
+    const old = await report(w, aliceCode.canonical);
+    const again = await report(w, aliceCode.canonical);
+    const fresh = await report(w, bobCode.canonical);
+    const closed = await report(w, bobCode.canonical);
+    await arrivedHoursAgo(old, 30);
+    await arrivedHoursAgo(again, 23);
+    await arrivedHoursAgo(fresh, 1);
+    await arrivedHoursAgo(closed, 40);
+    await runOps("reports.sql", { report_id: closed });
+    await runOps("suspend.sql", { account_id: bob.accountId });
+    const events = () => count(w, "SELECT count(*) AS n FROM audit_events");
+    const before = await events();
+    const queue = await runOps("report-queue.sql");
+    expect(queue.map((row) => row.id)).toEqual([old, again, fresh]);
+    expect(queue[0]).toEqual({
+      id: old,
+      canonical: aliceCode.canonical,
+      reason: "spam",
+      note: "",
+      created_at: expect.stringMatching(TIMESTAMP),
+      hours_open: 30,
+      overdue: 1,
+      open_for_code: 2,
+      code_id: aliceCode.id,
+      code_status: "active",
+      owner_id: alice.accountId,
+      owner_suspended: 0,
+    });
+    expect(queue[1]).toMatchObject({ hours_open: 23, overdue: 0 });
+    expect(queue[2]).toMatchObject({
+      hours_open: 1,
+      overdue: 0,
+      open_for_code: 1,
+      code_status: "revoked",
+      owner_id: bob.accountId,
+      owner_suspended: 1,
+    });
+    // Read only: nothing changed, and no audit row was written.
+    expect(
+      await count(
+        w,
+        "SELECT count(*) AS n FROM reports WHERE closed_at IS NULL",
+      ),
+    ).toBe(3);
+    expect(await events()).toBe(before);
+  });
+
+  it("names no code or owner for a report of a code that was never issued", async () => {
+    const w = await makeWorld();
+    // This world mints nothing, so every fixture-7 code is unissued.
+    const response = await call(w, "POST", "/v1/reports", {
+      body: { canonical: fixture7Codes()[0] as string, reason: "other" },
+    });
+    expect(response.status).toBe(202);
+    const [row] = await runOps("report-queue.sql");
+    expect(row).toMatchObject({
+      code_id: null,
+      code_status: null,
+      owner_id: null,
+      owner_suspended: null,
+      open_for_code: 1,
+    });
+  });
+
+  it("lists in report-overdue.sql only the reports open for more than one day", async () => {
+    const w = await makeWorld();
+    const alice = await signIn(w);
+    const code = await mint(w, alice.access);
+    const late = await report(w, code.canonical);
+    const edge = await report(w, code.canonical);
+    const fresh = await report(w, code.canonical);
+    await arrivedHoursAgo(late, 25);
+    await arrivedHoursAgo(edge, 23.9);
+    await arrivedHoursAgo(fresh, 0);
+    const overdue = await runOps("report-overdue.sql");
+    expect(overdue).toEqual([
+      {
+        id: late,
+        canonical: code.canonical,
+        reason: "spam",
+        created_at: expect.stringMatching(TIMESTAMP),
+        hours_open: 25,
+      },
+    ]);
+    // Acting on it and closing it meets the target: zero rows.
+    await runOps("revoke-code.sql", { code_id: code.id });
+    await runOps("reports.sql", { report_id: late });
+    expect(await runOps("report-overdue.sql")).toEqual([]);
+  });
+
+  it("suspension refuses mint, re-roll, and record writes with 403, and unsuspend restores them", async () => {
+    const w = await makeWorld();
+    const alice = await signIn(w);
+    const code = await mint(w, alice.access);
+    await runOps("suspend.sql", { account_id: alice.accountId });
+    const [suspended] = await audit("account.suspend");
+    expectOperatorEvent(
+      suspended,
+      "account.suspend",
+      "account",
+      alice.accountId,
+    );
+    const writes = () => [
+      mintRequest(w, alice.access),
+      call(w, "POST", `/v1/codes/${code.id}/reroll`, { token: alice.access }),
+      call(w, "POST", `/v1/records/${code.record_id}/versions`, {
+        token: alice.access,
+        body: { title: "v2", body: "" },
+      }),
+    ];
+    for (const response of await Promise.all(writes())) {
+      expect(response.status).toBe(403);
+      expect(await response.json()).toEqual({ error: "forbidden" });
+    }
+    await runOps("unsuspend.sql", { account_id: alice.accountId });
+    // The suspension revoked the code, so re-roll is tried on a new one.
+    const minted = await mintRequest(w, alice.access);
+    expect(minted.status).toBe(201);
+    const next = (await minted.json()) as { id: string; record_id: string };
+    const rerolled = await call(w, "POST", `/v1/codes/${next.id}/reroll`, {
+      token: alice.access,
+    });
+    expect(rerolled.status).toBe(200);
+    const version = await call(
+      w,
+      "POST",
+      `/v1/records/${next.record_id}/versions`,
+      {
+        token: alice.access,
+        body: { title: "v2", body: "" },
+      },
+    );
+    expect(version.status).toBe(201);
   });
 });

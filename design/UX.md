@@ -48,6 +48,8 @@ The marketing demo adds `The demo will not guess.` under that result. A product 
 
 The screen can offer share. Share sends `share.text` (the canonical code) and does not send a URL. `share.url` is null.
 
+The zzThat apps add Hide this code (`resolve.hide`) on the Resolve screen and in the Report sheet (D-2026-10-10-25, RM-101). Hiding keeps the canonical code in a list on the device and calls no server. A hidden code still resolves, but the screen shows `resolve.hidden` and `resolve.unhide` instead of the title and body. Once the Resolve `creator` field ships (RM-112), Block this creator (`resolve.block_creator`) works the same way for every code with that `creator`, with `resolve.blocked` and `resolve.unblock`. Neither list leaves the device. Both are cleared by account deletion and by `account.unhide_all`.
+
 ## Create
 
 The server chooses the words, including for a free public code. The person does not submit their own word list.
@@ -107,7 +109,7 @@ The client shows one sentence. It does not show the JSON `error` code except whe
 
 ## Account
 
-The account screen shows which provider the person signed in with (`account.signed_in_with`), Sign out, Delete account, the support contact (`account.support`), the privacy policy link (`account.privacy`), and `account.licenses`. The support address and the policy URL are build settings, not copy. `{provider}` is the `provider.*` string for the first entry of `providers` from `GET /v1/me`; an account has one provider. `account.licenses` opens the third-party notices (`NOTICE` and `OFL.txt`) as plain text (INFERRED). Deletion calls `DELETE /v1/me` after the Delete confirm pattern.
+The account screen shows which provider the person signed in with (`account.signed_in_with`), Sign out, Delete account, the support contact (`account.support`), the privacy policy link (`account.privacy`), and `account.licenses`. The support address and the policy URL are build settings, not copy. `{provider}` is the `provider.*` string for the first entry of `providers` from `GET /v1/me`; an account has one provider. `account.licenses` opens the third-party notices (`NOTICE` and `OFL.txt`) as plain text (INFERRED). In the zzThat apps, `account.unhide_all` empties the device's hidden-code and blocked-creator lists, then shows `account.unhide_all_done`; it shows signed in or out, because hiding needs no account (D-2026-10-10-25, the decision's Settings reset). Deletion calls `DELETE /v1/me` after the Delete confirm pattern.
 
 ## Patterns added 2026-10-04
 
@@ -133,7 +135,7 @@ Loading keeps the previous content on screen and shows a small progress mark, ne
 
 ### Minted code
 
-The code is the largest text on the screen, in the mono font, in lowercase, never truncated. The check word sits in place inside the code and has its own label below (`minted.check_word_label`, `minted.check_word_help`) and its own accessibility label. `minted.reroll` shows while `rerolls_remaining` is above 0. At `reroll-cap` the button goes away and `minted.reroll_cap` shows. `minted.write_check` opens Write check.
+The code is the largest text on the screen, in the mono font, in lowercase, never truncated. The check word sits in place inside the code and has its own label below (`minted.check_word_label`, `minted.check_word_help`) and its own accessibility label. `minted.reroll` shows while `rerolls_remaining` is above 0. At `reroll-cap` the button goes away and `minted.reroll_cap` shows. The suggested-word picker (D-2026-10-11-01 option C, RM-113): while re-rolls remain, `minted.pick_help` sits under the code with `minted.reroll` and `minted.keep`. The server still chooses every word, and the client sends no code string. `minted.keep` keeps the current words: the picker closes, `minted.reroll_cap` shows, and Write check follows. A re-roll retires the old words for good, so the picker never shows earlier ones. `minted.write_check` opens Write check.
 
 ### Write check
 
@@ -142,6 +144,10 @@ The person photographs what they wrote. The spec 004 pipeline runs on the phone 
 ### My codes
 
 A list of rows: the code in mono, the record title, and a status word (`codes.status_*`) when the code is not active. Codes retired by a re-roll do not appear. Empty: `codes.empty`. Signed out: `codes.signed_out` with a sign-in button.
+
+### Saved
+
+A device-only list (D-2026-10-11-01 row 17, RM-115; zzThat FR-050), reached from My codes, signed in or out: `saved.title`, then one row per saved code in mono, newest first; a row opens Resolve. Empty: `saved.empty`. Resolve offers `resolve.save`, or `resolve.unsave` for a saved code. Saving calls no server and keeps only the canonical code on the device. Account deletion and `account.clear_saved` (then `account.clear_saved_done`) empty the list.
 
 ### Code detail
 
@@ -157,7 +163,7 @@ A system dialog with the title, the body, a destructive action, and Cancel (`rev
 
 ### Report
 
-A sheet from the Resolve screen: `report.title`, four reasons (`report.reason_*`), an optional note of up to 500 characters, and `report.send`. The answer is always `report.sent`, whether or not the code exists.
+A sheet from the Resolve screen: `report.title`, four reasons (`report.reason_*`), an optional note of up to 500 characters, and `report.send`. The answer is always `report.sent`, followed by `report.review`, whether or not the code exists. In the zzThat apps the sent state also offers `resolve.hide` (and `resolve.block_creator` once RM-112 ships), so a person can hide what they reported (D-2026-10-10-25).
 
 ### Sign in
 

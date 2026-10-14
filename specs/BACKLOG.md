@@ -193,7 +193,7 @@ RM-050 production resources ─> RM-053 web build ─> RM-051 deploy ─> RM-052
 
 ### RM-021 Key ids for `ZZ_DATA_KEY` sealed values and tags
 
-- Release v1.0 · P0 · In review (part B of #130) · Bundle B4 · Gate G5 · Journeys J7
+- Release v1.0 · P0 · Done (PR #142 merged 2026-10-10) · Bundle B4 · Gate G5 · Journeys J7
 - **Problem.** Sealed Apple tokens and HMAC tags carry no key id and use fixed `v1` HKDF labels (`workers/api/src/lib/crypto.ts:9-10,97-112`), so a rotation silently breaks Apple revocation at deletion (`account/me.ts:48-62`).
 - **Scope.** Prefix new sealed values with a key id; accept an optional `ZZ_DATA_KEY_PREVIOUS` for decryption; treat unprefixed values as the first key; add a re-encrypt step in the cron.
 - **Acceptance.** A test seals with key A, rotates to key B with A as previous, and still revokes; a test with no previous key fails closed with a logged class.
@@ -289,14 +289,14 @@ RM-050 production resources ─> RM-053 web build ─> RM-051 deploy ─> RM-052
 
 ### RM-035 Bound retention and deletion work; add cron indexes
 
-- Release v1.0 · P0 · In review (part B of #130) · Bundle B1, B4 · Gate G6 · Journeys J7, J8
+- Release v1.0 · P0 · Done (PR #142 merged 2026-10-10) · Bundle B1, B4 · Gate G6 · Journeys J7, J8
 - **Problem.** The cron selects and deletes without limits (`workers/api/src/retention/cron.ts`); account deletion purges every revoked code and deletes all photos in one call (`account/me.ts:155-163`); retention queries scan without indexes.
 - **Scope.** Limited loops with a time budget and per-step isolation; purge only codes that were cacheable; chunk R2 deletes at 1,000 keys; indexes on `auth_nonces(expires_at)`, `refresh_tokens(expires_at)`, `pending_revocations(next_attempt_at)`, `reports(closed_at)`; a log class for abandoned Apple revocations.
 - **Acceptance.** Deleting an account with 5,000 codes returns 204; a cron run with 10,000 expired nonces finishes over successive runs without exceeding one invocation's limits.
 
 ### RM-036 Request, version, and error-class logging
 
-- Release v1.0 · P0 · In review (part B of #130) · Bundle B4 · Gate G7
+- Release v1.0 · P0 · Done (PR #142 merged 2026-10-10) · Bundle B4 · Gate G7
 - **Scope.** Log the request id and `cf-ray` and return `X-Request-Id`; log the deployed version from version metadata; log D1, R2, and Durable Object error classes; keep FR-027 exclusions.
 - **Acceptance.** A log-line test asserts the fields and the absence of code, token, text, and IP.
 
@@ -315,7 +315,7 @@ RM-050 production resources ─> RM-053 web build ─> RM-051 deploy ─> RM-052
 
 ### RM-039 Low-severity hardening
 
-- Release v1.0 · P2 · In review (part B of #130) · Bundle B1
+- Release v1.0 · P2 · Done (PR #142 merged 2026-10-10) · Bundle B1
 - **Scope.** Strip Unicode format characters before the blocklist check (`workers/api/src/lib/text.ts:5`); check JSON body size while streaming (`http/body.ts:21-22`); revoke the previous Apple token when a new one replaces it (`auth/signin.ts:88-96`); audit a rejected ID token; return `reroll-cap` for a handle re-roll even when mint is disabled (`codes/reroll.ts:88`); document whether reports and reads from suspended accounts are allowed (FR-025).
 - **Acceptance.** One test per change.
 
@@ -416,21 +416,21 @@ RM-050 production resources ─> RM-053 web build ─> RM-051 deploy ─> RM-052
 
 ### RM-098 Grant organization must match the holder's and the scope's
 
-- Release v1.3 (prerequisite, before the pilot onboards) · P1 · Ready · Bundle B7 · Owner: kneelbeforez0D
+- Release v1.3 (prerequisite, before the pilot onboards) · P1 · Done (PR #155, closes #148) · Bundle B7 · Owner: kneelbeforez0D
 - **Scope.** `workers/api/ops/grant.sql` writes no grant and no audit row when `:org_id` differs from the subject's `accounts.org_id` (empty matches null), and, for `enterprise` and `logistics`, `:same_org` lets a grant through only when its `org_id` equals the non-null `org_id` of every other active grant in the scope. Header and plan.md Operator work say to run `ops/set-org.sql` first.
 - **Acceptance.** `test/ops-grants.test.ts`: a mismatched `:org_id` writes nothing, including for an existing holder; a matching one, and empty for an account with no organization, succeed; `:same_org` with a different or null `org_id` than the scope's active grants writes nothing; existing grant tests pass after their fixtures run `set-org.sql` first.
 - **Governing.** D-2026-10-10-24 items 1 to 3; D-2026-10-10-22.
 
 ### RM-099 set-org.sql guards for moved accounts
 
-- Release v1.3 (prerequisite, before the pilot onboards) · P1 · Ready · Bundle B7 · Owner: kneelbeforez0D
+- Release v1.3 (prerequisite, before the pilot onboards) · P1 · Done (PR #155, closes #148) · Bundle B7 · Owner: kneelbeforez0D
 - **Scope.** `workers/api/ops/set-org.sql` writes nothing (no update, no audit row) when the account holds an active grant whose `org_id` differs from the new one, unless `:revoke_grants` is set, in which case those grants are revoked in the same batch with `grant.remove` events. It also writes nothing when the account owns `enterprise` or `logistics` codes, unless `:move_owner` equals `yes`. plan.md Operator work gains the runbook note: a moved owner takes its history, including the old organization's actor ids, to the new organization's auditors, and the old organization loses it; to keep history, create a new account.
 - **Acceptance.** `test/ops-org.test.ts`: a holder with a different-org grant is not moved; with `:revoke_grants` it is moved and the grants stop reaching (viewer 404, auditor list empty); an owner of an `enterprise` code is not moved without `:move_owner`, and is with it; a first assignment from null with no grants and no codes still works.
 - **Governing.** D-2026-10-10-24 item 4.
 
 ### RM-100 Deleted accounts' audit visibility
 
-- Release v1.3 (prerequisite, before the pilot onboards) · P2 · Ready · Bundle B7 · Owner: kneelbeforez0D
+- Release v1.3 (prerequisite, before the pilot onboards) · P2 · Done (PR #155, closes #148) · Bundle B7 · Owner: kneelbeforez0D
 - **Scope.** Spec 005 FR-016 states what an auditor sees after an owner in its organization deletes the account (whether that owner's code and record events stay listed or drop out when their code rows are purged); a test pins the behavior.
 - **Acceptance.** `test/org-grants.test.ts` or `test/audit.test.ts`: after `DELETE /v1/me` by an owner in `acme`, the `acme` auditor's list matches the FR-016 sentence.
 - **Governing.** D-2026-10-10-24 item 4.
@@ -514,14 +514,14 @@ RM-050 production resources ─> RM-053 web build ─> RM-051 deploy ─> RM-052
 
 ### RM-101 Hide this code and the expanded report flow in the apps (external)
 
-- Release v1.1 · P0 · Ready · Bundle B3 · Owner: kneelbeforez0D
+- Release v1.1 · P0 · In progress (Hide merged in zzThat #64; Block in zzThat #65, draft) · Bundle B3 · Owner: kneelbeforez0D
 - **Scope.** zzThat FR-035 replaces "No block list" (D-2026-10-10-25 item 1). Resolve and the Report sheet offer "Hide this code" and, once RM-112 ships, "Block this creator": a device-only list of hidden canonical codes and blocked creator references (no server call), shown afterwards as a hidden state with Unhide or Unblock; cleared on account deletion and by a Settings reset. Create asks for terms acceptance before the first create and again when the terms version changes (RM-103). The Report sheet's sent state says the creator is reviewed within 24 hours and can be suspended. Copy keys go through zzThis `design/copy.json`.
 - **Acceptance.** iOS and Android tests: hide a code, resolve it again (scan and typed) and see the hidden state without its title or body; unhide restores it; block a creator and another code with the same `creator` shows the hidden state; delete the account, or run the Settings reset, and both lists are empty; no network call is made by hide, block, unhide, or unblock; Create refuses until the current terms version is accepted.
 - **Governing.** D-2026-10-10-25; Apple 1.2; Play UGC.
 
 ### RM-102 Moderation tooling: triage SLA, suspend, and runbook
 
-- Release v1.1 · P0 · Ready · Bundle B9 · Owner: kneelbeforez0D (tooling), Danny (moderator name)
+- Release v1.1 · P0 · In progress (tooling merged in PR #157, 2026-10-11; moderators named in D-2026-10-11-08 answer 17; staging rehearsal pending) · Bundle B9 · Owner: kneelbeforez0D (tooling), Danny (moderator name)
 - **Scope.** Extends RM-077. `workers/api/ops/` SQL: open reports by age and code, a query for reports open longer than 24 hours, suspend and unsuspend an account with audit rows (FR-025), and revoke a reported code. `docs/OPERATIONS.md` gains the moderator runbook: named moderator and backup, 24-hour response, and the escalation to `ZZ_FREE_PUBLIC=false`.
 - **Acceptance.** Tests on the ops SQL: a report older than 24 hours appears in the breach query; suspend blocks mint, re-roll, and record writes with 403 `forbidden` and writes an audit row; unsuspend restores them. The runbook is rehearsed once on staging.
 - **Governing.** D-2026-10-10-25 item 2; Apple 1.2 "timely responses"; Play UGC.
@@ -535,28 +535,28 @@ RM-050 production resources ─> RM-053 web build ─> RM-051 deploy ─> RM-052
 
 ### RM-104 Data safety and privacy drafts include ML Kit diagnostics (external)
 
-- Release v1.1 · P1 · Ready · Bundle B3 · Owner: kneelbeforez0D
+- Release v1.1 · P1 · Done (zzThat #51 merged 2026-10-11; Google sign-in rows in zzThat #72) · Bundle B3 · Owner: kneelbeforez0D
 - **Scope.** zzThat `apps/store/data-safety-draft.md` and `apps/store/privacy-policy-draft.md` per D-2026-10-10-25 item 4; this repository's `docs/DATA-LIFECYCLE.md` row is in the decision pull request.
 - **Acceptance.** The Data safety draft lists App info and performance and Device or other IDs as collected by the ML Kit SDK, not shared, for analytics and diagnostics; no "no analytics" sentence remains unqualified; the list matches Google's ML Kit disclosure page for the pinned version.
 - **Governing.** D-2026-10-10-25 item 4.
 
 ### RM-105 Age rating 13+ and Teen (external)
 
-- Release v1.1 · P1 · Ready · Bundle B3 · Owner: kneelbeforez0D (spec), Danny (filing)
+- Release v1.1 · P1 · Done (zzThat #51), then revised by RM-120: 18+ in the Terms, ratings from the questionnaires (zzThat #72) · Bundle B3 · Owner: kneelbeforez0D (spec), Danny (filing)
 - **Scope.** zzThat FR-031, spec.md Privacy and permissions, and `apps/store/listing-draft.md` say Apple 13+ and Google Play Teen, with the questionnaire answers (user-generated content yes; no other mature themes) recorded in the listing draft.
 - **Acceptance.** No "12+" remains in zzThat; the draft lists each answer.
 - **Governing.** D-2026-10-10-25 item 5.
 
 ### RM-106 Signed AAB release job and Play App Signing (external)
 
-- Release v1.1 · P0 · Ready · Bundle B3 · Owner: kneelbeforez0D (job), Danny (secrets, Play enrollment)
+- Release v1.1 · P0 · In review (zzThat #62) · Bundle B3 · Owner: kneelbeforez0D (job), Danny (secrets, Play enrollment)
 - **Scope.** zzThat workflow job `release-android`, `workflow_dispatch` only, behind a protected environment: `bundleProdRelease`, signed with the upload key from secrets, injected API origin and client ids, AAB uploaded as an artifact. No key, password, or keystore in the tree.
 - **Acceptance.** A run produces a signed `.aab`; `jarsigner -verify` passes with the upload certificate; a secret scan of the tree is clean; Danny enrolls the app in Play App Signing at first upload.
 - **Governing.** D-2026-10-10-25 item 6.
 
 ### RM-107 Privacy manifest HMAC entry and SDK manifest check (external)
 
-- Release v1.1 · P1 · Ready · Bundle B3 · Owner: kneelbeforez0D
+- Release v1.1 · P1 · Done (zzThat #63 merged 2026-10-13) · Bundle B3 · Owner: kneelbeforez0D
 - **Scope.** zzThat `PrivacyInfo.xcprivacy` adds Other Data Types (not linked, not tracking, App Functionality); a Release archive's Xcode Privacy Report is attached to the PR.
 - **Acceptance.** The manifest matches the App Store privacy draft row for row; the report shows a manifest for every linked SDK and no undeclared required-reason API.
 - **Governing.** D-2026-10-10-25 item 7.
@@ -587,10 +587,24 @@ RM-050 production resources ─> RM-053 web build ─> RM-051 deploy ─> RM-052
 
 ### RM-112 Optional creator reference on Resolve for creator blocking
 
-- Release v1.1 · P0 · Ready (exception accepted by Danny, 2026-10-09 PT; ships after RM-075) · Bundle B9 · Owner: kneelbeforez0D
+- Release v1.1 · P0 · In review (PR #161; exception accepted by Danny, 2026-10-09 PT; ships after RM-075) · Bundle B9 · Owner: kneelbeforez0D
 - **Scope.** Resolve gains an optional response field `creator`: an opaque, stable HMAC of the owner account id (keyed with a server secret, never the raw id), null for private records. OpenAPI `info.version` changes and discovery advertises it. Old clients must ignore it (RM-075).
 - **Acceptance.** Worker tests: two public codes from one owner resolve with the same `creator`; codes from different owners differ; a private record gives null; the raw account id never appears; the cached public response keeps the field. zzThat tolerant-reader tests pass on both apps.
 - **Governing.** D-2026-10-10-25 item 1; D-2026-10-10-12; Apple 1.2; Play UGC.
+
+### RM-113 Suggested-word picker on Create (server-chosen codes)
+
+- Release v1.1 · P1 · In review (zzThat #65, draft; RM-125 extends it) · Bundle B3 · Owner: kneelbeforez0D · External (zzThat; web create may mirror)
+- **Scope.** Option (C) from D-2026-10-11-01. Create keeps `POST /v1/codes` and re-roll: the server still chooses words and the check word (zzThat FR-017, ZQ11). The UI offers a clearer way to pick among suggested or re-rolled server words (for example show the candidate set and "Get different words") so creators feel they chose a code without sending a person-written string. No wire change. Cap remains 3 re-rolls (spec 005 FR-006).
+- **Acceptance.** zzThat (and web if create is shown) tests: mint still sends no canonical; re-roll to cap; picker copy uses `design/copy.json` keys; Unavailable when `free_public` is false.
+- **Governing.** D-2026-10-11-01; D-2026-10-10-21.
+
+### RM-115 Local Saved list in zzThat (device-only)
+
+- Release v1.1 · P2 · In review (zzThat #65, draft) · Bundle B3 · Owner: kneelbeforez0D · External (zzThat)
+- **Scope.** Row 17 ASSIMILATE from D-2026-10-11-01. Add a device-only "Saved" list of codes the person scanned and chose to save (canonical + optional local thumbnail). No server sync, no photo upload. Cleared on account deletion and by a Settings reset (same pattern as hide/block lists). Cloud sync of Saved stays QUEUE with RM-117 / v2.2.
+- **Acceptance.** Spec and runtime name Saved; tests show save/unsave without network; list survives process restart; deletion and reset clear it; no new API calls.
+- **Governing.** D-2026-10-11-01.
 
 ## v1.2 and v1.3 items
 
@@ -619,15 +633,38 @@ RM-050 production resources ─> RM-053 web build ─> RM-051 deploy ─> RM-052
 
 - Release v1.3 · P2 · Backlog · Bundle B7 · Index `codes(scope)` and record each event's scope at insert so auditor queries stop scanning.
 
+
+### RM-114 Owner-only renew for expired codes
+
+- Release v1.3 · P2 · Backlog (QUEUED) · Bundle B7 · Owner: kneelbeforez0D
+- **Scope.** Row 9 from D-2026-10-11-01. Public resolve keeps one not-found shape for unknown, expired, used, and revoked (spec 002 FR-011, spec 005 FR-009). The signed-in owner (My codes / owner resolve) may see that a code expired and renew it (update `expires_at`) without a public "this code expired" message. Rolling renew-on-scan by arbitrary scanners is out of scope.
+- **Acceptance.** Spec and tests: public expired → not-found; owner sees expired and can renew; scanner cannot keep another person's code alive by scanning.
+- **Governing.** D-2026-10-11-01; pairs with RM-078 expiring-code UI.
+
 ## v2.0 to v2.2 items
 
 | ID | Release | Pri | Status | Item | Governing |
 |---|---|---|---|---|---|
+
+### RM-116 Person-made code claim (contract 2)
+
+- Release v2.0 · P1 · Backlog · Bundle with RM-084 / RM-087 · Owner: kneelbeforez0D
+- **Scope.** Option (A) from D-2026-10-11-01. Design and implement a signed-in **claim** of a person-made (or no-device field) code under contract 2: first-come on global `match_key` (FR-032 unchanged), minimum entropy (for example three parts or words plus digits), blocklist and trademark filter on code parts (extend RM-028), no fuzzy live-code match (Q40), and a new OCR qualification corpus for open vocabulary. Align with Q25 / RM-084. Option (B) (additive contract-1 slice) is not planned. Add a threat-model row for phrase squatting and guessable person-made codes.
+- **Acceptance.** Design record reviewed by Danny; OpenAPI contract 2 + dual-contract tests (RM-087); Worker and zzThat claim flows; threat-model row with controls; qualification plan named.
+- **Governing.** D-2026-10-11-01; CONTRACT-EVOLUTION; THREAT-MODEL.
+
+### RM-117 Cloud photo and training consent (before photo reads)
+
+- Release v2.2 · P1 · Backlog (RESEARCH) · Bundle B12 · Owner: Danny (legal) / kneelbeforez0D (eng)
+- **Scope.** Row 8 from D-2026-10-11-01. Before RM-092 photo reads or RM-097 image matching: in-app explicit consent (purpose, retention, training yes/no), privacy policy and store-label updates, zzThat FR-005 consent text revision, EXIF strip and downscale rules, and DATA-LIFECYCLE rows. Training use is a separate opt-in from upload-for-read.
+- **Acceptance.** Consent copy approved by Danny; drafts and manifests match; no upload path enabled until this RM and R-B12 exit.
+- **Governing.** D-2026-10-11-01; Q34; Apple App Privacy / 5.1.2 norms; THREAT-MODEL photo row.
+
 | RM-080 | v2.0 | P0 | Backlog | #87 gate extended with an Organization entity: Scope, Namespace, Organization cardinality, ownership, grants, migration | #87; D-2026-10-10-06; DOMAIN-MODEL |
 | RM-081 | v2.0 | P1 | Backlog | Multi-list verification and per-scope dictionaries; discovery lists versions | spec 003 FR-017, FR-022; D-2026-10-10-04 |
 | RM-082 | v2.0 | P1 | Backlog | `GET /v1/keys` and client signature verification | Q28 |
 | RM-083 | v2.0 | P1 | Backlog | Partner OAuth 2.0 client credentials, one client per partner | Q19; B11 |
-| RM-084 | v2.0 | P2 | Backlog | No-device field-code claim and scope-aware handles | Q25, Q56, Q71 |
+| RM-084 | v2.0 | P2 | Backlog | No-device field-code claim and scope-aware handles | Q25, Q56, Q71; align with RM-116 |
 | RM-085 | v2.0 | P2 | Backlog | Self-service data export | D-2026-10-10-16 |
 | RM-086 | v2.0 | P2 | Backlog | Mint idempotency key; reuse grace evaluation (DF-10) | backend review M1 |
 | RM-087 | v2.0 | P0 | Backlog | Contract negotiation, dual-contract tests, deprecation record | CONTRACT-EVOLUTION |
@@ -637,3 +674,17 @@ RM-050 production resources ─> RM-053 web build ─> RM-051 deploy ─> RM-052
 | RM-092 | v2.2 | P1 | Backlog (RESEARCH) | Advanced recognition and photo reads after R-B12; R2 joins recovery scope | B12; spec 005 US5 |
 | RM-097 | v2.2 | P3 | Backlog (RESEARCH) | Image matching of scans against the creator's photos (Michael 2026-10-09); needs reference photos, consent wording, and a retention limit | D-2026-10-10-23; `docs/SPEC.md` 12.2 |
 | RM-095 | R-B6 | P1 | Backlog | Human and OCR confusion evaluation of the production list on the Q34 corpus | spec 003 FR-001, FR-002 |
+| RM-113 | v1.1 | P1 | Ready | Suggested-word picker on Create (server-chosen; option C) | D-2026-10-11-01 |
+| RM-114 | v1.3 | P2 | Backlog (QUEUED) | Owner-only renew for expired codes; no public expired message | D-2026-10-11-01 |
+| RM-115 | v1.1 | P2 | Ready | Local Saved list in zzThat (device-only) | D-2026-10-11-01 |
+| RM-116 | v2.0 | P1 | Backlog | Person-made code claim design (contract 2; option A) | D-2026-10-11-01; RM-084 |
+| RM-117 | v2.2 | P1 | Backlog (RESEARCH) | Cloud photo and training consent before photo reads | D-2026-10-11-01; B12 |
+| RM-118 | v1.1 | P0 | Ready | iOS Sign in with Apple beside Google | D-2026-10-11-02; Guideline 4.8 |
+| RM-119 | v1.1 | P0 | Ready | iOS in-app account deletion with Apple token revocation | D-2026-10-11-03; spec 005 FR-023 |
+| RM-120 | v1.1 | P0 | Ready | 18+ gating, Terms clause, store age-rating questionnaires | D-2026-10-11-05 |
+| RM-121 | v1.1 | P1 | Ready | "Early release" labeling; no alpha/beta/test; no zzThis mention on zzThat surfaces | D-2026-10-11-06, -07 |
+| RM-122 | v1.1 | P1 | Backlog | zzsupport@zer0state.com in app, listings, policy, site footer (mailbox first) | D-2026-10-11-04 |
+| RM-123 | v1.1 | P0 | Backlog | Publish privacy policy (answers 1-19) at proposed zzthat.com/privacy | D-2026-10-11-08, -09; zzThat #47 |
+| RM-124 | v1.1 | P0 | Backlog | Terms of Use and content policy draft for Michael's review | D-2026-10-11-10; D-2026-10-11-15 |
+| RM-125 | v1.1 | P1 | Ready | Create: 1/2/3 word length, 5 re-rolls per creation, server rate limit, no phone numbers | D-2026-10-11-11, -12; extends RM-113 |
+| RM-126 | Horizon | P3 | Backlog | Links and zzPages safety requirements | D-2026-10-11-13 |
