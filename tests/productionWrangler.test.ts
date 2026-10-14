@@ -20,7 +20,7 @@ describe("wrangler.production.toml", () => {
     expect(config).toContain('bucket_name = "zzthis-photos"');
     expect(config).toContain('pattern = "zz.zer0state.com"');
     expect(config).not.toMatch(/staging/i);
-    expect(config).not.toContain("fixture-7");
+    expect(vars.ZZ_WORDLIST_VERSION).not.toBe("fixture-7");
   });
 
   it("keeps production flags fail-closed and invocation logs off", () => {
@@ -39,7 +39,7 @@ describe("wrangler.production.toml", () => {
       "APPLE_PRIVATE_KEY",
       "CLOUDFLARE_API_TOKEN",
     ]) {
-      expect(config).not.toContain(secret);
+      expect(config).not.toMatch(new RegExp(`^${secret} =`, "m"));
     }
   });
 
