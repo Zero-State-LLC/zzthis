@@ -60,7 +60,7 @@ The operator owns declaration and closure. Every P0/P1 needs a preserved timelin
 
 ## Moderation
 
-Required before `ZZ_FREE_PUBLIC` turns on (D-2026-10-10-25 item 2, RM-102; Apple App Review Guideline 1.2, Google Play user-generated content policy). Spec 005 records the target: every report is triaged within one day, and a confirmed abusive code is revoked and its owner suspended within that window.
+Required before `ZZ_FREE_PUBLIC` turns on (D-2026-10-10-25 item 2, RM-102; Apple App Review Guideline 1.2, Google Play user-generated content policy). Spec 005 records the target: every report is triaged within one day (24 hours), and a confirmed abusive code is revoked and its owner suspended within that window.
 
 | Role | Who |
 |---|---|

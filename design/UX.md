@@ -129,7 +129,7 @@ Loading keeps the previous content on screen and shows a small progress mark, ne
 2. The photo stays on screen. Each candidate from the spec 004 scanner gets a box on it and a row in a list below, in reading order.
 3. One candidate in Accept opens at once. Otherwise the list asks `scan.pick_one`, and nothing opens until the person taps a row.
 4. Clarify shows the one uncertain word, its list candidates, and `scan.clarify_as_written`. A check-word mismatch shows `scan.check_mismatch` with the words as read, and offers typing.
-5. Retry shows `scan.retry` with the reason. Abstain shows the parser reason in plain words, or `scan.bare`, and offers typing. A `wrong-length` result shows `scan.wrong_length` and offers typing; it is not sent.
+5. Retry shows `scan.retry` with one reason, chosen by signal (spec 004 Retry reasons, D-2026-10-10-23): `scan.retry_marker_cut`, `scan.retry_blur`, `scan.retry_glare`, `scan.retry_closer` (the code is small in the frame), or `scan.retry_angle` (skew or perspective). Abstain shows the parser reason in plain words, or `scan.bare`, and offers typing. A `wrong-length` result shows `scan.wrong_length` and offers typing; it is not sent.
 6. `scan.type_instead` is always one tap away. If the camera is off, the screen shows `scan.camera_off`.
 7. iOS shows `scan.camera_purpose` when it asks for the camera.
 

@@ -2,7 +2,7 @@
 
 Evidence classification: **OBSERVED** for statements describing current repository code/tests; **INFERRED** for governance, production gates, or design choices accepted by the convergence intent; **SPECULATIVE** only where explicitly marked as future research.
 
-Status: current V1 model plus reserved future terms. Deepened 2026-10-10 with state ids, guards, and the Organization gap from the [architecture review](analysis-2026-10-10-architecture-review.md). The persisted schema is `workers/api/migrations/0001_init.sql`; spec 005 Data model is the column list.
+Status: current V1 model plus reserved future terms. Deepened 2026-10-10 with state ids, guards, and the Organization gap from the [architecture review](analysis-2026-10-10-architecture-review.md). The persisted schema is `workers/api/migrations/` 0001 to 0003: `0001_init.sql` (tables and audit triggers), `0002_retention_indexes.sql` (indexes for the daily retention run, RM-035), and `0003_org_bound_grants.sql` (nullable `org_id` on accounts and grants, RM-074); spec 005 Data model is the column list.
 
 ## Ubiquitous language
 
@@ -16,6 +16,8 @@ Status: current V1 model plus reserved future terms. Deepened 2026-10-10 with st
 | Record | Owner-linked content a code addresses, with versions | The code |
 | Grant | A role (`issuer`, `viewer`, `auditor`) for one account in one scope, bound to one `org_id` or to none | An organization membership |
 | org_id | The interim tenant key on accounts and grants, set by the operator (D-2026-10-10-22) | The Organization entity, which replaces it in contract 2 (RM-080) |
+| Creator reference | The optional Resolve field `creator`: an opaque HMAC of the owner's account id under the HMAC key derived from `ZZ_DATA_KEY`, label `creator`; the same owner gives the same value on every public code; null for private records (RM-112) | The account id, which it never reveals; rotating `ZZ_DATA_KEY` changes every value |
+| Device lists | Hidden codes, blocked creators, and Saved codes kept by zzThat on the device (RM-101, RM-115) | Server data: none of them is ever sent to the server |
 
 ## V1 entities (OBSERVED)
 
@@ -83,7 +85,8 @@ Terminal: C2, C3, C4. Words of a code in any terminal state are never issued aga
 
 **Scope controls V1 product behavior; it is not a tenant.** Within its scope, a `viewer` or `auditor` grant reaches only accounts with the grant's `org_id`; a grant with no `org_id` reaches only its holder's own rows (spec 005 FR-016, FR-034, FR-035; D-2026-10-10-22, RM-074, #135). `org_id` is the interim tenant key: a nullable text column on `accounts` and `grants` (migration 0003), with no table of its own. Until contract 2:
 
-- each of `enterprise` and `logistics` serves at most one organization, and the operator grants roles only to that organization's accounts (D-2026-10-10-06, RM-063); `ops/grant.sql` refuses a grant to a second account in the scope unless the operator states it is the same organization (RM-073);
+- each of `enterprise` and `logistics` serves at most one organization, and the operator grants roles only to that organization's accounts (D-2026-10-10-06, RM-063); `ops/grant.sql` refuses a grant to a second account in the scope unless the operator states it is the same organization with `:same_org` (RM-073), and then only when the grant's `org_id` is not empty and equals the `org_id` of every active grant in the scope (RM-098); it also writes nothing when the grant's `org_id` differs from the holder's `accounts.org_id`, where empty matches only an account with no organization (RM-098);
+- `ops/set-org.sql` refuses to move an account that holds an active grant for another `org_id` unless `:revoke_grants` is `yes`, which ends those grants in the same batch, and refuses to move an owner of `enterprise` or `logistics` codes unless `:move_owner` is `yes`; membership is read live, so a moved owner takes its history to the new organization (D-2026-10-10-24, RM-099);
 - Organization (tenant) is a missing entity. `org_id` is its migration source. Its relation to Scope and Namespace is part of the #87 gate (RM-080).
 
 Future terms, reserved and not persisted under contract 1:

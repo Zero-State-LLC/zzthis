@@ -1,0 +1,704 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://zer0state.com/schemas/zz-ocr-qual-receipt-v1.json",
+  "title": "ZZ-OCR-QUAL-001 qualification receipt",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "qualification_id",
+    "candidate_id",
+    "run_id",
+    "started_at_utc",
+    "finished_at_utc",
+    "manifest_sha256",
+    "candidate_bundle_sha256",
+    "pre_run_attestation_sha256",
+    "pre_run_attestation_ref",
+    "pre_run_sigstore_bundle_sha256",
+    "pre_run_sigstore_bundle_ref",
+    "execution_attestation_sha256",
+    "execution_attestation_ref",
+    "execution_sigstore_bundle_sha256",
+    "execution_sigstore_bundle_ref",
+    "split_counts",
+    "adapter",
+    "device_coverage",
+    "decoder",
+    "metrics_by_split",
+    "bucket_metrics",
+    "release_gates",
+    "false_accepts",
+    "false_valid_cases",
+    "reviews",
+    "report_sha256",
+    "disposition",
+    "promoted_engine",
+    "approver",
+    "pull_request",
+    "no_promotion_reason"
+  ],
+  "properties": {
+    "schema_version": { "const": 1 },
+    "qualification_id": { "const": "ZZ-OCR-QUAL-001" },
+    "candidate_id": { "type": "string", "minLength": 1 },
+    "run_id": { "type": "string", "minLength": 1 },
+    "started_at_utc": { "type": "string", "format": "date-time" },
+    "finished_at_utc": { "type": "string", "format": "date-time" },
+    "manifest_sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+    "candidate_bundle_sha256": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "pre_run_attestation_sha256": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "pre_run_attestation_ref": { "type": "string", "format": "uri" },
+    "pre_run_sigstore_bundle_sha256": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "pre_run_sigstore_bundle_ref": { "type": "string", "format": "uri" },
+    "execution_attestation_sha256": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "execution_attestation_ref": { "type": "string", "format": "uri" },
+    "execution_sigstore_bundle_sha256": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "execution_sigstore_bundle_ref": { "type": "string", "format": "uri" },
+    "split_counts": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["tuning", "final"],
+      "properties": {
+        "tuning": { "type": "integer", "minimum": 0 },
+        "final": { "type": "integer", "minimum": 0 }
+      }
+    },
+    "adapter": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "commit",
+        "artifact_sha256",
+        "platform",
+        "engine_id",
+        "engine_version",
+        "config_sha256",
+        "preprocessing_sha256",
+        "confidence_mapping_sha256",
+        "device_matrix_sha256",
+        "adapter_results_sha256"
+      ],
+      "properties": {
+        "commit": { "type": "string", "pattern": "^[a-f0-9]{40}$" },
+        "artifact_sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+        "platform": { "enum": ["ios", "android"] },
+        "engine_id": { "type": "string", "minLength": 1 },
+        "engine_version": { "type": "string", "minLength": 1 },
+        "config_sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+        "preprocessing_sha256": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        },
+        "confidence_mapping_sha256": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        },
+        "device_matrix_sha256": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        },
+        "adapter_results_sha256": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        }
+      }
+    },
+    "device_coverage": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "device_matrix_entry_id",
+          "os_version",
+          "device_class",
+          "minimum_sample_count",
+          "observed_sample_count",
+          "metrics_by_split"
+        ],
+        "properties": {
+          "device_matrix_entry_id": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9._-]+$"
+          },
+          "os_version": { "type": "string", "minLength": 1 },
+          "device_class": { "type": "string", "minLength": 1 },
+          "minimum_sample_count": { "type": "integer", "minimum": 1 },
+          "observed_sample_count": { "type": "integer", "minimum": 0 },
+          "metrics_by_split": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["tuning", "final"],
+            "properties": {
+              "tuning": { "$ref": "#/$defs/metricSet" },
+              "final": { "$ref": "#/$defs/metricSet" }
+            }
+          }
+        }
+      }
+    },
+    "decoder": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "commit",
+        "wordlist_sha256",
+        "vectors_sha256",
+        "wordlist_version",
+        "checkword_version",
+        "checkword_sha256",
+        "band_mapping_sha256"
+      ],
+      "properties": {
+        "commit": { "type": "string", "pattern": "^[a-f0-9]{40}$" },
+        "vectors_sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+        "wordlist_version": { "type": "string", "minLength": 1 },
+        "wordlist_sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+        "checkword_version": { "type": "string", "minLength": 1 },
+        "checkword_sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+        "band_mapping_sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" }
+      }
+    },
+    "metrics_by_split": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["tuning", "final"],
+      "properties": {
+        "tuning": { "$ref": "#/$defs/metricSet" },
+        "final": { "$ref": "#/$defs/metricSet" }
+      }
+    },
+    "bucket_metrics": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["split", "bucket_id", "metrics"],
+        "properties": {
+          "split": { "enum": ["tuning", "final"] },
+          "bucket_id": { "type": "string", "minLength": 1 },
+          "metrics": { "$ref": "#/$defs/metricSet" }
+        }
+      }
+    },
+    "release_gates": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "frozen_at_utc",
+        "pre_run_attestation_sha256",
+        "execution_attestation_sha256",
+        "corpus_manifest_sha256",
+        "device_matrix_sha256",
+        "gate_config_sha256",
+        "required_gate_ids",
+        "required_buckets",
+        "thresholds",
+        "gate_results"
+      ],
+      "properties": {
+        "frozen_at_utc": { "type": "string", "format": "date-time" },
+        "pre_run_attestation_sha256": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        },
+        "execution_attestation_sha256": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        },
+        "corpus_manifest_sha256": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        },
+        "device_matrix_sha256": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        },
+        "gate_config_sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+        "required_gate_ids": {
+          "const": [
+            "false-accept-count",
+            "false-valid-decode-rate",
+            "endpoint-recall",
+            "pair-accuracy",
+            "exact-code-accuracy",
+            "character-error-rate",
+            "roi-normalization-success-rate",
+            "p95-latency-ms"
+          ]
+        },
+        "required_buckets": {
+          "type": "array",
+          "minItems": 24,
+          "maxItems": 24,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "bucket_id",
+              "minimum_sample_count",
+              "observed_sample_count"
+            ],
+            "properties": {
+              "bucket_id": {
+                "enum": [
+                  "handwriting",
+                  "print",
+                  "low-contrast",
+                  "glare",
+                  "blur",
+                  "motion-blur",
+                  "perspective",
+                  "rotation",
+                  "distance",
+                  "wrapped",
+                  "multi-code",
+                  "partial-fiducial",
+                  "false-zz",
+                  "ambiguous-pairing",
+                  "unequal-fiducial-size",
+                  "curved-surface",
+                  "candidate-overflow",
+                  "running-text",
+                  "confusable-character",
+                  "near-word",
+                  "invalid-reserved-character",
+                  "no-code",
+                  "handle",
+                  "field-code-part"
+                ]
+              },
+              "minimum_sample_count": { "type": "integer", "minimum": 1 },
+              "observed_sample_count": { "type": "integer", "minimum": 0 }
+            }
+          }
+        },
+        "thresholds": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "max_false_accept_count",
+            "max_false_valid_decode_rate",
+            "min_endpoint_recall",
+            "min_pair_accuracy",
+            "min_exact_code_accuracy",
+            "max_character_error_rate",
+            "min_roi_normalization_success_rate",
+            "max_p95_latency_ms",
+            "fiducial_iou_threshold",
+            "cer_normalization"
+          ],
+          "properties": {
+            "max_false_accept_count": { "const": 0 },
+            "max_false_valid_decode_rate": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            },
+            "min_endpoint_recall": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            },
+            "min_pair_accuracy": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            },
+            "min_exact_code_accuracy": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            },
+            "max_character_error_rate": { "type": "number", "minimum": 0 },
+            "min_roi_normalization_success_rate": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            },
+            "max_p95_latency_ms": { "type": "number", "exclusiveMinimum": 0 },
+            "fiducial_iou_threshold": {
+              "type": "number",
+              "exclusiveMinimum": 0,
+              "maximum": 1
+            },
+            "cer_normalization": { "const": "nfc-code-points-v1" }
+          }
+        },
+        "gate_results": {
+          "type": "array",
+          "minItems": 8,
+          "maxItems": 8,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "gate_id",
+              "split",
+              "observed",
+              "operator",
+              "threshold",
+              "result"
+            ],
+            "properties": {
+              "gate_id": {
+                "enum": [
+                  "false-accept-count",
+                  "false-valid-decode-rate",
+                  "endpoint-recall",
+                  "pair-accuracy",
+                  "exact-code-accuracy",
+                  "character-error-rate",
+                  "roi-normalization-success-rate",
+                  "p95-latency-ms"
+                ]
+              },
+              "split": { "const": "final" },
+              "observed": { "type": ["number", "null"] },
+              "operator": {
+                "enum": ["eq", "lte", "gte", "lt", "gt", "present"]
+              },
+              "threshold": { "type": ["number", "null"] },
+              "result": { "enum": ["pass", "fail", "not-applicable"] }
+            }
+          },
+          "allOf": [
+            {
+              "contains": {
+                "properties": { "gate_id": { "const": "false-accept-count" } },
+                "required": ["gate_id"]
+              }
+            },
+            {
+              "contains": {
+                "properties": {
+                  "gate_id": { "const": "false-valid-decode-rate" }
+                },
+                "required": ["gate_id"]
+              }
+            },
+            {
+              "contains": {
+                "properties": { "gate_id": { "const": "endpoint-recall" } },
+                "required": ["gate_id"]
+              }
+            },
+            {
+              "contains": {
+                "properties": { "gate_id": { "const": "pair-accuracy" } },
+                "required": ["gate_id"]
+              }
+            },
+            {
+              "contains": {
+                "properties": { "gate_id": { "const": "exact-code-accuracy" } },
+                "required": ["gate_id"]
+              }
+            },
+            {
+              "contains": {
+                "properties": {
+                  "gate_id": { "const": "character-error-rate" }
+                },
+                "required": ["gate_id"]
+              }
+            },
+            {
+              "contains": {
+                "properties": {
+                  "gate_id": { "const": "roi-normalization-success-rate" }
+                },
+                "required": ["gate_id"]
+              }
+            },
+            {
+              "contains": {
+                "properties": { "gate_id": { "const": "p95-latency-ms" } },
+                "required": ["gate_id"]
+              }
+            }
+          ]
+        }
+      }
+    },
+    "false_accepts": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/falseAcceptDisposition" }
+    },
+    "false_valid_cases": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/falseValidDisposition" }
+    },
+    "reviews": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "dependency_license",
+        "privacy",
+        "security",
+        "qualification"
+      ],
+      "properties": {
+        "dependency_license": { "$ref": "#/$defs/reviewDisposition" },
+        "privacy": { "$ref": "#/$defs/reviewDisposition" },
+        "security": { "$ref": "#/$defs/reviewDisposition" },
+        "qualification": { "$ref": "#/$defs/reviewDisposition" }
+      }
+    },
+    "report_sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+    "disposition": { "enum": ["PASS", "FAIL", "INCOMPLETE", "NO_PROMOTION"] },
+    "promoted_engine": { "type": ["string", "null"] },
+    "approver": { "type": ["string", "null"] },
+    "pull_request": { "type": ["string", "null"] },
+    "no_promotion_reason": { "type": ["string", "null"] }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": { "disposition": { "const": "PASS" } },
+        "required": ["disposition"]
+      },
+      "then": {
+        "properties": {
+          "split_counts": {
+            "type": "object",
+            "properties": { "final": { "type": "integer", "minimum": 1 } }
+          },
+          "release_gates": {
+            "type": "object",
+            "properties": {
+              "gate_results": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": { "result": { "const": "pass" } }
+                }
+              }
+            }
+          },
+          "reviews": {
+            "type": "object",
+            "properties": {
+              "dependency_license": {
+                "type": "object",
+                "properties": { "status": { "const": "approved" } }
+              },
+              "privacy": {
+                "type": "object",
+                "properties": { "status": { "const": "approved" } }
+              },
+              "security": {
+                "type": "object",
+                "properties": { "status": { "const": "approved" } }
+              },
+              "qualification": {
+                "type": "object",
+                "properties": { "status": { "const": "approved" } }
+              }
+            }
+          }
+        },
+        "required": ["promoted_engine", "approver", "pull_request"],
+        "not": {
+          "anyOf": [
+            { "properties": { "promoted_engine": { "const": null } } },
+            { "properties": { "approver": { "const": null } } },
+            { "properties": { "pull_request": { "const": null } } }
+          ]
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": { "disposition": { "const": "NO_PROMOTION" } },
+        "required": ["disposition"]
+      },
+      "then": {
+        "properties": {
+          "promoted_engine": { "const": null },
+          "no_promotion_reason": { "type": "string", "minLength": 1 }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": { "disposition": { "enum": ["FAIL", "INCOMPLETE"] } },
+        "required": ["disposition"]
+      },
+      "then": { "properties": { "promoted_engine": { "const": null } } }
+    }
+  ],
+  "$defs": {
+    "rate": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["numerator", "denominator", "rate"],
+      "properties": {
+        "numerator": { "type": "integer", "minimum": 0 },
+        "denominator": { "type": "integer", "minimum": 0 },
+        "rate": { "type": ["number", "null"], "minimum": 0, "maximum": 1 }
+      }
+    },
+    "bandDistribution": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["accept", "clarify", "retry", "abstain"],
+      "properties": {
+        "accept": { "$ref": "#/$defs/rate" },
+        "clarify": { "$ref": "#/$defs/rate" },
+        "retry": { "$ref": "#/$defs/rate" },
+        "abstain": { "$ref": "#/$defs/rate" }
+      }
+    },
+    "metricSet": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "sample_count",
+        "endpoint_precision",
+        "endpoint_recall",
+        "complete_pair_rate",
+        "pair_accuracy",
+        "false_finder_count",
+        "false_finder_rate",
+        "missed_endpoint_count",
+        "false_pair_count",
+        "false_pair_rate",
+        "roi_mean_iou",
+        "roi_normalization_success_rate",
+        "exact_code_accuracy",
+        "part_word_accuracy",
+        "character_error_rate",
+        "false_valid_decode_count",
+        "false_valid_decode_rate",
+        "false_accept_count",
+        "false_accept_rate",
+        "no_code_false_positive_count",
+        "no_code_false_positive_rate",
+        "wrapped_code_accuracy",
+        "multi_code_accuracy",
+        "band_distribution",
+        "latency_ms",
+        "package_size_delta_bytes",
+        "peak_runtime_memory_bytes",
+        "crash_count",
+        "exception_count"
+      ],
+      "properties": {
+        "sample_count": { "type": "integer", "minimum": 1 },
+        "endpoint_precision": { "$ref": "#/$defs/rate" },
+        "endpoint_recall": { "$ref": "#/$defs/rate" },
+        "complete_pair_rate": { "$ref": "#/$defs/rate" },
+        "pair_accuracy": { "$ref": "#/$defs/rate" },
+        "false_finder_count": { "type": "integer", "minimum": 0 },
+        "false_finder_rate": { "$ref": "#/$defs/rate" },
+        "missed_endpoint_count": { "type": "integer", "minimum": 0 },
+        "false_pair_count": { "type": "integer", "minimum": 0 },
+        "false_pair_rate": { "$ref": "#/$defs/rate" },
+        "roi_mean_iou": {
+          "type": ["number", "null"],
+          "minimum": 0,
+          "maximum": 1
+        },
+        "roi_normalization_success_rate": { "$ref": "#/$defs/rate" },
+        "exact_code_accuracy": { "$ref": "#/$defs/rate" },
+        "part_word_accuracy": { "$ref": "#/$defs/rate" },
+        "character_error_rate": { "type": ["number", "null"], "minimum": 0 },
+        "false_valid_decode_count": { "type": "integer", "minimum": 0 },
+        "false_valid_decode_rate": { "$ref": "#/$defs/rate" },
+        "false_accept_count": { "type": "integer", "minimum": 0 },
+        "false_accept_rate": { "$ref": "#/$defs/rate" },
+        "no_code_false_positive_count": { "type": "integer", "minimum": 0 },
+        "no_code_false_positive_rate": { "$ref": "#/$defs/rate" },
+        "wrapped_code_accuracy": { "$ref": "#/$defs/rate" },
+        "multi_code_accuracy": { "$ref": "#/$defs/rate" },
+        "band_distribution": { "$ref": "#/$defs/bandDistribution" },
+        "latency_ms": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["p50", "p95"],
+          "properties": {
+            "p50": { "type": "number", "minimum": 0 },
+            "p95": { "type": "number", "minimum": 0 }
+          }
+        },
+        "package_size_delta_bytes": { "type": ["integer", "null"] },
+        "peak_runtime_memory_bytes": {
+          "type": ["integer", "null"],
+          "minimum": 0
+        },
+        "crash_count": { "type": "integer", "minimum": 0 },
+        "exception_count": { "type": "integer", "minimum": 0 },
+        "not_measured_reasons": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": { "type": "string", "minLength": 1 }
+        }
+      }
+    },
+    "caseDisposition": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "device_matrix_entry_id",
+        "sample_id",
+        "pair_id",
+        "expected_codes",
+        "observed_codes",
+        "disposition",
+        "reviewer"
+      ],
+      "properties": {
+        "device_matrix_entry_id": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9._-]+$"
+        },
+        "sample_id": { "type": "string", "minLength": 1 },
+        "pair_id": { "type": ["string", "null"], "minLength": 1 },
+        "expected_codes": { "type": "array", "items": { "type": "string" } },
+        "observed_codes": { "type": "array", "items": { "type": "string" } },
+        "disposition": { "type": "string", "minLength": 1 },
+        "reviewer": { "type": "string", "minLength": 1 }
+      }
+    },
+    "falseAcceptDisposition": { "$ref": "#/$defs/caseDisposition" },
+    "falseValidDisposition": {
+      "allOf": [
+        { "$ref": "#/$defs/caseDisposition" },
+        {
+          "properties": {
+            "pair_id": { "type": "string", "minLength": 1 }
+          }
+        }
+      ]
+    },
+    "reviewDisposition": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status", "reviewer", "evidence_ref"],
+      "properties": {
+        "status": { "enum": ["approved", "blocked", "not-applicable"] },
+        "reviewer": { "type": "string", "minLength": 1 },
+        "evidence_ref": { "type": "string", "minLength": 1 }
+      }
+    }
+  }
+}
