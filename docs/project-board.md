@@ -58,7 +58,7 @@ Replaces the 2026-10-07 map, which listed PRs #118, #123, #124, and #126 as in r
 | PR #122 gitleaks allowlist | Done | v1.0; RM-003 | merged 2026-10-10; `security` is green on `main` (D-2026-10-10-13) |
 | PR #95 production Wrangler file and manual workflow | Merged | v1.0; RM-001, RM-002 | merged 2026-10-14; resource ids are still the zero UUID (RM-050); workflow not dispatched |
 | PR #85 governance artifacts | Closed (superseded) | — | its governance artifacts are already present on main; after syncing, no file diff remained, so it was closed without merging |
-| PR #119 B4 continuation evidence | In review | v1.0; RM-016, R2 evidence | evidence documentation |
+| PR #119 B4 continuation evidence | Done | v1.0; RM-016, R2 evidence | merged 2026-10-11 |
 | PR #89 ZZ-OCR-QUAL-001 spec | Done | v1.1; RM-060 | merged 2026-10-14; camera Accept still needs a PASS receipt |
 | PR #115 OCR qualification harness | Merged, preflight only | v1.1; RM-061 | merged 2026-10-14; T003 and T003A stay open; no PASS receipt |
 | PR #121 README and board mirror | Done | v1.0; RM-006 | merged 2026-10-14 |
@@ -66,7 +66,7 @@ Replaces the 2026-10-07 map, which listed PRs #118, #123, #124, and #126 as in r
 | PR #91 site reconciliation, #90 | Done | v1.0 (B5); RM-044 | #91 merged 2026-10-14 and #90 is closed |
 | PR #120 Q72 and Q73 answers; #116, #117 | Done | v1.0 (B5); RM-044 | Michael's answers; applied in #120, merged 2026-10-10 |
 | PR #125 footer social icons and Omer removal | Done | v1.0 (B5); RM-044 | Michael's 2026-10-08 changes |
-| PR #128 LICENSE owner name | In review | v1.0 (legal) | legal text needs Danny's yes |
+| PR #128 LICENSE owner name | Closed, superseded by #143 | v1.0 (legal) | #143 merged 2026-10-10 after Danny's approval; names Michael Chung as owner |
 | PR #127 location capability | Merged, research only | R-B17 | merged 2026-10-14; no contract-1 change (D-2026-10-10-18) |
 | #87 contract-2 gate | Backlog | v2.0; RM-080 | now includes the Organization entity (D-2026-10-10-06); required before #81 can leave CANON-SHADOW |
 | #81, PR #82 semantic profiles | #82 merged; #81 still open | v2.1; RM-091 | CANON-SHADOW semantic-profile specification track; PR #82 merged 2026-10-14 |
