@@ -61,7 +61,8 @@ describe("POST /v1/codes, plain (FR-004, T008)", () => {
     expect(code).toMatchObject({
       status: "active",
       scope: "free_public",
-      rerolls_remaining: 3,
+      // D-2026-10-13-02 (FR-006): five re-rolls, six candidates.
+      rerolls_remaining: 5,
     });
     const parsed = parseCode(code.canonical);
     expect(parsed.ok && parsed.kind).toBe("plain");

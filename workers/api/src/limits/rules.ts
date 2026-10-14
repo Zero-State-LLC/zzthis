@@ -1,4 +1,4 @@
-import { HOUR, MINUTE } from "../lib/time.ts";
+import { DAY, HOUR, MINUTE } from "../lib/time.ts";
 
 export interface Limit {
   readonly limit: number;
@@ -43,6 +43,16 @@ export const CALLER_RULES = {
     user: { limit: 20, windowMs: HOUR },
   },
 } as const satisfies Record<string, { ip: Limit; user: Limit }>;
+
+// D-2026-10-13-03 (RM-072): each free_public mint and each re-roll of a
+// free_public code counts once against the caller's mint subject and once
+// against the RM-030 IP subject, per UTC day. Windows are fixed and start
+// at a multiple of the window length after the epoch, so a DAY window is
+// the UTC day. These counts are on top of the hourly mint row.
+export const MINT_DAY_RULES = {
+  subject: { limit: 30, windowMs: DAY },
+  ip: { limit: 60, windowMs: DAY },
+} as const satisfies Record<string, Limit>;
 
 export type IpRule = keyof typeof IP_RULES;
 export type UserRule = keyof typeof USER_RULES;

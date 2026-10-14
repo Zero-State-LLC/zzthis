@@ -109,6 +109,32 @@ describe("limiter failure policy (RM-038)", () => {
     expect(response.status).toBe(503);
   });
 
+  it("fails a free_public draw closed when only the daily mint count fails, writing nothing (D-2026-10-13-03)", async () => {
+    const w = await makeWorld();
+    const alice = await signIn(w);
+    const broken = await makeWorld({
+      settings: {
+        ZZ_LIMITER: brokenLimiter((key) => key.startsWith("mint-day:")),
+      },
+    });
+    const errors = vi.spyOn(console, "error").mockImplementation(() => {});
+    const response = await call(broken, "POST", "/v1/codes", {
+      token: alice.access,
+      body: {
+        scope: "free_public",
+        kind: "plain",
+        record: { title: "t", body: "" },
+      },
+    });
+    expect(await expectMatchesSchema(response, "mintCode", 503)).toEqual({
+      error: "not-ready",
+    });
+    expect(errors.mock.calls.map((args) => String(args[0]))).toContain(
+      JSON.stringify({ event: "limiter-fault", rule: "mint-day" }),
+    );
+    expect(await count(broken, "SELECT count(*) AS n FROM codes")).toBe(0);
+  });
+
   it("still refuses a suspended account when only the refusal count fails, without an audit row", async () => {
     const w = await makeWorld();
     const alice = await signIn(w);

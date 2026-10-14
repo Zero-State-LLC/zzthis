@@ -6,6 +6,7 @@ import { ApiError, json, malformed, notReady } from "../http/respond.ts";
 import { MintRequest, type MintBody } from "../http/schemas.ts";
 import { cleanRecord } from "../lib/text.ts";
 import { iso, parseTimestamp } from "../lib/time.ts";
+import { limitFreePublicDraw } from "../limits/enforce.ts";
 import { refuseBlocked } from "../moderation/content.ts";
 import { matchKeyTaken, withDrawnCode } from "./draw.ts";
 import { requestedHandle } from "./handles.ts";
@@ -13,7 +14,9 @@ import { checkMintScope } from "./scope.ts";
 import { newRecord, writeMint, type NewRecord } from "./store.ts";
 import { codeBody, type CodeRow } from "./view.ts";
 
-const PLAIN_REROLLS = 3;
+// D-2026-10-13-02 (RM-125, FR-006): five re-rolls, so six candidates per
+// creation. A handle has none.
+const PLAIN_REROLLS = 5;
 
 interface MintOptions {
   readonly visibility: "public" | "private";
@@ -86,6 +89,11 @@ export async function mintCode(c: AppContext): Promise<Response> {
     type: "scope",
     id: request.scope,
   });
+  // D-2026-10-13-03: only a request that goes on to draw counts against
+  // the daily cap, so a refused or malformed one does not spend it.
+  if (request.scope === "free_public") {
+    await limitFreePublicDraw(c, caller.id);
+  }
   const record = await newRecord(c, caller.id, options.visibility, text);
   const row =
     options.handle === null

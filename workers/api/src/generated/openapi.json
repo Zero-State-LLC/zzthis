@@ -1873,7 +1873,7 @@
           "rerolls_remaining": {
             "type": "integer",
             "minimum": 0,
-            "maximum": 3
+            "maximum": 5
           },
           "created_at": {
             "type": "string",
@@ -1931,7 +1931,7 @@
           "rerolls_remaining": {
             "type": "integer",
             "minimum": 0,
-            "maximum": 3
+            "maximum": 5
           },
           "created_at": {
             "type": "string",
