@@ -18,7 +18,7 @@ Rules:
 2. A capability that needs a breaking wire change cannot be in a v1.x release ([CONTRACT-EVOLUTION.md](../docs/CONTRACT-EVOLUTION.md)). Contract 1 is frozen through v1.1 (D-2026-10-10-12).
 3. Dates are not set here. Order follows dependencies, then user value.
 
-## Current readiness (OBSERVED 2026-10-10, `main` 8189ce1; CI row updated 2026-10-13)
+## Current readiness (OBSERVED 2026-10-10, `main` 8189ce1; CI row updated 2026-10-13; citation rows updated 2026-10-14)
 
 | Area | State | Evidence |
 |---|---|---|
@@ -26,8 +26,8 @@ Rules:
 | `packages/zz-core` grammar, classifier, check word, issuer, match key, scanner | Implemented; every shared vector passes | 235 zz-core tests pass locally on 2026-10-10 |
 | `/v1` API Worker | Implemented; 330 Worker tests pass; deployed to isolated staging with mint, sign-in, and photo reads off | `docs/cloudflare-resource-inventory.md` |
 | Web client | Implemented (9 screens, typed lookup); 78 unit tests and a local Playwright flow; not reachable for sign-in on staging | `apps/web` |
-| Native iOS and Android apps | Not in this repository (zzThat); camera engine unqualified | PR #89, PR #115 (drafts) |
-| Production | No production configuration, resource, OAuth client, privacy policy, or deploy approval | B4 issue [#93](https://github.com/Zero-State-LLC/zzthis/issues/93), [#86](https://github.com/Zero-State-LLC/zzthis/issues/86) |
+| Native iOS and Android apps | Not in this repository (zzThat); camera engine unqualified | #89 and #115 merged; no PASS receipt |
+| Production | Production Wrangler file and manual workflow merged in #95; D1 id is still the unassigned zero UUID; no OAuth client, privacy policy, or deploy approval | B4 issue [#93](https://github.com/Zero-State-LLC/zzthis/issues/93), [#86](https://github.com/Zero-State-LLC/zzthis/issues/86), [#131](https://github.com/Zero-State-LLC/zzthis/issues/131) |
 | CI | `build` and site tests green; `security` green on `main` since PR #122 (RM-003, run 38017896510) | D-2026-10-10-13 |
 
 Verdict: implementation-complete prototype; not production-ready. The shortest path to a usable production release is v1.0 below.
@@ -199,9 +199,9 @@ Every capability the repository describes or implies has one row. "Code" is the 
 | `free_public` scope | FR-005 | Implemented behind a flag | v1.2 |
 | Creator reference on Resolve | spec 005 Resolve step 10, FR-033; RM-112 | Implemented (PR #161) | v1.1 |
 | Moderation queue SQL | spec 005 US7, FR-025; RM-102 | Implemented (PR #157: `ops/report-queue.sql`, `ops/report-overdue.sql`) | v1.1 |
-| Device hide and block | D-2026-10-10-25; RM-101 | zzThat: hide merged (zzThat PR #64); block in draft zzThat PR #65 | v1.1 |
-| Suggested-word picker on Create | D-2026-10-11-01 option C; RM-113 | zzThat draft PR #65 (web may mirror); copy keys merged (PR #162) | v1.1 |
-| Saved list on the device | D-2026-10-11-01; RM-115 | zzThat draft PR #65; copy keys merged (PR #162) | v1.1 |
+| Device hide and block | D-2026-10-10-25; RM-101 | zzThat: hide merged (#64); block merged (#65); terms acceptance still open (RM-103) | v1.1 |
+| Suggested-word picker on Create | D-2026-10-11-01 option C; RM-113 | zzThat #65 merged 2026-10-14 (web may mirror); copy keys merged (PR #162); cap remains 3 until D-2026-10-13-02 | v1.1 |
+| Saved list on the device | D-2026-10-11-01; RM-115 | zzThat #65 merged 2026-10-14; canonical codes only, no thumbnail; copy keys merged (PR #162) | v1.1 |
 | Owner-only renew of expired codes | D-2026-10-11-01; RM-114 | None | v1.3 |
 | Retry photo upload and server read | US5, FR-013 | Server path implemented, disabled | v2.2 |
 | On-device camera capture | spec 004 US1; B2 | zzThat; unqualified | v1.1 |

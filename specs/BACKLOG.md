@@ -24,8 +24,8 @@ Human-gated items (Principle VIII) name Danny or Michael as owner. An agent may 
 | [#93](https://github.com/Zero-State-LLC/zzthis/issues/93) B4 Cloudflare runtime | RM-001, RM-002, RM-012, RM-016, RM-031, RM-042, RM-045, RM-050 to RM-052 |
 | [#92](https://github.com/Zero-State-LLC/zzthis/issues/92) dependency advisories | RM-004 |
 | PR [#122](https://github.com/Zero-State-LLC/zzthis/pull/122) gitleaks allowlist | RM-003 |
-| PR [#95](https://github.com/Zero-State-LLC/zzthis/pull/95) manual deploy workflow | superseded by RM-002 when it merges |
-| PR [#89](https://github.com/Zero-State-LLC/zzthis/pull/89), PR [#115](https://github.com/Zero-State-LLC/zzthis/pull/115) OCR qualification | RM-060, RM-061, RM-064 |
+| PR [#95](https://github.com/Zero-State-LLC/zzthis/pull/95) production Wrangler file and manual workflow | merged 2026-10-14; RM-001 and RM-002 files are on main; resource ids still empty (RM-050); workflow not dispatched |
+| PR [#89](https://github.com/Zero-State-LLC/zzthis/pull/89), PR [#115](https://github.com/Zero-State-LLC/zzthis/pull/115) OCR qualification | RM-060 Done (#89); RM-061 preflight merged (#115), PASS receipt still open; RM-064 |
 | [#87](https://github.com/Zero-State-LLC/zzthis/issues/87) contract-2 gate | RM-080 |
 | [#81](https://github.com/Zero-State-LLC/zzthis/issues/81), PR #82 semantic profiles | RM-091 |
 | [#83](https://github.com/Zero-State-LLC/zzthis/issues/83), PR #84 ZK research | R-B15 |
@@ -68,8 +68,8 @@ RM-050 production resources ─> RM-053 web build ─> RM-051 deploy ─> RM-052
 
 ### RM-001 Production Wrangler configuration
 
-- Release v1.0 · P0 · Ready · Bundle B4 · Gate G11 · Owner: API maintainer drafts; Danny supplies resource ids
-- **Problem.** No production configuration exists. The default `workers/api/wrangler.toml` is local-only with placeholder ids, and production names exist only in `docs/cloudflare-resource-inventory.md`.
+- Release v1.0 · P0 · Done for the repo file (PR #95 merged 2026-10-14). Resource ids stay the zero UUID until RM-050. · Bundle B4 · Gate G11 · Owner: API maintainer drafts; Danny supplies resource ids
+- **Problem.** The default `workers/api/wrangler.toml` is local-only. PR #95 put `workers/api/wrangler.production.toml` and `tests/productionWrangler.test.ts` on main. The D1 id is still `00000000-0000-0000-0000-000000000000` until RM-050.
 - **Outcome and scope.** Add `workers/api/wrangler.production.toml`: Worker `zzthis-api`, D1 `zzthis`, R2 `zzthis-photos`, the `Limiter` migration, the daily cron, the `zz.zer0state.com` custom domain (Q69), `ZZ_ENV=production`, every flag explicit (`ZZ_DEV_AUTH`, `ZZ_PHOTO_READS`, `ZZ_FREE_PUBLIC` false; `ZZ_MINT_ENABLED` true only at launch), an `[observability]` block with invocation logs off, and no secret values. Resource ids stay empty until Danny creates the resources (RM-050).
 - **Depends on.** None. **Components.** `workers/api`, a new repository test.
 - **Acceptance.** A test parses the file and fails if `ZZ_DEV_AUTH` or `ZZ_PHOTO_READS` is true, `ZZ_WORDLIST_VERSION` is `fixture-7`, invocation logs are on, a secret name appears under `[vars]`, or a staging resource name appears. `wrangler deploy --dry-run --config wrangler.production.toml` passes in CI without credentials.
@@ -79,8 +79,8 @@ RM-050 production resources ─> RM-053 web build ─> RM-051 deploy ─> RM-052
 
 ### RM-002 Manual production deploy workflow
 
-- Release v1.0 · P0 · Ready · Bundle B4 · Gate G11 · Owner: API maintainer drafts; Danny owns the environment
-- **Problem.** No production deploy path; PR #95 targets the local config without environment protection.
+- Release v1.0 · P0 · Workflow file merged (PR #95, 2026-10-14). Not dispatched. D-2026-10-10-08 is still PROPOSED. · Bundle B4 · Gate G11 · Owner: API maintainer drafts; Danny owns the environment
+- **Problem.** There was no production deploy path. The merged PR #95 adds `.github/workflows/cloudflare-api-production.yml`: `workflow_dispatch` only, `main` only, environment `production`. Remote migrate and deploy refuse the unassigned zero UUID. The workflow has not been dispatched.
 - **Outcome and scope.** `.github/workflows/cloudflare-api-production.yml`: `workflow_dispatch` only, `main` only, GitHub environment `production` with Danny as required reviewer, the same checks as the staging workflow, a D1 Time Travel bookmark printed before `migrations apply`, `wrangler deploy --config wrangler.production.toml`, and the Worker version id and git SHA in the job summary. Builds `apps/web` with the production `PUBLIC_*` values from environment variables.
 - **Depends on.** RM-001. **Components.** `.github/workflows`.
 - **Acceptance.** The workflow cannot run from a branch; a run without the reviewer's approval waits; a dry-run job variant passes on a pull request without credentials.
@@ -439,12 +439,12 @@ RM-050 production resources ─> RM-053 web build ─> RM-051 deploy ─> RM-052
 
 ### RM-060 Land the qualification specification
 
-- Release v1.1 · P0 · In review (PR #89, draft) · Bundle B2 · Phase R-B2
+- Release v1.1 · P0 · Done (PR #89 merged 2026-10-14). `specs/004-capture` cites the RecognitionResult boundary and the receipt states. · Bundle B2 · Phase R-B2
 - **Acceptance.** PR #89 rebased on `main`, independently reviewed, and merged; `specs/004-capture` cites the RecognitionResult boundary and the receipt states.
 
 ### RM-061 Qualification harness and protected workflow
 
-- Release v1.1 · P0 · In progress (PR #115, draft) · Bundle B2 · Phase R-B2
+- Release v1.1 · P0 · In progress (PR #115 merged 2026-10-14 as the fail-closed preflight). T003 and T003A stay open: no protected final-corpus run and no PASS receipt. · Bundle B2 · Phase R-B2
 - **Acceptance.** Evidence reconciliation, metric recomputation, decoder replay, and Sigstore verification implemented; the protected workflow identity pinned; schema-valid negative receipts fail.
 
 ### RM-062 Private qualification corpus (Q34)

@@ -55,22 +55,22 @@ Replaces the 2026-10-07 map, which listed PRs #118, #123, #124, and #126 as in r
 | #86 production readiness | In progress | v1.0; RM-022 to RM-029, RM-040 to RM-043, RM-054 | the governance baseline is present on main; evidence gates open: numeric RTO/RPO/SLO, restore evidence, observability, key lifecycle and deploy approval remain open |
 | #93 B4 Cloudflare runtime | In progress | v1.0; RM-001, RM-002, RM-012, RM-016, RM-031, RM-042, RM-045, RM-050 to RM-052 | isolated staging resources and prior API/D1/Worker checks remain recorded; staging is deployed but there is no write-path or cache evidence yet, so production stays gated. Feature flags stay disabled. The #91 public branch Preview is live, but a newer Clef review has mixed/low route confidence and is not signoff. After acceptance, deploy the exact commit through main-only staging and repeat complete route/asset/header, responsive, and interactive-network parity against the accepted baseline. R2 lifecycle rules remain configured; the non-sensitive probe was confirmed present on 2026-10-08 before its 2026-11-06 expected expiry. A contradictory earlier empty-prefix observation is unverified. Verify deletion after expiry plus Cloudflare's usual 24-hour processing window. Measured product recovery objectives, secret and DO recovery, spend-alert semantics/thresholds, and production approval remain open |
 | #92 dependency advisories | Ready | v1.0; RM-004 | dispositioned as build-only on 2026-10-10 (D-2026-10-10-14); upgrades pending |
-| PR #122 gitleaks allowlist | In review | v1.0; RM-003 | `security` is red on `main` from a branch-only false positive (D-2026-10-10-13) |
-| PR #95 manual deploy workflow | In review (to be superseded) | v1.0; RM-002 | targets the local config; replace with the reviewer-gated production workflow |
+| PR #122 gitleaks allowlist | Done | v1.0; RM-003 | merged 2026-10-10; `security` is green on `main` (D-2026-10-10-13) |
+| PR #95 production Wrangler file and manual workflow | Merged | v1.0; RM-001, RM-002 | merged 2026-10-14; resource ids are still the zero UUID (RM-050); workflow not dispatched |
 | PR #85 governance artifacts | Closed (superseded) | — | its governance artifacts are already present on main; after syncing, no file diff remained, so it was closed without merging |
 | PR #119 B4 continuation evidence | In review | v1.0; RM-016, R2 evidence | evidence documentation |
-| PR #89 ZZ-OCR-QUAL-001 spec | In review (draft) | v1.1; RM-060 | camera qualification contract |
-| PR #115 OCR qualification harness | In progress (draft) | v1.1; RM-061 | stacked on PR #89 |
-| PR #121 README and board mirror | In review (draft) | v1.0; RM-006 | overlaps this review's README and board updates; reconcile before merge |
+| PR #89 ZZ-OCR-QUAL-001 spec | Done | v1.1; RM-060 | merged 2026-10-14; camera Accept still needs a PASS receipt |
+| PR #115 OCR qualification harness | Merged, preflight only | v1.1; RM-061 | merged 2026-10-14; T003 and T003A stay open; no PASS receipt |
+| PR #121 README and board mirror | Done | v1.0; RM-006 | merged 2026-10-14 |
 | PR #85 governance artifacts | Closed (superseded) | v1.0 (governance) | artifacts already present on main; after syncing, no file diff remained, so it was closed without merging |
-| PR #91 site reconciliation, #90 | In review (draft) | v1.0 (B5); RM-044 | closes #90; rebased/merged with main at head `f97458a`; CI and site typecheck/test pass, security is blocked only by the exact historical Gitleaks OCR threshold false positive (isolated draft fix PR #122), and E2E is skipped. Keep draft for mobile/interactive verification and the #89 architecture-claim gate |
-| PR #120 Q72 and Q73 answers; #116, #117 | Done | v1.0 (B5); RM-044 | Michael's answers; Q72 and Q73 were answered by Michael and applied in draft PR #120 |
+| PR #91 site reconciliation, #90 | Done | v1.0 (B5); RM-044 | #91 merged 2026-10-14 and #90 is closed |
+| PR #120 Q72 and Q73 answers; #116, #117 | Done | v1.0 (B5); RM-044 | Michael's answers; applied in #120, merged 2026-10-10 |
 | PR #125 footer social icons and Omer removal | Done | v1.0 (B5); RM-044 | Michael's 2026-10-08 changes |
 | PR #128 LICENSE owner name | In review | v1.0 (legal) | legal text needs Danny's yes |
-| PR #127 location capability | In review | R-B17 | research only (D-2026-10-10-18) |
+| PR #127 location capability | Merged, research only | R-B17 | merged 2026-10-14; no contract-1 change (D-2026-10-10-18) |
 | #87 contract-2 gate | Backlog | v2.0; RM-080 | now includes the Organization entity (D-2026-10-10-06); required before #81 can leave CANON-SHADOW |
-| #81, PR #82 semantic profiles | Backlog / In review (draft) | v2.1; RM-091 | CANON-SHADOW semantic-profile specification track; PR #82 assimilates the semantic-profile spec |
-| #83, PR #84 ZK research | Backlog / In review (draft) | R-B15 | SPECULATIVE; the S1 research PR depends on the semantic parent/rebase |
+| #81, PR #82 semantic profiles | #82 merged; #81 still open | v2.1; RM-091 | CANON-SHADOW semantic-profile specification track; PR #82 merged 2026-10-14 |
+| #83, PR #84 ZK research | #84 merged; #83 still open | R-B15 | SPECULATIVE; S1 research merged 2026-10-14 |
 | #35 any-language codes | Backlog | R-I18N | research |
 | #114, #7 site follow-ups and assets | Backlog | v1.0 (B5); RM-044 | Michael's supplied files |
 | #11, #8 xTechSearch | In progress (Danny) | RM-047, not a release item | decide by 2026-10-12 |
