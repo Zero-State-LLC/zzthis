@@ -1,7 +1,7 @@
 # Feature spec: capture by camera, typing, or voice
 
 Feature ID: 004-capture
-Status: shared-library parts implemented (the scanner rules and the classifier in `packages/zz-core`, with vectors); on-device recognition not built in this repository (zzThat, v1.1). Recognition approach decided (Q18, #74): Option A on the device; engine-neutral evidence feeds the shared zz decoder. Apple Vision is the iOS baseline; Android ML Kit and PP-OCR are qualification candidates under engine qualification ZZ-OCR-QUAL-001 (draft PR #89); a platform without a PASS receipt ships confirm-only (D-2026-10-10-03). Deepened 2026-10-03: grammar path, decision-band triggers, error states, and edge cases. v1 reads English (ASCII) codes with Option A and has no cloud reader; trained models and other scripts are v2 (issue #35).
+Status: shared-library parts implemented (the scanner rules and the classifier in `packages/zz-core`, with vectors); on-device recognition not built in this repository (zzThat, v1.1). Recognition boundary decided: on-device, engine-neutral evidence feeds the shared zz decoder. Recognition approach decided (Q18, #74): Option A on the device. Apple Vision is the iOS baseline; Android ML Kit and PP-OCR are qualification candidates under engine qualification ZZ-OCR-QUAL-001 (merged in #89); a platform without a PASS receipt ships confirm-only (D-2026-10-10-03). No cloud reader in v1. Deepened 2026-10-03: grammar path, decision-band triggers, error states, and edge cases. v1 reads English (ASCII) codes with Option A; trained/VLM readers and other scripts are v2 (issue #35).
 Phase: specify (what and why). The how is in [plan.md](plan.md).
 Constitution: [.specify/memory/constitution.md](../../.specify/memory/constitution.md).
 
@@ -76,13 +76,13 @@ Recognition output flows through spec 003 parsing/canonicalization before any re
 
 ## Decision bands and error states
 
-Thresholds stay OPEN (Q37). The triggers below say which band applies; they set no numbers.
+Q37 is resolved for the prototype parameter values: camera Accept starts at 0.80 confidence and Retry applies below 0.50. These remain parameters, not measured release criteria; a frozen qualification gate config records the values used for a run. The rules below define the mapping and precedence.
 
 | Band | Trigger | What the person sees |
 |---|---|---|
 | Accept | Grammar passes, every snapped word is above the accept threshold, and the check word verifies (word codes) | The canonical code, then the record view |
 | Clarify | Grammar passes, but one or more words fall between the thresholds, the check word fails with one uncertain word, or the classifier returns `confirm` (a near-word, FR-015) | The uncertain word with wordlist candidates and the part as written; confirm or type it |
-| Retry | A marker is missing or cut off, the photo is blurred, glare hides part of the code, the code is small in the frame, or the code is skewed or seen at a steep angle | "Take another photo" with the reason: marker cut off, blur, glare, "Move closer" (the code is small in the frame), or "Try a better angle" (skew or perspective) (D-2026-10-10-23); after a set number of retries, offer the server read (US3). No server/cloud read exists in v1. |
+| Retry | A marker is missing or cut off, the photo is blurred, glare hides part of the code, the code is small in the frame, or the code is skewed or seen at a steep angle | "Take another photo" with the reason: marker cut off, blur, glare, "Move closer" (the code is small in the frame), or "Try a better angle" (skew or perspective) (D-2026-10-10-23); after two retries, continue to offer rescan or typed entry. No server/cloud read exists in v1 (the server read in US3 is deferred). |
 | Abstain | Grammar fails for any reason other than a missing or cut-off marker (that is Retry), including `unsupported-script` and `reserved-symbol` (FR-012). A bare mark also lands here in v1 (FR-011), and so does a word code whose check-word verify returns `wrong-length` (FR-016) | The reason in plain words, and typed entry |
 
 Handles and field codes never reach Accept without a person confirming them (FR-010).
@@ -150,7 +150,7 @@ A stray `zz` in running text can still pair with a real marker. The person then 
 
 ### Prototype band values
 
-Thresholds stay parameters (Q37). These values let the apps ship. They are not measured results.
+Thresholds stay parameters (Q37). The prototype values below are defaults for implementation, not measured qualification results. Qualification freezes the values it evaluates in the gate config.
 
 | Band | Camera trigger | Typed trigger |
 |---|---|---|
@@ -185,7 +185,7 @@ The pre-build audit found that the scanner rules, read literally, could not pair
 | Q18 | Which recognition engine ships? | REFINED 2026-10-06: on-device and no-cloud remain locked. Apple Vision is the iOS baseline. Android ML Kit and PP-OCR are qualified under ZZ-OCR-QUAL-001 and the winner is pinned from evidence. Custom/VLM readers remain v2. |
 | Q33 | Scope of the zzThat app (web, Android, iOS) as a product: which features ship first? | RESOLVED [DELEGATED 2026-10-04, #74]: iOS and Android together with the zzThat spec 001 scope; the web client in spec 005 |
 | Q34 | Where the test set of real photos comes from, and consent for using them | RESOLVED [DELEGATED 2026-10-04, #74]: Team-made photos with written consent, no faces or personal data, kept private, used to measure only |
-| Q37 | Confidence thresholds for accept, clarify, retry, and abstain, and how read-back errors are measured | RESOLVED [DELEGATED 2026-10-04, #74]: Accept at 0.80, retry below 0.50, as parameters |
+| Q37 | Confidence thresholds for accept, clarify, retry, and abstain, and how read-back errors are measured | PARTIAL [DELEGATED 2026-10-04, #74]: Accept at 0.80 and Retry below 0.50 as parameters; read-back error measurement method remains OPEN |
 | Q38 | Where voice input is processed, and whether audio leaves the device | RESOLVED [DELEGATED 2026-10-04, #74]: No voice in v1; later, on the device only |
 | Q55 | How is a `zz` inside running text treated? (issue #41) | RESOLVED: box every candidate, the person picks (FR-013) |
 

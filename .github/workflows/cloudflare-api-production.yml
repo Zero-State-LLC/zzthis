@@ -1,0 +1,80 @@
+# Manual production deploy (RM-002, D-2026-10-10-08).
+# Supersedes the local-config workflow this branch first proposed.
+# Agents do not dispatch this (AGENTS.md). The production environment
+# requires a reviewer. Remote migrate/deploy refuses the unassigned
+# resource-id sentinel.
+
+name: Cloudflare API production
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: cloudflare-api-production
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    environment: production
+    env:
+      WRANGLER_SEND_METRICS: "false"
+      WRANGLER_SEND_ERROR_REPORTS: "false"
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+          cache: npm
+      - run: npm ci
+      - run: bash scripts/check-agents-md.sh AGENTS.md
+      - run: npm run lint
+      - run: npm run typecheck
+      - run: npm run test
+      - name: Build with production web settings
+        env:
+          ASTRO_BASE: /
+          PUBLIC_GOOGLE_WEB_CLIENT_ID: ${{ vars.PUBLIC_GOOGLE_WEB_CLIENT_ID }}
+          PUBLIC_APPLE_SERVICES_ID: ${{ vars.PUBLIC_APPLE_SERVICES_ID }}
+          PUBLIC_APPLE_REDIRECT_URI: ${{ vars.PUBLIC_APPLE_REDIRECT_URI }}
+          PUBLIC_SUPPORT_EMAIL: ${{ vars.PUBLIC_SUPPORT_EMAIL }}
+          PUBLIC_PRIVACY_URL: ${{ vars.PUBLIC_PRIVACY_URL }}
+        run: |
+          set -euo pipefail
+          test -n "$PUBLIC_GOOGLE_WEB_CLIENT_ID" || { echo 'Missing PUBLIC_GOOGLE_WEB_CLIENT_ID'; exit 1; }
+          test -n "$PUBLIC_APPLE_SERVICES_ID" || { echo 'Missing PUBLIC_APPLE_SERVICES_ID'; exit 1; }
+          test -n "$PUBLIC_APPLE_REDIRECT_URI" || { echo 'Missing PUBLIC_APPLE_REDIRECT_URI'; exit 1; }
+          test -n "$PUBLIC_SUPPORT_EMAIL" || { echo 'Missing PUBLIC_SUPPORT_EMAIL'; exit 1; }
+          test -n "$PUBLIC_PRIVACY_URL" || { echo 'Missing PUBLIC_PRIVACY_URL'; exit 1; }
+          npm run build
+      - name: Dry-run production API Worker
+        run: npm exec --workspace @zzthis/api -- wrangler deploy --dry-run --config wrangler.production.toml --outdir .wrangler/api-production-dry-run
+        working-directory: workers/api
+      - name: Bookmark, migrate, and deploy production
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        working-directory: workers/api
+        run: |
+          set -euo pipefail
+          test -n "$CLOUDFLARE_API_TOKEN" || { echo 'Missing CLOUDFLARE_API_TOKEN'; exit 1; }
+          test -n "$CLOUDFLARE_ACCOUNT_ID" || { echo 'Missing CLOUDFLARE_ACCOUNT_ID'; exit 1; }
+          if grep -q '00000000-0000-0000-0000-000000000000' wrangler.production.toml; then
+            echo 'Production resource ids are still the unassigned sentinel (RM-050). Refusing remote migrate and deploy.'
+            exit 1
+          fi
+          bookmark="$(npm exec --workspace @zzthis/api -- wrangler d1 time-travel info zzthis --config wrangler.production.toml --json)"
+          printf 'D1 Time Travel bookmark before migrations:\n\n```\n%s\n```\n' "$bookmark" >> "$GITHUB_STEP_SUMMARY"
+          npm exec --workspace @zzthis/api -- wrangler d1 migrations apply zzthis --remote --config wrangler.production.toml
+          npm exec --workspace @zzthis/api -- wrangler deploy --config wrangler.production.toml
+      - name: Record deployment source
+        run: |
+          printf 'API production deployment source: `%s`\n\nWorker: `zzthis-api`\n' "$GITHUB_SHA" >> "$GITHUB_STEP_SUMMARY"
