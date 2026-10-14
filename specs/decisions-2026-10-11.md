@@ -108,7 +108,7 @@ Source: Michael's reply "zzThat: answers for Dan" (2026-10-11), answering Danny'
 - **Points.** Not scheduled until Michael writes a short purpose (what earns them, what they are for, no cash value).
 - **Photos.** No photo leaves the phone in v1. Training uploads wait for v2.2 with explicit opt-in (confirms RM-117).
 
-## D-2026-10-11-15 Code reuse after expiry vs. uniqueness (OPEN: Danny)
+## D-2026-10-11-15 Code reuse after expiry vs. uniqueness (ACCEPTED: option B, Danny, 2026-10-14, [#170](https://github.com/Zero-State-LLC/zzthis/issues/170#issuecomment-6175348667); locked in a #164 comment 2026-10-12)
 
 - **Conflict.** Michael's Terms list says "codes stay live 2 months from last use, then the words may be reused." Current rule: codes stay unique, never reissued, through v1.x pending research (spec 005 FR-032; Q36; D-2026-10-11-01 row 3 QUEUE, hijack risk; DATA-LIFECYCLE "retired codes never reissued").
 - **Uniqueness rule is unchanged** until Danny decides. The reuse clause is held out of the Terms draft.
