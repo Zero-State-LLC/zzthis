@@ -2,7 +2,7 @@
 
 Author: Claude (working with Michael)
 Date: 2026-10-13
-Status: draft (accepted when Danny merges the PR that adds it)
+Status: accepted (Danny, 2026-10-13)
 Product: zzThis (`Zero-State-LLC/zzthis`)
 
 ## Problem / why now
@@ -28,4 +28,4 @@ The 2026-10-09 patch adding Aaron Godbout was not merged. This patch rebuilds it
 
 ## Next
 
-Danny reviews and merges. Merging the PR that adds this file accepts it.
+Accepted by Danny on 2026-10-13. Spec updated in `specs/001-marketing-site/spec.md` (US3, FR-009) and `docs/SPEC.md` (Section 3.5 About, advisor card, headshots, acceptance list).
