@@ -2,7 +2,7 @@
 
 Evidence classification: **OBSERVED** for statements describing current repository code/tests; **INFERRED** for governance, production gates, or design choices accepted by the convergence intent; **SPECULATIVE** only where explicitly marked as future research.
 
-Status: current V1 model plus reserved future terms. Deepened 2026-10-10 with state ids, guards, and the Organization gap from the [architecture review](analysis-2026-10-10-architecture-review.md). The persisted schema is `workers/api/migrations/` 0001 to 0003: `0001_init.sql` (tables and audit triggers), `0002_retention_indexes.sql` (indexes for the daily retention run, RM-035), and `0003_org_bound_grants.sql` (nullable `org_id` on accounts and grants, RM-074); spec 005 Data model is the column list. Accepted and not yet built: migration 0004 (`accounts.last_active_at`, `codes.idle_expired_at`, RM-127, D-2026-10-13-01).
+Status: current V1 model plus reserved future terms. Deepened 2026-10-10 with state ids, guards, and the Organization gap from the [architecture review](analysis-2026-10-10-architecture-review.md). The persisted schema is `workers/api/migrations/` 0001 to 0003: `0001_init.sql` (tables and audit triggers), `0002_retention_indexes.sql` (indexes for the daily retention run, RM-035), and `0003_org_bound_grants.sql` (nullable `org_id` on accounts and grants, RM-074); spec 005 Data model is the column list. Accepted and in review: migration 0004 (`accounts.last_active_at`, `codes.idle_expired_at`, RM-127, D-2026-10-13-01; PR #177) and migration 0005 (`codes.rerolls_remaining` check widened to 0 to 5, D-2026-10-13-02; PR #178). They apply in either order.
 
 ## Ubiquitous language
 
