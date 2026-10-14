@@ -37,6 +37,7 @@ function isConcept(id: ImageId): boolean {
 
 <section class="app-sec" id={app.id} aria-labelledby={`${app.id}-title`}>
   <h2 id={`${app.id}-title`}>{app.title}</h2>
+  <p class="label">{app.status}</p>
   <p class="app-sec__story">{app.story}</p>
   {app.pageExtra && <p class="app-sec__extra">{app.pageExtra}</p>}
   <ul class={pageClass(app.pageImages.length)}>
