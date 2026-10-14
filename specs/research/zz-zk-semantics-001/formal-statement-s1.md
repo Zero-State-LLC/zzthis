@@ -42,7 +42,9 @@ The resolver establishes authority. The proof establishes only the relation stat
 - `E`: validity epoch or bounded time window.
 - `NS`: semantic namespace identifier/commitment.
 - `AR`: authority-state commitment binding approved profile/dictionary/policy state.
-- `J`: replay tag/nullifier derived inside the relation.
+- `S`: one-time spend nullifier. Stable for a code and predicate across challenges.
+- `T`: presentation tag. Binds one proof presentation to audience, challenge, and epoch.
+- `J`: retired name for a single tag that mixed `S` and `T`. Do not hash the challenge into `S`.
 - `π`: zero-knowledge proof.
 
 ## 4. Canonical code commitment
@@ -152,11 +154,14 @@ PublicInputsV1 {
   namespace_commitment NS,
   authority_state_commitment AR,
   policy_id_and_version Qid,
+  predicate_program_hash,
+  verifying_key_id,
   code_commitment cid,
   audience_commitment A,
   challenge N,
   validity_epoch E,
-  nullifier J
+  spend_nullifier S,
+  presentation_tag T
 }
 ```
 
@@ -218,7 +223,9 @@ The hidden resolution M is deterministically assembled from the proved leaves ac
 Q(M, declared_policy_context) == TRUE
 ```
 
-The verifier accepts only the exact `Qid` it requested or policy allows. A proof for a weaker/different predicate is not interchangeable.
+The verifier accepts only the exact `Qid` it requested or policy allows. A proof for a weaker or different predicate is not interchangeable.
+
+`Qid` MUST select the predicate program that the relation evaluates. Authority state AR maps each approved `Qid` to one `predicate_program_hash` and, when the proof system has a verifying key, one `verifying_key_id`. The relation constrains both public values to that mapping and evaluates that program. Checking that a label string equals the requested `Qid` is not enough: a weaker program that emits the same label fails because its program hash or verifying key is not the mapped identity. Mandatory negative test 16 and fixture vector 17 reject that substitution (`STATEMENT_MISMATCH`).
 
 The first prototype predicate is intentionally narrow:
 
@@ -230,30 +237,35 @@ Its exact Boolean definition must be frozen with the synthetic dataset before im
 
 ### 9.5 Replay-domain binding
 
-S1 binds proof use to verifier context:
+S1 separates one-time spend from challenge binding. Hashing `N` into the only consumed nullifier would allow the same code to be spent again under a fresh challenge.
 
 ```
-J = H(
-  "zzthis:zk:nullifier:v1" ||
+S = H(
+  "zzthis:zk:spend:v1" ||
   s ||
-  A ||
-  N ||
-  E ||
   cid ||
   Qid
 )
+
+T = H(
+  "zzthis:zk:presentation:v1" ||
+  S ||
+  A ||
+  N ||
+  E
+)
 ```
 
-The proof demonstrates correct construction of J without revealing s.
+`S` is stable across audience, challenge, and epoch. `T` changes when `A`, `N`, or `E` changes. The proof demonstrates correct construction of both without revealing `s`.
 
-The verifier rejects a previously accepted J within the replay domain.
+Where one-time semantics apply, the verifier consumes `S`. It also rejects a `T` that does not bind the presented proof to the audience, challenge, and epoch of this request.
 
 Properties to test:
-- changing A changes J;
-- changing N changes J;
-- changing E changes J;
-- changing cid or Qid changes J;
-- reuse of the same proof outside its intended challenge/audience fails.
+- a new `N` does not produce a new `S`;
+- changing cid or Qid changes `S`;
+- changing A, N, or E changes `T` and leaves `S` unchanged;
+- reuse of a consumed `S` fails even when `N` is fresh;
+- reuse of the same proof outside its intended challenge or audience fails the `T` check.
 
 This construction is a research candidate, not a cryptographic recommendation. The selected proof system and field/hash constraints may require a different construction after review.
 
@@ -265,7 +277,7 @@ Verifier acceptance requires:
 1. E is within the verifier's accepted validity window.
 2. AR is a currently trusted authority-state commitment.
 3. R/P/Qid remain approved under AR for E.
-4. J has not already been consumed where one-time semantics apply.
+4. S has not already been consumed where one-time semantics apply. A fresh challenge does not mint a new spend.
 
 If a dictionary, policy, or authority binding is revoked, the verifier stops accepting the corresponding authority state even if an old proof remains mathematically valid.
 
@@ -319,7 +331,7 @@ A verifier MUST reject proofs or presentations with:
 10. wrong audience;
 11. wrong challenge;
 12. expired validity epoch;
-13. replayed nullifier where replay is forbidden;
+13. replayed spend nullifier `S` where one-time use is forbidden, including replay under a new challenge;
 14. untrusted/revoked authority state;
 15. malformed/non-canonical public input;
 16. proof for a weaker predicate substituted for requested Q;
@@ -332,7 +344,7 @@ A valid ZK proof can still leak metadata. Measure or reason about:
 
 - whether `cid` enables code correlation;
 - whether stable R/P/NS values identify an organization;
-- whether J is linkable across verifiers or epochs;
+- whether stable `S` is linkable across verifiers or epochs;
 - whether disclosed predicate ids reveal sensitive workflow information;
 - whether dictionary size/tree depth leaks useful information;
 - whether timing/proof size differs by hidden value;

@@ -41,7 +41,36 @@ Required negative/control values include:
 - state = revoked
 - state = public-information
 
-Populate remaining leaves with synthetic random labels and values so the tree contains 64 committed leaves.
+The other leaves are frozen by this generator, not by an unnamed random draw. Two implementations that follow it commit the same dictionary.
+
+- Leaf count: 64, indexes 0 through 63.
+- Tree order: ascending `leaf_index`. Pair the Merkle tree in that order. Do not sort by label or hash.
+- Seed string: `zzthis-s1-fixture-v1`.
+- `token_commitment = SHA-256(UTF-8("zzthis:s1:token:v1|" || token))`.
+- `namespace_id`, `semantic_profile_id`, and `dictionary_version` are the authority-fixture values below.
+- `leaf_version = 1`. `policy_tags` is empty. `semantic_type` is `class` for X1, `locus` for X2, and `state` for X3.
+- `leaf_bytes` and `leaf_hash` follow `formal-statement-s1.md` section 5. Text is UTF-8. Empty lists encode as a zero count.
+
+Indexes 0 through 7 are the control leaves:
+
+| index | token | position | semantic_value |
+|---|---|---|---|
+| 0 | copper | X1 | electrical |
+| 1 | lantern | X2 | zone-07 |
+| 2 | sky | X3 | maintenance-authorized |
+| 3 | pipe | X1 | plumbing |
+| 4 | beacon | X2 | zone-08 |
+| 5 | slate | X3 | inspection-only |
+| 6 | ash | X3 | revoked |
+| 7 | poster | X3 | public-information |
+
+For index 8 through 63:
+
+- `token = "syn-" || lowercase-hex(SHA-256(UTF-8(seed || ":" || decimal index)))[0:8]`
+- `token_position = (X1, X2, X3)[index mod 3]`
+- `semantic_value = "filler-" || decimal index`
+
+No filler token or value may equal a control token or control value. The generator inputs above do not, and an implementation MUST reject the dictionary if a generated filler collides with one.
 
 ## Predicate Q1
 
@@ -99,7 +128,7 @@ Each vector has an expected ACCEPT/REJECT result and reason code.
 11. wrong audience -> REJECT AUDIENCE_BINDING
 12. wrong challenge -> REJECT CHALLENGE_BINDING
 13. expired epoch -> REJECT EXPIRED
-14. replay accepted J -> REJECT REPLAY
+14. replay of a consumed spend nullifier S, including under a fresh challenge -> REJECT REPLAY
 15. revoked authority manifest -> REJECT AUTHORITY_REVOKED
 16. malformed canonical public encoding -> REJECT NON_CANONICAL_INPUT
 17. proof of L0 substituted when Q1 requested -> REJECT STATEMENT_MISMATCH
