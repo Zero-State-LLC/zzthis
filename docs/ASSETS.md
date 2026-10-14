@@ -106,3 +106,11 @@ Source: Michael's 2026-10-08 v2 patch (`intent/2026-10-08-michael-kathy-found-do
 | public/images/handwritten/hw-kathy-found-dog.webp | concept | Michael's 2026-10-08 v2 patch | 672 by 655. The zz-Kathy-found-dog-zz card in front of the plush corgi; the collar tag shows a capital-letter zz (spec 001 T053). About, under the four real photos, first of the set. |
 | public/images/handwritten/hw-kathy-phone.webp | concept | Michael's 2026-10-08 v2 patch | 395 by 380. A phone that scanned the card, showing Record found and zzpage.com/zz/Kathy-found-dog. About, second of the set. |
 | public/images/handwritten/hw-kathy-board-phone.webp | concept | Michael's 2026-10-08 v2 patch | 1040 by 515. The card pinned on a store community board, with the phone beside it. About, third of the set. |
+
+## Added 2026-10-13 (Michael's About changes)
+
+Source: Michael's 2026-10-13 changes (`intent/2026-10-13-michael-about-aaron-founder-title.md`).
+
+| path | status | source | notes |
+|---|---|---|---|
+| public/images/people/aaron-godbout.webp | headshot | Aaron Godbout's headshot, supplied by Michael 2026-10-13 | Headshot, Aaron Godbout, 440 by 440, WebP. |

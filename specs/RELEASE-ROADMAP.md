@@ -90,13 +90,15 @@ Each gate needs dated evidence linked from the release packet (RM-054). A gate w
 - **User outcome.** iOS and Android users scan a handwritten code with the camera, confirm or accept it, and use every v1.0 job in the zzThat apps. Public creation, edit, and revoke open in v1.1 on the web and in the apps together (D-2026-10-10-21, PROPOSED; Danny agreed in chat 2026-10-09).
 - **Bundles.** B2, B3. Implementation lives in zzThat; this repository owns the contract pin, vectors, design files, and the qualification protocol.
 - **Prerequisites.** v1.0 production API; ZZ-OCR-QUAL-001 merged (PR #89) with a harness (PR #115) and a protected workflow; the Q34 private corpus.
-- **Included.** On-device recognition behind the shared decoder; bands from the qualification receipt; confirm-only fallback for any unqualified platform (D-2026-10-10-03); creation check (spec 004 FR-017); App Store and Play submissions; "Try zzThat" on the site (spec 001 T016); report-handling commitments for user-written pages. Retry reasons "Move closer" and "Try a better angle" (D-2026-10-10-23). Live multi-frame reading with word-by-word voting may ship if ready (RM-096, P3).
-- **Excluded.** Cloud or server vision, photo upload, voice, custom models, web camera.
+- **Included.** On-device recognition behind the shared decoder; bands from the qualification receipt; confirm-only fallback for any unqualified platform (D-2026-10-10-03); creation check (spec 004 FR-017); App Store and Play submissions; "Try zzThat" on the site (spec 001 T016); report-handling commitments for user-written pages. Retry reasons "Move closer" and "Try a better angle" (D-2026-10-10-23). Live multi-frame reading with word-by-word voting may ship if ready (RM-096, P3). Suggested-word picker on Create while codes stay server-chosen (RM-113, D-2026-10-11-01 option C). Local Saved list in zzThat, device-only (RM-115).
+- **Excluded.** Cloud or server vision, photo upload, voice, custom models, web camera. Person-made (client-written) code claim (v2.0, RM-116); additive contract-1 person-made slice is not planned (D-2026-10-11-01).
 - **Contracts and data.** None in this repository. zzThat pins the v1.0 release commit and verifies tolerant readers (RM-075).
 - **Security and privacy.** No raw photo leaves the device; store privacy labels match the data lifecycle matrix.
 - **Gates.** A signed PASS receipt per promoted engine, or confirm-only mode; store review passes; account deletion from each app verified against production.
 - **Store compliance prerequisites (D-2026-10-10-25).** Before submission: RM-101 hide and report flow, RM-104 Data safety with ML Kit diagnostics, RM-105 age rating 13+ and Teen, RM-106 signed AAB and Play App Signing, RM-107 privacy manifest, RM-108 store forms, RM-109 EU trader status, RM-110 one support address, the published privacy policy (RM-026, Danny's B2 fields), and the v1.0 web deletion link live. Before `ZZ_FREE_PUBLIC` turns on: RM-112 creator reference (D-2026-10-10-12 exception accepted by Danny, 2026-10-09 PT; ships after RM-075), RM-102 moderation tooling with a 24-hour report response, RM-103 terms and content policy, and the RM-028 blocklist.
 - **PROPOSED (D-2026-10-10-21, Danny agreed in chat 2026-10-09; adopted on merge).** Add public community create for the web and the apps: `ZZ_FREE_PUBLIC` turns on at the v1.1 gate after Danny's written yes, with RM-076 and RM-077 moved here from v1.2 and the prerequisites in that record (RM-028, RM-030, RM-031, RM-032, RM-033, RM-041, RM-042, RM-063, RM-068, RM-072 durable-key mint cap, and a rehearsed shutoff redeploy with a target time). Until Danny decides, v1.2 below stands.
+
+Store-readiness additions from Michael's 2026-10-11 answers (D-2026-10-11-02 to -14): RM-118 Sign in with Apple, RM-119 in-app deletion with Apple token revoke, RM-120 18+ gating, RM-121 "early release" labeling and no zzThis mention, RM-122 zzsupport@zer0state.com, RM-123 privacy policy (host PROPOSED zzthat.com), RM-124 Terms draft for Michael, RM-125 1/2/3-word create with 5 re-rolls. Launch is US-only. Code reuse after expiry is OPEN (D-2026-10-11-15); uniqueness stays.
 
 ## v1.2 Public community codes (QUEUED, B9)
 
@@ -111,14 +113,14 @@ Each gate needs dated evidence linked from the release packet (RM-054). A gate w
 
 - **Outcome.** One pilot organization issues private, single-use, or expiring codes and audits them.
 - **Prerequisites.** v1.0; the one-organization-per-scope grant rule (RM-063) enforced in the grant script (RM-073); org-bound grants for viewer resolve and the auditor filter (RM-074, D-2026-10-10-22, closes #135); audit scope index (RM-088).
-- **Included.** Web issuer controls for `visibility`, `single_use`, and `expires_at`, which contract 1 already accepts (RM-078); signed-in resolve for viewers; an auditor view of `GET /v1/audit` (RM-079); onboarding runbook.
+- **Included.** Web issuer controls for `visibility`, `single_use`, and `expires_at`, which contract 1 already accepts (RM-078); signed-in resolve for viewers; an auditor view of `GET /v1/audit` (RM-079); onboarding runbook; owner-only renew for expired codes with public not-found unchanged (RM-114, D-2026-10-11-01).
 - **Excluded.** More than one organization per scope (v2.0); links to external identifiers as structured fields (v2.0); AI photo-to-action (R-AI).
 
 ## v2.0 Contract 2 foundation (QUEUED)
 
 - **Outcome.** A versioned contract that adds organizations, scope-aware resolution, published signing keys, partner clients, and multiple word lists without breaking contract-1 clients.
 - **Prerequisites.** The #87 gate extended with the Organization entity (RM-080); tolerant-reader evidence; a deprecation record (CONTRACT-EVOLUTION).
-- **Included.** RM-080 to RM-087, RM-089, RM-090: Organization, Scope, and Namespace model; `GET /v1/keys` and client signature checks (Q28); partner OAuth 2.0 client credentials (Q19, B11); multi-list verification and per-scope dictionaries (spec 003 FR-022); no-device claim (Q25); scope-aware handle duplicates (Q56, Q71); self-service export; mint idempotency key; audit cursor; new name suffixes.
+- **Included.** RM-080 to RM-087, RM-089, RM-090: Organization, Scope, and Namespace model; `GET /v1/keys` and client signature checks (Q28); partner OAuth 2.0 client credentials (Q19, B11); multi-list verification and per-scope dictionaries (spec 003 FR-022); no-device claim (Q25); person-made code claim under contract 2 (RM-116, D-2026-10-11-01 option A; first-come, FR-032, min entropy, part blocklist, no fuzzy live match, new OCR qualification); scope-aware handle duplicates (Q56, Q71); self-service export; mint idempotency key; audit cursor; new name suffixes.
 - **Compatibility.** Contract 1 keeps serving until every pinned cohort has an upgrade path; both contracts are tested independently.
 
 ## v2.1 Semantic profiles (SHADOW until #87, B10)
@@ -129,7 +131,7 @@ Each gate needs dated evidence linked from the release packet (RM-054). A gate w
 ## v2.2 Advanced recognition and retry photos (RESEARCH-gated, B12)
 
 - **Outcome.** Hard-case reads improve through a custom recognizer or a governed server read, with photo upload under explicit consent.
-- **Prerequisites.** R-B12 exit; data-lifecycle and threat-model updates; R2 joins the recovery scope.
+- **Prerequisites.** R-B12 exit; cloud photo and training consent (RM-117, D-2026-10-11-01); data-lifecycle and threat-model updates; R2 joins the recovery scope.
 
 ## Research phases
 

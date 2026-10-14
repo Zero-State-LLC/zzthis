@@ -62,9 +62,11 @@ Full records: [decisions-2026-10-10.md](decisions-2026-10-10.md). Rows in docs/S
 
 | Item | Owner/evidence | Blocking effect |
 |---|---|---|
+| B17 consumer location capability | Operator disposition; consumer journey and privacy decisions in `specs/006-location/spec.md` | No contract-1 schema change or implementation until release/scope and privacy decisions are accepted |
 | OCR/fiducial release thresholds | ZZ-OCR-QUAL-001 tuning/final corpus (draft PR #89, harness draft PR #115) | blocks camera Accept promotion, not typed entry |
 | production wordlist human-confusion thresholds | R-B6 on the Q34 corpus; fallback in D-2026-10-10-04 | blocks freezing the production wordlist unless Danny records risk acceptance |
 | product SLO, end-to-end RPO, RTO | proposed values in D-2026-10-10-10; drill RM-024 (#86) | blocks production authorization |
+| six high npm audit findings | clean Node 24 npm audit JSON plus dependency-path reachability (#92) | blocks dependency-security disposition |
 | contract-2 Scope/Namespace/Organization model | #87 plus D-2026-10-10-06 | blocks promotion of #81 semantic-profile work and multi-organization pilots |
 | ZK proof-system promotion | #87/#81 plus S1 negative vectors and trust/lifecycle decisions | #83 remains CANON-SHADOW |
 | audit retention and minimization | Danny, at 1 GB or 6 months after launch (D-2026-10-10-10) | none before then |
@@ -81,3 +83,23 @@ Resolved since 2026-10-06: the six high npm audit findings (#92) are disposition
 ## Hygiene rule
 
 A new OPEN item must name owner, safe default if one exists, evidence needed, blocking artifact, and canonical decision location. Do not add bare TODO/TBD/OPEN prose to active specs.
+
+## 2026-10-11
+
+| ID | Status | Topic |
+|---|---|---|
+| D-2026-10-11-01 | ACCEPTED | Michael MVP dispositions; person-made plan (C) v1.1 + (A) v2.0 |
+| D-2026-10-11-02 | ACCEPTED | iOS v1 Sign in with Apple beside Google (4.8) |
+| D-2026-10-11-03 | ACCEPTED | iOS in-app account deletion with Apple token revocation (5.1.1) |
+| D-2026-10-11-04 | ACCEPTED | Public contact zzsupport@zer0state.com (app + site footer) |
+| D-2026-10-11-05 | ACCEPTED | 18+ for early release |
+| D-2026-10-11-06 | ACCEPTED | Label "early release", never alpha/beta/test |
+| D-2026-10-11-07 | ACCEPTED | No zzThis/zzthis.com on zzThat surfaces |
+| D-2026-10-11-08 | ACCEPTED | Store and privacy answers 1-19 |
+| D-2026-10-11-09 | PROPOSED | Privacy policy and Terms at zzthat.com (Danny) |
+| D-2026-10-11-10 | ACCEPTED | Terms clauses; draft to Michael before publishing |
+| D-2026-10-11-11 | ACCEPTED | v1.1 create: 1/2/3 words, suggested words, 5 re-rolls |
+| D-2026-10-11-12 | ACCEPTED | Rejects: near-miss, public expired message, phone numbers |
+| D-2026-10-11-13 | ACCEPTED | Links/zzPages requirements (unscheduled) |
+| D-2026-10-11-14 | ACCEPTED | Points unscheduled; photo training v2.2 opt-in |
+| D-2026-10-11-15 | OPEN | Code reuse after 2 months vs. uniqueness (Danny) |

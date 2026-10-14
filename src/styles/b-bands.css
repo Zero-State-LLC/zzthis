@@ -193,8 +193,8 @@
   max-width: 96ch;
 }
 
-/* [MICHAEL 2026-10-08] Small, discreet social icons: X for zzThis, then a
-   zzthat wordmark with its Discord and Instagram links. */
+/* [MICHAEL 2026-10-08, 2026-10-13] Small, discreet social icons, grouped by
+   brand: the zzthis logo and its links, then the zzthat logo and its links. */
 .colophon__social {
   display: flex;
   flex-wrap: wrap;
@@ -204,6 +204,7 @@
 
 .social {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   gap: 0 var(--space-xs);
   margin: 0;
@@ -230,8 +231,18 @@
   height: 18px;
 }
 
-.social__brand img {
+.social__brand {
+  flex-shrink: 0;
+  margin-inline-end: var(--space-3xs);
+}
+
+/* A light/dark logo pair takes its display from the .only-light / .only-dark
+   theme helpers in b-base.css; single logos are block. */
+.social__brand img:not(.only-light) {
   display: block;
+}
+
+.social__brand img {
   width: auto;
   height: 16px;
 }

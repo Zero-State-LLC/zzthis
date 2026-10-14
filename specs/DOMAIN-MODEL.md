@@ -107,4 +107,15 @@ A V1.x/V2 implementation proposal must explicitly define Organization, Scope, an
 
 ## Research entities
 
+### Location research terms
+
+These terms are proposed by B17 and do not exist as contract-1 persisted entities:
+
+- **LocationAttachment**: optional, versioned record content describing a place or event location. It never changes the code-to-record resolver key.
+- **SourcePosition**: coordinate supplied by an explicit user action or one-time foreground device reading, with provenance and uncertainty when available. Retention is an open decision.
+- **DisclosedLocation**: the point, area, or owner-authored label the record is authorized to reveal. It may be coarser than the source position; public serialization must not reveal undisclosed data.
+- **LocationReference**: a future human-readable encoding derived from a typed location. It is not a record code, resolver key, or authority. Its scheme and grammar are unselected.
+
+The owner must explicitly choose to attach a location and preview its disclosure. No location is inferred from photos, text, or background device access. See `specs/006-location/spec.md` for unresolved choices and release gates.
+
 Proof, nullifier/replay tag, verifier/audience, authority-state commitment, and dictionary commitment are research-only terms under #83/S1 and create no V1 authority. Location terms proposed in PR #127 are not part of this model until that PR is reviewed (D-2026-10-10-18).
