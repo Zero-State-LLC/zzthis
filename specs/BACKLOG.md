@@ -514,14 +514,14 @@ RM-050 production resources ─> RM-053 web build ─> RM-051 deploy ─> RM-052
 
 ### RM-101 Hide this code and the expanded report flow in the apps (external)
 
-- Release v1.1 · P0 · Ready · Bundle B3 · Owner: kneelbeforez0D
+- Release v1.1 · P0 · In progress (Hide merged in zzThat #64; Block in zzThat #65, draft) · Bundle B3 · Owner: kneelbeforez0D
 - **Scope.** zzThat FR-035 replaces "No block list" (D-2026-10-10-25 item 1). Resolve and the Report sheet offer "Hide this code" and, once RM-112 ships, "Block this creator": a device-only list of hidden canonical codes and blocked creator references (no server call), shown afterwards as a hidden state with Unhide or Unblock; cleared on account deletion and by a Settings reset. Create asks for terms acceptance before the first create and again when the terms version changes (RM-103). The Report sheet's sent state says the creator is reviewed within 24 hours and can be suspended. Copy keys go through zzThis `design/copy.json`.
 - **Acceptance.** iOS and Android tests: hide a code, resolve it again (scan and typed) and see the hidden state without its title or body; unhide restores it; block a creator and another code with the same `creator` shows the hidden state; delete the account, or run the Settings reset, and both lists are empty; no network call is made by hide, block, unhide, or unblock; Create refuses until the current terms version is accepted.
 - **Governing.** D-2026-10-10-25; Apple 1.2; Play UGC.
 
 ### RM-102 Moderation tooling: triage SLA, suspend, and runbook
 
-- Release v1.1 · P0 · In review (PR #157) · Bundle B9 · Owner: kneelbeforez0D (tooling), Danny (moderator name)
+- Release v1.1 · P0 · In progress (tooling merged in PR #157, 2026-10-11; moderators named in D-2026-10-11-08 answer 17; staging rehearsal pending) · Bundle B9 · Owner: kneelbeforez0D (tooling), Danny (moderator name)
 - **Scope.** Extends RM-077. `workers/api/ops/` SQL: open reports by age and code, a query for reports open longer than 24 hours, suspend and unsuspend an account with audit rows (FR-025), and revoke a reported code. `docs/OPERATIONS.md` gains the moderator runbook: named moderator and backup, 24-hour response, and the escalation to `ZZ_FREE_PUBLIC=false`.
 - **Acceptance.** Tests on the ops SQL: a report older than 24 hours appears in the breach query; suspend blocks mint, re-roll, and record writes with 403 `forbidden` and writes an audit row; unsuspend restores them. The runbook is rehearsed once on staging.
 - **Governing.** D-2026-10-10-25 item 2; Apple 1.2 "timely responses"; Play UGC.
@@ -535,28 +535,28 @@ RM-050 production resources ─> RM-053 web build ─> RM-051 deploy ─> RM-052
 
 ### RM-104 Data safety and privacy drafts include ML Kit diagnostics (external)
 
-- Release v1.1 · P1 · Ready · Bundle B3 · Owner: kneelbeforez0D
+- Release v1.1 · P1 · Done (zzThat #51 merged 2026-10-11; Google sign-in rows in zzThat #72) · Bundle B3 · Owner: kneelbeforez0D
 - **Scope.** zzThat `apps/store/data-safety-draft.md` and `apps/store/privacy-policy-draft.md` per D-2026-10-10-25 item 4; this repository's `docs/DATA-LIFECYCLE.md` row is in the decision pull request.
 - **Acceptance.** The Data safety draft lists App info and performance and Device or other IDs as collected by the ML Kit SDK, not shared, for analytics and diagnostics; no "no analytics" sentence remains unqualified; the list matches Google's ML Kit disclosure page for the pinned version.
 - **Governing.** D-2026-10-10-25 item 4.
 
 ### RM-105 Age rating 13+ and Teen (external)
 
-- Release v1.1 · P1 · Ready · Bundle B3 · Owner: kneelbeforez0D (spec), Danny (filing)
+- Release v1.1 · P1 · Done (zzThat #51), then revised by RM-120: 18+ in the Terms, ratings from the questionnaires (zzThat #72) · Bundle B3 · Owner: kneelbeforez0D (spec), Danny (filing)
 - **Scope.** zzThat FR-031, spec.md Privacy and permissions, and `apps/store/listing-draft.md` say Apple 13+ and Google Play Teen, with the questionnaire answers (user-generated content yes; no other mature themes) recorded in the listing draft.
 - **Acceptance.** No "12+" remains in zzThat; the draft lists each answer.
 - **Governing.** D-2026-10-10-25 item 5.
 
 ### RM-106 Signed AAB release job and Play App Signing (external)
 
-- Release v1.1 · P0 · Ready · Bundle B3 · Owner: kneelbeforez0D (job), Danny (secrets, Play enrollment)
+- Release v1.1 · P0 · In review (zzThat #62) · Bundle B3 · Owner: kneelbeforez0D (job), Danny (secrets, Play enrollment)
 - **Scope.** zzThat workflow job `release-android`, `workflow_dispatch` only, behind a protected environment: `bundleProdRelease`, signed with the upload key from secrets, injected API origin and client ids, AAB uploaded as an artifact. No key, password, or keystore in the tree.
 - **Acceptance.** A run produces a signed `.aab`; `jarsigner -verify` passes with the upload certificate; a secret scan of the tree is clean; Danny enrolls the app in Play App Signing at first upload.
 - **Governing.** D-2026-10-10-25 item 6.
 
 ### RM-107 Privacy manifest HMAC entry and SDK manifest check (external)
 
-- Release v1.1 · P1 · Ready · Bundle B3 · Owner: kneelbeforez0D
+- Release v1.1 · P1 · Done (zzThat #63 merged 2026-10-13) · Bundle B3 · Owner: kneelbeforez0D
 - **Scope.** zzThat `PrivacyInfo.xcprivacy` adds Other Data Types (not linked, not tracking, App Functionality); a Release archive's Xcode Privacy Report is attached to the PR.
 - **Acceptance.** The manifest matches the App Store privacy draft row for row; the report shows a manifest for every linked SDK and no undeclared required-reason API.
 - **Governing.** D-2026-10-10-25 item 7.
@@ -594,14 +594,14 @@ RM-050 production resources ─> RM-053 web build ─> RM-051 deploy ─> RM-052
 
 ### RM-113 Suggested-word picker on Create (server-chosen codes)
 
-- Release v1.1 · P1 · Ready · Bundle B3 · Owner: kneelbeforez0D · External (zzThat; web create may mirror)
+- Release v1.1 · P1 · In review (zzThat #65, draft; RM-125 extends it) · Bundle B3 · Owner: kneelbeforez0D · External (zzThat; web create may mirror)
 - **Scope.** Option (C) from D-2026-10-11-01. Create keeps `POST /v1/codes` and re-roll: the server still chooses words and the check word (zzThat FR-017, ZQ11). The UI offers a clearer way to pick among suggested or re-rolled server words (for example show the candidate set and "Get different words") so creators feel they chose a code without sending a person-written string. No wire change. Cap remains 3 re-rolls (spec 005 FR-006).
 - **Acceptance.** zzThat (and web if create is shown) tests: mint still sends no canonical; re-roll to cap; picker copy uses `design/copy.json` keys; Unavailable when `free_public` is false.
 - **Governing.** D-2026-10-11-01; D-2026-10-10-21.
 
 ### RM-115 Local Saved list in zzThat (device-only)
 
-- Release v1.1 · P2 · Ready · Bundle B3 · Owner: kneelbeforez0D · External (zzThat)
+- Release v1.1 · P2 · In review (zzThat #65, draft) · Bundle B3 · Owner: kneelbeforez0D · External (zzThat)
 - **Scope.** Row 17 ASSIMILATE from D-2026-10-11-01. Add a device-only "Saved" list of codes the person scanned and chose to save (canonical + optional local thumbnail). No server sync, no photo upload. Cleared on account deletion and by a Settings reset (same pattern as hide/block lists). Cloud sync of Saved stays QUEUE with RM-117 / v2.2.
 - **Acceptance.** Spec and runtime name Saved; tests show save/unsave without network; list survives process restart; deletion and reset clear it; no new API calls.
 - **Governing.** D-2026-10-11-01.
