@@ -15,6 +15,7 @@ import * as navigationModule from "../src/content/navigation";
 import * as peopleModule from "../src/content/people";
 import * as technologyModule from "../src/content/technology";
 import * as usesModule from "../src/content/uses";
+import * as walkthroughsModule from "../src/content/walkthroughs";
 import * as workflowsModule from "../src/content/workflows";
 
 const { applications, applicationsPage } = applicationsModule;
@@ -45,6 +46,7 @@ const modules: readonly unknown[] = [
   peopleModule,
   technologyModule,
   usesModule,
+  walkthroughsModule,
   workflowsModule,
 ];
 
@@ -273,26 +275,30 @@ describe("navigation and people", () => {
   });
 
   it("lists the footer social links with their owners", () => {
-    // [MICHAEL 2026-10-08] X belongs to zzThis; Discord and Instagram belong
-    // to zzThat and sit beside the zzthat wordmark.
-    expect(zzthisSocial).toEqual([
-      { label: "zzThis on X", href: "https://x.com/zzthisapp", icon: "x" },
+    // [MICHAEL 2026-10-13] Each brand has its own group, led by its logo.
+    // Twitter keeps the bird icon and twitter.com addresses.
+    expect(zzthisSocial.map((link) => [link.icon, link.href])).toEqual([
+      ["twitter", "https://twitter.com/zzthiscom"],
+      ["linkedin", "https://www.linkedin.com/company/zzthis"],
+      ["youtube", "https://www.youtube.com/@zzthiscom"],
+      ["telegram", "https://t.me/zzthisapp"],
     ]);
-    expect(zzthatSocial).toEqual([
-      {
-        label: "zzThat on Discord",
-        href: "https://discord.gg/hwXvVKYzn4",
-        icon: "discord",
-      },
-      {
-        label: "zzThat on Instagram",
-        href: "https://www.instagram.com/zzthatcom/",
-        icon: "instagram",
-      },
+    expect(zzthatSocial.map((link) => [link.icon, link.href])).toEqual([
+      ["twitter", "https://twitter.com/zzthatcom"],
+      ["instagram", "https://www.instagram.com/zzthatcom/"],
+      ["tiktok", "https://www.tiktok.com/@zzthatcom"],
+      ["youtube", "https://www.youtube.com/@zzthat"],
+      ["discord", "https://discord.gg/hwXvVKYzn4"],
+      ["telegram", "https://t.me/zzthat"],
     ]);
+    for (const link of zzthisSocial) {
+      expect(link.label.startsWith("zzThis on ")).toBe(true);
+    }
+    for (const link of zzthatSocial) {
+      expect(link.label.startsWith("zzThat on ")).toBe(true);
+    }
     for (const link of [...zzthisSocial, ...zzthatSocial]) {
       expect(link.href.startsWith("https://")).toBe(true);
-      expect(link.label).not.toBe("");
     }
   });
 
@@ -465,5 +471,29 @@ describe("content hygiene across all content modules", () => {
         banned.some((term) => text.toLowerCase().includes(term)),
       ),
     ).toEqual([]);
+  });
+});
+
+describe("applications walkthroughs [MICHAEL 2026-10-11]", () => {
+  const { walkthroughs } = walkthroughsModule;
+
+  it("has the pallet and household walkthroughs, five images each", () => {
+    expect(walkthroughs.map((walk) => walk.title)).toEqual([
+      "Smart force-multiplier automation",
+      "Smart packing and handling",
+    ]);
+    for (const walk of walkthroughs) {
+      expect(walk.frames).toHaveLength(5);
+    }
+  });
+
+  it("ships every walkthrough image and thumbnail under public, each at most 2 MB", () => {
+    for (const frame of walkthroughs.flatMap((walk) => walk.frames)) {
+      for (const src of [frame.src, frame.thumb]) {
+        const path = join("public", src);
+        expect(existsSync(path), path).toBe(true);
+        expect(statSync(path).size).toBeLessThanOrEqual(2 * 1024 * 1024);
+      }
+    }
   });
 });
