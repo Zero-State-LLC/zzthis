@@ -134,6 +134,7 @@ export async function writeMint(
     check_word: code.checkWord,
     status: "active",
     expires_at: code.expiresAt,
+    idle_expired_at: null,
     record_id: record.id,
     scope: code.scope,
     rerolls_remaining: code.rerolls,

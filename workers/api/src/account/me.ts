@@ -7,7 +7,11 @@ import { json } from "../http/respond.ts";
 import { open } from "../lib/crypto.ts";
 import { DAY, iso } from "../lib/time.ts";
 import { limitUser } from "../limits/enforce.ts";
-import { purgeResolve } from "../resolve/cache.ts";
+import {
+  COULD_BE_CACHED,
+  PURGE_MAX,
+  purgeResolveAll,
+} from "../resolve/cache.ts";
 
 // GET /v1/me: the account id and its providers. No profile fields.
 export async function getMe(c: AppContext): Promise<Response> {
@@ -150,8 +154,7 @@ function accountDeletion(
 // the FR-018 worst case. A cleanup fault is logged and the 204 stands: the
 // rows are gone, and the reads/ lifecycle rule expires a stray object.
 const R2_DELETE_MAX = 1000;
-export const PURGE_MAX = 500;
-const PURGE_CHUNK = 50;
+export { PURGE_MAX };
 
 async function deletionCleanup(
   c: AppContext,
@@ -168,17 +171,11 @@ async function deletionCleanup(
     );
   }
   const cached = await c.env.ZZ_DB.prepare(
-    "SELECT c.canonical FROM codes c JOIN records r ON r.id = c.record_id WHERE c.owner_id = ? AND c.write_id = ? AND c.single_use = 0 AND c.expires_at IS NULL AND c.first_resolved_at IS NOT NULL AND r.visibility = 'public' LIMIT ?",
+    `SELECT c.canonical FROM codes c JOIN records r ON r.id = c.record_id WHERE c.owner_id = ? AND c.write_id = ? AND ${COULD_BE_CACHED} LIMIT ?`,
   )
     .bind(accountId, c.get("requestId"), PURGE_MAX)
     .all<{ canonical: string }>();
-  for (let i = 0; i < cached.results.length; i += PURGE_CHUNK) {
-    await Promise.all(
-      cached.results
-        .slice(i, i + PURGE_CHUNK)
-        .map((row) => purgeResolve(row.canonical)),
-    );
-  }
+  await purgeResolveAll(cached.results.map((row) => row.canonical));
 }
 
 // DELETE /v1/me (FR-023). Audit rows stay, and the words are never issued
