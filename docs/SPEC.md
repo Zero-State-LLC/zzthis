@@ -56,7 +56,7 @@ This spec covers three deliverables and one proposal:
 
 **Audience for the brief:** Michael Chung (founder and project lead) and Daniel Meyer (full-stack development) [BRIEF].
 
-**Current v1 capability boundary (2026-10-07):** typed lookup is implemented. On-device OCR is planned but not built; the current decision set (draft PR #89) keeps raw photos on-device, validates OCR candidates with the shared grammar/check-word rules, and sends only a canonical code to the API. No cloud/server vision fallback is in v1. Voice and post-capture AI task analysis are outside v1. A secure analysis-packet handoff is not implemented or specified in the current capture flow; it needs its own accepted contract before work begins.
+**Current v1 capability boundary (2026-10-07):** typed lookup is implemented. On-device OCR is planned but not built; the current decision set (merged in #89) keeps raw photos on-device, validates OCR candidates with the shared grammar/check-word rules, and sends only a canonical code to the API. No cloud/server vision fallback is in v1. Voice and post-capture AI task analysis are outside v1. A secure analysis-packet handoff is not implemented or specified in the current capture flow; it needs its own accepted contract before work begins.
 
 **Honesty rules that apply everywhere:**
 
@@ -1195,7 +1195,7 @@ Michael's answers arrived on 2026-10-02 through Danny (issue #10), in an updated
 | Q15 | Domain | Closed for launch: GitHub Pages project URL https://zero-state-llc.github.io/zzthis/, no custom domain or DNS [OPERATOR 2026-10-01]. SUPERSEDED [DANNY 2026-10-08, #6]: the site moves to the root of https://zzthis.com on GitHub Pages (Section 6, Hosting); Michael sets the DNS records at the registrar, and Danny sets the Pages custom domain |
 | Q16 | Ridham Bhagat's role: "robotics and resilient operations" [BRIEF] or "robotics and operations" [WIRE]? | RESOLVED: "Cybersecurity, cryptography and research methods", with the updated bio from Michael's later answers (replaces "Robotics and smart-contract security") [MICHAEL 2026-10-02] |
 | Q17 | Concept label wording | RESOLVED: "Concept illustration" on standalone AI-render panels; one label above a grouped gallery (Section 3.1a) [MICHAEL 2026-10-02] |
-| Q18 | Should we fine-tune our own small model for on-device capture (Option B, Section 10.8)? | RESOLVED [DELEGATED 2026-10-04, #74], refined by draft PR #89: keep recognition on-device; Apple Vision is the iOS baseline; qualify Android candidates on the same frozen corpus before selection. No cloud reader in v1 (`photo_reads` false, spec 005 US5). A custom-model benchmark remains a v2 track. |
+| Q18 | Should we fine-tune our own small model for on-device capture (Option B, Section 10.8)? | RESOLVED [DELEGATED 2026-10-04, #74], refined in #89: keep recognition on-device; Apple Vision is the iOS baseline; qualify Android candidates on the same frozen corpus before selection. No cloud reader in v1 (`photo_reads` false, spec 005 US5). A custom-model benchmark remains a v2 track. |
 | Q19 | How do partner apps authenticate to the API (Section 10.6)? | RESOLVED [DELEGATED 2026-10-04, #74]: no partner route in contract 1. In v2, partners use OAuth 2.0 client credentials: one client per partner, scopes per deployment, secrets rotated at least yearly |
 | Q20 | Does the demo's code lookup show "no match" (not "did you mean") for unrelated codes such as `zz-apple-sky-zz` vs `zz-b2-4-zz`? | RESOLVED: it depends on context [MICHAEL 2026-10-02]; recorded as a per-deployment suggestion policy (Section 10.4, Q40), and the public demo stays exact match [OPERATOR 2026-10-02]. RESOLVED [DELEGATED 2026-10-04, #74]: the miss wording is "No match. Check the words and try again." (design/copy.json `resolve.not_found`); the demo adds "The demo will not guess." |
 | Q40 | Suggestion policy details: which deployment types may enable suggestions, what a suggestion may reveal, and how high-security deployments grade misreads | RESOLVED [DELEGATED 2026-10-04, #74]: off for every deployment in v1, including free public (zzThat ZQ13). A high-security deployment can never turn it on. A later suggestion may show wordlist words only, never a live code |
@@ -1376,9 +1376,9 @@ flowchart LR
 
 AI reads, grammar verifies [OPERATOR 2026-10-02].
 
-1. Recognition runs on the device with an AI vision model, preferably a small on-device model [OPERATOR 2026-10-02]; Apple Vision is the iOS baseline, and the Android engine choice is gated by qualification on a shared frozen corpus (draft PR #89).
+1. Recognition runs on the device with an AI vision model, preferably a small on-device model [OPERATOR 2026-10-02]; Apple Vision is the iOS baseline, and the Android engine choice is gated by qualification on a shared frozen corpus (merged in #89).
 2. Only the decoded code goes to the API. The photo stays on the device by default [OPERATOR 2026-10-02]; raw scan photos stay on-device in v1.
-3. There is no cloud/server vision fallback in v1: no cloud reader, `photo_reads` false. A server read is a v2.2 research item (B12); photos go to the server only on a retry or a hard case, where a larger cloud vision model can read them [OPERATOR 2026-10-02].
+3. There is no cloud or server vision fallback in v1: no cloud reader, and `photo_reads` stays false. A server read is a v2.2 research item (B12). The older operator note that photos go to the server on a retry or a hard case [OPERATOR 2026-10-02] is superseded for v1.
 4. Every model read, on device or in the cloud, is snapped to the closed wordlist, and the checksum word is verified [OPERATOR 2026-10-02]. Every candidate also passes the shared grammar and check-word validation before lookup.
 5. Low-confidence reads go to clarify, rescan, or abstain, with a human confirm step, using the decision bands in Section 2.5 [OPERATOR 2026-10-02] [PRODUCT]; thresholds require measured qualification evidence.
 
@@ -1430,12 +1430,12 @@ Portable SQL. Column lists are illustrative.
 
 ### 10.8 Recognition qualification (iOS baseline set; Android engine selection pending)
 
-> The comparison that follows is historical research. The v1 decision set in draft PR #89 supersedes any cloud-reader/fallback assumption: raw photos remain on-device, no server vision fallback is used, and the shared decoder remains authoritative.
+> The comparison that follows is historical research. The v1 decision set merged in #89 supersedes any cloud-reader or fallback assumption: raw photos remain on-device, no server vision fallback is used, and the shared decoder remains authoritative.
 
 
 Two ways to build the reader in Section 10.3. Both feed the same grammar: snap to the closed wordlist, verify the checksum word, and confirm with a person when confidence is low [OPERATOR 2026-10-02].
 
-- **Option A: platform OCR.** Use native on-device OCR behind the engine-neutral evidence boundary: Apple Vision is the iOS baseline; qualify the Android engine against the same corpus. The shared decoder and check-word validation remain authoritative (draft PR #89).
+- **Option A: platform OCR.** Use native on-device OCR behind the engine-neutral evidence boundary: Apple Vision is the iOS baseline; qualify the Android engine against the same corpus. The shared decoder and check-word validation remain authoritative (merged in #89).
 - **Option B: fine-tune our own small model.** For example TrOCR-small, or a small vision-language model with LoRA, trained on the closed wordlist. This is easier than general handwriting recognition because the model only has to pick from about 4,000 known words, not read any text [OPERATOR 2026-10-02].
 
 **Data for Option B.** Data is the hard part. Start with synthetic data: the wordlist rendered in handwriting fonts, with blur, warping, and cardboard and tape textures. Then add real photos [OPERATOR 2026-10-02]. Training takes hours on a single GPU, and the result is small enough to run on a phone [OPERATOR 2026-10-02].
