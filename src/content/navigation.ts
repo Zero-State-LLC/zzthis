@@ -33,9 +33,18 @@ export const footerItems: readonly FooterItem[] = [
 ];
 
 // [MICHAEL 2026-10-08] Small, discreet social icons in every page's footer.
-// X belongs to zzThis. Discord and Instagram belong to zzThat, so they sit
-// beside a small zzthat wordmark. A link left empty is not shown.
-export type SocialIcon = "x" | "discord" | "instagram";
+// [MICHAEL 2026-10-13] Each brand gets its own group, led by its logo:
+// zzThis (logo, then its links), then zzThat (logo, then its links).
+// Twitter uses the classic bird icon and twitter.com addresses (Michael's
+// preference). A link left empty is not shown.
+export type SocialIcon =
+  | "twitter"
+  | "linkedin"
+  | "youtube"
+  | "telegram"
+  | "tiktok"
+  | "discord"
+  | "instagram";
 
 export interface SocialLink {
   label: string;
@@ -47,7 +56,26 @@ const shown = (links: readonly SocialLink[]): readonly SocialLink[] =>
   links.filter((link) => link.href !== "");
 
 export const zzthisSocial: readonly SocialLink[] = shown([
-  { label: "zzThis on X", href: "https://x.com/zzthisapp", icon: "x" },
+  {
+    label: "zzThis on Twitter",
+    href: "https://twitter.com/zzthiscom",
+    icon: "twitter",
+  },
+  {
+    label: "zzThis on LinkedIn",
+    href: "https://www.linkedin.com/company/zzthis",
+    icon: "linkedin",
+  },
+  {
+    label: "zzThis on YouTube",
+    href: "https://www.youtube.com/@zzthiscom",
+    icon: "youtube",
+  },
+  {
+    label: "zzThis on Telegram",
+    href: "https://t.me/zzthisapp",
+    icon: "telegram",
+  },
 ]);
 
 // Invite link to the zzThat server, given as permanent (never expires, no use
@@ -56,11 +84,31 @@ export const zzthisSocial: readonly SocialLink[] = shown([
 export const zzthatDiscordUrl = "https://discord.gg/hwXvVKYzn4";
 
 export const zzthatSocial: readonly SocialLink[] = shown([
-  { label: "zzThat on Discord", href: zzthatDiscordUrl, icon: "discord" },
+  {
+    label: "zzThat on Twitter",
+    href: "https://twitter.com/zzthatcom",
+    icon: "twitter",
+  },
   {
     label: "zzThat on Instagram",
     href: "https://www.instagram.com/zzthatcom/",
     icon: "instagram",
+  },
+  {
+    label: "zzThat on TikTok",
+    href: "https://www.tiktok.com/@zzthatcom",
+    icon: "tiktok",
+  },
+  {
+    label: "zzThat on YouTube",
+    href: "https://www.youtube.com/@zzthat",
+    icon: "youtube",
+  },
+  { label: "zzThat on Discord", href: zzthatDiscordUrl, icon: "discord" },
+  {
+    label: "zzThat on Telegram",
+    href: "https://t.me/zzthat",
+    icon: "telegram",
   },
 ]);
 
