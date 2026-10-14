@@ -89,3 +89,17 @@ A new OPEN item must name owner, safe default if one exists, evidence needed, bl
 | ID | Status | Topic |
 |---|---|---|
 | D-2026-10-11-01 | ACCEPTED | Michael MVP dispositions; person-made plan (C) v1.1 + (A) v2.0 |
+| D-2026-10-11-02 | ACCEPTED | iOS v1 Sign in with Apple beside Google (4.8) |
+| D-2026-10-11-03 | ACCEPTED | iOS in-app account deletion with Apple token revocation (5.1.1) |
+| D-2026-10-11-04 | ACCEPTED | Public contact zzsupport@zer0state.com (app + site footer) |
+| D-2026-10-11-05 | ACCEPTED | 18+ for early release |
+| D-2026-10-11-06 | ACCEPTED | Label "early release", never alpha/beta/test |
+| D-2026-10-11-07 | ACCEPTED | No zzThis/zzthis.com on zzThat surfaces |
+| D-2026-10-11-08 | ACCEPTED | Store and privacy answers 1-19 |
+| D-2026-10-11-09 | PROPOSED | Privacy policy and Terms at zzthat.com (Danny) |
+| D-2026-10-11-10 | ACCEPTED | Terms clauses; draft to Michael before publishing |
+| D-2026-10-11-11 | ACCEPTED | v1.1 create: 1/2/3 words, suggested words, 5 re-rolls |
+| D-2026-10-11-12 | ACCEPTED | Rejects: near-miss, public expired message, phone numbers |
+| D-2026-10-11-13 | ACCEPTED | Links/zzPages requirements (unscheduled) |
+| D-2026-10-11-14 | ACCEPTED | Points unscheduled; photo training v2.2 opt-in |
+| D-2026-10-11-15 | OPEN | Code reuse after 2 months vs. uniqueness (Danny) |
