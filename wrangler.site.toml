@@ -1,0 +1,8 @@
+name = "zzthis-site-staging"
+compatibility_date = "2026-08-15"
+
+[assets]
+directory = "./dist"
+not_found_handling = "404-page"
+
+# Staging-only. Production routes/custom domains are intentionally absent.

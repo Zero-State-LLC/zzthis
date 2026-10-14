@@ -1,6 +1,6 @@
 # Requirements checklist: 002-resolver-core
 
-Checked 2026-10-04. The resolver is not built. HTTP shapes for `/v1` are spec 005. This checklist is about spec 002 itself.
+Checked 2026-10-04. The resolver is not built. Status note 2026-10-10: implemented through spec 005 and tested; staging only. HTTP shapes for `/v1` are spec 005. This checklist is about spec 002 itself.
 
 ## Completeness
 
