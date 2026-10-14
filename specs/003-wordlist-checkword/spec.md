@@ -162,6 +162,25 @@ The pre-build audit found places where two careful builders could read the gramm
 | D-2026-10-04-10 | Decided 2026-10-05 by established practice (RFC 8265 and 8266, Unicode C6, UAX #15, UAX #44, UTS #39): the 256 guard counts raw UTF-16 code units first; fullwidth forms map to ASCII and the text is normalized to NFC; whitespace is the Unicode White_Space set; lowercasing is the Unicode mapping without locale rules; a letter that is still not ASCII fails with `unsupported-script`. | The U+00A0, em space, Kelvin sign, and Cyrillic rows join `grammar` and pass today. The fullwidth, combining-acute, and U+FEFF rows moved into `grammar` with the spec 005 T035 parser change. |
 | D-2026-10-04-03, D-2026-10-04-06, D-2026-10-04-11 | Scanner readings, decided 2026-10-05 ([spec 004](../004-capture/spec.md), Readings) | New `vectors.json` scanner rows |
 
+## Structured semantic profile classification (CANON-SHADOW; issue #81)
+
+The v1 grammar and current code kinds do not change. In particular, an ordinary three-part plain code is not automatically a structured semantic code.
+
+A future `structured` profile is an opt-in interpretation layer over a successfully parsed canonical code. Syntax recognition and semantic interpretation remain separate:
+- `wordlist_version` identifies the recognition/error-correction vocabulary used by word codes.
+- `semantic_profile_id` identifies an interpretation schema.
+- `dictionary_version` identifies the semantic mappings used by that schema.
+- `namespace_id` identifies the authority/domain that may disclose those mappings.
+
+For an explicitly structured profile, the profile MAY define:
+- X1 as a compact schema/class selector.
+- X2 as a schema-defined locus/target.
+- X3 as a schema-defined state/action/qualifier.
+
+X1 SHOULD use a small set of visually and phonologically distinguishable values. Selecting X1 may select larger X2/X3 semantic dictionaries. These semantic dictionaries are not the recognition wordlist and MUST NOT be used by the parser to infer authority or meaning.
+
+The illustrative code `zz-copper-lantern-sky-zz` remains a normal canonical code unless a resolver-authorized semantic profile binds it. Example semantic mappings in issue #81 are explanatory only and MUST NOT ship as production vocabulary.
+
 ## Open questions
 
 | ID | Question | Default |
