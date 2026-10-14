@@ -4,6 +4,11 @@ name = "zzthis-api-staging"
 main = "src/index.ts"
 compatibility_date = "2026-08-15"
 compatibility_flags = ["nodejs_compat"]
+# D-2026-10-13-06: staging answers only on its Access-protected host
+# (zz-staging.zer0state.com, created by Danny), never on workers.dev or a
+# preview URL, so its writes are never public.
+workers_dev = false
+preview_urls = false
 
 [assets]
 directory = "../../apps/web/dist"
@@ -36,11 +41,12 @@ new_sqlite_classes = ["Limiter"]
 crons = ["17 3 * * *"]
 
 # Safe, non-secret staging configuration. Runtime keys are Cloudflare Worker
-# secrets and are deliberately absent from this file.
+# secrets and are deliberately absent from this file. ZZ_FREE_PUBLIC is on
+# because the web client mints only free_public (D-2026-10-13-06).
 [vars]
 ZZ_ENV = "staging"
 ZZ_CONTRACT = "1"
-ZZ_FREE_PUBLIC = "false"
+ZZ_FREE_PUBLIC = "true"
 ZZ_MINT_ENABLED = "false"
 ZZ_PHOTO_READS = "false"
 ZZ_DEV_AUTH = "false"

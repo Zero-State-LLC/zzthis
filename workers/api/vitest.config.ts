@@ -26,12 +26,25 @@ export default defineConfig(async () => {
     path.join(import.meta.dirname, "migrations"),
   );
   const ops = await readOps(path.join(import.meta.dirname, "ops"));
+  // The staging reset (D-2026-10-13-06), split into statements by wrangler's
+  // SQL splitter, as the migrations are, so the trigger bodies stay whole.
+  const { unstable_splitSqlQuery } = await import("wrangler");
+  const stagingReset = unstable_splitSqlQuery(
+    await readFile(
+      path.join(import.meta.dirname, "scripts", "staging-reset.sql"),
+      "utf8",
+    ),
+  );
   return {
     plugins: [
       cloudflareTest({
         wrangler: { configPath: "./wrangler.toml" },
         miniflare: {
-          bindings: { TEST_MIGRATIONS: migrations, TEST_OPS_SQL: ops },
+          bindings: {
+            TEST_MIGRATIONS: migrations,
+            TEST_OPS_SQL: ops,
+            TEST_STAGING_RESET: stagingReset,
+          },
         },
       }),
     ],
