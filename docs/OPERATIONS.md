@@ -82,6 +82,26 @@ Escalation: when the queue cannot be kept within one day, or a wave of abuse arr
 
 Before launch: rehearse steps 1 to 3 once on staging with a seeded report, and record the date here. _Not yet rehearsed._
 
+## Operator deletion and access requests
+
+D-2026-10-13-08 (RM-023, RM-027). zzThis stores no email or name, so an emailed request cannot be matched to an account by itself.
+
+1. Identity check: the person signs in and quotes the account id shown on `/account/` (copy key `account.id`, Michael). Act only on that id. The `/account/` change is separate work; until it ships, ask the person to delete the account themselves, in the app or on `/account/`.
+2. Deletion: run `ops/delete-account.sql` with that id (its header gives the command). It writes the FR-023 step 2 batch that `DELETE /v1/me` writes and one `account.delete` audit event with no actor. Each stored Apple token is queued in `pending_revocations`, due now, and the next daily run revokes it. SQL cannot delete the photo objects or purge the edge cache: the 30-day `reads/` lifecycle rule removes the objects, and a cached resolve lasts at most 60 seconds (FR-018). An unknown or already deleted account is left alone.
+3. Access request: answer with that account's rows from `accounts`, `codes`, `records`, and the current version of each record, as JSON:
+
+   ```sh
+   npx wrangler d1 execute ZZ_DB --remote --json --command="$(sed 's/:account_id/ACCOUNT_ID/g' <<'SQL'
+   SELECT * FROM accounts WHERE id = ':account_id';
+   SELECT * FROM codes WHERE owner_id = ':account_id' ORDER BY created_at;
+   SELECT * FROM records WHERE owner_id = ':account_id' ORDER BY created_at;
+   SELECT v.* FROM record_versions v JOIN records r ON r.current_version_id = v.id WHERE r.owner_id = ':account_id' ORDER BY v.created_at;
+   SQL
+   )"
+   ```
+
+Before a D1 restore (Time Travel or an import), export the `audit_events` and `pending_revocations` rows written after the target time (`created_at` later than it) with `--json`, and insert them again after the restore. A restore that goes back past an `account.delete` event brings that account back: run `ops/delete-account.sql` again for each such account.
+
 ## Observability
 
 Production logging must be purpose-limited and redact:
