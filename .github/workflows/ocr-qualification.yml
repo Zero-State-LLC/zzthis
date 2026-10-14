@@ -1,0 +1,121 @@
+name: OCR Qualification (local, diagnostic only)
+
+on:
+  workflow_dispatch:
+    inputs:
+      stage:
+        description: Freeze/sign inputs first, then evaluate a frozen candidate
+        required: true
+        type: choice
+        options:
+          - freeze
+          - evaluate
+      candidate_id:
+        description: Opaque candidate directory name in the runner's private corpus root
+        required: true
+        type: string
+
+permissions:
+  contents: read
+  id-token: write
+
+concurrency:
+  group: ocr-qualification-${{ inputs.candidate_id }}
+  cancel-in-progress: false
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  qualification:
+    if: github.repository == 'Zero-State-LLC/zzthis' && github.ref == 'refs/heads/main' && github.ref_protected
+    runs-on:
+      group: zzthis-ocr-qualification
+      labels: [self-hosted, macOS, ARM64, ocr-qualification]
+    timeout-minutes: 90
+    env:
+      ZZ_OCR_QUAL_PRIVATE_ROOT: ${{ vars.ZZ_OCR_QUAL_PRIVATE_ROOT }}
+      QUALIFICATION_STAGE: ${{ inputs.stage }}
+      QUALIFICATION_CANDIDATE_ID: ${{ inputs.candidate_id }}
+    steps:
+      - name: Check out protected main
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          ref: refs/heads/main
+          persist-credentials: false
+          clean: true
+
+      - name: Verify preinstalled local toolchain
+        run: |
+          set -euo pipefail
+          node --version | grep -E '^v(2[2-9]|[3-9][0-9])\.' >/dev/null
+          cosign version | grep -F 'GitVersion: v3.1.3' >/dev/null
+          test -n "$ZZ_OCR_QUAL_PRIVATE_ROOT"
+
+      - name: Install locked verifier dependencies without lifecycle scripts
+        run: npm ci --ignore-scripts --no-audit --no-fund
+
+      - name: Prepare frozen pre-run attestation
+        if: inputs.stage == 'freeze'
+        run: node scripts/ocr-qualification-trusted-runner.mjs freeze "$QUALIFICATION_CANDIDATE_ID"
+
+      - name: Sign frozen pre-run attestation
+        if: inputs.stage == 'freeze'
+        run: |
+          set -euo pipefail
+          umask 077
+          candidate_dir="$ZZ_OCR_QUAL_PRIVATE_ROOT/candidates/$QUALIFICATION_CANDIDATE_ID"
+          test ! -e "$candidate_dir/pre-run-bundle.sigstore.json"
+          cosign sign-blob --yes \
+            --bundle "$candidate_dir/pre-run-bundle.sigstore.json" \
+            "$candidate_dir/pre-run-attestation.json" >/dev/null
+          chmod 600 "$candidate_dir/pre-run-bundle.sigstore.json"
+
+      - name: Verify frozen pre-run publication
+        if: inputs.stage == 'freeze'
+        run: node scripts/ocr-qualification-trusted-runner.mjs verify-freeze "$QUALIFICATION_CANDIDATE_ID"
+
+      - name: Verify freeze and run final-split evaluation
+        if: inputs.stage == 'evaluate'
+        run: node scripts/ocr-qualification-trusted-runner.mjs evaluate "$QUALIFICATION_CANDIDATE_ID"
+
+      - name: Sign runner-timed execution attestation
+        if: inputs.stage == 'evaluate'
+        run: |
+          set -euo pipefail
+          umask 077
+          run_dir="$ZZ_OCR_QUAL_PRIVATE_ROOT/runs/${GITHUB_RUN_ID}.${GITHUB_RUN_ATTEMPT}"
+          test ! -e "$run_dir/execution-bundle.sigstore.json"
+          cosign sign-blob --yes \
+            --bundle "$run_dir/execution-bundle.sigstore.json" \
+            "$run_dir/execution-attestation.json" >/dev/null
+          chmod 600 "$run_dir/execution-bundle.sigstore.json"
+
+      - name: Assemble local non-authorizing receipt
+        if: inputs.stage == 'evaluate'
+        run: |
+          set -euo pipefail
+          candidate_dir="$ZZ_OCR_QUAL_PRIVATE_ROOT/candidates/$QUALIFICATION_CANDIDATE_ID"
+          run_dir="$ZZ_OCR_QUAL_PRIVATE_ROOT/runs/${GITHUB_RUN_ID}.${GITHUB_RUN_ATTEMPT}"
+          set +e
+          npm run qual:ocr -- \
+            --manifest "$candidate_dir/manifest.json" \
+            --device-matrix "$candidate_dir/device-matrix.json" \
+            --candidate-bundle "$candidate_dir/candidate-bundle.json" \
+            --gate-config "$candidate_dir/gate-config.json" \
+            --pre-run-attestation "$candidate_dir/pre-run-attestation.json" \
+            --pre-run-bundle "$candidate_dir/pre-run-bundle.sigstore.json" \
+            --execution-attestation "$run_dir/execution-attestation.json" \
+            --execution-bundle "$run_dir/execution-bundle.sigstore.json" \
+            --adapter-results "$candidate_dir/adapter-results.json" \
+            --output "$run_dir/qualification-diagnostic.json" \
+            --markdown-report "$run_dir/qualification-diagnostic.md" \
+            --receipt-output "$run_dir/qualification-receipt.json" \
+            --receipt-report "$run_dir/qualification-receipt.md" \
+            >/dev/null 2>&1
+          status=$?
+          set -e
+          test "$status" -eq 2
+          node scripts/ocr-qualification-nonauthorizing.mjs \
+            "$run_dir/qualification-diagnostic.json"
