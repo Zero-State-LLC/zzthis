@@ -22,7 +22,7 @@ const { applications, applicationsPage } = applicationsModule;
 const { comparisonColumns, comparisonNote, comparisonRows } = comparisonModule;
 const { whyMarkers } = anatomyModule;
 const { featured, hero } = heroModule;
-const { navItems, footerItems, footerNotice, zzthisSocial, zzthatSocial } =
+const { footerItems, footerNotice, zzthisSocial, zzthatSocial } =
   navigationModule;
 const { advisors, founder, founderOrigin } = peopleModule;
 const { demoTitle, demoPrototypeLinks } = demoModule;

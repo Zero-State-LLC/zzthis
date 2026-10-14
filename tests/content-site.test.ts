@@ -38,14 +38,15 @@ describe("navigation and people", () => {
     ]);
   });
 
-  it("lists the reconciled advisors in the 2026-10-08 order, all with initials and retained approved assets", () => {
+  it("lists the advisors in the current published order, all with initials and retained approved assets", () => {
     // [MICHAEL 2026-10-06 change list] Daniel and Adam move to first.
     // [MICHAEL 2026-10-08] Omer F. Yalcin is removed until his employer
-    // gives permission.
+    // gives permission. Aaron Godbout joined on 2026-10-13.
     expect(advisors.map((person) => person.name)).toEqual([
       "Daniel Meyer",
       "Adam Fry",
       "Patrick Muggler",
+      "Aaron Godbout",
       "Arshi Chadha",
     ]);
     expect(advisors.every((person) => person.initials !== undefined)).toBe(
@@ -64,21 +65,58 @@ describe("navigation and people", () => {
   });
 
   it("lists the footer social links with their owners", () => {
-    // [MICHAEL 2026-10-08] X belongs to zzThis; Discord and Instagram belong
-    // to zzThat and sit beside the zzthat wordmark.
     expect(zzthisSocial).toEqual([
-      { label: "zzThis on X", href: "https://x.com/zzthisapp", icon: "x" },
+      {
+        label: "zzThis on Twitter",
+        href: "https://twitter.com/zzthiscom",
+        icon: "twitter",
+      },
+      {
+        label: "zzThis on LinkedIn",
+        href: "https://www.linkedin.com/company/zzthis",
+        icon: "linkedin",
+      },
+      {
+        label: "zzThis on YouTube",
+        href: "https://www.youtube.com/@zzthiscom",
+        icon: "youtube",
+      },
+      {
+        label: "zzThis on Telegram",
+        href: "https://t.me/zzthisapp",
+        icon: "telegram",
+      },
     ]);
     expect(zzthatSocial).toEqual([
+      {
+        label: "zzThat on Twitter",
+        href: "https://twitter.com/zzthatcom",
+        icon: "twitter",
+      },
+      {
+        label: "zzThat on Instagram",
+        href: "https://www.instagram.com/zzthatcom/",
+        icon: "instagram",
+      },
+      {
+        label: "zzThat on TikTok",
+        href: "https://www.tiktok.com/@zzthatcom",
+        icon: "tiktok",
+      },
+      {
+        label: "zzThat on YouTube",
+        href: "https://www.youtube.com/@zzthat",
+        icon: "youtube",
+      },
       {
         label: "zzThat on Discord",
         href: "https://discord.gg/hwXvVKYzn4",
         icon: "discord",
       },
       {
-        label: "zzThat on Instagram",
-        href: "https://www.instagram.com/zzthatcom/",
-        icon: "instagram",
+        label: "zzThat on Telegram",
+        href: "https://t.me/zzthat",
+        icon: "telegram",
       },
     ]);
     for (const link of [...zzthisSocial, ...zzthatSocial]) {
@@ -103,6 +141,7 @@ describe("navigation and people", () => {
     expect(byName("Adam Fry")?.profileUrl).toBeUndefined();
     for (const name of [
       "Patrick Muggler",
+      "Aaron Godbout",
       "Arshi Chadha",
       "Daniel Meyer",
       "Adam Fry",
@@ -110,7 +149,7 @@ describe("navigation and people", () => {
       expect(byName(name)?.bio).toBeTruthy();
     }
     expect(founder.role).toBe(
-      "Founder, business-model architect, and project lead",
+      "Founder, new products and business model architect, project lead",
     );
     expect(founder.bio.startsWith("I “invent” business models.")).toBe(true);
     expect(founderOrigin.text).toBe(founder.bio);
