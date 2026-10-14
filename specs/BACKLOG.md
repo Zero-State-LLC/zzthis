@@ -587,7 +587,7 @@ RM-050 production resources ─> RM-053 web build ─> RM-051 deploy ─> RM-052
 
 ### RM-112 Optional creator reference on Resolve for creator blocking
 
-- Release v1.1 · P0 · Ready (exception accepted by Danny, 2026-10-09 PT; ships after RM-075) · Bundle B9 · Owner: kneelbeforez0D
+- Release v1.1 · P0 · In review (PR #161; exception accepted by Danny, 2026-10-09 PT; ships after RM-075) · Bundle B9 · Owner: kneelbeforez0D
 - **Scope.** Resolve gains an optional response field `creator`: an opaque, stable HMAC of the owner account id (keyed with a server secret, never the raw id), null for private records. OpenAPI `info.version` changes and discovery advertises it. Old clients must ignore it (RM-075).
 - **Acceptance.** Worker tests: two public codes from one owner resolve with the same `creator`; codes from different owners differ; a private record gives null; the raw account id never appears; the cached public response keeps the field. zzThat tolerant-reader tests pass on both apps.
 - **Governing.** D-2026-10-10-25 item 1; D-2026-10-10-12; Apple 1.2; Play UGC.
@@ -679,4 +679,12 @@ RM-050 production resources ─> RM-053 web build ─> RM-051 deploy ─> RM-052
 | RM-115 | v1.1 | P2 | Ready | Local Saved list in zzThat (device-only) | D-2026-10-11-01 |
 | RM-116 | v2.0 | P1 | Backlog | Person-made code claim design (contract 2; option A) | D-2026-10-11-01; RM-084 |
 | RM-117 | v2.2 | P1 | Backlog (RESEARCH) | Cloud photo and training consent before photo reads | D-2026-10-11-01; B12 |
-
+| RM-118 | v1.1 | P0 | Ready | iOS Sign in with Apple beside Google | D-2026-10-11-02; Guideline 4.8 |
+| RM-119 | v1.1 | P0 | Ready | iOS in-app account deletion with Apple token revocation | D-2026-10-11-03; spec 005 FR-023 |
+| RM-120 | v1.1 | P0 | Ready | 18+ gating, Terms clause, store age-rating questionnaires | D-2026-10-11-05 |
+| RM-121 | v1.1 | P1 | Ready | "Early release" labeling; no alpha/beta/test; no zzThis mention on zzThat surfaces | D-2026-10-11-06, -07 |
+| RM-122 | v1.1 | P1 | Backlog | zzsupport@zer0state.com in app, listings, policy, site footer (mailbox first) | D-2026-10-11-04 |
+| RM-123 | v1.1 | P0 | Backlog | Publish privacy policy (answers 1-19) at proposed zzthat.com/privacy | D-2026-10-11-08, -09; zzThat #47 |
+| RM-124 | v1.1 | P0 | Backlog | Terms of Use and content policy draft for Michael's review | D-2026-10-11-10; D-2026-10-11-15 |
+| RM-125 | v1.1 | P1 | Ready | Create: 1/2/3 word length, 5 re-rolls per creation, server rate limit, no phone numbers | D-2026-10-11-11, -12; extends RM-113 |
+| RM-126 | Horizon | P3 | Backlog | Links and zzPages safety requirements | D-2026-10-11-13 |

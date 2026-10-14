@@ -1498,7 +1498,7 @@ v1 is the public site and demo plus an English-only prototype of the three produ
 | Capture prototype, Option A | 004 | Scanner and classifier implemented in zz-core; on-device camera in zzThat, unqualified (v1.1) | Typed, spoken, and photographed codes go through one grammar, snap, and verify path with accept, clarify, retry, and abstain |
 | Option B benchmark | 004 T008 (Q18) | Not started; research phase R-B12 | Result recorded; it opens or defers v2 track A |
 
-Every OPEN question that blocks a v1 task has a GitHub issue and a default. Q50 to Q61 (issues #36 to #42, #44 to #48) were filed and answered on 2026-10-03; the answers are in Sections 2.2a and 9a.
+Every OPEN question that blocks a v1 task has a GitHub issue and a default. Q50 to Q61 (issues #36 to #42, #44 to #48) were filed and answered on 2026-10-03; the answers are in Sections 2.2a and 9a. B17 is a separate RESEARCH proposal for a consumer v1.x location capability; it is not part of the current v1 outcome and does not alter contract 1 (`specs/006-location/spec.md`).
 
 ### 12.2 v2 candidates (not committed)
 
@@ -1510,7 +1510,8 @@ Each row now has a release, research phase, or deferred entry in the capability 
 | Own fine-tuned reader beyond the benchmark | Section 10.8, Q18 |
 | Drawn-symbol camera mode, and object codes (a ZZ mark on an object; the object's image is the code) | Q49 reply (issue #34); Q50 answer (issue #36) |
 | Firm per-context and per-language code rules (lookalikes, part counts, non-Latin scripts) | Q57, Q59 answers (issues #44, #46) |
-| Handle scopes beyond enterprise: free public duplicates with local priority (GPS or region); reusable postal account codes with a spending cap and owner credit | Q56 answer (issue #42); Section 9a D-2026-10-03-10 |
+| Handle scopes beyond enterprise: reusable postal account codes with a spending cap and owner credit | Q56 answer (issue #42); Section 9a D-2026-10-03-10 |
+
 | Premium short handles (pricing tiers, as ENS) | Q60 answer (issue #47) |
 | Per-scope dictionaries: a 10,000-word postal list, BIP39 for Bitcoin, the EFF long list, and lists per language | Q58 answer (issue #45); spec 003 FR-022 |
 | More name suffixes beyond `.eth` | Q52 answer (issue #38) |
