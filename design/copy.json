@@ -173,6 +173,14 @@
       "text": "Unblock",
       "source": "INFERRED 2026-10-10 (D-2026-10-10-25, RM-101; shown once RM-112 ships), for Michael's review"
     },
+    "resolve.save": {
+      "text": "Save",
+      "source": "INFERRED 2026-10-11 (D-2026-10-11-01, RM-115), for Michael's review"
+    },
+    "resolve.unsave": {
+      "text": "Remove from Saved",
+      "source": "INFERRED 2026-10-11 (D-2026-10-11-01, RM-115), for Michael's review"
+    },
     "resolve.rate_limited": {
       "text": "Wait a moment, then try again.",
       "source": "design/UX.md"
@@ -237,6 +245,14 @@
       "text": "These words stay.",
       "source": "design/UX.md"
     },
+    "minted.pick_help": {
+      "text": "These words were chosen for you. Keep them, or get different words.",
+      "source": "INFERRED 2026-10-11 (D-2026-10-11-01, RM-113), for Michael's review"
+    },
+    "minted.keep": {
+      "text": "Keep these words",
+      "source": "INFERRED 2026-10-11 (D-2026-10-11-01, RM-113), for Michael's review"
+    },
     "minted.write_check": {
       "text": "Check my handwriting",
       "source": "INFERRED 2026-10-04, for Michael's review"
@@ -276,6 +292,14 @@
     "codes.status_revoked": {
       "text": "Revoked",
       "source": "INFERRED 2026-10-04, for Michael's review"
+    },
+    "saved.title": {
+      "text": "Saved",
+      "source": "INFERRED 2026-10-11 (D-2026-10-11-01, RM-115), for Michael's review"
+    },
+    "saved.empty": {
+      "text": "Codes you save show here. They stay on this device.",
+      "source": "INFERRED 2026-10-11 (D-2026-10-11-01, RM-115), for Michael's review"
     },
     "detail.edit": {
       "text": "Edit",
@@ -408,6 +432,14 @@
     "account.unhide_all_done": {
       "text": "Everything you hid on this device shows again.",
       "source": "INFERRED 2026-10-10 (D-2026-10-10-25, RM-101), for Michael's review"
+    },
+    "account.clear_saved": {
+      "text": "Clear saved codes on this device",
+      "source": "INFERRED 2026-10-11 (D-2026-10-11-01, RM-115), for Michael's review"
+    },
+    "account.clear_saved_done": {
+      "text": "Saved codes on this device are cleared.",
+      "source": "INFERRED 2026-10-11 (D-2026-10-11-01, RM-115), for Michael's review"
     },
     "delete.title": {
       "text": "Delete your account?",
