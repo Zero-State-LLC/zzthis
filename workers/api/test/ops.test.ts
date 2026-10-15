@@ -23,7 +23,8 @@ import { fixture7Codes } from "./helpers/random.ts";
 import { makeWorld } from "./helpers/world.ts";
 
 // The report, suspension, and revoke files in workers/api/ops (spec 005
-// plan.md, Operator work, T038). The grant files are in ops-grants.test.ts.
+// plan.md, Operator work, T038). The grant files are in ops-grants.test.ts,
+// and the account deletion file is in ops-delete.test.ts.
 
 describe("ops/reports.sql", () => {
   it("lists the open reports as written, and closes nothing", async () => {
