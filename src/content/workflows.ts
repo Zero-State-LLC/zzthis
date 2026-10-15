@@ -13,7 +13,8 @@ export interface TitledImage {
 }
 
 export const coreIdentity = {
-  heading: "How it works",
+  // [MICHAEL 2026-10-14] "- field" distinguishes this from the consumer block.
+  heading: "How it works - field",
   intro:
     "Core identity: MARK a lowercase zz code → READ it by manual entry today; on-device camera recognition is planned for v1 → LINK it to a record → REPORT it in a voice handoff to another person if useful.",
   steps: [

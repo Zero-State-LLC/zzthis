@@ -357,6 +357,49 @@ kbd {
   gap: var(--space-xs);
 }
 
+.hero__code {
+  font-family: var(--font-mono);
+  font-weight: 600;
+  color: var(--color-accent-ink);
+  overflow-wrap: anywhere;
+}
+
+.hero__photos {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-xs);
+}
+
+.hero__photos img {
+  width: 100%;
+  height: auto;
+  border: var(--rule-hair) solid var(--color-rule-strong);
+}
+
+.consumer {
+  display: grid;
+  gap: var(--space-sm);
+  justify-items: start;
+}
+
+.consumer__text,
+.consumer__lead {
+  max-width: 62ch;
+  color: var(--color-ink-2);
+}
+
+.consumer__lead {
+  font-weight: 600;
+}
+
+.consumer__steps {
+  display: grid;
+  gap: var(--space-2xs);
+  margin: 0;
+  padding-inline-start: 1.25em;
+  color: var(--color-ink-2);
+}
+
 .hero__body {
   font-size: var(--text-sm);
   color: var(--color-ink-2);
