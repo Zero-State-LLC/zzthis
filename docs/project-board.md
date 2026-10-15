@@ -77,3 +77,21 @@ Replaces the 2026-10-07 map, which listed PRs #118, #123, #124, and #126 as in r
 | zzThat app parity (draft card) | Backlog | v1.1; RM-069, RM-071 | the apps start dark and use the lowercase zzThat wordmark (`docs/SPEC.md` Section 5.5); lands in the zzThat specs and apps |
 
 When repo state and Project status disagree, fix the Project field rather than changing repo truth to match the board. This file is a status mirror; the live project field is still the canonical status.
+
+### Convergence note (2026-10-15)
+
+The 2026-10-10 map above stays as the record of that day. Its #92 row said upgrades were pending. PR #175 later patched sharp and undici. `http-cache-semantics` (GHSA-ch52-4w7c-c8xp) remains, with no patched version, so #92 stays open and Ready.
+
+Live Project 25 fields were not written. The signed-in token has `gist`, `read:org`, `repo`, and `workflow`. It lacks `read:project`, so the Project API returns insufficient scopes. Set the statuses below on the board by hand. Do not create a second board. This note does not re-decide #11.
+
+| Item | Intended board status | Release / backlog | Reason |
+|---|---|---|---|
+| PR #173 | Done | docs | merged 2026-10-15 |
+| PR #174 | Done | v1.0; RM-023, RM-027 | merged 2026-10-15. The deletion script and `ops-delete.test.ts` are on main. RM-023 stays In progress because the RM-024 restore drill has not run. RM-027 stays In progress: the runbook is in OPERATIONS, the staging dry run waits on RM-012, and the account-id label waits on Michael |
+| PR #175 | Done | v1.0; #92, RM-004 | merged 2026-10-15. sharp and undici are patched. #92 stays open and Ready |
+| PR #176 | Done | v1.0; RM-013 | merged 2026-10-15. The staging file sets `ZZ_FREE_PUBLIC`, turns workers.dev and preview URLs off, and adds `staging-reset.sql`. `ZZ_DEV_AUTH` and `ZZ_MINT_ENABLED` stay false. `ZZ_BLOCKLIST` is still an empty var. RM-013 stays In progress. RM-012 stays Blocked on Danny. RM-014 and RM-015 stay Ready |
+| PR #177 | Done | v1.1; RM-127 | merged 2026-10-15. Idle expiry and revive. The 80-day clock has not started because `ZZ_FREE_PUBLIC` is still false in production |
+| PR #178 | Done | v1.1; RM-072, RM-125 | merged 2026-10-15. RM-072 is Done. RM-125 stays In progress: the server and the OpenAPI maximum of 5 are on main, and zzThat demo and cap tests still start at 3. The API pin was not bumped |
+| zzThat PR #79 | Done | v1.1; RM-075 | merged 2026-10-15. Unknown-enum half, with the unknown-key half from zzThat #58. RM-075 is Done. No store build is claimed. zzThat #54 was closed by #79 at 2026-10-15T02:21:04Z. The first store build remains the RM-075 gate. |
+
+Not moved to Done: RM-012, RM-013, RM-014, RM-015, RM-023, RM-024, RM-027, RM-076, RM-125, the privacy page, the production wordlist, and #92.

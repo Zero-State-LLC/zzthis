@@ -58,7 +58,7 @@ The server chooses the words, including for a free public code. The person does 
 2. Before the person's first create on this device, and again whenever `terms.version` changes, the client shows the Terms step (Terms, below). Create waits until it is done.
 3. The client reads `GET /v1`. If `free_public` is false, create stays on the unavailable state and the client does not show a code.
 4. Otherwise the client calls `POST /v1/codes`. The response canonical is the code the person writes down.
-5. Re-roll (`POST /v1/codes/{id}/reroll`) asks the server for different words. A new code starts with `rerolls_remaining` 5 (spec 005 FR-006, D-2026-10-13-02; 3 until the server change in RM-125 ships). Clients read the number from the response and never hard-code it. Each re-roll spends one. At 0, or after the code has been resolved, the server returns `reroll-cap` and the current words stay. The previous words are retired.
+5. Re-roll (`POST /v1/codes/{id}/reroll`) asks the server for different words. A new code starts with `rerolls_remaining` 5 (spec 005 FR-006, D-2026-10-13-02; the server change merged in PR #178). zzThat demo fixtures still start at 3. Clients read the number from the response and never hard-code it. Each re-roll spends one. At 0, or after the code has been resolved, the server returns `reroll-cap` and the current words stay. The previous words are retired.
 6. The person writes the canonical code on the thing. A photo check that the handwriting matches stays on the device.
 
 Unavailable copy:
