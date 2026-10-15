@@ -33,6 +33,8 @@ export interface LinkBlock extends TextBlock {
   linkText: string;
 }
 
+// [MICHAEL 2026-10-15] Sub-headline ends with the barcode start and end bars
+// and the QR corner squares.
 export const hero: HeroContent = {
   eyebrow: "The next evolution of the barcode",
   title: "A barcode/QR code you can write by hand",
@@ -41,7 +43,7 @@ export const hero: HeroContent = {
       "Barcodes use bars. QR codes use dots. zzThis uses everyday words. Just wrap your words in double z’s - like ",
     code: "zz-Kathy-found-dog-zz",
     after:
-      " - write it on anything with a marker, and scan it to open its digital record. The “zz” ends tell our scanner exactly where to look, just like the three corner dots on a QR code.",
+      " - write it on anything with a marker, and scan it to open its digital record. The “zz” ends tell our scanner exactly where to look, just like the start and end bars on a barcode and the three corner squares on a QR code.",
   },
   paragraph: {
     before:

@@ -149,7 +149,7 @@ describe("navigation and people", () => {
       expect(byName(name)?.bio).toBeTruthy();
     }
     expect(founder.role).toBe(
-      "Founder, new products and business model architect, project lead",
+      "Founder, new products and business models architect, project lead",
     );
     expect(founder.bio.startsWith("I “invent” business models.")).toBe(true);
     expect(founderOrigin.text).toBe(founder.bio);
