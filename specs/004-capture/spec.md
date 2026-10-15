@@ -1,7 +1,7 @@
 # Feature spec: capture by camera, typing, or voice
 
 Feature ID: 004-capture
-Status: shared-library parts implemented (the scanner rules and the classifier in `packages/zz-core`, with vectors); on-device recognition not built in this repository (zzThat, v1.1). Recognition boundary decided: on-device, engine-neutral evidence feeds the shared zz decoder. Recognition approach decided (Q18, #74): Option A on the device. Apple Vision is the iOS baseline; Android ML Kit and PP-OCR are qualification candidates under engine qualification ZZ-OCR-QUAL-001 (merged in #89); a platform without a PASS receipt ships confirm-only (D-2026-10-10-03). No cloud reader in v1. Deepened 2026-10-03: grammar path, decision-band triggers, error states, and edge cases. v1 reads English (ASCII) codes with Option A; trained/VLM readers and other scripts are v2 (issue #35).
+Status: shared-library parts implemented (the scanner rules and the classifier in `packages/zz-core`, with vectors); on-device recognition not built in this repository (zzThat, v1.1). Recognition boundary decided: on-device, engine-neutral evidence feeds the shared zz decoder. Recognition approach decided (Q18, #74): Option A on the device. Apple Vision is the iOS baseline; Android ML Kit and PP-OCR are qualification candidates under engine qualification ZZ-OCR-QUAL-001 (merged in #89); a platform without a PASS receipt ships confirm-only (D-2026-10-10-03), and v1.1 ships confirm-only on both platforms unless a signed PASS receipt exists at store submission (D-2026-10-13-05, FR-023). No cloud reader in v1. Deepened 2026-10-03: grammar path, decision-band triggers, error states, and edge cases. v1 reads English (ASCII) codes with Option A; trained/VLM readers and other scripts are v2 (issue #35).
 Phase: specify (what and why). The how is in [plan.md](plan.md).
 Constitution: [.specify/memory/constitution.md](../../.specify/memory/constitution.md).
 
@@ -62,6 +62,7 @@ Acceptance: v1 never uploads the raw photo for recognition. A server/VLM hard-ca
 | FR-014 | When a photo holds more than one code, the client lists them all and the person chooses. | INFERRED from "never silently pick the wrong one" |
 | FR-016 | For a word code, the client verifies the check word against the scope's list (spec 003 FR-022) before it sends the code. A mismatch goes to Clarify; it is never sent as is and never auto-corrected to another valid code. A `wrong-length` result goes to Abstain with `scan.wrong_length` and typed entry. It is not sent, and no word is added or dropped. | [MICHAEL 2026-10-03 #45] (Q58); `wrong-length` band INFERRED (D-2026-10-04-07) |
 | FR-017 | Creation check: after a person writes a code on an object, the client can photograph it and confirm it reads the handwriting back to the same canonical form. The check runs on the device, or online when the scope needs a uniqueness check. A failed read asks the person to rewrite or confirm. | [MICHAEL 2026-10-03 #45]; flow INFERRED |
+| FR-023 | Confirm-only mode. v1.1 ships camera capture confirm-only on both iOS and Android unless a signed ZZ-OCR-QUAL-001 PASS receipt for that platform and engine exists at store submission (RM-064 records it). In confirm-only mode a camera candidate that would be Accept becomes Clarify: the person sees the full canonical code and Confirm, and nothing resolves until they confirm. Every other camera band and every typed band is unchanged. The shared vectors add the camera Accept rows again with `confirm_only: true`, expecting Clarify. Threshold numbers are set only once the Q34 corpus exists. | D-2026-10-10-03 (ADOPTED); D-2026-10-13-05 (ACCEPTED, Danny 2026-10-14, [#170](https://github.com/Zero-State-LLC/zzthis/issues/170#issuecomment-6175348667)); RM-065 |
 | FR-015 | Before snapping is turned off for a part, the client runs the near-word check (`docs/SPEC.md` Section 2.2a G1, spec 003 FR-021). A letters-only part within edit distance 2 of a wordlist word goes to Clarify with the candidates and the part as written. The part is read as written only after the person picks that. A misread word such as `coper` is never silently kept as field data, and never silently snapped. | INFERRED, PR #43 review |
 
 ## Semantic-boundary invariant (CANON-SHADOW; issue #81)
@@ -85,7 +86,7 @@ Q37 is resolved for the prototype parameter values: camera Accept starts at 0.80
 | Retry | A marker is missing or cut off, the photo is blurred, glare hides part of the code, the code is small in the frame, or the code is skewed or seen at a steep angle | "Take another photo" with the reason: marker cut off, blur, glare, "Move closer" (the code is small in the frame), or "Try a better angle" (skew or perspective) (D-2026-10-10-23); after two retries, continue to offer rescan or typed entry. No server/cloud read exists in v1 (the server read in US3 is deferred). |
 | Abstain | Grammar fails for any reason other than a missing or cut-off marker (that is Retry), including `unsupported-script` and `reserved-symbol` (FR-012). A bare mark also lands here in v1 (FR-011), and so does a word code whose check-word verify returns `wrong-length` (FR-016) | The reason in plain words, and typed entry |
 
-Handles and field codes never reach Accept without a person confirming them (FR-010).
+Handles and field codes never reach Accept without a person confirming them (FR-010). In confirm-only mode (FR-023), no camera candidate reaches Accept without a person confirming it.
 
 ## Edge cases
 
@@ -166,6 +167,19 @@ Bands use the local verify only when step 4 ran. When the list versions differ, 
 After two retries in one scan, v1 continues to offer rescan or typed entry. `photo_reads` remains false: no raw-photo cloud/server read is enabled in v1. A future server/VLM hard-case verifier requires a separate v2 decision.
 
 The creation check (FR-017) runs the same steps on the person's photo and passes when the picked candidate's canonical form equals the minted code.
+
+### Confirm-only mode (FR-023, D-2026-10-13-05)
+
+v1.1 runs this mode on a platform unless a signed PASS receipt for that platform's engine exists at store submission. It changes only the camera column of the table above.
+
+| Band | Camera trigger in confirm-only mode | Typed trigger |
+|---|---|---|
+| Accept | Never reached from the camera | Unchanged |
+| Clarify | Every camera candidate that would be Accept under the table above, shown as the full canonical code with Confirm; plus every Clarify trigger above | Unchanged |
+| Retry | Unchanged | Unchanged |
+| Abstain | Unchanged | Unchanged |
+
+After Confirm the client resolves the code as it would have from Accept (Client read pipeline step 7). The vectors in [spec 003 `vectors.json`](../003-wordlist-checkword/vectors.json) gain one row for each camera Accept row, marked `confirm_only: true` and expecting Clarify; the existing rows keep their expectations. Adding those rows is the code pull request for RM-065, not this spec change. With a PASS receipt, that platform's camera uses the table above with the receipt's frozen thresholds.
 
 ## Readings (decided 2026-10-05 by established practice, docs/SPEC.md 9a)
 

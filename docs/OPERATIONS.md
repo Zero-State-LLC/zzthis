@@ -92,7 +92,28 @@ Each day, and whenever a report arrives during a launch:
 
 Escalation: when the queue cannot be kept within one day, or a wave of abuse arrives faster than it can be handled, turn create off for everyone by setting `ZZ_FREE_PUBLIC` to `false` (spec 005 FR-005). That is a production config change, so it needs Danny's yes (AGENTS.md), and it is the first thing to ask for. Turn it back on when the queue is clear.
 
+Shutoff triggers (D-2026-10-13-03, ACCEPTED by Danny 2026-10-14, [#170](https://github.com/Zero-State-LLC/zzthis/issues/170#issuecomment-6175348667)). Ask Danny to turn public create off when any one of these is true:
+
+| Trigger | How it is seen |
+|---|---|
+| Any report has been open more than 48 hours | `ops/report-overdue.sql` lists it, with its age |
+| More than 2,000 `free_public` codes are drawn in one UTC day | a count of `code.mint` and `code.reroll` audit events with result `ok` on `free_public` codes since 00:00 UTC (INFERRED query; the audit log is the only per-day record) |
+| The month's Cloudflare usage alert passes $50 | the usage notification set under RM-042 |
+
+Target: 30 minutes from Danny's decision to stop to new `free_public` mints refused. `ZZ_FREE_PUBLIC` is a Wrangler var, so shutoff is a production redeploy with the flag `false` through the RM-002 workflow. Existing codes keep resolving. Rehearse the redeploy on staging, time it, and record the measured time here and in the release packet before the flag turns on (RM-076). If the measured redeploy misses 30 minutes, the named upgrade is a runtime flag read from KV or D1 with a short cache (D-2026-10-10-21 item 7). _Not yet rehearsed._
+
 Before launch: rehearse steps 1 to 3 once on staging with a seeded report, and record the date here. _Not yet rehearsed._
+
+## Account deletion and access requests
+
+D-2026-10-13-08 (ACCEPTED by Danny, 2026-10-14, [#170](https://github.com/Zero-State-LLC/zzthis/issues/170#issuecomment-6175348667)); BACKLOG RM-023 and RM-027.
+
+- **Identity.** No email is stored, so an emailed request cannot be matched to an account by itself. The person signs in and quotes the account id shown on `/account/` (copy key `account.id`; the label is pending Michael's review). Act only on an id quoted this way.
+- **Deletion.** Run `ops/delete-account.sql` with that account id. It runs the spec 005 FR-023 step 2 batch, writes an `account.delete` audit event with no actor, and copies any stored Apple token into `pending_revocations` (attempts 0, due now), so the next daily run revokes it. The words of the account's codes are never issued again.
+- **Access.** Answer with that account's rows from `accounts`, `codes`, `records`, and the current record versions, as JSON. Do not include other accounts' rows or audit rows that name other accounts.
+- **Restore replay.** A D1 Time Travel restore drops rows written after the target time. Before a restore, export the `audit_events` and `pending_revocations` rows written after the target. After it, re-insert them, then run `ops/delete-account.sql` for every account whose `account.delete` event is in the export, so an erased account stays erased and its Apple token is still revoked.
+
+The privacy policy names this method (RM-026, RM-123).
 
 ## Observability
 
@@ -125,6 +146,8 @@ Apple/Google outage must fail closed for new token exchange while existing valid
 
 `ZZ_DATA_KEY` rotation (RM-021): set the old key as `ZZ_DATA_KEY_PREVIOUS` and the new key as `ZZ_DATA_KEY`, then deploy. New sealed Apple tokens name the new key. Keep `ZZ_DATA_KEY_PREVIOUS` set until no row still uses the old key id: `SELECT count(*) FROM identities WHERE apple_refresh_token_enc IS NOT NULL AND apple_refresh_token_enc NOT LIKE 'k1.<new id>.%'` and the same for `pending_revocations.token_enc` both return 0, or 30 days pass and the pending rows expire. HMAC tags are not migrated: rotation resets rate-limit windows and old not-found and nonce audit targets stop matching new ones. It also changes every Resolve `creator` value (RM-112), so creators that people blocked in the apps show again until they block them again; rotate only when the key is at risk.
 
+Rotation rule for v1.x (2026-10-14): do not rotate `ZZ_DATA_KEY` in v1.x except after a compromise. A rotation changes every Resolve `creator` value, so creators that people blocked in the apps lapse, and every `mint-subject` key (spec 005 FR-011), so daily mint caps restart for the rest of that UTC day. Record any rotation and its reason in the incident log.
+
 
 Before production define owner, storage system, rotation cadence, emergency revoke/replace procedure, key identifiers, and verification overlap. Compromise response must include invalidation scope and evidence that old material is no longer accepted.
 
@@ -138,14 +161,14 @@ Production authorization requires: numeric SLO posture, RTO/RPO, successful rest
 
 ## Recovery scope and proposed objectives (2026-10-10)
 
-Recorded in [D-2026-10-10-10](../specs/decisions-2026-10-10.md). Status: PROPOSED until Danny accepts the numbers.
+Recorded in [D-2026-10-10-10](../specs/decisions-2026-10-10.md). Status: ACCEPTED (Danny, 2026-10-14, [#170](https://github.com/Zero-State-LLC/zzthis/issues/170#issuecomment-6175348667)). The numbers count only once the seeded drill (RM-024) meets them.
 
 - **Authoritative state for v1.0.** D1 plus four secrets: `ZZ_TOKEN_SECRET`, `ZZ_DATA_KEY`, `ZZ_RECORD_SIGNING_KEY` (with its key id), and `APPLE_PRIVATE_KEY`. Configuration is in git.
 - **Out of the RPO scope while `ZZ_PHOTO_READS` is false.** R2 holds no application object, and the limiter Durable Object is non-authoritative. The production configuration test (BACKLOG RM-001) fails if photo reads are turned on, so R2 cannot silently join the scope.
 - **Secret escrow.** The operator keeps each secret in an escrow outside Cloudflare and outside this repository, names the location in a private runbook, and rehearses restore into a scratch Worker (RM-022).
-- **Deletion replay.** A Time Travel restore undoes account deletions made after the restore point. Before restoring, list accounts deleted after the target from the audit log; after restoring, re-run deletion for each (RM-023).
+- **Deletion replay.** A Time Travel restore undoes account deletions made after the restore point. Before restoring, export the audit and pending-revocation rows written after the target; after restoring, re-insert them and re-run deletion with `ops/delete-account.sql` for each deleted account (RM-023; Account deletion and access requests, above).
 - **Migration bookmark.** Every production migration prints a D1 bookmark first (RM-002).
-- **Proposed objectives.** RPO 5 minutes for D1; RTO 4 hours from incident declaration to verified service. These are conservative defaults from minute-granular Time Travel and the 1.735-second staging restore, not measured service results. They count only after the seeded drill (RM-024) meets them.
+- **Objectives.** RPO 5 minutes for D1; RTO 4 hours from incident declaration to verified service. These are conservative defaults from minute-granular Time Travel and the 1.735-second staging restore, not measured service results. They count only after the seeded drill (RM-024) meets them.
 - **Service objective.** Proposed: no public SLO for v1.0; track 30-day resolve success from Cloudflare Worker metrics and review it weekly during the first pilot (RM-043).
 - **Plan.** Production runs on Workers Paid for the 30-day recovery window and invocation limits (D-2026-10-10-09).
 - **Alerting.** A scheduled GitHub Actions probe of `GET /v1` and one synthetic public code files an issue on failure (D-2026-10-10-11, RM-040). Invocation logs stay off, pinned in configuration.
