@@ -2,7 +2,7 @@
 
 Evidence classification: **OBSERVED** for statements describing current repository code/tests; **INFERRED** for governance, production gates, or design choices accepted by the convergence intent; **SPECULATIVE** only where explicitly marked as future research.
 
-Status: current V1 model plus reserved future terms. Deepened 2026-10-10 with state ids, guards, and the Organization gap from the [architecture review](analysis-2026-10-10-architecture-review.md). The persisted schema is `workers/api/migrations/` 0001 to 0003: `0001_init.sql` (tables and audit triggers), `0002_retention_indexes.sql` (indexes for the daily retention run, RM-035), and `0003_org_bound_grants.sql` (nullable `org_id` on accounts and grants, RM-074); spec 005 Data model is the column list. Accepted and in review: migration 0004 (`accounts.last_active_at`, `codes.idle_expired_at`, RM-127, D-2026-10-13-01; PR #177) and migration 0005 (`codes.rerolls_remaining` check widened to 0 to 5, D-2026-10-13-02; PR #178). They apply in either order.
+Status: current V1 model plus reserved future terms. Deepened 2026-10-10 with state ids, guards, and the Organization gap from the [architecture review](analysis-2026-10-10-architecture-review.md). The persisted schema is `workers/api/migrations/` 0001 to 0005: `0001_init.sql` (tables and audit triggers), `0002_retention_indexes.sql` (indexes for the daily retention run, RM-035), `0003_org_bound_grants.sql` (nullable `org_id` on accounts and grants, RM-074), `0004_idle_expiry.sql` (`accounts.last_active_at`, `codes.idle_expired_at`, RM-127, D-2026-10-13-01; PR #177, merged 2026-10-15), and `0005_five_rerolls.sql` (`codes.rerolls_remaining` check widened to 0 to 5, D-2026-10-13-02; PR #178, merged 2026-10-15). Spec 005 Data model is the column list. 0004 and 0005 apply in either order.
 
 ## Ubiquitous language
 
@@ -21,7 +21,7 @@ Status: current V1 model plus reserved future terms. Deepened 2026-10-10 with st
 
 ## V1 entities (OBSERVED)
 
-- **Account**: authenticated subject; no email or name stored; optional operator-set `org_id`; `last_active_at` from sign-in and refresh (accepted, RM-127).
+- **Account**: authenticated subject; no email or name stored; optional operator-set `org_id`; `last_active_at` from sign-in and refresh (PR #177, RM-127).
 - **Identity**: provider and subject bound to an account; holds the sealed Apple refresh token for deletion-time revocation.
 - **Scope**: one of three fixed values; not an entity table.
 - **Code**: public identifier with lifecycle state, scope, kind (`plain`, `handle`), list version, and owner.
@@ -41,7 +41,7 @@ Status: current V1 model plus reserved future terms. Deepened 2026-10-10 with st
 | C1 | active | `status = 'active'`, `expires_at` null or in the future |
 | C2 | used | `status = 'used'` |
 | C3 | expired | Derived at read time: `status = 'active'` and `expires_at <= now` (`workers/api/src/codes/view.ts:21-28`); never written |
-| C3a | idle-expired (INFERRED: accepted 2026-10-14, not built) | `status = 'active'` and `idle_expired_at` set; `free_public` only. Read as `expired` by the owner list and as not-found by the public (spec 005 FR-036, D-2026-10-13-01) |
+| C3a | idle-expired (OBSERVED: PR #177, merged 2026-10-15) | `status = 'active'` and `idle_expired_at` set; `free_public` only. Read as `expired` by the owner list and as not-found by the public (spec 005 FR-036, D-2026-10-13-01) |
 | C4 | revoked | `status = 'revoked'` with `revoked_reason` |
 
 | Transition | Trigger | Guard | Effects |

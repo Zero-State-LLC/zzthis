@@ -1,6 +1,6 @@
 # zzThis delivery backlog
 
-Status: the repository copy of the kanban for the [release roadmap](RELEASE-ROADMAP.md), created 2026-10-10. The live board is the [zzThis + zzThat project](https://github.com/orgs/Zero-State-LLC/projects/25); [docs/project-board.md](../docs/project-board.md) defines how issue and PR truth maps to board status. When this file and an issue disagree, the issue and its PR evidence win, and this file is corrected.
+Status: the repository copy of the kanban for the [release roadmap](RELEASE-ROADMAP.md), created 2026-10-10. The live board is the [zzThis + zzThat project](https://github.com/orgs/Zero-State-LLC/projects/25); [docs/project-board.md](../docs/project-board.md) defines how issue and PR truth maps to board status. When this file and an issue disagree, the issue and its PR evidence win, and this file is corrected. Reconciled 2026-10-15 to pull requests #173 to #178 and to zzThat #79. Live Project 25 Status fields were not written in that pass: the token lacks the `read:project` scope. Intended statuses are in [docs/project-board.md](../docs/project-board.md).
 
 Spec Kit task lists (`specs/NNN-*/tasks.md`) keep their T-numbers and history. This backlog adds cross-spec items with stable `RM-` ids. An id is never reused; a finished or dropped item stays with its final status.
 
@@ -33,6 +33,13 @@ Human-gated items (Principle VIII) name Danny or Michael as owner. An agent may 
 | PR [#127](https://github.com/Zero-State-LLC/zzthis/pull/127) location | R-B17 |
 | [#116](https://github.com/Zero-State-LLC/zzthis/issues/116), [#117](https://github.com/Zero-State-LLC/zzthis/issues/117), [#114](https://github.com/Zero-State-LLC/zzthis/issues/114), [#7](https://github.com/Zero-State-LLC/zzthis/issues/7), [#90](https://github.com/Zero-State-LLC/zzthis/issues/90) site content | RM-044 |
 | [#11](https://github.com/Zero-State-LLC/zzthis/issues/11), [#8](https://github.com/Zero-State-LLC/zzthis/issues/8) xTechSearch | RM-047 (external, not a release item) |
+| PR [#173](https://github.com/Zero-State-LLC/zzthis/pull/173) docs reconciliation | merged 2026-10-15 |
+| PR [#174](https://github.com/Zero-State-LLC/zzthis/pull/174) operator account deletion | merged 2026-10-15; RM-023 script and tests; RM-027 runbook. The RM-024 drill and the RM-027 staging dry run stay open |
+| PR [#175](https://github.com/Zero-State-LLC/zzthis/pull/175) dev sharp and undici | merged 2026-10-15; RM-004 partial. #92 stays open: `http-cache-semantics` has no patched version |
+| PR [#176](https://github.com/Zero-State-LLC/zzthis/pull/176) staging flags | merged 2026-10-15; RM-013 repo half. RM-012 stays blocked on Danny |
+| PR [#177](https://github.com/Zero-State-LLC/zzthis/pull/177) idle expiry | merged 2026-10-15; RM-127 Done |
+| PR [#178](https://github.com/Zero-State-LLC/zzthis/pull/178) five re-rolls and daily mint cap | merged 2026-10-15; RM-072 Done; RM-125 server only. zzThat cap tests still start at 3 |
+| zzThat PR [#79](https://github.com/Zero-State-LLC/zzthat/pull/79) unknown-enum tolerance | merged 2026-10-15; RM-075 Done. No store build is claimed |
 
 ## Issues filed 2026-10-10
 
@@ -150,10 +157,11 @@ RM-050 production resources ─> RM-053 web build ─> RM-051 deploy ─> RM-052
 
 ### RM-013 Staging configuration that can exercise writes
 
-- Release v1.0 · P0 · Ready (applies after RM-012) · Bundle B4 · Gate G2 · Owner: API maintainer
+- Release v1.0 · P0 · In progress (repo half merged in PR #176, 2026-10-15; discovery evidence waits on RM-012) · Bundle B4 · Gate G2 · Owner: API maintainer
 - **Problem.** Staging has mint, developer sign-in, and providers off, so no write path has run on Cloudflare.
 - **Scope.** In `wrangler.staging.toml`, staging only: `ZZ_DEV_AUTH=true`, `ZZ_MINT_ENABLED=true`, `ZZ_FREE_PUBLIC=true` (the web client mints only `free_public`), `fixture-7`, `workers_dev = false`, `preview_urls = false`, and `ZZ_BLOCKLIST` moved from `[vars]` to a secret so staging matches the production binding type. Add `workers/api/scripts/staging-reset.sql`: it drops the two audit triggers, deletes every application table, and recreates the triggers; the staging workflow runs it only against `zzthis-staging`. Only after RM-012, never on the public workers.dev host (D-2026-10-13-06).
 - **Acceptance.** Discovery on the staging host lists `dev` and `free_public: true`; the workers.dev `/v1` no longer answers 200; a fresh reset leaves every application table empty and both audit triggers in place.
+- **Evidence.** PR #176 set `ZZ_FREE_PUBLIC=true`, `workers_dev = false`, and `preview_urls = false`, and added `workers/api/scripts/staging-reset.sql`. `ZZ_DEV_AUTH` and `ZZ_MINT_ENABLED` stay false. `ZZ_BLOCKLIST` is still an empty `[vars]` value, not a secret. The staging workflow does not run the reset script. Discovery on the host waits on RM-012.
 - **Governing.** spec 005 FR-022 (developer sign-in is allowed outside production), FR-029, Environment (Staging values); D-2026-10-10-07, D-2026-10-13-06.
 
 ### RM-014 Run the end-to-end suite against staging
@@ -166,7 +174,7 @@ RM-050 production resources ─> RM-053 web build ─> RM-051 deploy ─> RM-052
 ### RM-015 API smoke and rate-limit verification script
 
 - Release v1.0 · P0 · Ready (after RM-013) · Bundle B4 · Gate G2 · Journeys J1, J2, J6
-- **Scope.** A script that calls every OpenAPI operation once with valid input and checks status and schema, then drives each rate-limit row to its first 429 with bounded traffic, including the daily mint cap once RM-072 ships, and records p50 and p95 latency for resolve, mint, and token. The staging reset does not clear limiter windows, so this runs after RM-014 (D-2026-10-13-06).
+- **Scope.** A script that calls every OpenAPI operation once with valid input and checks status and schema, then drives each rate-limit row to its first 429 with bounded traffic, including the daily mint cap (RM-072, merged in PR #178), and records p50 and p95 latency for resolve, mint, and token. The staging reset does not clear limiter windows, so this runs after RM-014 (D-2026-10-13-06).
 - **Acceptance.** Every row in the spec 005 Rate limits table returns 429 at its limit plus one with `Retry-After`; the report is stored in the release packet.
 - **Governing.** spec 005 FR-011, Rate limits.
 
@@ -210,10 +218,10 @@ RM-050 production resources ─> RM-053 web build ─> RM-051 deploy ─> RM-052
 
 ### RM-023 Restore runbook with deletion replay
 
-- Release v1.0 · P0 · Ready · Bundle B4 · Gate G5
+- Release v1.0 · P0 · In progress (script and tests merged in PR #174, 2026-10-15; the RM-024 drill is still open) · Bundle B4 · Gate G5
 - **Problem.** A D1 Time Travel restore undoes account deletions made after the restore point, so erased text and Apple tokens would return. It also drops `pending_revocations` rows written after the bookmark. `DELETE /v1/me` needs the account's own token, so the operator had no way to replay a deletion.
 - **Scope.** Add `ops/delete-account.sql` (D-2026-10-13-08): the FR-023 step 2 batch, an `account.delete` audit event with no actor, and a copy of any stored Apple token into `pending_revocations` (attempts 0, due now), so the daily run revokes it. Before a restore, export the `audit_events` and `pending_revocations` rows written after the target time; after the restore, re-insert them and run `ops/delete-account.sql` for every account whose `account.delete` event is in the export. Capture a bookmark before every migration (RM-002).
-- **Acceptance.** Tests in `workers/api/test/ops.test.ts`: the script revokes the account's codes, erases its versions, deletes its identities, grants, and refresh tokens, sets `deleted_at`, writes `account.delete` with no actor, and queues the Apple token. The drill in RM-024 includes a deletion after the bookmark, and the account stays deleted, with its audit and pending rows back, after restore and replay.
+- **Acceptance.** Tests in `workers/api/test/ops-delete.test.ts` (PR #174): the script revokes the account's codes, erases its versions, deletes its identities, grants, and refresh tokens, sets `deleted_at`, writes `account.delete` with no actor, and queues the Apple token. The drill in RM-024 includes a deletion after the bookmark, and the account stays deleted, with its audit and pending rows back, after restore and replay. That drill has not run.
 - **Governing.** D-2026-10-10-10; D-2026-10-13-08 (ACCEPTED, Danny 2026-10-14, [#170](https://github.com/Zero-State-LLC/zzthis/issues/170#issuecomment-6175348667)); spec 005 FR-023; `docs/DATA-LIFECYCLE.md` Deletion evidence; OPERATIONS, Account deletion and access requests.
 
 ### RM-024 Recovery drill and objectives
@@ -239,7 +247,7 @@ RM-050 production resources ─> RM-053 web build ─> RM-051 deploy ─> RM-052
 
 ### RM-027 Data-subject request runbook
 
-- Release v1.0 · P1 · Ready · Bundle B4 · Owner: Danny
+- Release v1.0 · P1 · In progress (runbook merged in PR #174, 2026-10-15; the staging dry run waits on RM-012; the account-id label waits on Michael) · Bundle B4 · Owner: Danny
 - **Scope.** Steps for access and deletion requests received by email (D-2026-10-13-08). No email is stored, so the identity check is: the person signs in and quotes the account id shown on `/account/` (copy key `account.id`, pending Michael's review). A deletion runs `ops/delete-account.sql` (RM-023). An access request is answered with that account's rows from `accounts`, `codes`, `records`, and the current record versions, as JSON. Complete the open rows of `docs/DATA-LIFECYCLE.md` (tombstone retention, audit retention, export). The privacy policy names this method (RM-026, RM-123).
 - **Acceptance.** A staging dry run answers an access request for a seeded account with the JSON above, and deletes a seeded account with `ops/delete-account.sql`.
 - **Governing.** D-2026-10-10-16; D-2026-10-13-08 (ACCEPTED, Danny 2026-10-14, [#170](https://github.com/Zero-State-LLC/zzthis/issues/170#issuecomment-6175348667)); OPERATIONS, Account deletion and access requests.
@@ -496,7 +504,7 @@ RM-050 production resources ─> RM-053 web build ─> RM-051 deploy ─> RM-052
 
 ### RM-072 Durable-key daily mint cap for free_public
 
-- Release v1.1 · P0 · Ready · Bundle B9 · Owner: kneelbeforez0D
+- Release v1.1 · P0 · Done (PR #178 merged 2026-10-15; `workers/api/test/mint-cap.test.ts`) · Bundle B9 · Owner: kneelbeforez0D
 - **Problem.** A cap keyed to the account id resets when a person deletes and recreates the account, so it does not bound one person's mints.
 - **Scope.** Spec 005 FR-011 as amended (D-2026-10-13-03). Window: the UTC day. Subject key: the HMAC of `provider:provider_subject` under the derived HMAC key with the label `mint-subject`, so the raw subject is never stored and the key survives account deletion for the window only. Each `free_public` mint and each `free_public` re-roll counts once against the subject (30 per UTC day) and once against the RM-030 IP subject (60 per UTC day, /64 for IPv6, address for IPv4); this is the one signed-in call that also counts against an IP row. Over either cap is 429 `rate-limited`, the existing contract-1 body, with `Retry-After` until the next UTC day.
 - **Acceptance.** Tests: 30 mints and re-rolls in a UTC day succeed and the 31st is 429; mint to the cap, delete the account, sign in again with the same provider subject, and the next mint is 429; a re-roll counts like a mint; two accounts from one /64 share the 60 IP cap; the next UTC day allows mints again; `enterprise` and `logistics` mints do not count; no raw provider subject appears in storage or logs.
@@ -504,9 +512,10 @@ RM-050 production resources ─> RM-053 web build ─> RM-051 deploy ─> RM-052
 
 ### RM-075 Tolerant-reader verification in zzThat (external)
 
-- Release v1.1 · P0 for the unknown-enum half, a gate on the first store build (D-2026-10-13-09); the unknown-key half is Done (zzThat #58, which cleared RM-112) · In progress · Bundle B3 · Owner: kneelbeforez0D
-- **Scope.** The unknown-enum half (zzThat #54, zzThat T106): Android sets the generator's `enumUnknownDefaultCase=true`; iOS decodes an unknown value to a fallback case. Until it passes, no new value is added to any existing response enum within contract 1 (`docs/CONTRACT-EVOLUTION.md`). The gate is on the first store build, not on any server change.
+- Release v1.1 · P0 · Done (unknown-key half: zzThat #58; unknown-enum half: zzThat #79, T106, merged 2026-10-15) · Bundle B3 · Owner: kneelbeforez0D · The first store build has not happened (D-2026-10-13-09). zzThat #54 stays open.
+- **Scope.** The unknown-enum half (zzThat #54, zzThat T106) landed in zzThat #79: Android sets the generator's `enumUnknownDefaultCase=true`; iOS decodes an unknown value to a fallback case. The gate remains the first store build, not a server change. Until that build, no new value is added to any existing response enum within contract 1 (`docs/CONTRACT-EVOLUTION.md`).
 - **Acceptance.** Generated clients ignore unknown keys and tolerate unknown enum values, shown by a contract test with an extra field and an unknown value in each response enum, on both apps, before the first store build.
+- **Evidence.** `TolerantReaderTest` (Android) and `TolerantReaderTests` (iOS) cover that contract test. T095 and T106 are checked. No store build is claimed.
 - **Governing.** D-2026-10-10-12; D-2026-10-13-09 (ACCEPTED, Danny 2026-10-14, [#170](https://github.com/Zero-State-LLC/zzthis/issues/170#issuecomment-6175348667)).
 
 ### RM-076 Public community codes review
@@ -613,7 +622,7 @@ RM-050 production resources ─> RM-053 web build ─> RM-051 deploy ─> RM-052
 ### RM-113 Suggested-word picker on Create (server-chosen codes)
 
 - Release v1.1 · P1 · Done (zzThat #65 merged 2026-10-14; RM-125 extends it) · Bundle B3 · Owner: kneelbeforez0D · External (zzThat; web create may mirror)
-- **Scope.** Option (C) from D-2026-10-11-01. Create keeps `POST /v1/codes` and re-roll: the server still chooses words and the check word (zzThat FR-017, ZQ11). The UI offers a clearer way to pick among suggested or re-rolled server words (for example show the candidate set and "Get different words") so creators feel they chose a code without sending a person-written string. No wire change. The cap was 3 re-rolls; RM-125 raises it to 5 (spec 005 FR-006, D-2026-10-13-02).
+- **Scope.** Option (C) from D-2026-10-11-01. Create keeps `POST /v1/codes` and re-roll: the server still chooses words and the check word (zzThat FR-017, ZQ11). The UI offers a clearer way to pick among suggested or re-rolled server words (for example show the candidate set and "Get different words") so creators feel they chose a code without sending a person-written string. No wire change. The cap was 3 re-rolls; RM-125 raised it to 5 on the server in PR #178 (spec 005 FR-006, D-2026-10-13-02). zzThat demo fixtures still start at 3.
 - **Acceptance.** zzThat (and web if create is shown) tests: mint still sends no canonical; re-roll to cap; picker copy uses `design/copy.json` keys; Unavailable when `free_public` is false.
 - **Governing.** D-2026-10-11-01; D-2026-10-10-21.
 
@@ -700,8 +709,8 @@ Added by #164. Scope and acceptance for RM-120, RM-124, and RM-125 follow the re
 | RM-122 | v1.1 | P1 | Backlog | zzsupport@zer0state.com in app, listings, policy, site footer (mailbox first) | D-2026-10-11-04 |
 | RM-123 | v1.1 | P0 | Backlog | Publish privacy policy (answers 1-19) at proposed zzthat.com/privacy | D-2026-10-11-08, -09; zzThat #47 |
 | RM-124 | v1.1 | P0 | Backlog; draft in zzThat #72; wording pending Michael | Terms of Use and content policy draft for Michael's review; client-only acceptance | D-2026-10-11-10; D-2026-10-11-15; D-2026-10-13-01, -04 |
-| RM-125 | v1.1 | P1 | Ready | Create: 5 re-rolls per creation, two-word codes only, server daily cap (RM-072), no phone numbers; length choice moves to v2.0 | D-2026-10-11-11, -12; D-2026-10-13-02; extends RM-113 |
-| RM-127 | v1.1 | P0 | Ready | Idle expiry and revive (server) | D-2026-10-13-01; D-2026-10-11-15 option B; spec 005 FR-036 |
+| RM-125 | v1.1 | P1 | In progress (server and OpenAPI maximum 5 in PR #178; zzThat cap tests still start at 3) | Create: 5 re-rolls per creation, two-word codes only, server daily cap (RM-072, Done), no phone numbers; length choice moves to v2.0 | D-2026-10-11-11, -12; D-2026-10-13-02; extends RM-113 |
+| RM-127 | v1.1 | P0 | Done (PR #177) | Idle expiry and revive (server). The 80-day clock has not started: `ZZ_FREE_PUBLIC` is still false in production | D-2026-10-13-01; D-2026-10-11-15 option B; spec 005 FR-036 |
 
 ### RM-118 iOS Sign in with Apple beside Google (external)
 
@@ -754,9 +763,10 @@ Added by #164. Scope and acceptance for RM-120, RM-124, and RM-125 follow the re
 
 ### RM-125 Create: five re-rolls on two-word codes
 
-- Release v1.1 · P1 · Ready · Bundle B9 · Owner: kneelbeforez0D · Extends RM-113
-- **Scope.** A new plain code gets `rerolls_remaining` 5, six candidates per creation (spec 005 FR-006); the OpenAPI `rerolls_remaining` `maximum` becomes 5 in the same pull request, a narrow D-2026-10-10-12 exception (`docs/CONTRACT-EVOLUTION.md`). Two-word codes only: one-word codes are not issued in contract 1, and the length choice (including three words) moves to v2.0 with RM-116 (spec 003, Code length). Rolls are also capped per day on the server (RM-072). No phone numbers in codes: filter 3 drops number words (RM-020). zzThat's picker gets five rolls with no app change.
+- Release v1.1 · P1 · In progress (server and OpenAPI maximum 5 merged in PR #178, 2026-10-15; zzThat demo and cap tests still start at 3) · Bundle B9 · Owner: kneelbeforez0D · Extends RM-113
+- **Scope.** A new plain code gets `rerolls_remaining` 5, six candidates per creation (spec 005 FR-006); the OpenAPI `rerolls_remaining` `maximum` became 5 in PR #178, a narrow D-2026-10-10-12 exception (`docs/CONTRACT-EVOLUTION.md`). Two-word codes only: one-word codes are not issued in contract 1, and the length choice (including three words) moves to v2.0 with RM-116 (spec 003, Code length). Rolls are also capped per day on the server (RM-072, Done in the same pull request). No phone numbers in codes: filter 3 drops number words (RM-020). zzThat's picker gets five rolls with no app change when it reads the response count.
 - **Acceptance.** Worker tests: a new plain code has `rerolls_remaining` 5; five re-rolls succeed and the sixth is `reroll-cap`; a handle still has 0. The OpenAPI test and both generated clients accept 5. zzThat's re-roll cap test passes at 5.
+- **Evidence.** The worker tests and the OpenAPI maximum are in PR #178. Neither generated client enforces `maximum` (spec 005 FR-006). zzThat `DemoAPITests`, `DemoApiTest`, and `PickerFlowTest` still start at 3. `AppFlowTest.rerollDropsTheOldWordsAndStopsAtTheCap` stops at 0, so a live 5 decodes. The API pin stays `fd99d276e4546d2ebf9d23b5f6de85b08bad56c4`. The phone-number filter stays RM-020, blocked on Michael.
 - **Governing.** D-2026-10-11-11, D-2026-10-11-12; D-2026-10-13-02 (ACCEPTED); spec 005 FR-006. Pending Michael: hearing why one-word codes are out.
 
 ### RM-126 Links and zzPages safety requirements
@@ -768,7 +778,7 @@ Added by #164. Scope and acceptance for RM-120, RM-124, and RM-125 follow the re
 
 ### RM-127 Idle expiry and revive (server)
 
-- Release v1.1 · P0 · Ready · Bundle B9 · Owner: kneelbeforez0D · Must ship within 80 days of `ZZ_FREE_PUBLIC` turning on in production
+- Release v1.1 · P0 · Done (PR #177 merged 2026-10-15; `workers/api/test/idle.test.ts`, `workers/api/test/revive.test.ts`) · Bundle B9 · Owner: kneelbeforez0D · Must ship within 80 days of `ZZ_FREE_PUBLIC` turning on in production. That flag is still false, so the clock has not started.
 - **Scope.** Spec 005 FR-036 (D-2026-10-13-01). `free_public` codes only. Migration 0004 adds `accounts.last_active_at` (backfilled to the migration time) and `codes.idle_expired_at`, with their indexes. `POST /v1/auth/token` and `POST /v1/auth/refresh` set `last_active_at` at most once per UTC day and, unless the account is suspended, clear `idle_expired_at` on all the owner's codes in the same batch, with one `code.revive` event each. The FR-026 daily run sets `idle_expired_at` on each active `free_public` code whose owner's `last_active_at` is more than 90 days old, in batches of 500 rows, at most 10 batches per run, with one `code.expire` event per code, and purges cache keys as FR-023 step 3 does. Re-roll refuses an idle-expired code. A code is never reissued. No wire change: the public answer is the one not-found body and the owner sees `expired`.
 - **Acceptance.** Worker tests: 90 days idle plus one daily run gives a public 404 (the one not-found body) and `expired` for the owner in `GET /v1/me/codes`; a refresh (and a sign-in) revives the codes, with one `code.revive` event each; another person's scan of the code changes nothing (no `last_active_at` change, no revive); `enterprise` codes never idle-expire; a suspended owner is not revived; re-roll of an idle-expired code is `reroll-cap`; a run over 5,000 eligible codes stops at 10 batches and the next run continues.
 - **Governing.** D-2026-10-13-01 (ACCEPTED, Danny 2026-10-14, [#170](https://github.com/Zero-State-LLC/zzthis/issues/170#issuecomment-6175348667)); D-2026-10-11-15 option B (ACCEPTED); spec 005 FR-009, FR-026, FR-036; Q36; DOMAIN-MODEL C3a; `docs/DATA-LIFECYCLE.md`; `docs/THREAT-MODEL.md`.

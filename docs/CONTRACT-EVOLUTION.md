@@ -38,7 +38,7 @@ Status: ACCEPTED (Danny, 2026-10-09 PT) as a named exception to D-2026-10-10-12.
 Status: ACCEPTED (Danny, 2026-10-14, [#170](https://github.com/Zero-State-LLC/zzthis/issues/170#issuecomment-6175348667)) as a narrow exception to D-2026-10-10-12.
 
 - A new plain code gets `rerolls_remaining` 5 instead of 3 (spec 005 FR-006), so one creation offers six candidates. This is a server rule change.
-- The OpenAPI `rerolls_remaining` `maximum` changes from 3 to 5 in the same code pull request (RM-125). Neither generated client enforces `maximum`, so shipped apps keep working. No field, route, error, or enum value is added.
+- The OpenAPI `rerolls_remaining` `maximum` changed from 3 to 5 in PR #178 (RM-125). Neither generated client enforces `maximum`, so shipped apps keep working. No field, route, error, or enum value is added. zzThat demo and cap tests still start at 3, and the API pin was not bumped.
 - Word count does not change in contract 1: one-word and three-word codes stay `wrong-length`. Three-word codes come with contract 2 at v2.0 (spec 003, Code length).
 
 ## Rule until tolerant readers pass (2026-10-14, D-2026-10-13-09)
@@ -47,6 +47,7 @@ Status: ACCEPTED (Danny, 2026-10-14, [#170](https://github.com/Zero-State-LLC/zz
 
 - No new value is added to any existing response enum within contract 1 until zzThat's unknown-enum tolerance passes on both apps (RM-075, zzThat issue #54). Android sets the generator's `enumUnknownDefaultCase=true`; iOS decodes an unknown value to a fallback case.
 - That tolerance is a gate on the first store build, not on any server change: once an app version is in a store, any later enum value would break that cohort.
+- Evidence 2026-10-15: zzThat #79 merged the unknown-enum decoder (T106) on both platforms. The first store build has not happened, and zzThat #54 stays open.
 - Idle expiry (spec 005 FR-036) follows this rule: it reuses the existing `expired` status and adds no enum value.
 
 ## Semantic-profile implications
