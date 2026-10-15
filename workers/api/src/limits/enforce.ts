@@ -1,10 +1,11 @@
 import type { AppContext } from "../http/context.ts";
-import { ApiError, notReady } from "../http/respond.ts";
+import { ApiError, notReady, unauthorized } from "../http/respond.ts";
 import { hmacTag } from "../lib/crypto.ts";
 import type { Take } from "./limiter.ts";
 import {
   CALLER_RULES,
   IP_RULES,
+  MINT_DAY_RULES,
   USER_RULES,
   type CallerRule,
   type IpRule,
@@ -139,6 +140,50 @@ export async function limitCaller(
   } else {
     await take(c, rule, `user:${accountId}`, limits.user);
   }
+}
+
+// D-2026-10-13-03: the mint subject is an HMAC of the identity's provider
+// and provider subject, never the account id, so deleting the account and
+// signing in again with the same provider subject keeps the day's count.
+// Nothing outlives the window: the limiter clears a finished window.
+//
+// Sign-in creates each account with exactly one identity and nothing links
+// a second, so there is one row. If an account ever had more, the oldest
+// (then the lowest id) is the subject, so the choice never changes between
+// calls. No row means the account was deleted after requireActive read it:
+// 401, as RM-033 answers a deletion that lands during a request.
+async function mintSubject(c: AppContext, accountId: string): Promise<string> {
+  const row = await c.env.ZZ_DB.prepare(
+    "SELECT provider, provider_subject FROM identities WHERE account_id = ? ORDER BY created_at, id LIMIT 1",
+  )
+    .bind(accountId)
+    .first<{ provider: string; provider_subject: string }>();
+  if (row === null) throw unauthorized();
+  const tag = await hmacTag(
+    c.get("settings").dataKeys,
+    "mint-subject",
+    `${row.provider}:${row.provider_subject}`,
+  );
+  return `subject:${tag}`;
+}
+
+// D-2026-10-13-03 (RM-072, FR-011 amended): one free_public draw, a mint or
+// a re-roll, counted against the mint subject and then the IP subject for
+// the UTC day. This is the one signed-in call that also counts against an
+// IP row. The subject goes first, so a caller over their own cap does not
+// spend the shared IP count. Over either limit is the FR-011 429, with
+// Retry-After running to the next UTC midnight.
+export async function limitFreePublicDraw(
+  c: AppContext,
+  accountId: string,
+): Promise<void> {
+  await take(
+    c,
+    "mint-day",
+    await mintSubject(c, accountId),
+    MINT_DAY_RULES.subject,
+  );
+  await take(c, "mint-day", await ipSubject(c), MINT_DAY_RULES.ip);
 }
 
 // D-2026-10-05-05: a suspended account's refusals are audited once per

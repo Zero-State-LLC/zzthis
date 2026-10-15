@@ -66,9 +66,9 @@ test("sign in, create, re-roll to the cap, resolve, edit, revoke, report, delete
   await expect(minted).toHaveText(/^zz-[a-z]+-[a-z]+-[a-z]+-zz$/);
   await expect(page.getByText("Check word", { exact: true })).toBeVisible();
 
-  // Re-roll to the cap: three times, then the words stay.
+  // Re-roll to the cap: five times (D-2026-10-13-02), then the words stay.
   const reroll = page.getByRole("button", { name: "Get different words" });
-  for (let i = 0; i < 3; i += 1) {
+  for (let i = 0; i < 5; i += 1) {
     const before = (await minted.textContent()) as string;
     await reroll.click();
     await expect(minted).not.toHaveText(before);

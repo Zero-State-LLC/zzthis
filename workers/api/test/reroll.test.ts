@@ -12,6 +12,8 @@ import { scripted } from "./helpers/random.ts";
 import { expectMatchesSchema } from "./helpers/schema.ts";
 import { makeWorld, type World } from "./helpers/world.ts";
 
+const HOUR = 60 * 60 * 1000;
+
 const FIXTURE_7 = [
   "copper",
   "lantern",
@@ -49,7 +51,7 @@ async function codesOf(recordId: string) {
 }
 
 describe("POST /v1/codes/{id}/reroll (T009)", () => {
-  it("re-rolls three times, then reroll-cap, and the retired codes never come back", async () => {
+  it("re-rolls five times, so the sixth candidate is the last, then reroll-cap, and the retired codes never come back", async () => {
     const values: number[] = [];
     const source = scripted();
     const w = await makeWorld({ random: () => values.shift() ?? source() });
@@ -57,7 +59,9 @@ describe("POST /v1/codes/{id}/reroll (T009)", () => {
     const first = await mint(w, alice.access);
     const retired: string[] = [];
     let current: MintedCode = first;
-    for (const remaining of [2, 1, 0]) {
+    // D-2026-10-13-02 (FR-006): a new plain code has five re-rolls.
+    expect(first.rerolls_remaining).toBe(5);
+    for (const remaining of [4, 3, 2, 1, 0]) {
       const response = await reroll(w, alice.access, current.id);
       const next = await expectMatchesSchema<MintedCode>(
         response,
@@ -71,6 +75,8 @@ describe("POST /v1/codes/{id}/reroll (T009)", () => {
       retired.push(current.canonical);
       current = next;
     }
+    // Six candidates per creation: the first code and five re-rolls.
+    expect(await codesOf(first.record_id)).toHaveLength(6);
     const rows = await count(w, "SELECT count(*) AS n FROM codes");
     const capped = await reroll(w, alice.access, current.id);
     expect(await expectMatchesSchema(capped, "rerollCode", 403)).toEqual({
@@ -91,10 +97,14 @@ describe("POST /v1/codes/{id}/reroll (T009)", () => {
     for (const canonical of retired) {
       expect((await call(w, "GET", resolvePath(canonical))).status).toBe(404);
     }
-    // The issuer draws a retired code first; the server draws again.
+    // The issuer draws a retired code first; the server draws again. A new
+    // hour, so the hourly mint row (10, shared with re-roll) has room.
+    // An access token lasts 900 seconds, so sign in again.
+    w.clock.advance(HOUR);
+    const later = await signIn(w);
     for (const canonical of retired) {
       values.push(...indexes(canonical));
-      const fresh = await mint(w, alice.access);
+      const fresh = await mint(w, later.access);
       expect(retired).not.toContain(fresh.canonical);
     }
   });

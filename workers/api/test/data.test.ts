@@ -1,3 +1,4 @@
+import { applyD1Migrations, reset } from "cloudflare:test";
 import { env } from "cloudflare:workers";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { call, count, mint, mintRequest, signIn } from "./helpers/http.ts";
@@ -50,11 +51,12 @@ const TABLES: Record<string, string[]> = {
     "record_id",
     "owner_id",
     "first_resolved_at",
-    "rerolls_remaining",
     "replaced_by",
     "write_id",
     "created_at",
     "idle_expired_at",
+    // Migration 0005 swapped this column to widen its CHECK, so it is last.
+    "rerolls_remaining",
   ],
   records: [
     "id",
@@ -167,6 +169,66 @@ describe("migration 0001 (T004)", () => {
         .bind(alice.accountId)
         .run(),
     ).rejects.toThrow(/CHECK/);
+  });
+});
+
+describe("migration 0005 (D-2026-10-13-02)", () => {
+  it("allows rerolls_remaining 0 to 5 and refuses 6, a negative count, or null", async () => {
+    const w = await makeWorld();
+    const alice = await signIn(w);
+    const code = await mint(w, alice.access);
+    const set = (value: number | null) =>
+      env.ZZ_DB.prepare("UPDATE codes SET rerolls_remaining = ? WHERE id = ?")
+        .bind(value, code.id)
+        .run();
+    for (const value of [0, 5]) await set(value);
+    await expect(set(6)).rejects.toThrow(/CHECK/);
+    await expect(set(-1)).rejects.toThrow(/CHECK/);
+    await expect(set(null)).rejects.toThrow(/NOT NULL/);
+  });
+
+  it("keeps every existing code's count", async () => {
+    await reset();
+    await applyD1Migrations(
+      env.ZZ_DB,
+      env.TEST_MIGRATIONS.filter((m) => !m.name.startsWith("0005")),
+    );
+    const w = await makeWorld();
+    const acme = await signIn(w, "acme");
+    await env.ZZ_DB.prepare(
+      "INSERT INTO grants (id, subject_id, scope, role, expires_at) VALUES ('g', ?, 'enterprise', 'issuer', NULL)",
+    )
+      .bind(acme.accountId)
+      .run();
+    // Before 0005 only 0 to 3 fit, and only a handle (0) mints.
+    const handle = await mint(w, acme.access, {
+      scope: "enterprise",
+      kind: "handle",
+      handle: "@agentsmith",
+    });
+    const handle2 = await mint(w, acme.access, {
+      scope: "enterprise",
+      kind: "handle",
+      handle: "@agentjones",
+    });
+    const set = (value: number) =>
+      env.ZZ_DB.prepare("UPDATE codes SET rerolls_remaining = ? WHERE id = ?")
+        .bind(value, handle.id)
+        .run();
+    await expect(set(4)).rejects.toThrow(/CHECK/);
+    await set(3);
+    await applyD1Migrations(env.ZZ_DB, env.TEST_MIGRATIONS);
+    const rows = await env.ZZ_DB.prepare(
+      "SELECT id, rerolls_remaining FROM codes ORDER BY rerolls_remaining",
+    ).all<{ id: string; rerolls_remaining: number }>();
+    expect(rows.results).toEqual([
+      { id: handle2.id, rerolls_remaining: 0 },
+      { id: handle.id, rerolls_remaining: 3 },
+    ]);
+    const columns = await env.ZZ_DB.prepare("PRAGMA table_info(codes)").all<{
+      name: string;
+    }>();
+    expect(columns.results.map((row) => row.name)).toEqual(TABLES["codes"]);
   });
 });
 

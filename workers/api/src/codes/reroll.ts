@@ -3,6 +3,7 @@ import { auditStatement } from "../audit/writer.ts";
 import type { AppContext } from "../http/context.ts";
 import { ApiError, json, notFound, notReady } from "../http/respond.ts";
 import { changes } from "../lib/db.ts";
+import { limitFreePublicDraw } from "../limits/enforce.ts";
 import { iso } from "../lib/time.ts";
 import { purgeResolve } from "../resolve/cache.ts";
 import { withDrawnCode } from "./draw.ts";
@@ -82,6 +83,12 @@ export async function rerollCode(c: AppContext): Promise<Response> {
   if (owned.kind === "handle") throw new ApiError(403, "reroll-cap");
   if (!c.get("settings").mintEnabled) throw notReady();
   await checkMintScope(c, caller, owned.scope, "code.reroll");
+  // D-2026-10-13-03: a free_public re-roll is a draw and counts against the
+  // daily cap. It counts before the guard, like every limiter rule, so a
+  // re-roll the guard then refuses with reroll-cap has still counted.
+  if (owned.scope === "free_public") {
+    await limitFreePublicDraw(c, caller.id);
+  }
   const newId = await withDrawnCode(c, async (code) => {
     const id = crypto.randomUUID();
     const results = await c.env.ZZ_DB.batch(
