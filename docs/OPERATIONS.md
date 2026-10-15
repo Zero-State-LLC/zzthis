@@ -39,6 +39,18 @@ Required evidence before production:
 5. owner for recurring restore tests;
 6. key/secret recovery and rotation procedure that does not put secrets in the repo.
 
+## Staging reset
+
+D-2026-10-13-06 (RM-013). Before a staging run (RM-014, RM-015), empty the staging database by hand from `workers/api`:
+
+```sh
+npx wrangler d1 execute zzthis-staging --remote --config wrangler.staging.toml --file scripts/staging-reset.sql
+```
+
+`scripts/staging-reset.sql` drops the two `audit_events` triggers, deletes every application table, and creates the triggers again as `migrations/0001_init.sql` defines them. It runs only against `zzthis-staging`, never production. No workflow runs it. Limiter windows are not reset, so run RM-014 before RM-015.
+
+Staging sets `ZZ_FREE_PUBLIC = "true"`, `workers_dev = false`, and `preview_urls = false` (`wrangler.staging.toml`). It answers only on the Access-protected `zz-staging.zer0state.com`, which Danny creates with its Access policy. Until then, a staging deploy is not reachable.
+
 
 ## Canonical Cloudflare substrate
 

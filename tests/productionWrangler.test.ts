@@ -30,6 +30,8 @@ describe("wrangler.production.toml", () => {
     expect(vars.ZZ_FREE_PUBLIC).toBe("false");
     expect(vars.ZZ_MINT_ENABLED).toBe("false");
     expect(vars.ZZ_WORDLIST_VERSION).toBe("proto-v0");
+    expect(config).toMatch(/^workers_dev = false$/m);
+    expect(config).toMatch(/^preview_urls = false$/m);
     expect(config).toContain("invocation_logs = false");
     expect(config).not.toContain("invocation_logs = true");
     for (const secret of [
