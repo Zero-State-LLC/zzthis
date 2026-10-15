@@ -47,7 +47,7 @@ Status: ACCEPTED (Danny, 2026-10-14, [#170](https://github.com/Zero-State-LLC/zz
 
 - No new value is added to any existing response enum within contract 1 until zzThat's unknown-enum tolerance passes on both apps (RM-075, zzThat issue #54). Android sets the generator's `enumUnknownDefaultCase=true`; iOS decodes an unknown value to a fallback case.
 - That tolerance is a gate on the first store build, not on any server change: once an app version is in a store, any later enum value would break that cohort.
-- Evidence 2026-10-15: zzThat #79 merged the unknown-enum decoder (T106) on both platforms. The first store build has not happened, and zzThat #54 stays open.
+- Evidence 2026-10-15: zzThat #79 merged the unknown-enum decoder (T106) on both platforms. The first store build has not happened. zzThat #54 was closed by #79 at 2026-10-15T02:21:04Z. The store build remains the RM-075 gate.
 - Idle expiry (spec 005 FR-036) follows this rule: it reuses the existing `expired` status and adds no enum value.
 
 ## Semantic-profile implications

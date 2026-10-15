@@ -92,6 +92,6 @@ Live Project 25 fields were not written. The signed-in token has `gist`, `read:o
 | PR #176 | Done | v1.0; RM-013 | merged 2026-10-15. The staging file sets `ZZ_FREE_PUBLIC`, turns workers.dev and preview URLs off, and adds `staging-reset.sql`. `ZZ_DEV_AUTH` and `ZZ_MINT_ENABLED` stay false. `ZZ_BLOCKLIST` is still an empty var. RM-013 stays In progress. RM-012 stays Blocked on Danny. RM-014 and RM-015 stay Ready |
 | PR #177 | Done | v1.1; RM-127 | merged 2026-10-15. Idle expiry and revive. The 80-day clock has not started because `ZZ_FREE_PUBLIC` is still false in production |
 | PR #178 | Done | v1.1; RM-072, RM-125 | merged 2026-10-15. RM-072 is Done. RM-125 stays In progress: the server and the OpenAPI maximum of 5 are on main, and zzThat demo and cap tests still start at 3. The API pin was not bumped |
-| zzThat PR #79 | Done | v1.1; RM-075 | merged 2026-10-15. Unknown-enum half, with the unknown-key half from zzThat #58. RM-075 is Done. No store build is claimed. zzThat #54 stays open |
+| zzThat PR #79 | Done | v1.1; RM-075 | merged 2026-10-15. Unknown-enum half, with the unknown-key half from zzThat #58. RM-075 is Done. No store build is claimed. zzThat #54 was closed by #79 at 2026-10-15T02:21:04Z. The first store build remains the RM-075 gate. |
 
 Not moved to Done: RM-012, RM-013, RM-014, RM-015, RM-023, RM-024, RM-027, RM-076, RM-125, the privacy page, the production wordlist, and #92.

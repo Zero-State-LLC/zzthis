@@ -512,7 +512,7 @@ RM-050 production resources ─> RM-053 web build ─> RM-051 deploy ─> RM-052
 
 ### RM-075 Tolerant-reader verification in zzThat (external)
 
-- Release v1.1 · P0 · Done (unknown-key half: zzThat #58; unknown-enum half: zzThat #79, T106, merged 2026-10-15) · Bundle B3 · Owner: kneelbeforez0D · The first store build has not happened (D-2026-10-13-09). zzThat #54 stays open.
+- Release v1.1 · P0 · Done (unknown-key half: zzThat #58; unknown-enum half: zzThat #79, T106, merged 2026-10-15) · Bundle B3 · Owner: kneelbeforez0D · The first store build has not happened (D-2026-10-13-09). zzThat #54 was closed by #79 at 2026-10-15T02:21:04Z. The store build remains the RM-075 gate.
 - **Scope.** The unknown-enum half (zzThat #54, zzThat T106) landed in zzThat #79: Android sets the generator's `enumUnknownDefaultCase=true`; iOS decodes an unknown value to a fallback case. The gate remains the first store build, not a server change. Until that build, no new value is added to any existing response enum within contract 1 (`docs/CONTRACT-EVOLUTION.md`).
 - **Acceptance.** Generated clients ignore unknown keys and tolerate unknown enum values, shown by a contract test with an extra field and an unknown value in each response enum, on both apps, before the first store build.
 - **Evidence.** `TolerantReaderTest` (Android) and `TolerantReaderTests` (iOS) cover that contract test. T095 and T106 are checked. No store build is claimed.
