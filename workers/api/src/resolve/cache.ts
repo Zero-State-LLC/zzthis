@@ -53,3 +53,25 @@ export async function purgeResolve(canonical: string): Promise<void> {
     cacheFault("delete");
   }
 }
+
+// RM-035: a bounded set of purges runs PURGE_CHUNK at a time. Account
+// deletion (FR-023 step 3) and the idle-expiry run (D-2026-10-13-01) purge
+// only codes that could be cached, at most PURGE_MAX per call or run.
+export const PURGE_MAX = 500;
+const PURGE_CHUNK = 50;
+
+export async function purgeResolveAll(
+  canonicals: readonly string[],
+): Promise<void> {
+  for (let i = 0; i < canonicals.length; i += PURGE_CHUNK) {
+    await Promise.all(
+      canonicals.slice(i, i + PURGE_CHUNK).map((key) => purgeResolve(key)),
+    );
+  }
+}
+
+// FR-019 (a): a code that could be in the edge cache is reusable, has no
+// expiry, has a public record, and was resolved at least once. SQL over
+// codes c joined to records r.
+export const COULD_BE_CACHED =
+  "c.single_use = 0 AND c.expires_at IS NULL AND c.first_resolved_at IS NOT NULL AND r.visibility = 'public'";

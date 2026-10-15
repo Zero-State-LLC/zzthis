@@ -1,4 +1,5 @@
 import { auditStatement } from "../audit/writer.ts";
+import { activityStatements } from "../codes/idle.ts";
 import { readJson } from "../http/body.ts";
 import type { AppContext } from "../http/context.ts";
 import {
@@ -134,6 +135,10 @@ export async function refreshSession(c: AppContext): Promise<Response> {
   const now = iso(c.get("now"));
   const writeId = c.get("requestId");
   const next = await newRefreshToken(c.get("now"));
+  const rotatedGate = {
+    sql: "SELECT 1 FROM refresh_tokens WHERE token_hash = ? AND write_id = ?",
+    params: [presented.hash, writeId],
+  };
   const rotated = await db.batch([
     db
       .prepare(
@@ -155,11 +160,11 @@ export async function refreshSession(c: AppContext): Promise<Response> {
         result: "ok",
         at: now,
       },
-      {
-        sql: "SELECT 1 FROM refresh_tokens WHERE token_hash = ? AND write_id = ?",
-        params: [presented.hash, writeId],
-      },
+      rotatedGate,
     ),
+    // D-2026-10-13-01: a refresh is activity, and revives idle-expired
+    // codes, only when the rotation took effect.
+    ...activityStatements(db, row.account_id, c.get("now"), rotatedGate),
   ]);
   if (changes(rotated) === 1) {
     return sessionResponse(c, row.account_id, row.client, next.token);

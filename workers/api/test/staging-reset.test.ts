@@ -114,8 +114,12 @@ describe("scripts/staging-reset.sql", () => {
     const schemaBefore = await schema();
     const migrations = await env.ZZ_DB.prepare(
       "SELECT * FROM d1_migrations ORDER BY id",
-    ).all();
-    expect(migrations.results).toHaveLength(3);
+    ).all<{ name: string }>();
+    // The applied names are the migration files, so another file does not
+    // need a new count here.
+    expect(migrations.results.map((row) => row.name)).toEqual(
+      env.TEST_MIGRATIONS.map((migration) => migration.name),
+    );
 
     await runReset();
 

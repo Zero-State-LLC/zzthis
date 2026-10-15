@@ -1,4 +1,5 @@
 import { revokeAppleToken } from "../auth/apple.ts";
+import { expireIdleCodes } from "../codes/idle.ts";
 import type { Deps } from "../deps.ts";
 import { readSettings, type Settings, type WorkerEnv } from "../env.ts";
 import { open } from "../lib/crypto.ts";
@@ -22,6 +23,7 @@ export interface RetentionReport {
   readonly nonces: number;
   readonly refreshTokens: number;
   readonly reports: number;
+  readonly idleExpired: number;
   readonly revoked: number;
   readonly retried: number;
   readonly abandoned: number;
@@ -157,7 +159,8 @@ async function retryRevocation(
 
 // FR-026, daily at 03:17 UTC: expired photos and their rows, used or
 // expired nonces, refresh tokens 30 days past expiry, reports 365 days
-// after they were closed, and the pending Apple revocations that are due.
+// after they were closed, idle free_public codes (D-2026-10-13-01), and
+// the pending Apple revocations that are due.
 export async function runRetention(
   env: WorkerEnv,
   deps: Deps,
@@ -212,6 +215,11 @@ export async function runRetention(
       iso(nowMs - REPORT_KEPT_AFTER_CLOSE),
     ),
   );
+  // D-2026-10-13-01: free_public codes whose owner has been idle more than
+  // 90 days stop resolving, in the same bounded batches.
+  const idleExpired = await step("idle-expiry", () =>
+    expireIdleCodes(db, nowMs, limits),
+  );
   // Due for a retry, or past the 30-day window even if the next retry is
   // later, so no token outlives the window by a doubled wait. Oldest first.
   const outcomes: Outcome[] = [];
@@ -236,6 +244,7 @@ export async function runRetention(
     nonces,
     refreshTokens,
     reports,
+    idleExpired,
     revoked: count("revoked"),
     retried: count("retried"),
     abandoned: count("abandoned"),

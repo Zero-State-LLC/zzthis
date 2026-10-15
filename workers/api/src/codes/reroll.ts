@@ -29,7 +29,7 @@ function rerollBatch(
   return [
     db
       .prepare(
-        "UPDATE codes SET status = 'revoked', revoked_reason = 'reroll', replaced_by = ? WHERE id = ? AND owner_id = ? AND status = 'active' AND rerolls_remaining > 0 AND first_resolved_at IS NULL AND (expires_at IS NULL OR expires_at > ?)",
+        "UPDATE codes SET status = 'revoked', revoked_reason = 'reroll', replaced_by = ? WHERE id = ? AND owner_id = ? AND status = 'active' AND rerolls_remaining > 0 AND first_resolved_at IS NULL AND idle_expired_at IS NULL AND (expires_at IS NULL OR expires_at > ?)",
       )
       .bind(newId, oldId, callerId, now),
     db
@@ -90,8 +90,8 @@ export async function rerollCode(c: AppContext): Promise<Response> {
     return changes(results) === 1 ? id : null;
   });
   // The guard refused the caller's own code: no re-rolls left (a handle
-  // always), already resolved, or no longer active, such as the loser of
-  // two racing re-rolls.
+  // always), already resolved, idle-expired (D-2026-10-13-01), or no longer
+  // active, such as the loser of two racing re-rolls.
   if (newId === null) throw new ApiError(403, "reroll-cap");
   const rows = await c.env.ZZ_DB.prepare(
     `SELECT ${CODE_COLUMNS} FROM codes WHERE id IN (?, ?)`,

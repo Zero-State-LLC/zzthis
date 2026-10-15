@@ -12,6 +12,7 @@ interface RevokeRow {
   canonical: string;
   status: "active" | "used" | "expired" | "revoked";
   expires_at: string | null;
+  idle_expired_at: string | null;
 }
 
 // POST /v1/codes/{id}/revoke: one guarded update with its audit insert
@@ -47,7 +48,7 @@ export async function revokeCode(c: AppContext): Promise<Response> {
   ]);
   const row = await db
     .prepare(
-      "SELECT owner_id, canonical, status, expires_at FROM codes WHERE id = ?",
+      "SELECT owner_id, canonical, status, expires_at, idle_expired_at FROM codes WHERE id = ?",
     )
     .bind(codeId)
     .first<RevokeRow>();

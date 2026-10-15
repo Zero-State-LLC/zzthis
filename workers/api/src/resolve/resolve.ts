@@ -25,6 +25,7 @@ interface ResolveRow {
   status: string;
   single_use: number;
   expires_at: string | null;
+  idle_expired_at: string | null;
   owner_id: string;
   first_resolved_at: string | null;
   visibility: "public" | "private";
@@ -57,7 +58,7 @@ async function lookup(
   matchKey: string,
 ): Promise<ResolveRow | null> {
   const row = await c.env.ZZ_DB.prepare(
-    "SELECT c.id, c.scope, c.canonical, c.status, c.single_use, c.expires_at, c.owner_id, c.first_resolved_at, r.visibility, r.deleted_at AS record_deleted_at, v.title, v.body, v.created_at AS updated_at FROM codes c JOIN records r ON r.id = c.record_id JOIN record_versions v ON v.id = r.current_version_id WHERE c.match_key = ?",
+    "SELECT c.id, c.scope, c.canonical, c.status, c.single_use, c.expires_at, c.idle_expired_at, c.owner_id, c.first_resolved_at, r.visibility, r.deleted_at AS record_deleted_at, v.title, v.body, v.created_at AS updated_at FROM codes c JOIN records r ON r.id = c.record_id JOIN record_versions v ON v.id = r.current_version_id WHERE c.match_key = ?",
   )
     .bind(matchKey)
     .first<ResolveRow>();
@@ -66,6 +67,8 @@ async function lookup(
     row !== null &&
     row.status === "active" &&
     (row.expires_at === null || row.expires_at > now) &&
+    // D-2026-10-13-01: an idle-expired code is the one not-found body.
+    row.idle_expired_at === null &&
     row.record_deleted_at === null;
   return live ? row : null;
 }
@@ -137,7 +140,7 @@ async function markResolved(
     const results = await db.batch([
       db
         .prepare(
-          "UPDATE codes SET status = 'used', write_id = ?, first_resolved_at = COALESCE(first_resolved_at, ?) WHERE id = ? AND status = 'active' AND (expires_at IS NULL OR expires_at > ?)",
+          "UPDATE codes SET status = 'used', write_id = ?, first_resolved_at = COALESCE(first_resolved_at, ?) WHERE id = ? AND status = 'active' AND idle_expired_at IS NULL AND (expires_at IS NULL OR expires_at > ?)",
         )
         .bind(writeId, now, row.id, now),
       auditStatement(db, event, {

@@ -6,7 +6,14 @@ import { makeWorld } from "./helpers/world.ts";
 
 // spec 005 Data model, column for column.
 const TABLES: Record<string, string[]> = {
-  accounts: ["id", "created_at", "suspended_at", "deleted_at", "org_id"],
+  accounts: [
+    "id",
+    "created_at",
+    "suspended_at",
+    "deleted_at",
+    "org_id",
+    "last_active_at",
+  ],
   identities: [
     "id",
     "account_id",
@@ -47,6 +54,7 @@ const TABLES: Record<string, string[]> = {
     "replaced_by",
     "write_id",
     "created_at",
+    "idle_expired_at",
   ],
   records: [
     "id",
