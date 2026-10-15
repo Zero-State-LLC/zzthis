@@ -1,4 +1,5 @@
 import { auditStatement } from "../audit/writer.ts";
+import { activityStatements } from "../codes/idle.ts";
 import { readJson } from "../http/body.ts";
 import type { AppContext } from "../http/context.ts";
 import { unauthorized } from "../http/respond.ts";
@@ -86,9 +87,11 @@ async function existingAccount(
     }>();
   if (found === null) return null;
   const now = iso(c.get("now"));
+  // D-2026-10-13-01: a sign-in is activity, and revives idle-expired codes.
   const statements = [
     insertRefreshToken(db, session.refresh, found.account_id, session.client),
     signInAudit(db, found.account_id, "auth.token", now),
+    ...activityStatements(db, found.account_id, c.get("now")),
   ];
   if (session.apple !== null) {
     // The token and its client id are written and replaced together.
@@ -148,9 +151,9 @@ async function newAccount(c: AppContext, session: Session): Promise<string> {
   await db.batch([
     db
       .prepare(
-        "INSERT INTO accounts (id, created_at, suspended_at, deleted_at) VALUES (?, ?, NULL, NULL)",
+        "INSERT INTO accounts (id, created_at, suspended_at, deleted_at, last_active_at) VALUES (?, ?, NULL, NULL, ?)",
       )
-      .bind(accountId, now),
+      .bind(accountId, now, now),
     db
       .prepare(
         "INSERT INTO identities (id, account_id, provider, provider_subject, apple_refresh_token_enc, apple_client_id, created_at) VALUES (?, ?, ?, ?, ?, ?, ?)",

@@ -39,6 +39,18 @@ Required evidence before production:
 5. owner for recurring restore tests;
 6. key/secret recovery and rotation procedure that does not put secrets in the repo.
 
+## Staging reset
+
+D-2026-10-13-06 (RM-013). Before a staging run (RM-014, RM-015), empty the staging database by hand from `workers/api`:
+
+```sh
+npx wrangler d1 execute zzthis-staging --remote --config wrangler.staging.toml --file scripts/staging-reset.sql
+```
+
+`scripts/staging-reset.sql` drops the two `audit_events` triggers, deletes every application table, and creates the triggers again as `migrations/0001_init.sql` defines them. It runs only against `zzthis-staging`, never production. No workflow runs it. Limiter windows are not reset, so run RM-014 before RM-015.
+
+Staging sets `ZZ_FREE_PUBLIC = "true"`, `workers_dev = false`, and `preview_urls = false` (`wrangler.staging.toml`). It answers only on the Access-protected `zz-staging.zer0state.com`, which Danny creates with its Access policy. Until then, a staging deploy is not reachable.
+
 
 ## Canonical Cloudflare substrate
 
@@ -94,12 +106,23 @@ Before launch: rehearse steps 1 to 3 once on staging with a seeded report, and r
 
 ## Account deletion and access requests
 
-D-2026-10-13-08 (ACCEPTED by Danny, 2026-10-14, [#170](https://github.com/Zero-State-LLC/zzthis/issues/170#issuecomment-6175348667)); BACKLOG RM-023 and RM-027.
+D-2026-10-13-08 (ACCEPTED by Danny, 2026-10-14, [#170](https://github.com/Zero-State-LLC/zzthis/issues/170#issuecomment-6175348667)); BACKLOG RM-023 and RM-027. zzThis stores no email or name, so an emailed request cannot be matched to an account by itself.
 
-- **Identity.** No email is stored, so an emailed request cannot be matched to an account by itself. The person signs in and quotes the account id shown on `/account/` (copy key `account.id`; the label is pending Michael's review). Act only on an id quoted this way.
-- **Deletion.** Run `ops/delete-account.sql` with that account id. It runs the spec 005 FR-023 step 2 batch, writes an `account.delete` audit event with no actor, and copies any stored Apple token into `pending_revocations` (attempts 0, due now), so the next daily run revokes it. The words of the account's codes are never issued again.
-- **Access.** Answer with that account's rows from `accounts`, `codes`, `records`, and the current record versions, as JSON. Do not include other accounts' rows or audit rows that name other accounts.
-- **Restore replay.** A D1 Time Travel restore drops rows written after the target time. Before a restore, export the `audit_events` and `pending_revocations` rows written after the target. After it, re-insert them, then run `ops/delete-account.sql` for every account whose `account.delete` event is in the export, so an erased account stays erased and its Apple token is still revoked.
+1. Identity check: the person signs in and quotes the account id shown on `/account/` (copy key `account.id`; the label is pending Michael's review). Act only on that id. The `/account/` change is separate work; until it ships, ask the person to delete the account themselves, in the app or on `/account/`.
+2. Deletion: run `ops/delete-account.sql` with that id (its header gives the command). It writes the FR-023 step 2 batch that `DELETE /v1/me` writes and one `account.delete` audit event with no actor. Each stored Apple token is copied into `pending_revocations` (attempts 0, due now), and the next daily run revokes it. The words of the account's codes are never issued again. SQL cannot delete the photo objects or purge the edge cache: the 30-day `reads/` lifecycle rule removes the objects, and a cached resolve lasts at most 60 seconds (FR-018). An unknown or already deleted account is left alone.
+3. Access request: answer with that account's rows from `accounts`, `codes`, `records`, and the current version of each record, as JSON. Do not include other accounts' rows or audit rows that name other accounts.
+
+   ```sh
+   npx wrangler d1 execute ZZ_DB --remote --json --command="$(sed 's/:account_id/ACCOUNT_ID/g' <<'SQL'
+   SELECT * FROM accounts WHERE id = ':account_id';
+   SELECT * FROM codes WHERE owner_id = ':account_id' ORDER BY created_at;
+   SELECT * FROM records WHERE owner_id = ':account_id' ORDER BY created_at;
+   SELECT v.* FROM record_versions v JOIN records r ON r.current_version_id = v.id WHERE r.owner_id = ':account_id' ORDER BY v.created_at;
+   SQL
+   )"
+   ```
+
+Before a D1 restore (Time Travel or an import), export the `audit_events` and `pending_revocations` rows written after the target time (`created_at` later than it) with `--json`, and insert them again after the restore. A restore that goes back past an `account.delete` event brings that account back: run `ops/delete-account.sql` again for each such account, so an erased account stays erased and its Apple token is still revoked.
 
 The privacy policy names this method (RM-026, RM-123).
 

@@ -58,7 +58,7 @@ export async function listMyCodes(c: AppContext): Promise<Response> {
       ? ""
       : "AND (c.created_at < ? OR (c.created_at = ? AND c.id < ?))";
   const rows = await c.env.ZZ_DB.prepare(
-    `SELECT c.id, c.canonical, c.check_word, c.status, c.expires_at, c.record_id, c.scope, c.rerolls_remaining, c.created_at, v.title FROM codes c JOIN records r ON r.id = c.record_id JOIN record_versions v ON v.id = r.current_version_id WHERE c.owner_id = ? AND (c.revoked_reason IS NULL OR c.revoked_reason <> 'reroll') ${after} ORDER BY c.created_at DESC, c.id DESC LIMIT ?`,
+    `SELECT c.id, c.canonical, c.check_word, c.status, c.expires_at, c.idle_expired_at, c.record_id, c.scope, c.rerolls_remaining, c.created_at, v.title FROM codes c JOIN records r ON r.id = c.record_id JOIN record_versions v ON v.id = r.current_version_id WHERE c.owner_id = ? AND (c.revoked_reason IS NULL OR c.revoked_reason <> 'reroll') ${after} ORDER BY c.created_at DESC, c.id DESC LIMIT ?`,
   )
     .bind(
       caller.id,

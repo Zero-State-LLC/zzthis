@@ -6,6 +6,8 @@ declare global {
       TEST_MIGRATIONS: D1Migration[];
       // workers/api/ops/*.sql, by file name (vitest.config.ts).
       TEST_OPS_SQL: Record<string, string>;
+      // workers/api/scripts/staging-reset.sql, as statements (vitest.config.ts).
+      TEST_STAGING_RESET: string[];
     }
   }
 }
