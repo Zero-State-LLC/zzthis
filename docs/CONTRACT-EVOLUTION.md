@@ -30,7 +30,7 @@ Status: ACCEPTED (Danny, 2026-10-09 PT) as a named exception to D-2026-10-10-12.
 
 - One additive, optional Resolve response field, `creator`, inside contract 1: an opaque HMAC of the owner's account id, null for private records.
 - Shipped in PR #161 with OpenAPI `info.version` 1.1, `X-ZZ-Contract: 1` unchanged, and discovery `creator_refs: true`.
-- RM-075 tolerant readers: the unknown-key half passes on both apps (zzThat PR #58), which covers the new keys `creator` and `creator_refs`; the unknown-enum half is open (zzThat issue #54) and this field adds no enum value.
+- RM-075 tolerant readers: the unknown-key half passes on both apps (zzThat PR #58), which covers the new keys `creator` and `creator_refs`. The unknown-enum half merged in zzThat #79 (T106) and closed #54 at 2026-10-15T02:21:04Z. This field adds no enum value. The first store build has not happened.
 - No other contract-1 change is allowed under rule 1 until D-2026-10-10-12 is decided, except the named exception below.
 
 ## Accepted exception: five re-rolls (2026-10-14, D-2026-10-13-02)
@@ -45,7 +45,7 @@ Status: ACCEPTED (Danny, 2026-10-14, [#170](https://github.com/Zero-State-LLC/zz
 
 Status: ACCEPTED (Danny, 2026-10-14, [#170](https://github.com/Zero-State-LLC/zzthis/issues/170#issuecomment-6175348667)).
 
-- No new value is added to any existing response enum within contract 1 until zzThat's unknown-enum tolerance passes on both apps (RM-075, zzThat issue #54). Android sets the generator's `enumUnknownDefaultCase=true`; iOS decodes an unknown value to a fallback case.
+- No new value is added to any existing response enum within contract 1 until a store build carries zzThat's unknown-enum tolerance (RM-075). The decoder merged in zzThat #79 and closed #54 at 2026-10-15T02:21:04Z. Android sets the generator's `enumUnknownDefaultCase=true`; iOS decodes an unknown value to a fallback case.
 - That tolerance is a gate on the first store build, not on any server change: once an app version is in a store, any later enum value would break that cohort.
 - Evidence 2026-10-15: zzThat #79 merged the unknown-enum decoder (T106) on both platforms. The first store build has not happened. zzThat #54 was closed by #79 at 2026-10-15T02:21:04Z. The store build remains the RM-075 gate.
 - Idle expiry (spec 005 FR-036) follows this rule: it reuses the existing `expired` status and adds no enum value.
