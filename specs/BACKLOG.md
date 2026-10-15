@@ -75,11 +75,12 @@ RM-050 production resources ─> RM-053 web build ─> RM-051 deploy ─> RM-052
 - **Acceptance.** A test parses the file and fails if `ZZ_DEV_AUTH` or `ZZ_PHOTO_READS` is true, `ZZ_WORDLIST_VERSION` is `fixture-7`, invocation logs are on, a secret name appears under `[vars]`, or a staging resource name appears. `wrangler deploy --dry-run --config wrangler.production.toml` passes in CI without credentials.
 - **Verification.** CI run of the new test and dry run.
 - **Governing.** D-2026-10-10-08, D-2026-10-10-10; spec 005 Environment, FR-022, FR-027, FR-029; `specs/CLOUDFLARE-RUNTIME.md`.
+- **Follow-up (D-2026-10-13-07).** Production accepts only `prod-v1`, so the file's `ZZ_WORDLIST_VERSION = "proto-v0"` changes to `prod-v1` in the RM-020 pull request, and the test then fails on any other value. RM-001 depends on RM-020 for launch.
 - **Risks.** A wrong id binds staging data to production; the test's staging-name check guards it.
 
 ### RM-002 Manual production deploy workflow
 
-- Release v1.0 · P0 · Workflow file merged (PR #95, 2026-10-14). Not dispatched. D-2026-10-10-08 is still PROPOSED. · Bundle B4 · Gate G11 · Owner: API maintainer drafts; Danny owns the environment
+- Release v1.0 · P0 · Workflow file merged (PR #95, 2026-10-14). Not dispatched. D-2026-10-10-08 ACCEPTED (Danny, 2026-10-14, [#170](https://github.com/Zero-State-LLC/zzthis/issues/170#issuecomment-6175348667)). · Bundle B4 · Gate G11 · Owner: API maintainer drafts; Danny owns the environment
 - **Problem.** There was no production deploy path. The merged PR #95 adds `.github/workflows/cloudflare-api-production.yml`: `workflow_dispatch` only, `main` only, environment `production`. Remote migrate and deploy refuse the unassigned zero UUID. The workflow has not been dispatched.
 - **Outcome and scope.** `.github/workflows/cloudflare-api-production.yml`: `workflow_dispatch` only, `main` only, GitHub environment `production` with Danny as required reviewer, the same checks as the staging workflow, a D1 Time Travel bookmark printed before `migrations apply`, `wrangler deploy --config wrangler.production.toml`, and the Worker version id and git SHA in the job summary. Builds `apps/web` with the production `PUBLIC_*` values from environment variables.
 - **Depends on.** RM-001. **Components.** `.github/workflows`.
@@ -112,7 +113,7 @@ RM-050 production resources ─> RM-053 web build ─> RM-051 deploy ─> RM-052
 - Release v1.0 · P1 · Ready · Bundle B4 · Gate G1 · Owner: Danny (branch protection)
 - **Problem.** Only `build` (lint and build) is documented as required; the 861 tests run in `site-ci.yml` (`typecheck-and-test`).
 - **Acceptance.** Branch protection lists `typecheck-and-test`; a PR with a failing test cannot merge.
-- **Governing.** D-2026-10-10-20; constitution Engineering standards (do not edit `ci.yml`).
+- **Governing.** D-2026-10-10-20 (ACCEPTED, Danny 2026-10-14); constitution Engineering standards (do not edit `ci.yml`).
 
 ### RM-006 Specification and status convergence (this review)
 
@@ -142,30 +143,30 @@ RM-050 production resources ─> RM-053 web build ─> RM-051 deploy ─> RM-052
 
 ### RM-012 Access-protected staging hostname
 
-- Release v1.0 · P0 · Blocked on Danny · Bundle B4 · Gate G2, G3 · Owner: Danny
-- **Scope.** A staging hostname on the `zer0state.com` zone routed to `zzthis-api-staging`, protected by Cloudflare Access with a service token for automation.
+- Release v1.0 · P0 · Blocked on Danny (he creates the host and the Access policy) · Bundle B4 · Gate G2, G3 · Owner: Danny
+- **Scope.** `zz-staging.zer0state.com` on the `zer0state.com` zone, routed to `zzthis-api-staging`, protected by Cloudflare Access. The policy admits named emails and one Service Auth token; the token's id and secret live in the `cloudflare-staging` GitHub environment, never in git (D-2026-10-13-06).
 - **Acceptance.** An unauthenticated request gets the Access challenge; a request with the service token reaches `GET /v1` with 200.
-- **Governing.** D-2026-10-10-07. **Risks.** Free-plan seat limits; recheck at setup.
+- **Governing.** D-2026-10-10-07, D-2026-10-13-06 (both ACCEPTED, Danny 2026-10-14); spec 005 FR-029. **Risks.** Free-plan seat limits; recheck at setup.
 
 ### RM-013 Staging configuration that can exercise writes
 
 - Release v1.0 · P0 · Ready (applies after RM-012) · Bundle B4 · Gate G2 · Owner: API maintainer
 - **Problem.** Staging has mint, developer sign-in, and providers off, so no write path has run on Cloudflare.
-- **Scope.** In `wrangler.staging.toml`: `ZZ_DEV_AUTH=true`, `ZZ_MINT_ENABLED=true`, `fixture-7`, and `ZZ_BLOCKLIST` moved from `[vars]` to a secret so staging matches the production binding type. Add a documented reset step that empties application tables before a run. Only after RM-012, never on the public workers.dev host alone.
-- **Acceptance.** Discovery on the staging host lists `dev`; a fresh reset leaves every application table empty.
-- **Governing.** spec 005 FR-022 (developer sign-in is allowed outside production); D-2026-10-10-07.
+- **Scope.** In `wrangler.staging.toml`, staging only: `ZZ_DEV_AUTH=true`, `ZZ_MINT_ENABLED=true`, `ZZ_FREE_PUBLIC=true` (the web client mints only `free_public`), `fixture-7`, `workers_dev = false`, `preview_urls = false`, and `ZZ_BLOCKLIST` moved from `[vars]` to a secret so staging matches the production binding type. Add `workers/api/scripts/staging-reset.sql`: it drops the two audit triggers, deletes every application table, and recreates the triggers; the staging workflow runs it only against `zzthis-staging`. Only after RM-012, never on the public workers.dev host (D-2026-10-13-06).
+- **Acceptance.** Discovery on the staging host lists `dev` and `free_public: true`; the workers.dev `/v1` no longer answers 200; a fresh reset leaves every application table empty and both audit triggers in place.
+- **Governing.** spec 005 FR-022 (developer sign-in is allowed outside production), FR-029, Environment (Staging values); D-2026-10-10-07, D-2026-10-13-06.
 
 ### RM-014 Run the end-to-end suite against staging
 
 - Release v1.0 · P0 · Ready (after RM-013) · Bundle B1, B4 · Gate G2 · Journeys J1 to J7
-- **Scope.** Let `apps/web/playwright.config.ts` take a base URL and Access headers from the environment while keeping the local default; run the existing two flows against staging from a manual workflow.
+- **Scope.** Let `apps/web/playwright.config.ts` take a base URL from the environment while keeping the local default. The Access headers (`CF-Access-Client-Id`, `CF-Access-Client-Secret`) are added only for the staging origin with `page.route`, never as global extra headers (D-2026-10-13-06). Run the existing two flows against staging from a manual workflow, after a staging reset and before RM-015.
 - **Acceptance.** Both flows pass on staging with no CSP violation; the run URL is in the release packet.
 - **Governing.** spec 005 plan.md Tests; T032.
 
 ### RM-015 API smoke and rate-limit verification script
 
 - Release v1.0 · P0 · Ready (after RM-013) · Bundle B4 · Gate G2 · Journeys J1, J2, J6
-- **Scope.** A script that calls every OpenAPI operation once with valid input and checks status and schema, then drives each rate-limit row to its first 429 with bounded traffic, and records p50 and p95 latency for resolve, mint, and token.
+- **Scope.** A script that calls every OpenAPI operation once with valid input and checks status and schema, then drives each rate-limit row to its first 429 with bounded traffic, including the daily mint cap once RM-072 ships, and records p50 and p95 latency for resolve, mint, and token. The staging reset does not clear limiter windows, so this runs after RM-014 (D-2026-10-13-06).
 - **Acceptance.** Every row in the spec 005 Rate limits table returns 429 at its limit plus one with `Retry-After`; the report is stored in the release packet.
 - **Governing.** spec 005 FR-011, Rate limits.
 
@@ -185,10 +186,10 @@ RM-050 production resources ─> RM-053 web build ─> RM-051 deploy ─> RM-052
 
 ### RM-020 Build and freeze the production wordlist
 
-- Release v1.0 · P0 · Ready · Bundle B6 · Gate G8 · Owner: maintainer builds; Michael reviews words; Danny freezes
-- **Scope.** Extend the spec 003 pipeline with the Q35 filters: a published confusable-letter table and a Double Metaphone collision filter, then the private `ZZ_BLOCKLIST` (T037). Commit the list under a new version id with its yield report; keep proto-v0 unchanged (FR-017). Any new dependency (for example a Double Metaphone package) goes through dependency review.
-- **Acceptance.** Deterministic rebuild (FR-019); N is prime and at least 1,000; the report lists every removed word with its filter; check-word tests pass exhaustively on the fixture and by property on the new list (FR-020); Danny's freeze record cites R-B6 evidence or an explicit risk acceptance.
-- **Governing.** D-2026-10-10-04; spec 003 FR-001, FR-002, Prototype defaults; spec 005 T037; Q35.
+- Release v1.0 · P0 · Blocked on Michael (the letter groups in `confusable-v1.json`); the build is otherwise defined · Bundle B6 · Gate G8 · Owner: maintainer builds; Michael approves the letter groups and reviews words; Danny freezes
+- **Scope.** The spec 003 Production list build (D-2026-10-13-07): filter 3 also drops every English cardinal number word; filter 4 compares shape keys from `packages/zz-core/wordlists/confusable-v1.json` (`rn` to m, `cl` to d, `vv` to w, then letter groups); filter 5 compares Double Metaphone primary codes with an exact-pinned package after dependency review; in both, the earlier word in sort order is kept; the blocklist is read from `ZZ_BLOCKLIST_FILE` outside the repository and applied after filter 6 and before the prime cut, and the report gives only its count and the SHA-256 of the normalized list. The pipeline takes the version id as an argument; output `prod-v1`; proto-v0 output stays byte-identical. Production accepts only `prod-v1` (`env.ts`, spec 005 Environment, RM-001).
+- **Acceptance.** Deterministic rebuild (FR-019); N is prime and at least 1,000; the report lists every removed word with its filter and the kept word it collided with, except blocklisted words, which appear only as a count; CI rebuilds without the blocklist and checks that the committed list is an in-order subsequence with the gap equal to the reported count; proto-v0 rebuilds byte-identical; check-word tests pass exhaustively on the fixture and by property on the new list (FR-020); production settings refuse any list but `prod-v1`; Danny's freeze record cites the D-2026-10-10-04 risk acceptance, because no R-B6 corpus exists.
+- **Governing.** D-2026-10-10-04; D-2026-10-13-07 (ACCEPTED, Danny 2026-10-14, [#170](https://github.com/Zero-State-LLC/zzthis/issues/170#issuecomment-6175348667)); spec 003 FR-001, FR-002, Production list build; spec 005 T037, Environment; Q35.
 - **Risks.** Permanent after the first production mint.
 
 ### RM-021 Key ids for `ZZ_DATA_KEY` sealed values and tags
@@ -203,22 +204,23 @@ RM-050 production resources ─> RM-053 web build ─> RM-051 deploy ─> RM-052
 
 - Release v1.0 · P0 · Ready · Bundle B4 · Gate G5 · Owner: Danny
 - **Scope.** For each of `ZZ_TOKEN_SECRET`, `ZZ_DATA_KEY`, `ZZ_RECORD_SIGNING_KEY` (with key id), and `APPLE_PRIVATE_KEY`: owner, escrow location outside Cloudflare and the repository, rotation cadence, compromise procedure, and the user impact of rotation (token secret: every access token fails within 15 minutes and clients refresh; data key: RM-021; signing key: new id, old signatures stay stored).
+- **Rotation rule.** Do not rotate `ZZ_DATA_KEY` in v1.x except after a compromise: rotation changes every Resolve `creator` value (blocked creators show again) and every `mint-subject` key, so daily mint caps restart (OPERATIONS, Key and secret lifecycle).
 - **Acceptance.** A staging drill restores all four from escrow into a scratch Worker that passes the settings check.
 - **Governing.** D-2026-10-10-10; Q28; OPERATIONS.
 
 ### RM-023 Restore runbook with deletion replay
 
 - Release v1.0 · P0 · Ready · Bundle B4 · Gate G5
-- **Problem.** A D1 Time Travel restore undoes account deletions made after the restore point, so erased text and Apple tokens would return.
-- **Scope.** Before restore, export the list of account ids deleted after the target time from the audit log; after restore, re-run deletion for each. Capture a bookmark before every migration (RM-002).
-- **Acceptance.** The drill in RM-024 includes a deletion after the bookmark, and the account stays deleted after restore and replay.
-- **Governing.** D-2026-10-10-10; `docs/DATA-LIFECYCLE.md` Deletion evidence.
+- **Problem.** A D1 Time Travel restore undoes account deletions made after the restore point, so erased text and Apple tokens would return. It also drops `pending_revocations` rows written after the bookmark. `DELETE /v1/me` needs the account's own token, so the operator had no way to replay a deletion.
+- **Scope.** Add `ops/delete-account.sql` (D-2026-10-13-08): the FR-023 step 2 batch, an `account.delete` audit event with no actor, and a copy of any stored Apple token into `pending_revocations` (attempts 0, due now), so the daily run revokes it. Before a restore, export the `audit_events` and `pending_revocations` rows written after the target time; after the restore, re-insert them and run `ops/delete-account.sql` for every account whose `account.delete` event is in the export. Capture a bookmark before every migration (RM-002).
+- **Acceptance.** Tests in `workers/api/test/ops.test.ts`: the script revokes the account's codes, erases its versions, deletes its identities, grants, and refresh tokens, sets `deleted_at`, writes `account.delete` with no actor, and queues the Apple token. The drill in RM-024 includes a deletion after the bookmark, and the account stays deleted, with its audit and pending rows back, after restore and replay.
+- **Governing.** D-2026-10-10-10; D-2026-10-13-08 (ACCEPTED, Danny 2026-10-14, [#170](https://github.com/Zero-State-LLC/zzthis/issues/170#issuecomment-6175348667)); spec 005 FR-023; `docs/DATA-LIFECYCLE.md` Deletion evidence; OPERATIONS, Account deletion and access requests.
 
 ### RM-024 Recovery drill and objectives
 
 - Release v1.0 · P0 · Ready (after RM-013, RM-022, RM-023) · Bundle B4 · Gate G5 · Owner: Danny accepts numbers
 - **Scope.** Seed staging with accounts, codes, versions, grants, and audit rows; restore to a bookmark; verify row counts, a sample resolve, audit continuity, and the deletion replay; time it from declaration to verified service.
-- **Acceptance.** Measured RTO and RPO meet the accepted targets (proposed 4 hours and 5 minutes); Danny records acceptance.
+- **Acceptance.** Measured RTO and RPO meet the targets accepted in D-2026-10-10-10 (Danny, 2026-10-14): RTO 4 hours and RPO 5 minutes, which count only once this drill meets them; Danny records the result.
 - **Governing.** D-2026-10-10-10; OPERATIONS Recovery objectives.
 
 ### RM-025 Incident runbook, contacts, and kill switches
@@ -238,14 +240,14 @@ RM-050 production resources ─> RM-053 web build ─> RM-051 deploy ─> RM-052
 ### RM-027 Data-subject request runbook
 
 - Release v1.0 · P1 · Ready · Bundle B4 · Owner: Danny
-- **Scope.** SQL queries and steps for access and deletion requests received by email, with identity checks and an audit note; complete the open rows of `docs/DATA-LIFECYCLE.md` (tombstone retention, audit retention, export).
-- **Acceptance.** A staging dry run answers an access request for a seeded account.
-- **Governing.** D-2026-10-10-16.
+- **Scope.** Steps for access and deletion requests received by email (D-2026-10-13-08). No email is stored, so the identity check is: the person signs in and quotes the account id shown on `/account/` (copy key `account.id`, pending Michael's review). A deletion runs `ops/delete-account.sql` (RM-023). An access request is answered with that account's rows from `accounts`, `codes`, `records`, and the current record versions, as JSON. Complete the open rows of `docs/DATA-LIFECYCLE.md` (tombstone retention, audit retention, export). The privacy policy names this method (RM-026, RM-123).
+- **Acceptance.** A staging dry run answers an access request for a seeded account with the JSON above, and deletes a seeded account with `ops/delete-account.sql`.
+- **Governing.** D-2026-10-10-16; D-2026-10-13-08 (ACCEPTED, Danny 2026-10-14, [#170](https://github.com/Zero-State-LLC/zzthis/issues/170#issuecomment-6175348667)); OPERATIONS, Account deletion and access requests.
 
 ### RM-028 Production blocklist content
 
-- Release v1.0 · P0 · Blocked on Michael and Danny · Bundle B1 · Gate G8
-- **Scope.** Supply `ZZ_BLOCKLIST` as a production secret (required non-empty in production, FR-024) and use the same list in RM-020.
+- Release v1.0 · P0 · Blocked on Michael and Danny (list content) · Bundle B1 · Gate G8
+- **Scope.** Supply `ZZ_BLOCKLIST` as a production secret (required non-empty in production, FR-024) and use the same list in RM-020, read from `ZZ_BLOCKLIST_FILE` outside the repository; the RM-020 report shows only its count and the SHA-256 of the normalized list (D-2026-10-13-07). Number words are kept out of codes by filter 3, not by the blocklist (D-2026-10-11-12).
 - **Acceptance.** Production settings check passes; a staging test term is refused with 422 `content-refused`.
 
 ### RM-029 Threat-model review and residual risks
@@ -387,7 +389,7 @@ RM-050 production resources ─> RM-053 web build ─> RM-051 deploy ─> RM-052
 
 - Release v1.0 · P0 · Ready (after RM-011, RM-026) · Bundle B1
 - **Acceptance.** The deployed `/signin/` shows Apple and Google only; no `dev`; the dist check passes.
-- **PROPOSED (D-2026-10-10-21, Danny agreed in chat 2026-10-09; adopted on merge).** v1.0 web is lookup only: production discovery reports `free_public: false`, so `/create/` shows its Unavailable state; web create, edit, and revoke are verified in v1.1.
+- **D-2026-10-10-21 (ADOPTED, Danny 2026-10-14).** v1.0 web is lookup only: production discovery reports `free_public: false`, so `/create/` shows its Unavailable state; web create, edit, and revoke are verified in v1.1.
 
 ### RM-054 Release evidence packet and GO decision
 
@@ -459,8 +461,10 @@ RM-050 production resources ─> RM-053 web build ─> RM-051 deploy ─> RM-052
 
 ### RM-065 Confirm-only camera mode in spec 004
 
-- Release v1.1 · P1 · Ready · Bundle B2
-- **Acceptance.** Spec 004 band tables state that Accept requires a PASS receipt for the platform and engine, with shared band vectors for confirm-only mode.
+- Release v1.1 · P1 · Ready (spec text in spec 004 FR-023 and Confirm-only mode, 2026-10-14) · Bundle B2 · Owner: kneelbeforez0D (vectors and zzThat)
+- **Scope.** v1.1 ships confirm-only on both platforms unless a signed PASS receipt exists at store submission (RM-064 records it). In confirm-only mode a camera candidate that would be Accept becomes Clarify, showing the full canonical code and Confirm. Typed bands do not change. Threshold numbers wait for the Q34 corpus. zzThat implements it under its FR-025 with a new task.
+- **Acceptance.** Spec 004 band tables define confirm-only (done in the spec); the shared vectors add the camera Accept rows with `confirm_only: true`, expecting Clarify, and every platform's vector runner passes them; both apps show the canonical code and Confirm instead of resolving.
+- **Governing.** D-2026-10-10-03; D-2026-10-13-05 (ACCEPTED, Danny 2026-10-14, [#170](https://github.com/Zero-State-LLC/zzthis/issues/170#issuecomment-6175348667)); spec 004 FR-023.
 
 ### RM-066 zzThat pins the v1.0 release commit (external)
 
@@ -492,17 +496,31 @@ RM-050 production resources ─> RM-053 web build ─> RM-051 deploy ─> RM-052
 
 ### RM-072 Durable-key daily mint cap for free_public
 
-- Release v1.1 · P0 · Backlog · PROPOSED (D-2026-10-10-21) · Bundle B9
+- Release v1.1 · P0 · Ready · Bundle B9 · Owner: kneelbeforez0D
 - **Problem.** A cap keyed to the account id resets when a person deletes and recreates the account, so it does not bound one person's mints.
-- **Scope.** A daily `free_public` mint cap keyed to an HMAC of the sign-in provider and provider subject (keyed with the limiter HMAC key, so the raw subject is never stored), which survives account deletion for the cap window only, plus a per-IP daily cap on the RM-030 subject (/64 for IPv6, address for IPv4). Over either cap is 429 `rate-limited`, the existing contract-1 body. Numbers are Danny's.
-- **Acceptance.** Tests: mint to the cap, delete the account, sign in again with the same provider subject, and the next mint is 429; two accounts from one /64 share the IP cap; no raw provider subject appears in storage or logs.
-- **Governing.** D-2026-10-10-21; spec 005 FR-011; RM-030; data lifecycle (the key expires with the window).
+- **Scope.** Spec 005 FR-011 as amended (D-2026-10-13-03). Window: the UTC day. Subject key: the HMAC of `provider:provider_subject` under the derived HMAC key with the label `mint-subject`, so the raw subject is never stored and the key survives account deletion for the window only. Each `free_public` mint and each `free_public` re-roll counts once against the subject (30 per UTC day) and once against the RM-030 IP subject (60 per UTC day, /64 for IPv6, address for IPv4); this is the one signed-in call that also counts against an IP row. Over either cap is 429 `rate-limited`, the existing contract-1 body, with `Retry-After` until the next UTC day.
+- **Acceptance.** Tests: 30 mints and re-rolls in a UTC day succeed and the 31st is 429; mint to the cap, delete the account, sign in again with the same provider subject, and the next mint is 429; a re-roll counts like a mint; two accounts from one /64 share the 60 IP cap; the next UTC day allows mints again; `enterprise` and `logistics` mints do not count; no raw provider subject appears in storage or logs.
+- **Governing.** D-2026-10-10-21; D-2026-10-13-03 (ACCEPTED, Danny 2026-10-14, [#170](https://github.com/Zero-State-LLC/zzthis/issues/170#issuecomment-6175348667)); spec 005 FR-011, Rate limits; RM-030; `docs/DATA-LIFECYCLE.md` (mint-cap subject key).
 
 ### RM-075 Tolerant-reader verification in zzThat (external)
 
-- Release v1.1 · P1 · Backlog · Bundle B3
-- **Acceptance.** Generated clients ignore unknown keys and tolerate unknown enum values, shown by a contract test with an extra field.
-- **Governing.** D-2026-10-10-12.
+- Release v1.1 · P0 for the unknown-enum half, a gate on the first store build (D-2026-10-13-09); the unknown-key half is Done (zzThat #58, which cleared RM-112) · In progress · Bundle B3 · Owner: kneelbeforez0D
+- **Scope.** The unknown-enum half (zzThat #54, zzThat T106): Android sets the generator's `enumUnknownDefaultCase=true`; iOS decodes an unknown value to a fallback case. Until it passes, no new value is added to any existing response enum within contract 1 (`docs/CONTRACT-EVOLUTION.md`). The gate is on the first store build, not on any server change.
+- **Acceptance.** Generated clients ignore unknown keys and tolerate unknown enum values, shown by a contract test with an extra field and an unknown value in each response enum, on both apps, before the first store build.
+- **Governing.** D-2026-10-10-12; D-2026-10-13-09 (ACCEPTED, Danny 2026-10-14, [#170](https://github.com/Zero-State-LLC/zzthis/issues/170#issuecomment-6175348667)).
+
+### RM-076 Public community codes review
+
+- Release v1.1 · P0 · Backlog · Bundle B9 · Gate: v1.1 store launch · Owner: Danny promotes (moved from v1.2 by D-2026-10-10-21, ADOPTED 2026-10-14, [#170](https://github.com/Zero-State-LLC/zzthis/issues/170#issuecomment-6175348667))
+- **Scope.** Turn on `ZZ_FREE_PUBLIC` in production for web and app create together, only at the v1.1 gate and after Danny's written yes. The D-2026-10-10-21 prerequisites, each with evidence in the release packet: abuse controls (RM-030, RM-031, RM-032, RM-033); the FR-011 rows verified on staging (RM-015) plus the RM-072 daily mint cap; the RM-028 blocklist with the staging refusal test (G8); grant isolation (RM-063); moderation (RM-068, RM-077, RM-102, a named moderator, 24-hour response, suspension rehearsed); cost caps (RM-041, RM-042); the shutoff triggers and a staging-rehearsed shutoff redeploy measured against the 30-minute target (D-2026-10-13-03, OPERATIONS Moderation); the D-2026-10-10-04 density trigger monitored from the first public mint; the RM-103 Terms; and RM-127 idle expiry scheduled to ship within 80 days of the flag turning on.
+- **Acceptance.** Every prerequisite above has dated evidence in the release packet; Danny's written yes is recorded; production discovery shows `free_public: true` only after both.
+- **Governing.** D-2026-10-10-21 (ADOPTED); D-2026-10-13-03; spec 005 FR-005, FR-034.
+
+### RM-077 Report triage tooling
+
+- Release v1.1 · P1 · Done (`report-queue.sql` and `report-overdue.sql` in PR #157, with RM-102) · Bundle B9 · Required before `ZZ_FREE_PUBLIC` turns on (moved from v1.2 by D-2026-10-10-21, ADOPTED 2026-10-14)
+- **Scope.** Operator SQL views for open reports by age and code.
+- **Governing.** D-2026-10-10-21 (ADOPTED); spec 005 US7, FR-025.
 
 ### RM-096 Live multi-frame reading with word-by-word voting (zzThat)
 
@@ -514,7 +532,7 @@ RM-050 production resources ─> RM-053 web build ─> RM-051 deploy ─> RM-052
 
 ### RM-101 Hide this code and the expanded report flow in the apps (external)
 
-- Release v1.1 · P0 · In progress (Hide merged in zzThat #64 and Block in zzThat #65; terms acceptance before the first create waits on RM-103, RM-124, and D-2026-10-13-04) · Bundle B3 · Owner: kneelbeforez0D
+- Release v1.1 · P0 · In progress (Hide merged in zzThat #64 and Block in zzThat #65; terms acceptance before the first create is client-only per D-2026-10-13-04 (ACCEPTED) and waits on Michael's Terms, RM-124, and the copy keys added 2026-10-14) · Bundle B3 · Owner: kneelbeforez0D
 - **Scope.** zzThat FR-035 replaces "No block list" (D-2026-10-10-25 item 1). Resolve and the Report sheet offer "Hide this code" and, once RM-112 ships, "Block this creator": a device-only list of hidden canonical codes and blocked creator references (no server call), shown afterwards as a hidden state with Unhide or Unblock; cleared on account deletion and by a Settings reset. Create asks for terms acceptance before the first create and again when the terms version changes (RM-103). The Report sheet's sent state says the creator is reviewed within 24 hours and can be suspended. Copy keys go through zzThis `design/copy.json`.
 - **Acceptance.** iOS and Android tests: hide a code, resolve it again (scan and typed) and see the hidden state without its title or body; unhide restores it; block a creator and another code with the same `creator` shows the hidden state; delete the account, or run the Settings reset, and both lists are empty; no network call is made by hide, block, unhide, or unblock; Create refuses until the current terms version is accepted.
 - **Governing.** D-2026-10-10-25; Apple 1.2; Play UGC.
@@ -522,16 +540,16 @@ RM-050 production resources ─> RM-053 web build ─> RM-051 deploy ─> RM-052
 ### RM-102 Moderation tooling: triage SLA, suspend, and runbook
 
 - Release v1.1 · P0 · In progress (tooling merged in PR #157, 2026-10-11; moderators named in D-2026-10-11-08 answer 17; staging rehearsal pending) · Bundle B9 · Owner: kneelbeforez0D (tooling), Danny (moderator name)
-- **Scope.** Extends RM-077. `workers/api/ops/` SQL: open reports by age and code, a query for reports open longer than 24 hours, suspend and unsuspend an account with audit rows (FR-025), and revoke a reported code. `docs/OPERATIONS.md` gains the moderator runbook: named moderator and backup, 24-hour response, and the escalation to `ZZ_FREE_PUBLIC=false`.
+- **Scope.** Extends RM-077. `workers/api/ops/` SQL: open reports by age and code, a query for reports open longer than 24 hours, suspend and unsuspend an account with audit rows (FR-025), and revoke a reported code. `docs/OPERATIONS.md` gains the moderator runbook: named moderator and backup, 24-hour response, and the escalation to `ZZ_FREE_PUBLIC=false`, with the shutoff triggers and the 30-minute target from D-2026-10-13-03 (any report open more than 48 hours, more than 2,000 `free_public` codes drawn in a UTC day, or the month's Cloudflare usage alert past $50), rehearsed on staging.
 - **Acceptance.** Tests on the ops SQL: a report older than 24 hours appears in the breach query; suspend blocks mint, re-roll, and record writes with 403 `forbidden` and writes an audit row; unsuspend restores them. The runbook is rehearsed once on staging.
 - **Governing.** D-2026-10-10-25 item 2; Apple 1.2 "timely responses"; Play UGC.
 
 ### RM-103 Terms of use and content policy
 
-- Release v1.1 · P0 · Backlog · Bundle B9 · Owner: Danny (approval)
-- **Scope.** Draft terms of use and a content policy (prohibited content, reporting, suspension, appeals by email), linked from Create and Account in the apps and on the web. Legal approval is Danny's.
-- **Acceptance.** Danny's written yes; links present in both apps and the web client; each client requires acceptance of the current terms version before a person's first create and again after a version change, before `ZZ_FREE_PUBLIC` turns on.
-- **Governing.** D-2026-10-10-25 item 2; Play UGC terms requirement.
+- Release v1.1 · P0 · Backlog (blocked on Michael's Terms wording, RM-124) · Bundle B9 · Owner: Danny (approval); Michael (wording)
+- **Scope.** Terms of use and a content policy (prohibited content, reporting, suspension, appeals by email), linked from Create and Account in the apps and on the web. Client-only (D-2026-10-13-04): the server neither stores nor checks acceptance or age. The current version is `terms.version` in `design/copy.json`; each client stores the accepted version on the device, asks again when it changes, and clears it on account deletion. One combined step before the first create on a device: the person confirms they are 18 or older and accepts the Terms (`terms.age_confirm`, `terms.accept`, `terms.link`; `account.terms` on Account). Scanning and typing need neither. The Terms include the inactive-codes clause from D-2026-10-13-01, in Michael's final wording. Legal approval is Danny's.
+- **Acceptance.** Danny's written yes and Michael's approved wording; `terms.version` set to the approved Terms' effective date; links present in both apps and the web client; each client requires the combined step before a person's first create and again after `terms.version` changes, before `ZZ_FREE_PUBLIC` turns on; account deletion clears the stored version; no server call records acceptance.
+- **Governing.** D-2026-10-10-25 item 2; D-2026-10-11-05, D-2026-10-11-10; D-2026-10-13-04 (ACCEPTED, Danny 2026-10-14, [#170](https://github.com/Zero-State-LLC/zzthis/issues/170#issuecomment-6175348667)); Play UGC terms requirement; `design/UX.md` Terms.
 
 ### RM-104 Data safety and privacy drafts include ML Kit diagnostics (external)
 
@@ -595,7 +613,7 @@ RM-050 production resources ─> RM-053 web build ─> RM-051 deploy ─> RM-052
 ### RM-113 Suggested-word picker on Create (server-chosen codes)
 
 - Release v1.1 · P1 · Done (zzThat #65 merged 2026-10-14; RM-125 extends it) · Bundle B3 · Owner: kneelbeforez0D · External (zzThat; web create may mirror)
-- **Scope.** Option (C) from D-2026-10-11-01. Create keeps `POST /v1/codes` and re-roll: the server still chooses words and the check word (zzThat FR-017, ZQ11). The UI offers a clearer way to pick among suggested or re-rolled server words (for example show the candidate set and "Get different words") so creators feel they chose a code without sending a person-written string. No wire change. Cap remains 3 re-rolls (spec 005 FR-006).
+- **Scope.** Option (C) from D-2026-10-11-01. Create keeps `POST /v1/codes` and re-roll: the server still chooses words and the check word (zzThat FR-017, ZQ11). The UI offers a clearer way to pick among suggested or re-rolled server words (for example show the candidate set and "Get different words") so creators feel they chose a code without sending a person-written string. No wire change. The cap was 3 re-rolls; RM-125 raises it to 5 (spec 005 FR-006, D-2026-10-13-02).
 - **Acceptance.** zzThat (and web if create is shown) tests: mint still sends no canonical; re-roll to cap; picker copy uses `design/copy.json` keys; Unavailable when `free_public` is false.
 - **Governing.** D-2026-10-11-01; D-2026-10-10-21.
 
@@ -608,16 +626,7 @@ RM-050 production resources ─> RM-053 web build ─> RM-051 deploy ─> RM-052
 
 ## v1.2 and v1.3 items
 
-### RM-076 Public community codes review
-
-- Release v1.2 · P1 · Backlog (QUEUED) · Bundle B9 · Owner: Danny promotes
-- **Acceptance.** Written abuse review from v1.0 data; content policy; `ZZ_FREE_PUBLIC=true` in production after approval.
-- **PROPOSED (D-2026-10-10-21, Danny agreed in chat 2026-10-09; adopted on merge).** Release v1.1 · P0 · Covers web and app create together · Gate: v1.1 store launch. Needs the RM-072 durable-key daily mint cap for `free_public`, a moderation runbook with a named moderator and response time, written spend and abuse thresholds for turning the flag off, and a timed staging rehearsal of the shutoff redeploy (`ZZ_FREE_PUBLIC=false` through RM-002; it is a Wrangler var, so shutoff is a deploy, target 30 minutes, PROPOSED).
-
-### RM-077 Report triage tooling
-
-- Release v1.1 · P2 · Done (report-queue.sql and report-overdue.sql in PR #157, with RM-102) · Bundle B9 · Operator SQL views for open reports by age and code.
-- **PROPOSED (D-2026-10-10-21, Danny agreed in chat 2026-10-09; adopted on merge).** Release v1.1 · P1, required before `ZZ_FREE_PUBLIC` turns on.
+v1.2 has no items: D-2026-10-10-21 (ADOPTED 2026-10-14) moved RM-076 and RM-077 to v1.1.
 
 ### RM-078 Web issuer controls
 
@@ -637,7 +646,7 @@ RM-050 production resources ─> RM-053 web build ─> RM-051 deploy ─> RM-052
 ### RM-114 Owner-only renew for expired codes
 
 - Release v1.3 · P2 · Backlog (QUEUED) · Bundle B7 · Owner: kneelbeforez0D
-- **Scope.** Row 9 from D-2026-10-11-01. Public resolve keeps one not-found shape for unknown, expired, used, and revoked (spec 002 FR-011, spec 005 FR-009). The signed-in owner (My codes / owner resolve) may see that a code expired and renew it (update `expires_at`) without a public "this code expired" message. Rolling renew-on-scan by arbitrary scanners is out of scope.
+- **Scope.** Row 9 from D-2026-10-11-01. Issuer-set `expires_at` only (`enterprise` and `logistics` codes); idle expiry of `free_public` codes and its automatic revive are RM-127 (D-2026-10-13-01). Public resolve keeps one not-found shape for unknown, expired, used, and revoked (spec 002 FR-011, spec 005 FR-009). The signed-in owner (My codes / owner resolve) may see that a code expired and renew it (update `expires_at`) without a public "this code expired" message. Rolling renew-on-scan by arbitrary scanners is out of scope. An explicit per-code revive for idle-expired codes may join this item (D-2026-10-13-01 option 3b).
 - **Acceptance.** Spec and tests: public expired → not-found; owner sees expired and can renew; scanner cannot keep another person's code alive by scanning.
 - **Governing.** D-2026-10-11-01; pairs with RM-078 expiring-code UI.
 
@@ -659,7 +668,7 @@ RM-050 production resources ─> RM-053 web build ─> RM-051 deploy ─> RM-052
 | RM-092 | v2.2 | P1 | Backlog (RESEARCH) | Advanced recognition and photo reads after R-B12; R2 joins recovery scope | B12; spec 005 US5 |
 | RM-097 | v2.2 | P3 | Backlog (RESEARCH) | Image matching of scans against the creator's photos (Michael 2026-10-09); needs reference photos, consent wording, and a retention limit | D-2026-10-10-23; `docs/SPEC.md` 12.2 |
 | RM-095 | R-B6 | P1 | Backlog | Human and OCR confusion evaluation of the production list on the Q34 corpus | spec 003 FR-001, FR-002 |
-| RM-114 | v1.3 | P2 | Backlog (QUEUED) | Owner-only renew for expired codes; no public expired message | D-2026-10-11-01 |
+| RM-114 | v1.3 | P2 | Backlog (QUEUED) | Owner-only renew for issuer-set `expires_at`; no public expired message; idle expiry is RM-127 | D-2026-10-11-01; D-2026-10-13-01 |
 | RM-116 | v2.0 | P1 | Backlog | Person-made code claim design (contract 2; option A) | D-2026-10-11-01; RM-084 |
 | RM-117 | v2.2 | P1 | Backlog (RESEARCH) | Cloud photo and training consent before photo reads | D-2026-10-11-01; B12 |
 | RM-126 | Horizon | P3 | Backlog | Links and zzPages safety requirements | D-2026-10-11-13 |
@@ -680,15 +689,86 @@ RM-050 production resources ─> RM-053 web build ─> RM-051 deploy ─> RM-052
 
 ## v1.1 items from Michael's answers (D-2026-10-11-02 to -14)
 
-Added by #164. Scope and acceptance for RM-120, RM-124, and RM-125 depend on the PROPOSED records in [decisions-2026-10-13.md](decisions-2026-10-13.md) (D-2026-10-13-02 and -04); idle expiry under D-2026-10-11-15 is D-2026-10-13-01.
+Added by #164. Scope and acceptance for RM-120, RM-124, and RM-125 follow the records in [decisions-2026-10-13.md](decisions-2026-10-13.md) (D-2026-10-13-02 and -04), and RM-127 follows D-2026-10-13-01 under D-2026-10-11-15 option B; all ACCEPTED (Danny, 2026-10-14, [#170](https://github.com/Zero-State-LLC/zzthis/issues/170#issuecomment-6175348667)). Michael still owns the Terms wording, the confusable letter groups, and hearing why one-word codes are out.
 
 | ID | Release | Pri | Status | Item | Governing |
 |---|---|---|---|---|---|
 | RM-118 | v1.1 | P0 | Built in zzThat #43 (evidence on zzThat #66) | iOS Sign in with Apple beside Google | D-2026-10-11-02; Guideline 4.8 |
 | RM-119 | v1.1 | P0 | Built in zzThat #43 (evidence on zzThat #67) | iOS in-app account deletion with Apple token revocation | D-2026-10-11-03; spec 005 FR-023 |
-| RM-120 | v1.1 | P0 | Ready; client-only per D-2026-10-13-04 (PROPOSED) | 18+ gating, Terms clause, store age-rating questionnaires | D-2026-10-11-05 |
+| RM-120 | v1.1 | P0 | Ready; client-only per D-2026-10-13-04 (ACCEPTED); waits on Michael's Terms | 18+ gating, Terms clause, store age-rating questionnaires | D-2026-10-11-05; D-2026-10-13-04 |
 | RM-121 | v1.1 | P1 | Ready | "Early release" labeling; no alpha/beta/test; no zzThis mention on zzThat surfaces | D-2026-10-11-06, -07 |
 | RM-122 | v1.1 | P1 | Backlog | zzsupport@zer0state.com in app, listings, policy, site footer (mailbox first) | D-2026-10-11-04 |
 | RM-123 | v1.1 | P0 | Backlog | Publish privacy policy (answers 1-19) at proposed zzthat.com/privacy | D-2026-10-11-08, -09; zzThat #47 |
-| RM-124 | v1.1 | P0 | Backlog; draft in zzThat #72 | Terms of Use and content policy draft for Michael's review | D-2026-10-11-10; D-2026-10-11-15 |
-| RM-125 | v1.1 | P1 | Blocked on D-2026-10-13-02 (word count, contract freeze) | Create: 1/2/3 word length, 5 re-rolls per creation, server rate limit, no phone numbers | D-2026-10-11-11, -12; extends RM-113 |
+| RM-124 | v1.1 | P0 | Backlog; draft in zzThat #72; wording pending Michael | Terms of Use and content policy draft for Michael's review; client-only acceptance | D-2026-10-11-10; D-2026-10-11-15; D-2026-10-13-01, -04 |
+| RM-125 | v1.1 | P1 | Ready | Create: 5 re-rolls per creation, two-word codes only, server daily cap (RM-072), no phone numbers; length choice moves to v2.0 | D-2026-10-11-11, -12; D-2026-10-13-02; extends RM-113 |
+| RM-127 | v1.1 | P0 | Ready | Idle expiry and revive (server) | D-2026-10-13-01; D-2026-10-11-15 option B; spec 005 FR-036 |
+
+### RM-118 iOS Sign in with Apple beside Google (external)
+
+- Release v1.1 · P0 · Built in zzThat #43; evidence on zzThat #66 · Bundle B3 · Owner: kneelbeforez0D
+- **Scope.** iOS offers Sign in with Apple at equal prominence beside Google (App Store Review Guideline 4.8). The server side already exists: spec 005 FR-020 (Apple identity token and authorization code) and `identities.apple_client_id`. No server change.
+- **Acceptance.** Already built. Evidence on zzThat #66: the iOS sign-in screen shows both buttons at equal prominence, and an Apple sign-in reaches a signed-in session against `POST /v1/auth/token`. Real-provider verification on staging is RM-017.
+- **Governing.** D-2026-10-11-02; Guideline 4.8; spec 005 FR-020, Sign-in by platform.
+
+### RM-119 iOS in-app account deletion with Apple token revocation (external)
+
+- Release v1.1 · P0 · Built in zzThat #43; evidence on zzThat #67 · Bundle B3 · Owner: kneelbeforez0D
+- **Scope.** A signed-in person deletes the account from inside the app (Guideline 5.1.1(v)) through `DELETE /v1/me`, which revokes the stored Apple token first (spec 005 FR-023). The web deletion link `https://zz.zer0state.com/account/` stays for the store forms. No server change.
+- **Acceptance.** Already built. Evidence on zzThat #67: the entry point, the Delete confirm pattern, and the signed-out end state, with the device lists and the accepted terms version cleared. Apple revocation on staging is RM-017.
+- **Governing.** D-2026-10-11-03; Guideline 5.1.1(v); spec 005 FR-023.
+
+### RM-120 18+ gating, Terms clause, and age-rating questionnaires
+
+- Release v1.1 · P0 · Ready; waits on Michael's Terms (RM-124) · Bundle B3, B9 · Owner: kneelbeforez0D (clients), Danny (questionnaires)
+- **Scope.** Client-only (D-2026-10-13-04): the server neither stores nor checks age. One combined step before the first create on a device: the person confirms they are 18 or older (`terms.age_confirm`) and accepts the Terms (`terms.accept`). The accepted `terms.version` is stored on the device and asked again when it changes. Scanning and typing need neither. The Terms state 18+ (RM-124). Store ratings are whatever Apple's and Google's questionnaires give (D-2026-10-11-08 answer 15).
+- **Acceptance.** iOS, Android, and web tests: Create shows the combined step before the first create; create is refused until both boxes are confirmed; a changed `terms.version` asks again; account deletion clears the stored version; scan and type never ask; no server call records it. Danny files the questionnaire answers.
+- **Governing.** D-2026-10-11-05; D-2026-10-13-04; `design/UX.md` Terms.
+
+### RM-121 "Early release" labeling and no zzThis mention
+
+- Release v1.1 · P1 · Ready · Bundle B3 · Owner: kneelbeforez0D
+- **Scope.** The store listings and the app say "early release", never "alpha", "beta", or "test". No "zzThis" or "zzthis.com" in any visible zzThat copy, listing, policy, Terms, or visible URL; API hostnames the person never sees are not copy.
+- **Acceptance.** A sweep of zzThat strings, listing drafts, and policy drafts finds no "alpha", "beta", "test" label, "zzThis", or "zzthis.com"; the result is attached to the pull request.
+- **Governing.** D-2026-10-11-06, D-2026-10-11-07.
+
+### RM-122 zzsupport@zer0state.com everywhere
+
+- Release v1.1 · P1 · Backlog (the mailbox comes first) · Owner: Danny (mailbox), kneelbeforez0D (surfaces)
+- **Scope.** `zzsupport@zer0state.com` is the only public address for the apps: support, privacy contact, store contact, and abuse reports, in the app, the listings, the policy, and the site footer. Danny creates the mailbox and its routing to Danny and Michael before any surface shows it. Supersedes the address in RM-110.
+- **Acceptance.** A test message reaches Danny and Michael; every surface above shows the address.
+- **Governing.** D-2026-10-11-04; D-2026-10-11-08 answers 7 and 19.
+
+### RM-123 Publish the privacy policy
+
+- Release v1.1 · P0 · Backlog · Owner: Danny
+- **Scope.** Publish the privacy policy built from D-2026-10-11-08 answers 1 to 19 at the host D-2026-10-11-09 proposes (`https://zzthat.com/privacy`, PROPOSED, Danny), and set `PUBLIC_PRIVACY_URL`. The policy names the operator deletion and access-request method (D-2026-10-13-08, RM-027) and states that no email is stored.
+- **Acceptance.** The policy is live on or before the first store submission; `account.privacy` opens it in both apps and on the web; zzThat #47 is closed against it.
+- **Governing.** D-2026-10-11-08, D-2026-10-11-09; D-2026-10-13-08; zzThat #47.
+
+### RM-124 Terms of Use and content policy draft for Michael
+
+- Release v1.1 · P0 · Backlog; draft in zzThat #72; wording pending Michael · Owner: kneelbeforez0D (draft), Michael (wording), Danny (approval)
+- **Scope.** A draft with every D-2026-10-11-10 clause, the 18+ clause (D-2026-10-11-05), and the inactive-codes clause proposed in D-2026-10-13-01 (codes stop showing after 90 days without opening zzThat while signed in, turn back on at the next sign-in, and are never given to anyone else). The reuse clause stays out (D-2026-10-11-15 option B: never reissued). Acceptance is client-only (D-2026-10-13-04). Nothing publishes before Michael approves the wording; this backlog does not write it.
+- **Acceptance.** Michael's written approval of the wording; `terms.version` in `design/copy.json` set to the approved Terms' effective date; RM-103 links point at the published text.
+- **Governing.** D-2026-10-11-10; D-2026-10-11-15; D-2026-10-13-01, D-2026-10-13-04.
+
+### RM-125 Create: five re-rolls on two-word codes
+
+- Release v1.1 · P1 · Ready · Bundle B9 · Owner: kneelbeforez0D · Extends RM-113
+- **Scope.** A new plain code gets `rerolls_remaining` 5, six candidates per creation (spec 005 FR-006); the OpenAPI `rerolls_remaining` `maximum` becomes 5 in the same pull request, a narrow D-2026-10-10-12 exception (`docs/CONTRACT-EVOLUTION.md`). Two-word codes only: one-word codes are not issued in contract 1, and the length choice (including three words) moves to v2.0 with RM-116 (spec 003, Code length). Rolls are also capped per day on the server (RM-072). No phone numbers in codes: filter 3 drops number words (RM-020). zzThat's picker gets five rolls with no app change.
+- **Acceptance.** Worker tests: a new plain code has `rerolls_remaining` 5; five re-rolls succeed and the sixth is `reroll-cap`; a handle still has 0. The OpenAPI test and both generated clients accept 5. zzThat's re-roll cap test passes at 5.
+- **Governing.** D-2026-10-11-11, D-2026-10-11-12; D-2026-10-13-02 (ACCEPTED); spec 005 FR-006. Pending Michael: hearing why one-word codes are out.
+
+### RM-126 Links and zzPages safety requirements
+
+- Release Horizon · P3 · Backlog (unscheduled) · Owner: Michael (scheduling)
+- **Scope.** Requirements for when links or zzPages come: sign-in required to add a link; a known-bad-site check on add and on open; a "You're leaving zzThat" screen showing the full address; a Report button; a daily limit per account. Sign-in, not email collection. Out of the early release.
+- **Acceptance.** Before any link feature is promoted, a spec names each requirement above with a test, and THREAT-MODEL gains a link-safety row (FR-007 plain-text rule stays until then).
+- **Governing.** D-2026-10-11-13; R-ZZPAGE; spec 005 FR-007.
+
+### RM-127 Idle expiry and revive (server)
+
+- Release v1.1 · P0 · Ready · Bundle B9 · Owner: kneelbeforez0D · Must ship within 80 days of `ZZ_FREE_PUBLIC` turning on in production
+- **Scope.** Spec 005 FR-036 (D-2026-10-13-01). `free_public` codes only. Migration 0004 adds `accounts.last_active_at` (backfilled to the migration time) and `codes.idle_expired_at`, with their indexes. `POST /v1/auth/token` and `POST /v1/auth/refresh` set `last_active_at` at most once per UTC day and, unless the account is suspended, clear `idle_expired_at` on all the owner's codes in the same batch, with one `code.revive` event each. The FR-026 daily run sets `idle_expired_at` on each active `free_public` code whose owner's `last_active_at` is more than 90 days old, in batches of 500 rows, at most 10 batches per run, with one `code.expire` event per code, and purges cache keys as FR-023 step 3 does. Re-roll refuses an idle-expired code. A code is never reissued. No wire change: the public answer is the one not-found body and the owner sees `expired`.
+- **Acceptance.** Worker tests: 90 days idle plus one daily run gives a public 404 (the one not-found body) and `expired` for the owner in `GET /v1/me/codes`; a refresh (and a sign-in) revives the codes, with one `code.revive` event each; another person's scan of the code changes nothing (no `last_active_at` change, no revive); `enterprise` codes never idle-expire; a suspended owner is not revived; re-roll of an idle-expired code is `reroll-cap`; a run over 5,000 eligible codes stops at 10 batches and the next run continues.
+- **Governing.** D-2026-10-13-01 (ACCEPTED, Danny 2026-10-14, [#170](https://github.com/Zero-State-LLC/zzthis/issues/170#issuecomment-6175348667)); D-2026-10-11-15 option B (ACCEPTED); spec 005 FR-009, FR-026, FR-036; Q36; DOMAIN-MODEL C3a; `docs/DATA-LIFECYCLE.md`; `docs/THREAT-MODEL.md`.

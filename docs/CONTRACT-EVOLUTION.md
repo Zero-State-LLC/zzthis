@@ -31,7 +31,23 @@ Status: ACCEPTED (Danny, 2026-10-09 PT) as a named exception to D-2026-10-10-12.
 - One additive, optional Resolve response field, `creator`, inside contract 1: an opaque HMAC of the owner's account id, null for private records.
 - Shipped in PR #161 with OpenAPI `info.version` 1.1, `X-ZZ-Contract: 1` unchanged, and discovery `creator_refs: true`.
 - RM-075 tolerant readers: the unknown-key half passes on both apps (zzThat PR #58), which covers the new keys `creator` and `creator_refs`; the unknown-enum half is open (zzThat issue #54) and this field adds no enum value.
-- No other contract-1 change is allowed under rule 1 until D-2026-10-10-12 is decided.
+- No other contract-1 change is allowed under rule 1 until D-2026-10-10-12 is decided, except the named exception below.
+
+## Accepted exception: five re-rolls (2026-10-14, D-2026-10-13-02)
+
+Status: ACCEPTED (Danny, 2026-10-14, [#170](https://github.com/Zero-State-LLC/zzthis/issues/170#issuecomment-6175348667)) as a narrow exception to D-2026-10-10-12.
+
+- A new plain code gets `rerolls_remaining` 5 instead of 3 (spec 005 FR-006), so one creation offers six candidates. This is a server rule change.
+- The OpenAPI `rerolls_remaining` `maximum` changes from 3 to 5 in the same code pull request (RM-125). Neither generated client enforces `maximum`, so shipped apps keep working. No field, route, error, or enum value is added.
+- Word count does not change in contract 1: one-word and three-word codes stay `wrong-length`. Three-word codes come with contract 2 at v2.0 (spec 003, Code length).
+
+## Rule until tolerant readers pass (2026-10-14, D-2026-10-13-09)
+
+Status: ACCEPTED (Danny, 2026-10-14, [#170](https://github.com/Zero-State-LLC/zzthis/issues/170#issuecomment-6175348667)).
+
+- No new value is added to any existing response enum within contract 1 until zzThat's unknown-enum tolerance passes on both apps (RM-075, zzThat issue #54). Android sets the generator's `enumUnknownDefaultCase=true`; iOS decodes an unknown value to a fallback case.
+- That tolerance is a gate on the first store build, not on any server change: once an app version is in a store, any later enum value would break that cohort.
+- Idle expiry (spec 005 FR-036) follows this rule: it reuses the existing `expired` status and adds no enum value.
 
 ## Semantic-profile implications
 
