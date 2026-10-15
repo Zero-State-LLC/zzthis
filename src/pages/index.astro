@@ -9,32 +9,27 @@ import Pipeline from "../components/Pipeline.astro";
 import ComparisonCards from "../components/ComparisonCards.astro";
 import { comparisonHeading } from "../content/comparison";
 import Tour from "../components/Tour.astro";
-import { aboutTeaser, contactAction, hero } from "../content/hero";
+import { aboutTeaser, consumerHow, contactAction, hero } from "../content/hero";
 import { contactEmail } from "../content/navigation";
 import { url } from "../lib/url";
 import BaseLayout from "../layouts/BaseLayout.astro";
 
-const splitAt = hero.title.indexOf(". ");
-const setup = hero.title.slice(0, splitAt + 1);
-const claim = hero.title.slice(splitAt + 2);
-const phrase = "readable-writable";
-const phraseAt = claim.indexOf(phrase);
-const claimBefore = claim.slice(0, phraseAt);
-const claimAfter = claim.slice(phraseAt + phrase.length);
+const description =
+  hero.subline.before + hero.subline.code + hero.subline.after;
 ---
 
-<BaseLayout title="zzThis" description={hero.subline} home>
+<BaseLayout title="zzThis" description={description} home>
   <section class="hero" id="top" aria-labelledby="hero-title">
     <div class="hero__copy">
+      <p class="eyebrow">{hero.eyebrow}</p>
       <h1 class="hero__title" id="hero-title">
-        <span class="hero__setup">{setup}</span>{" "}
-        <span class="hero__claim">
-          {claimBefore}
-          <span class="nowrap">{phrase}</span>
-          {claimAfter}
-        </span>
+        <span class="hero__claim">{hero.title}</span>
       </h1>
-      <p class="hero__sub">{hero.subline}</p>
+      <p class="hero__sub">
+        {hero.subline.before}
+        <code class="hero__code">{hero.subline.code}</code>
+        {hero.subline.after}
+      </p>
       <div class="hero__actions">
         {hero.actions.map((action) => (
           <a
@@ -45,6 +40,18 @@ const claimAfter = claim.slice(phraseAt + phrase.length);
           </a>
         ))}
       </div>
+      <div class="hero__photos">
+        {hero.photos.map((photo) => (
+          <img
+            src={url(photo.src)}
+            width={photo.width}
+            height={photo.height}
+            alt={photo.alt}
+            loading="eager"
+            decoding="async"
+          />
+        ))}
+      </div>
       <p class="hero__body">
         {hero.paragraph.before}
         <code>{hero.paragraph.code}</code>
@@ -52,6 +59,19 @@ const claimAfter = claim.slice(phraseAt + phrase.length);
       </p>
     </div>
     <Console />
+  </section>
+  <section class="consumer" aria-labelledby="consumer-title">
+    <p class="eyebrow">{consumerHow.eyebrow}</p>
+    <h2 id="consumer-title">{consumerHow.heading}</h2>
+    <p class="consumer__text">{consumerHow.text}</p>
+    <p class="consumer__lead">{consumerHow.lead}</p>
+    <ol class="consumer__steps">
+      {consumerHow.steps.map((step) => (
+        <li>
+          <strong>{step.title}</strong> {step.text}
+        </li>
+      ))}
+    </ol>
   </section>
   <Anatomy />
   <section class="compare" aria-labelledby="compare-title">

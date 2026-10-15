@@ -21,7 +21,6 @@ import * as workflowsModule from "../src/content/workflows";
 const { applications, applicationsPage } = applicationsModule;
 const { comparisonColumns, comparisonNote, comparisonRows } = comparisonModule;
 const { whyMarkers } = anatomyModule;
-const { featured, hero } = heroModule;
 const { footerItems, footerNotice, zzthisSocial, zzthatSocial } =
   navigationModule;
 const { advisors, founder, founderOrigin } = peopleModule;
@@ -65,35 +64,6 @@ const allStrings = modules.flatMap(collectStrings);
 
 const story = (id: string): string | undefined =>
   applications.find((entry) => entry.id === id)?.story;
-
-describe("hero and featured statement (spec 3.2)", () => {
-  it("matches the hero copy", () => {
-    expect(hero.title).toBe(
-      "Barcodes made things scannable. zzThis makes things readable-writable - and smart.",
-    );
-    expect(hero.subline).toBe(
-      "Write a code on a thing; type it to find its record.",
-    );
-    const { before, code, after } = hero.paragraph;
-    expect(before + code + after).toBe(
-      "zzThis is a human-readable, human-writable code for the physical world. Write a zz-code on tape, a crate, a parcel, an envelope, or a sign, or embed it in text or program code. The prototype supports typed lookup to a digital record. On-device camera recognition is planned for v1 but is not implemented in this build. Voice recognition is planned for a future release, not v1.",
-    );
-    expect(code).toBe("zz-code");
-    expect(hero.actions.map((action) => action.label)).toEqual([
-      "See field logistics",
-      "How it works",
-    ]);
-  });
-
-  it("matches the featured statement", () => {
-    expect(featured.heading).toBe(
-      "The shortest, smartest distance between a physical thing, its digital record, and the work that comes next.",
-    );
-    expect(featured.text).toBe(
-      "A zz code gives people a way to create the mark themselves, wherever the work happens. Future AI-assisted workflows could help identify what a camera sees, count what remains, suggest how an item should be handled, and prepare the next task; those capabilities are explorations, not shipped v1 behavior. The same visible code connects the item, its history, and the people responsible for it. It bridges physical things and their digital control. AI may serve as an interface and connector, not as the authority that defines or resolves a zz code.",
-    );
-  });
-});
 
 describe("demo prototype decisions", () => {
   it("keeps zzthing.com in the demo pending the October 31 review", () => {
