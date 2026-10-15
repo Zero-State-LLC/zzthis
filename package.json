@@ -61,6 +61,11 @@
   "overrides": {
     "openapi-typescript": {
       "typescript": "$typescript"
+    },
+    "sharp": "0.35.5",
+    "miniflare@5.20260815.0-alpha": {
+      "sharp": "0.35.5",
+      "undici": "7.29.1"
     }
   }
 }

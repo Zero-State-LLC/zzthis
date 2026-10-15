@@ -1,6 +1,6 @@
 # Current decision status
 
-Date: 2026-10-06, updated 2026-10-10 by the [architecture review](analysis-2026-10-10-architecture-review.md), 2026-10-13 to match `main` at 8873ce1, and 2026-10-14 to match `main` at b20b212. Dated decision records and analysis files keep the status they had when written.
+Date: 2026-10-06, updated 2026-10-10 by the [architecture review](analysis-2026-10-10-architecture-review.md), 2026-10-13 to match `main` at 8873ce1, and 2026-10-14 to match `main` at b20b212 and to record Danny's answers on #170. Dated decision records and analysis files keep the status they had when written.
 Authority: docs/SPEC.md Section 9 and 9a plus later accepted intents. This file is a convergence index, not a new decision source.
 
 ## Reading rule
@@ -40,10 +40,10 @@ Full records: [decisions-2026-10-10.md](decisions-2026-10-10.md). Rows in docs/S
 | D-2026-10-10-04 | Production wordlist path; keep 2+check format with a density trigger | PROPOSED | Michael (format), Danny (freeze, risk) |
 | D-2026-10-10-05 | IPv6 /64 limits, zone rule, growth monitor | ASSIMILATED | Danny for the zone rule |
 | D-2026-10-10-06 | One organization per scope until contract 2 | ADOPTED rule; model PROPOSED | Danny |
-| D-2026-10-10-07 | Access-protected staging host with writes on | PROPOSED | Danny (DNS, Access) |
-| D-2026-10-10-08 | Production config and reviewer-gated workflow | PROPOSED | Danny |
-| D-2026-10-10-09 | Production on Workers Paid | PROPOSED | Danny (spend) |
-| D-2026-10-10-10 | Recovery scope; proposed RPO 5 min, RTO 4 h | PROPOSED | Danny |
+| D-2026-10-10-07 | Access-protected staging host with writes on | ACCEPTED (Danny, 2026-10-14, [#170](https://github.com/Zero-State-LLC/zzthis/issues/170#issuecomment-6175348667)); host and policy in D-2026-10-13-06 | Danny creates the host and Access policy (RM-012) |
+| D-2026-10-10-08 | Production config and reviewer-gated workflow | ACCEPTED (Danny, 2026-10-14, [#170](https://github.com/Zero-State-LLC/zzthis/issues/170#issuecomment-6175348667)) | Danny for each dispatch |
+| D-2026-10-10-09 | Production on Workers Paid | ACCEPTED (Danny, 2026-10-14, [#170](https://github.com/Zero-State-LLC/zzthis/issues/170#issuecomment-6175348667)) | Danny (spend action) |
+| D-2026-10-10-10 | Recovery scope; RPO 5 min, RTO 4 h, counted once the drill meets them | ACCEPTED (Danny, 2026-10-14, [#170](https://github.com/Zero-State-LLC/zzthis/issues/170#issuecomment-6175348667)) | - |
 | D-2026-10-10-11 | Observability and alerting baseline | ADOPTED design | Danny for contacts |
 | D-2026-10-10-12 | Contract 1 frozen through v1.1; tolerant-reader rule | PROPOSED amendment | Danny |
 | D-2026-10-10-13 | Security CI: allowlist the verified false positive | ADOPTED | - |
@@ -53,8 +53,8 @@ Full records: [decisions-2026-10-10.md](decisions-2026-10-10.md). Rows in docs/S
 | D-2026-10-10-17 | zzPage is research | ADOPTED | - |
 | D-2026-10-10-18 | Location (PR #127) is research | ADOPTED | - |
 | D-2026-10-10-19 | Backend defects enter v1.0 | ASSIMILATED | - |
-| D-2026-10-10-20 | Tests become a required check | PROPOSED | Danny |
-| D-2026-10-10-21 | `free_public` at v1.1 for zzThat create | PROPOSED in header; its text says the status changes when the record merges; PR #139 merged it 2026-10-10 | Danny to confirm |
+| D-2026-10-10-20 | Tests become a required check | ACCEPTED (Danny, 2026-10-14, [#170](https://github.com/Zero-State-LLC/zzthis/issues/170#issuecomment-6175348667)) | Danny sets branch protection (RM-005) |
+| D-2026-10-10-21 | `free_public` at v1.1 for zzThat create | ADOPTED (Danny, 2026-10-14, [#170](https://github.com/Zero-State-LLC/zzthis/issues/170#issuecomment-6175348667)); RM-076 and RM-077 are v1.1 gate items; v1.2 has no items | Danny's written yes before the flag turns on |
 | D-2026-10-10-22 | One organization per scope now; org-bound grants before v1.3 | ADOPTED; built in PR #146 | - |
 | D-2026-10-10-23 | Retake guidance now, combining retakes later | ADOPTED; retry reasons now, multi-frame reading later (RM-096) | - |
 | D-2026-10-10-24 | Follow-ups from the org-bound grants build | ACCEPTED (Danny, 2026-10-09 PT); RM-098 to RM-100 | - |
@@ -80,7 +80,23 @@ Full records: [decisions-2026-10-11.md](decisions-2026-10-11.md). Rows in docs/S
 | D-2026-10-11-12 | Rejects: near-miss, public expired message, phone numbers | ACCEPTED | - |
 | D-2026-10-11-13 | Links/zzPages requirements (unscheduled) | ACCEPTED | - |
 | D-2026-10-11-14 | Points unscheduled; photo training v2.2 opt-in | ACCEPTED | - |
-| D-2026-10-11-15 | Code reuse after 2 months vs. uniqueness | OPEN in the record; option B (never reissue, 60 days idle plus 30 days grace, owner revives) locked in a #164 comment on 2026-10-12; mechanics proposed in D-2026-10-13-01 | Danny |
+| D-2026-10-11-15 | Code reuse after 2 months vs. uniqueness | ACCEPTED, option B (Danny, 2026-10-14, [#170](https://github.com/Zero-State-LLC/zzthis/issues/170#issuecomment-6175348667)): never reissue; idle expiry after 90 days with automatic revive (D-2026-10-13-01, RM-127) | - |
+
+## Decisions recorded 2026-10-13
+
+Full records: [decisions-2026-10-13.md](decisions-2026-10-13.md). Rows in docs/SPEC.md Section 9a. All ACCEPTED as recommended (Danny, 2026-10-14, [#170](https://github.com/Zero-State-LLC/zzthis/issues/170#issuecomment-6175348667)).
+
+| ID | Subject | Status | Owner of any pending yes |
+|---|---|---|---|
+| D-2026-10-13-01 | Idle expiry and revive for `free_public` codes (spec 005 FR-036, RM-127) | ACCEPTED | Michael for the Terms wording |
+| D-2026-10-13-02 | Five re-rolls; two-word codes only in contract 1; three words at v2.0 | ACCEPTED | Michael to hear why one-word codes are out |
+| D-2026-10-13-03 | Daily mint cap (30 per subject, 60 per IP, UTC day) and shutoff triggers | ACCEPTED | - |
+| D-2026-10-13-04 | Terms and 18+ acceptance are client-only; `terms.version` in copy.json | ACCEPTED | Michael for the Terms wording |
+| D-2026-10-13-05 | v1.1 camera ships confirm-only unless a PASS receipt exists (spec 004 FR-023) | ACCEPTED | - |
+| D-2026-10-13-06 | Staging at `zz-staging.zer0state.com` behind Access; reset script | ACCEPTED | Danny creates the host and Access policy |
+| D-2026-10-13-07 | Production wordlist build `prod-v1` | ACCEPTED | Michael for the confusable letter groups |
+| D-2026-10-13-08 | Operator account deletion and data-subject requests | ACCEPTED | Michael for the `account.id` copy |
+| D-2026-10-13-09 | Unknown enum values gate the first store build | ACCEPTED | - |
 
 ## Genuinely open or evidence-gated
 
@@ -88,8 +104,8 @@ Full records: [decisions-2026-10-11.md](decisions-2026-10-11.md). Rows in docs/S
 |---|---|---|
 | B17 consumer location capability | Operator disposition; consumer journey and privacy decisions in `specs/006-location/spec.md` | No contract-1 schema change or implementation until release/scope and privacy decisions are accepted |
 | OCR/fiducial release thresholds | ZZ-OCR-QUAL-001 tuning/final corpus. #89 and the #115 preflight are merged; the private corpus and a PASS receipt are still open | blocks camera Accept promotion, not typed entry |
-| production wordlist human-confusion thresholds | R-B6 on the Q34 corpus; fallback in D-2026-10-10-04 | blocks freezing the production wordlist unless Danny records risk acceptance |
-| product SLO, end-to-end RPO, RTO | proposed values in D-2026-10-10-10; drill RM-024 (#86) | blocks production authorization |
+| production wordlist human-confusion thresholds | R-B6 on the Q34 corpus; fallback in D-2026-10-10-04; the `prod-v1` freeze cites that risk acceptance (D-2026-10-13-07) | blocks freezing the production wordlist unless Danny records risk acceptance |
+| product SLO, end-to-end RPO, RTO | RPO 5 minutes and RTO 4 hours accepted in D-2026-10-10-10 (2026-10-14), counted only once drill RM-024 (#86) meets them | blocks production authorization |
 | six high npm audit findings | clean Node 24 npm audit JSON plus dependency-path reachability (#92) | blocks dependency-security disposition |
 | contract-2 Scope/Namespace/Organization model | #87 plus D-2026-10-10-06 | blocks promotion of #81 semantic-profile work and multi-organization pilots |
 | ZK proof-system promotion | #87/#81 plus S1 negative vectors and trust/lifecycle decisions | #83 remains CANON-SHADOW |

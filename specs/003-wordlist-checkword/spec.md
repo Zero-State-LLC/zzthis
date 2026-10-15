@@ -1,7 +1,7 @@
 # Feature spec: wordlist and check word
 
 Feature ID: 003-wordlist-checkword
-Status: parser/check-word/shared-core implementation is present under spec 005 on main; human-factors validation of the production wordlist remains open. Originally requested in issue #14. Deepened 2026-10-03: the v1 text grammar (US3) is accepted from Michael's Q48 and Q49 answers ([`docs/SPEC.md` Section 2.2a](../../docs/SPEC.md)), and updated the same day from his answers to Q50 to Q61.
+Status: parser/check-word/shared-core implementation is present under spec 005 on main; human-factors validation of the production wordlist remains open. The production list build (`prod-v1`) is accepted (D-2026-10-13-07, Danny 2026-10-14, [#170](https://github.com/Zero-State-LLC/zzthis/issues/170#issuecomment-6175348667)) and not yet built (RM-020); its letter groups wait for Michael. Originally requested in issue #14. Deepened 2026-10-03: the v1 text grammar (US3) is accepted from Michael's Q48 and Q49 answers ([`docs/SPEC.md` Section 2.2a](../../docs/SPEC.md)), and updated the same day from his answers to Q50 to Q61.
 Phase: specify (what and why). The how is in [plan.md](plan.md).
 Constitution: [.specify/memory/constitution.md](../../.specify/memory/constitution.md).
 
@@ -52,8 +52,8 @@ Acceptance:
 
 | ID | Requirement | Source |
 |---|---|---|
-| FR-001 | The production list filters empirically confusable handwritten forms using a versioned confusable-shape model/table validated against the governed corpus. proto-v0 skips and reports this filter. | Q35 RESOLVED [DELEGATED 2026-10-04, #74]; empirical threshold evidence-gated |
-| FR-002 | The production list uses a phonetic key (Double Metaphone) to identify candidate sound-confusable pairs, then validates/removes empirically confusable pairs. proto-v0 skips and reports this filter. | Q35 RESOLVED [DELEGATED 2026-10-04, #74]; empirical threshold evidence-gated |
+| FR-001 | The production list filters empirically confusable handwritten forms using a versioned confusable-shape model/table validated against the governed corpus. proto-v0 skips and reports this filter. | Q35 RESOLVED [DELEGATED 2026-10-04, #74]; empirical threshold evidence-gated. Production build: filter 4 in Production list build (D-2026-10-13-07) |
+| FR-002 | The production list uses a phonetic key (Double Metaphone) to identify candidate sound-confusable pairs, then validates/removes empirically confusable pairs. proto-v0 skips and reports this filter. | Q35 RESOLVED [DELEGATED 2026-10-04, #74]; empirical threshold evidence-gated. Production build: filter 5 in Production list build (D-2026-10-13-07) |
 | FR-003 | Every pair of words has an edit distance of at least 3. Edit distance is Levenshtein distance over the lowercase ASCII letters: insert, delete, or substitute one letter, each costing 1. Swapping two letters is not one edit; it costs 2. FR-003, filter (6), and the G1 near-word check all use this one function. | [issue #14]; metric decided 2026-10-05 (`docs/SPEC.md` D-2026-10-04-05) |
 | FR-004 | Report yield after each filter and the gap to the needed code-space size. | [issue #14] |
 | FR-005 | A check word library tuned to handwriting and voice errors. The check word adds error detection, not capacity. | [issue #14] [PRODUCT] |
@@ -143,11 +143,39 @@ Status: decided. Danny said yes on #74 (2026-10-04), so these are the v1 rules (
 
 License: Danny said yes to the source and the license on #74 (Q32). The build runs the spec 003 pipeline and commits `proto-v0.txt`, `proto-v0.report.md`, `proto-v0.report.json`, and a draft root `NOTICE` crediting EFF (CC BY 3.0 US). Q32 on #74 is the license yes, so no further gate applies before the commit. Danny gave his legal yes on the `NOTICE` wording on #78 (2026-10-05, spec 005 T036). Local runs use `fixture-7`.
 
-Point of no return: after the first production mint, proto-v0 can never change, because issued codes must keep verifying (FR-017) and retired words are never issued again (Q36 default). Required before that mint: re-run the pipeline with `ZZ_BLOCKLIST`, check the yield report (the removed words and the new N), and commit the new list, so the file changes before the point of no return. The first production mint needs Danny's deploy yes (spec 005 T037).
+Point of no return: after the first production mint, the list that mint used can never change, because issued codes must keep verifying (FR-017) and retired words are never issued again (Q36 default). Production never mints from proto-v0: it accepts only `prod-v1`, built by the Production list build below (D-2026-10-13-07). That build replaces the earlier plan to re-run this pipeline with `ZZ_BLOCKLIST` and commit over proto-v0. The first production mint needs Danny's deploy yes (spec 005 T037).
 
 ### Shared test vectors
 
 [`vectors.json`](vectors.json) is the machine copy of the G9, G1a, and G10 rows in `docs/SPEC.md` Section 2.2a, plus the scanner rows (spec 004, Client read pipeline) and the check-word rows (fixture-7, with all 30 issuable codes). The G9 rows were checked against `src/lib/grammar.ts` on 2026-10-04. The spec 005 T035 parser change moved the former `grammar_pending` rows into `grammar` and added the D-2026-10-04-04 rows. The check-word rows were checked exhaustively: every single wrong word and every swap of two words is detected on fixture-7. The TypeScript, Swift, and Kotlin libraries each run every row. Do not edit a row to match a bug. Rows whose `note` names a D-2026-10-04 decision come from the readings below. The `see zz@bob.` scanner row is D-2026-10-05-06, Danny's decision on zzThat #43 (spec 004 Scanner rule 7).
+
+## Production list build (prod-v1, D-2026-10-13-07)
+
+Status: ACCEPTED (Danny, 2026-10-14, [#170](https://github.com/Zero-State-LLC/zzthis/issues/170#issuecomment-6175348667)). Built under RM-020, which becomes executable once Michael approves the letter groups. Pending Michael: the content of `confusable-v1.json` (the letter groups). This section does not invent them.
+
+The production list runs the Prototype defaults pipeline with the changes below. Everything not named here (source file and its SHA-256, filters 1, 2, and 6, the check word, the issuer rule, verify) is unchanged.
+
+| Step | Rule for `prod-v1` |
+|---|---|
+| Filter 3 | Drop `zz`, `fn`, `run`, the number words `zero` to `nine`, and every other English cardinal number word: `ten` to `nineteen`, the tens `twenty` to `ninety`, `hundred`, `thousand`, `million`, `billion`, and `trillion` (the word set is INFERRED from "every English cardinal number word"; D-2026-10-11-12 rules out numbers in codes). proto-v0 still holds `twelve`, `thirteen`, `fifteen`, `nineteen`, and `thousand`. |
+| Filter 4, letter shape | Build each word's shape key: first replace `rn` with `m`, `cl` with `d`, and `vv` with `w`, then map each letter to its group in `packages/zz-core/wordlists/confusable-v1.json`. Two words with equal shape keys collide. Michael approves the groups (pending Michael). |
+| Filter 5, sound | Two words with equal Double Metaphone primary codes collide. The package is pinned to an exact version and passes dependency review before it is added (no package is named here). |
+| Collisions in filters 4 and 5 | The earlier word in sort order is kept and the later one is removed. Sort order is filter 6's order: length, then alphabetical. The report names the kept word beside each removed word. |
+| Blocklist | Applied after filter 6 and before the prime cut. The pipeline reads the list from the file named by `ZZ_BLOCKLIST_FILE`, which lives outside the repository, and removes every word equal to a listed term after the FR-024 preparation (NFKC, format characters removed, lowercase) (INFERRED: a list word is one whole word). The report gives only the number of words removed and the SHA-256 of the normalized list, never the terms or the removed words. |
+| Prime cut (filter 7) | Keep the first N words, N the largest prime not above the count after the blocklist. The run fails if N is under 1,000. |
+| Public check in CI | CI rebuilds the list from public inputs, without the blocklist, and checks that the committed `prod-v1.txt` is an in-order subsequence of that rebuild's filter 6 output, with the gap equal to the reported count: the filter 6 count minus the reported blocklist count, cut to the largest prime, must equal the committed N (INFERRED arithmetic, so the prime cut and the gap agree). This keeps FR-019's public, byte-for-byte rebuild without publishing the blocklist. |
+| Version and files | Version id `prod-v1`. The pipeline takes the version id as an argument. Files: `packages/zz-core/wordlists/prod-v1.txt`, `prod-v1.report.md`, and `prod-v1.report.json`. Running the pipeline for `proto-v0` still gives byte-identical proto-v0 files (FR-017). |
+| Production | Production accepts only `prod-v1` (`workers/api/src/env.ts` and spec 005 Environment). RM-001 depends on RM-020. |
+| Freeze | Danny's freeze record cites the risk acceptance in D-2026-10-10-04, because no R-B6 corpus exists. R-B6 evidence, when it exists, can only shape a successor list (FR-017). |
+
+## Code length (D-2026-10-13-02)
+
+Status: ACCEPTED (Danny, 2026-10-14, [#170](https://github.com/Zero-State-LLC/zzthis/issues/170#issuecomment-6175348667)).
+
+- Contract 1 issues one length only: two data words and a check word (Prototype defaults, Issued format). One-word and three-word codes stay `wrong-length` on the server and in both apps.
+- One-word codes are not issued in contract 1. With 2,663 words, the whole one-word space fills after a few hundred creations, and at the resolve rate limit it can be read end to end in under an hour. Pending Michael: he is told why before the apps ship (D-2026-10-11-11 asked for a 1, 2, or 3 word choice).
+- Three-word codes come at v2.0 with contract 2 (with RM-116). They need a new check formula, `(d1 + 2·d2 + 3·d3) mod N`, issuer rules against swaps and deletions, an optional `words` field on mint, and new vectors in TypeScript, Swift, and Kotlin. If Michael needs three words at launch, the named D-2026-10-10-12 exception in D-2026-10-13-02 (2a) is the path, and it must land before the first store build.
+- Re-rolls: a new plain code gets 5 (spec 005 FR-006).
 
 ## Readings (decided 2026-10-05 by established practice, docs/SPEC.md 9a)
 
