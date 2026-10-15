@@ -68,7 +68,7 @@ Research note. Sources were read on 2026-10-10 through web search results that q
 - **Consequences.** v1.3 supports one enterprise pilot customer at a time.
 - **Revisit when.** A second organization needs private records before contract 2.
 
-## D-2026-10-10-07 A staging environment that can verify writes and the cache (PROPOSED: Danny, DNS and Access are human-gated)
+## D-2026-10-10-07 A staging environment that can verify writes and the cache (ACCEPTED: Danny, 2026-10-14, [#170](https://github.com/Zero-State-LLC/zzthis/issues/170#issuecomment-6175348667))
 
 - **Question.** Staging cannot sign in or mint (`ZZ_DEV_AUTH`, `ZZ_MINT_ENABLED` false, no provider settings), and on `*.workers.dev` the Cache API has no effect, so the write path and FR-018 caching are unverified on Cloudflare.
 - **Evidence.** `workers/api/wrangler.staging.toml`; Cloudflare Cache API docs state that Cache API operations on `*.workers.dev` deployments have no impact and that custom domains have functional cache ([Cache API](https://developers.cloudflare.com/workers/runtime-apis/cache/)).
@@ -77,7 +77,7 @@ Research note. Sources were read on 2026-10-10 through web search results that q
 - **Consequences.** Spec 005 FR-029 already names workers.dev for staging; this adds a gated custom hostname and does not change production.
 - **Revisit when.** Cloudflare enables the Cache API on workers.dev.
 
-## D-2026-10-10-08 Production configuration and deploy path (PROPOSED: Danny)
+## D-2026-10-10-08 Production configuration and deploy path (ACCEPTED: Danny, 2026-10-14, [#170](https://github.com/Zero-State-LLC/zzthis/issues/170#issuecomment-6175348667))
 
 - **Question.** There is no production Wrangler configuration and no production deploy path. Draft PR [#95](https://github.com/Zero-State-LLC/zzthis/pull/95) deploys from the default config, which is local-only since PR #106.
 - **Evidence.** `workers/api/wrangler.toml` (local placeholders); `.github/workflows/cloudflare-api-staging.yml` (manual, main-only, GitHub environment, full checks, then deploy).
@@ -86,7 +86,7 @@ Research note. Sources were read on 2026-10-10 through web search results that q
 - **Consequences.** Agents still never dispatch it (AGENTS.md); the environment reviewer enforces that.
 - **Revisit when.** The operator moves deploys to Cloudflare Workers Builds.
 
-## D-2026-10-10-09 Production runs on Workers Paid (PROPOSED: Danny, spend)
+## D-2026-10-10-09 Production runs on Workers Paid (ACCEPTED: Danny, 2026-10-14, [#170](https://github.com/Zero-State-LLC/zzthis/issues/170#issuecomment-6175348667))
 
 - **Question.** Which Workers plan can carry the v1.0 workload and its recovery promise?
 - **Evidence.** Free plan: 50 external subrequests per invocation, 50 D1 queries per invocation, 7-day D1 Time Travel. Paid: 10,000 subrequests per invocation by default since 2026-02-11, 1,000 D1 queries per invocation, 30-day Time Travel ([Workers limits](https://developers.cloudflare.com/workers/platform/limits/), [subrequest changelog 2026-02-11](https://developers.cloudflare.com/changelog/2026-02-11-subrequests-limit/), [D1 limits](https://developers.cloudflare.com/d1/platform/limits/)). Account deletion purges one cache key per revoked code and deletes photos in one call (`workers/api/src/account/me.ts:155-163`); the retention run is unbounded (`workers/api/src/retention/cron.ts`).
@@ -94,7 +94,7 @@ Research note. Sources were read on 2026-10-10 through web search results that q
 - **Consequences.** A monthly platform cost; the amount is not recorded in this public repository (constitution Principle VI).
 - **Revisit when.** Measured usage fits the free plan with margin, and the 7-day recovery window is accepted.
 
-## D-2026-10-10-10 Recovery scope and proposed objectives (PROPOSED: Danny sets the numbers)
+## D-2026-10-10-10 Recovery scope and proposed objectives (ACCEPTED: Danny, 2026-10-14, [#170](https://github.com/Zero-State-LLC/zzthis/issues/170#issuecomment-6175348667))
 
 - **Question.** OPERATIONS lists R2, Durable Object, configuration, and secret recovery as open blockers.
 - **Evidence.** In v1, `ZZ_PHOTO_READS` is false, so R2 holds no application objects; the limiter is non-authoritative (`docs/OPERATIONS.md`); configuration lives in git; secrets live only in Cloudflare. A D1 Time Travel restore also undoes account deletions made after the restore point (backend review M11).
@@ -150,12 +150,12 @@ Research note. Sources were read on 2026-10-10 through web search results that q
 
 - **Decision.** These findings are security or correctness defects and enter v1.0 under the append-closed exceptions: re-roll skips the scope check (RM-032), mint races deletion and suspension (RM-033), cache errors fail committed writes (RM-034), unbounded retention and deletion fan-out (RM-035), no outbound timeout on Apple calls (RM-037), `ZZ_DATA_KEY` cannot rotate (RM-021), no limiter failure policy (RM-038), and missing request and version logging (RM-036). Each backlog item cites its file and line evidence from the [analysis](analysis-2026-10-10-architecture-review.md).
 
-## D-2026-10-10-20 Tests become a required check (PROPOSED: Danny, branch protection)
+## D-2026-10-10-20 Tests become a required check (ACCEPTED: Danny, 2026-10-14, [#170](https://github.com/Zero-State-LLC/zzthis/issues/170#issuecomment-6175348667))
 
 - **Evidence.** The required check `build` runs lint and build; tests run in `site-ci.yml`, whose required status is not documented (`.github/workflows/ci.yml`, `site-ci.yml`).
 - **Decision.** Require the `site-ci.yml` test job on `main` (RM-005). Do not edit `ci.yml` (constitution, Engineering standards).
 
-## D-2026-10-10-21 Pull the free public scope forward to v1.1 for zzThat create (PROPOSED: Danny, release outcome)
+## D-2026-10-10-21 Pull the free public scope forward to v1.1 for zzThat create (ADOPTED: Danny, 2026-10-14, [#170](https://github.com/Zero-State-LLC/zzthis/issues/170#issuecomment-6175348667); merged in #139)
 
 - **Question.** zzThat create shows an unavailable state until `GET /v1` reports `free_public: true` (zzThat FR-018), and turning on `ZZ_FREE_PUBLIC` is v1.2 (QUEUED, RM-076). Michael's MVP input (`intent/2026-10-09-michael-zzthat-mvp-input.md`, PR [#138](https://github.com/Zero-State-LLC/zzthis/pull/138)) needs in-app create at launch. Can `free_public` move into v1.0 or v1.1 without widening contract 1?
 - **Evidence.** Contract 1 already carries the scope: spec 005 FR-005 (flag off by default), FR-034 (minting needs `ZZ_FREE_PUBLIC`), FR-035 (always public), US2 (server chooses the words, also in `free_public`). The web client mints only in `free_public` and shows Unavailable otherwise (`apps/web/src/lib/api.ts`, `apps/web/src/scripts/create.ts`), so the v1.0 outcome "create a server-chosen public code" in RELEASE-ROADMAP also depends on this flag; with the flag off, v1.0 web create is the Unavailable state. Open defects that public minting exposes: IPv6 callers escape the limiter ([#136](https://github.com/Zero-State-LLC/zzthis/issues/136), RM-030), scope grants leak across customers ([#135](https://github.com/Zero-State-LLC/zzthis/issues/135), RM-063, D-2026-10-10-06). The production blocklist is unsupplied (RM-028, required non-empty by FR-024). Enumeration risk grows with issued public codes (D-2026-10-10-04 density trigger). App Store guideline 1.2 needs report handling for user-generated content (RM-068, already v1.1).
