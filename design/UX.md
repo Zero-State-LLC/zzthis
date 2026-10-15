@@ -55,10 +55,11 @@ The zzThat apps add Hide this code (`resolve.hide`) on the Resolve screen and in
 The server chooses the words, including for a free public code. The person does not submit their own word list.
 
 1. The person is signed in.
-2. The client reads `GET /v1`. If `free_public` is false, create stays on the unavailable state and the client does not show a code.
-3. Otherwise the client calls `POST /v1/codes`. The response canonical is the code the person writes down.
-4. Re-roll (`POST /v1/codes/{id}/reroll`) asks the server for different words. A new code starts with `rerolls_remaining` 3. Each re-roll spends one. At 0, or after the code has been resolved, the server returns `reroll-cap` and the current words stay. The previous words are retired.
-5. The person writes the canonical code on the thing. A photo check that the handwriting matches stays on the device.
+2. Before the person's first create on this device, and again whenever `terms.version` changes, the client shows the Terms step (Terms, below). Create waits until it is done.
+3. The client reads `GET /v1`. If `free_public` is false, create stays on the unavailable state and the client does not show a code.
+4. Otherwise the client calls `POST /v1/codes`. The response canonical is the code the person writes down.
+5. Re-roll (`POST /v1/codes/{id}/reroll`) asks the server for different words. A new code starts with `rerolls_remaining` 5 (spec 005 FR-006, D-2026-10-13-02; 3 until the server change in RM-125 ships). Clients read the number from the response and never hard-code it. Each re-roll spends one. At 0, or after the code has been resolved, the server returns `reroll-cap` and the current words stay. The previous words are retired.
+6. The person writes the canonical code on the thing. A photo check that the handwriting matches stays on the device.
 
 Unavailable copy:
 
@@ -109,7 +110,7 @@ The client shows one sentence. It does not show the JSON `error` code except whe
 
 ## Account
 
-The account screen shows which provider the person signed in with (`account.signed_in_with`), Sign out, Delete account, the support contact (`account.support`), the privacy policy link (`account.privacy`), and `account.licenses`. The support address and the policy URL are build settings, not copy. `{provider}` is the `provider.*` string for the first entry of `providers` from `GET /v1/me`; an account has one provider. `account.licenses` opens the third-party notices (`NOTICE` and `OFL.txt`) as plain text (INFERRED). In the zzThat apps, `account.unhide_all` empties the device's hidden-code and blocked-creator lists, then shows `account.unhide_all_done`; it shows signed in or out, because hiding needs no account (D-2026-10-10-25, the decision's Settings reset). Deletion calls `DELETE /v1/me` after the Delete confirm pattern.
+The account screen shows which provider the person signed in with (`account.signed_in_with`), Sign out, Delete account, the support contact (`account.support`), the privacy policy link (`account.privacy`), and `account.licenses`. The support address and the policy URL are build settings, not copy. `{provider}` is the `provider.*` string for the first entry of `providers` from `GET /v1/me`; an account has one provider. `account.licenses` opens the third-party notices (`NOTICE` and `OFL.txt`) as plain text (INFERRED). Account also shows `account.terms`, which opens the Terms of Use, and `account.id` with the signed-in account's id next to it (D-2026-10-13-08). `account.id` is a label only: the client shows the id value beside it as plain, selectable text, not inside the string, because zzThat's string sync accepts only the `{provider}` and `{email}` placeholders. The id is what a person quotes when they email an access or deletion request, after signing in (OPERATIONS, Account deletion and access requests). The web client shows the same on `/account/`. In the zzThat apps, `account.unhide_all` empties the device's hidden-code and blocked-creator lists, then shows `account.unhide_all_done`; it shows signed in or out, because hiding needs no account (D-2026-10-10-25, the decision's Settings reset). Deletion calls `DELETE /v1/me` after the Delete confirm pattern.
 
 ## Patterns added 2026-10-04
 
@@ -136,6 +137,16 @@ Loading keeps the previous content on screen and shows a small progress mark, ne
 ### Minted code
 
 The code is the largest text on the screen, in the mono font, in lowercase, never truncated. The check word sits in place inside the code and has its own label below (`minted.check_word_label`, `minted.check_word_help`) and its own accessibility label. `minted.reroll` shows while `rerolls_remaining` is above 0. At `reroll-cap` the button goes away and `minted.reroll_cap` shows. The suggested-word picker (D-2026-10-11-01 option C, RM-113): while re-rolls remain, `minted.pick_help` sits under the code with `minted.reroll` and `minted.keep`. The server still chooses every word, and the client sends no code string. `minted.keep` keeps the current words: the picker closes, `minted.reroll_cap` shows, and Write check follows. A re-roll retires the old words for good, so the picker never shows earlier ones. `minted.write_check` opens Write check.
+
+### Terms
+
+Added 2026-10-14 (D-2026-10-13-04, ACCEPTED by Danny). Client-only: the server neither stores nor checks acceptance or age. The Terms wording is Michael's and is not written here.
+
+- One step before the person's first create on a device: `terms.age_confirm` (the person confirms they are 18 or older) and `terms.accept`, with `terms.link` opening the Terms of Use. Both must be confirmed before Create continues. It is one step, not two screens.
+- Scanning and typing a code need neither.
+- `terms.version` is not shown to the person. Clients compare it with the version stored on the device: when they differ, or nothing is stored, the step shows before the next create. After the step, the client stores the current `terms.version` on the device. The value is a placeholder, `draft-2026-10-14`, until Michael's approved Terms set the real effective date as the new value.
+- Account deletion clears the stored version, so the next account on the device sees the step again.
+- Account shows `account.terms`, which opens the same Terms of Use.
 
 ### Write check
 
