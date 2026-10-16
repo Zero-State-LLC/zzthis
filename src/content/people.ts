@@ -62,7 +62,8 @@ export const advisors: readonly Person[] = [
   {
     name: "Daniel Meyer",
     initials: "DM",
-    role: "Full-stack development",
+    // [MICHAEL 2026-10-15] Co-founder added to the title.
+    role: "Co-founder, Full-stack development",
     bio: "Daniel works across front-end and back-end software and supports zzThis application development and integration.",
   },
   {
