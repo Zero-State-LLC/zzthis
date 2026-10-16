@@ -14,3 +14,11 @@ describe("Aaron Godbout advisor card", () => {
     expect(aaron?.profileUrl).toBeUndefined();
   });
 });
+
+// [MICHAEL 2026-10-15] Daniel Meyer's card title carries Co-founder.
+describe("Daniel Meyer advisor card", () => {
+  it("shows Co-founder before his role", () => {
+    const daniel = advisors.find((person) => person.name === "Daniel Meyer");
+    expect(daniel?.role).toBe("Co-founder, Full-stack development");
+  });
+});

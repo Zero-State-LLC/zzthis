@@ -12,7 +12,7 @@ describe("hero and featured statement (spec 3.2, home top 2026-10-14)", () => {
     const sub = hero.subline;
     expect(sub.code).toBe("zz-Kathy-found-dog-zz");
     expect(sub.before + sub.code + sub.after).toBe(
-      "Barcodes use bars. QR codes use dots. zzThis uses everyday words. Just wrap your words in double z’s - like zz-Kathy-found-dog-zz - write it on anything with a marker, and scan it to open its digital record. The “zz” ends tell our scanner exactly where to look, just like the three corner dots on a QR code.",
+      "Barcodes use bars. QR codes use dots. zzThis uses everyday words. Just wrap your words in double z’s - like zz-Kathy-found-dog-zz - write it on anything with a marker, and scan it to open its digital record. The “zz” ends tell our scanner exactly where to look, just like the start and end bars on a barcode and the three corner squares on a QR code.",
     );
     const { before, code, after } = hero.paragraph;
     expect(before + code + after).toBe(

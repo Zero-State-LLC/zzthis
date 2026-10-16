@@ -26,8 +26,12 @@ describe("B v1.0 copy locks", () => {
   });
 
   it("uses one Hacker Dojo paragraph and the decision bands", () => {
-    expect(hackerDojo.paragraphs).toHaveLength(1);
+    // [MICHAEL 2026-10-15] Silicon Valley block: two paragraphs, seven skills.
+    expect(hackerDojo.heading).toBe("Silicon Valley: The Heart of Tech");
+    expect(hackerDojo.paragraphs).toHaveLength(2);
     expect(hackerDojo.paragraphs[0]).toContain("Apple");
+    expect(hackerDojo.skills).toHaveLength(7);
+    expect(hackerDojo.paragraphs.join(" ")).not.toMatch(/Hacker Dojo/);
     expect(decisionBands.names).toEqual([
       "Manual",
       "Rescan",

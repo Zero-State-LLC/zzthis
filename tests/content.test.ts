@@ -313,7 +313,7 @@ describe("applications (spec 3.2 H.7 and 3.4)", () => {
       expect(byName(name)?.bio).toBeTruthy();
     }
     expect(founder.role).toBe(
-      "Founder, new products and business model architect, project lead",
+      "Founder, new products and business models architect, project lead",
     );
     expect(founder.bio.startsWith("I “invent” business models.")).toBe(true);
     expect(founderOrigin.text).toBe(founder.bio);
