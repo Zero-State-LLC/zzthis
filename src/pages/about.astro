@@ -104,6 +104,12 @@ const handwrittenSet = [
     {hackerDojo.paragraphs.map((paragraph) => (
       <p>{paragraph}</p>
     ))}
+    <p>{hackerDojo.networkLead}</p>
+    <ul class="dojo__skills">
+      {hackerDojo.skills.map((skill) => (
+        <li>{skill}</li>
+      ))}
+    </ul>
   </section>
 
   <section class="block" aria-labelledby="hw-title">

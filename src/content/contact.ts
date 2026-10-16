@@ -71,14 +71,25 @@ export const aboutPage = {
 };
 
 export const hackerDojo = {
-  heading: "Hacker Dojo",
-  subtitle: "Innovation community and advisory network",
-  // [MICHAEL 2026-10-03 v1.0 change list] One paragraph. The logo stays in the data and is not shown.
-  // [MICHAEL 2026-10-06 change list] Paragraph replaced as given.
-  // [MICHAEL 2026-10-07 change list] Paragraph replaced again as given.
-  // [MICHAEL 2026-10-15] "Many of us are at" becomes "Many of us met at".
+  // [MICHAEL 2026-10-15] The Hacker Dojo block becomes a Silicon Valley
+  // block: new heading, subtitle, two paragraphs and a skills list, as given.
+  // The export keeps its old name; the logo stays in the data, not shown.
+  heading: "Silicon Valley: The Heart of Tech",
+  subtitle: "Innovation | Community | Networking",
   paragraphs: [
-    "Many of us met at Hacker Dojo, a premier coworking, maker, and networking community in the heart of Silicon Valley, minutes from the headquarters of Google, NVIDIA, Apple, Meta, NASA Ames, Stanford, SRI International, and many more – where every day brings direct discussions with, and participation in, the latest ideas and experience of deep and broad knowledge base and professional expertise – and “live” the cutting-edge developments and information, news, and breaking trends for problem solving and opportunities, innovation and creativity, and resources; its several hundred members cover a full range of skills: blockchain, crypto, and decentralized and distributed systems; software, hardware, devices, IoT, physical AI, and robotics; AI agents and local (on-device) AI; cybersecurity and cryptography; networking and infrastructure; UX and UI design.",
+    "Many of us are based in the heart of Silicon Valley and met through its coworking spaces, maker communities, professional networks, and technology events. We work near the headquarters and research centers of Google, NVIDIA, Apple, Meta, NASA Ames, Stanford University, SRI International, and many other leading organizations.",
+    "Here, we participate in direct discussions about emerging technologies and draw on a deep, broad base of professional knowledge. We live and work close to cutting-edge developments, breaking trends, new approaches to problem-solving, and opportunities for innovation and collaboration.",
+  ],
+  networkLead:
+    "Our extended network includes hundreds of people who contribute expertise and advice across:",
+  skills: [
+    "Blockchain, crypto, and decentralized and distributed systems",
+    "Software, hardware, connected devices, and IoT",
+    "Physical AI and robotics",
+    "AI agents and local, on-device AI",
+    "Cybersecurity and cryptography",
+    "Networking and infrastructure",
+    "UX and UI design",
   ],
   logo: {
     src: "images/logos/hacker-dojo.webp",

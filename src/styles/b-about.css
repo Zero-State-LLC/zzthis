@@ -245,10 +245,27 @@ a.pill {
   color: var(--color-ink-3);
 }
 
-.dojo p:not(.dojo__sub) {
-  font-size: var(--text-md);
+/* [MICHAEL 2026-10-15] Body about 15% smaller: --text-base (1.0625rem)
+   is 85% of the previous --text-md (1.25rem). */
+.dojo p:not(.dojo__sub),
+.dojo__skills {
+  font-size: var(--text-base);
   line-height: 1.55;
   max-width: 64ch;
+}
+
+.dojo__skills {
+  display: grid;
+  gap: var(--space-2xs) var(--space-md);
+  margin: 0;
+  padding-inline-start: 1.25em;
+  max-width: 72ch;
+}
+
+@media (min-width: 48rem) {
+  .dojo__skills {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
 }
 
 .dojo__head {
