@@ -481,6 +481,18 @@
       "text": "Terms of Use",
       "source": "INFERRED 2026-10-14 (D-2026-10-13-04 / -08), for Michael's review"
     },
+    "account.early_release": {
+      "text": "zzThat is in early release. Features may change.",
+      "source": "INFERRED 2026-10-16 (D-2026-10-11-06, RM-121), for Michael's review"
+    },
+    "account.discord": {
+      "text": "zzThat on Discord",
+      "source": "src/content/navigation.ts footer label [MICHAEL 2026-10-08] (RM-111)"
+    },
+    "account.instagram": {
+      "text": "zzThat on Instagram",
+      "source": "src/content/navigation.ts footer label [MICHAEL 2026-10-08] (RM-111)"
+    },
     "account.id": {
       "text": "Your account ID",
       "source": "INFERRED 2026-10-14 (D-2026-10-13-04 / -08), for Michael's review"

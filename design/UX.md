@@ -148,6 +148,10 @@ Added 2026-10-14 (D-2026-10-13-04, ACCEPTED by Danny). Client-only: the server n
 - Account deletion clears the stored version, so the next account on the device sees the step again.
 - Account shows `account.terms`, which opens the same Terms of Use.
 
+### Account: early release and community links
+
+Added 2026-10-16 for the v1.1 packaging. In the zzThat apps, Account shows `account.early_release` as a plain note (D-2026-10-11-06, RM-121), and two links, `account.discord` and `account.instagram`, that open the same addresses as the site footer (`src/content/navigation.ts`; RM-111). The addresses are build constants, not copy.
+
 ### Write check
 
 The person photographs what they wrote. The spec 004 pipeline runs on the phone and compares the picked candidate with the minted code: `writecheck.match` or `writecheck.mismatch`. The note `writecheck.on_device` is always visible. Nothing is uploaded.
