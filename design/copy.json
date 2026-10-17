@@ -245,6 +245,10 @@
       "text": "Some words in the title or message are not allowed. Change them and try again.",
       "source": "INFERRED 2026-10-04, for Michael's review"
     },
+    "create.daily_limit": {
+      "text": "You have made today's codes. Try again tomorrow.",
+      "source": "INFERRED 2026-10-16 (RM-072 daily mint cap, D-2026-10-13-03), for Michael's review"
+    },
     "minted.heading": {
       "text": "Write this code on your item",
       "source": "INFERRED 2026-10-04, for Michael's review"

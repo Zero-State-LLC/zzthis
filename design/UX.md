@@ -148,6 +148,10 @@ Added 2026-10-14 (D-2026-10-13-04, ACCEPTED by Danny). Client-only: the server n
 - Account deletion clears the stored version, so the next account on the device sees the step again.
 - Account shows `account.terms`, which opens the same Terms of Use.
 
+### Create: the daily limit
+
+Added 2026-10-16. A 429 on mint or re-roll during the RM-072 daily cap shows `create.daily_limit`; the client waits for `Retry-After` (which can run to the next UTC midnight), keeps Get a code and Get different words off until then, and keeps the title and body. Other 429s keep `resolve.rate_limited` (FR-033).
+
 ### Account: early release and community links
 
 Added 2026-10-16 for the v1.1 packaging. In the zzThat apps, Account shows `account.early_release` as a plain note (D-2026-10-11-06, RM-121), and two links, `account.discord` and `account.instagram`, that open the same addresses as the site footer (`src/content/navigation.ts`; RM-111). The addresses are build constants, not copy.
