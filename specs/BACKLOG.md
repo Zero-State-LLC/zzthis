@@ -576,7 +576,7 @@ RM-050 production resources ─> RM-053 web build ─> RM-051 deploy ─> RM-052
 
 ### RM-106 Signed AAB release job and Play App Signing (external)
 
-- Release v1.1 · P0 · In review (zzThat #62) · Bundle B3 · Owner: kneelbeforez0D (job), Danny (secrets, Play enrollment)
+- Release v1.1 · P0 · Done for the job (zzThat #62 merged 2026-10-14); Danny adds the upload key secrets and enrolls in Play App Signing · Bundle B3 · Owner: kneelbeforez0D (job), Danny (secrets, Play enrollment)
 - **Scope.** zzThat workflow job `release-android`, `workflow_dispatch` only, behind a protected environment: `bundleProdRelease`, signed with the upload key from secrets, injected API origin and client ids, AAB uploaded as an artifact. No key, password, or keystore in the tree.
 - **Acceptance.** A run produces a signed `.aab`; `jarsigner -verify` passes with the upload certificate; a secret scan of the tree is clean; Danny enrolls the app in Play App Signing at first upload.
 - **Governing.** D-2026-10-10-25 item 6.
@@ -674,7 +674,9 @@ v1.2 has no items: D-2026-10-10-21 (ADOPTED 2026-10-14) moved RM-076 and RM-077 
 | RM-089 | v2.0 | P3 | Backlog | Audit cursor across equal timestamps | backend review M8 |
 | RM-090 | v2.0 | P3 | Backlog | Name suffixes beyond `.eth` | spec 003 FR-023 |
 | RM-091 | v2.1 | P1 | Backlog (SHADOW) | Semantic profiles after RM-080 and PR #82 | #81 |
-| RM-092 | v2.2 | P1 | Backlog (RESEARCH) | Advanced recognition and photo reads after R-B12; R2 joins recovery scope | B12; spec 005 US5 |
+| RM-092 | v2.2 | P1 | Backlog (RESEARCH) | Advanced recognition and photo reads after R-B12; R2 joins recovery scope. Candidate server reader: Scry (D-2026-10-16-01, PROPOSED) | B12; spec 005 US5 |
+| RM-128 | R-B12 | P2 | Backlog (RESEARCH) | Scry "zz code" mode (ordered hypotheses from an ROI, no zz grammar in the engine) and a research adapter in the ZZ-OCR-QUAL-001 harness; private corpus on Zero State GPUs only; receipt compared with Vision and ML Kit (spec 004 T017) | D-2026-10-16-01; qualification.md |
+| RM-129 | v2.2 | P2 | Backlog | Inference host for server photo reads: self-hosted GPU through a Cloudflare Tunnel versus a Cloudflare-hosted model; availability rule (reader down means abstain); cost and latency limits | D-2026-10-16-01; CLOUDFLARE-RUNTIME |
 | RM-097 | v2.2 | P3 | Backlog (RESEARCH) | Image matching of scans against the creator's photos (Michael 2026-10-09); needs reference photos, consent wording, and a retention limit | D-2026-10-10-23; `docs/SPEC.md` 12.2 |
 | RM-095 | R-B6 | P1 | Backlog | Human and OCR confusion evaluation of the production list on the Q34 corpus | spec 003 FR-001, FR-002 |
 | RM-114 | v1.3 | P2 | Backlog (QUEUED) | Owner-only renew for issuer-set `expires_at`; no public expired message; idle expiry is RM-127 | D-2026-10-11-01; D-2026-10-13-01 |

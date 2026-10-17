@@ -136,7 +136,7 @@ Each phase ends with one recorded exit decision: promote to a named release, ext
 |---|---|---|---|---|
 | R-B2 | Which on-device engine may reach Accept on each platform? | ZZ-OCR-QUAL-001 final-split receipts on the frozen corpus and device matrix | Danny; zzThat maintainers | v1.1 bands or confirm-only mode |
 | R-B6 | Is the filtered production list confusable by hand or ear? | Q34 corpus confusion pairs; read-back error measurement (Q37) | Michael and Danny | v1.0 freeze evidence, or a successor list for v2.0 |
-| R-B12 | Does a fine-tuned reader or a server VLM beat Option A safely? | Option B benchmark on the same corpus (spec 004 T008); privacy review | Danny | v2.2 scope or rejection |
+| R-B12 | Does a fine-tuned reader or a server VLM beat Option A safely? | Option B benchmark on the same corpus (spec 004 T008); Scry as the server-VLM arm (RM-128, D-2026-10-16-01); privacy review | Danny | v2.2 scope or rejection |
 | R-B13 | Can bare, drawn, or object marks be matched by photo, place, and time without guessing? | Threat model for context matching; prototype on synthetic data | Michael | Horizon release or rejection |
 | R-B15 | Is a ZK selective-disclosure proof worth its cost? | S1 negative vectors (PR #84) after #87 | Danny | Horizon release or rejection |
 | R-B17 | Owner-selected location on records | Review of PR [#127](https://github.com/Zero-State-LLC/zzthis/pull/127); privacy model | Danny and Michael | v1.x or v2.x assignment |
