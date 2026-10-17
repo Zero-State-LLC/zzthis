@@ -1,0 +1,48 @@
+---
+import { heroMore } from "../content/hero";
+// [MICHAEL 2026-10-17] Paragraphs after the hero body. The picture code is an
+// original hand-drawn-style cupcake, drawn inline in the text color.
+---
+
+{heroMore.map((block) => (
+  <p class="hero__body">
+    <strong>{block.lead}</strong>{" "}
+    {block.parts.map((part) =>
+      part.kind === "text" ? (
+        part.text
+      ) : part.kind === "code" ? (
+        <code class="zzcode">{part.text}</code>
+      ) : part.kind === "zz" ? (
+        <code class="zzcode">
+          <bdi>
+            <span class="zzcode__zz">zz</span>-{part.words}-
+            <span class="zzcode__zz">zz</span>
+          </bdi>
+        </code>
+      ) : (
+        <code class="zzcode">
+          <span class="zzcode__zz">zz</span>-
+          <svg
+            class="zzcode__pic"
+            role="img"
+            aria-label={part.label}
+            viewBox="0 0 64 64"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="3"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <path d="M13 33 C9 31 9 25 14 23 C13 17 20 13 25 16 C27 10 37 9 40 15 C45 12 52 16 50 22 C56 24 55 32 50 33" />
+            <circle cx="33" cy="9" r="3.2" />
+            <path d="M34 6 C36 3 39 3 41 4" />
+            <path d="M11 34 C24 36.5 40 36.5 53 34" />
+            <path d="M13 35 L18 56 C27 58 37 58 46 56 L51 35" />
+            <path d="M22 37 L25 56 M32 37.5 L32 57 M42 37 L39 56" />
+          </svg>
+          -<span class="zzcode__zz">zz</span>
+        </code>
+      ),
+    )}
+  </p>
+))}
