@@ -61,7 +61,7 @@ The earlier 91-test verification snapshot above is superseded by the latest loca
 
 ## Deferred v2 — B12 Advanced Recognition (RESEARCH; not active v1 tasks)
 
-- [ ] T017 Evaluate a Qwen-class VLM only as a hard-case verifier behind RecognitionResult; no v1 dependency.
+- [ ] T017 Evaluate a Qwen-class VLM only as a hard-case verifier behind RecognitionResult; no v1 dependency. Candidate: Scry's Qwen3.8 vision reader on Zero State GPUs (BACKLOG RM-128, D-2026-10-16-01).
 - [ ] T018 Evaluate a custom zz-specific recognizer after enough governed data exists. Compare it against the frozen qualification baseline before promotion.
 
 ## Definition of done
