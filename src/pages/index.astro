@@ -4,6 +4,7 @@ import AppIndex from "../components/AppIndex.astro";
 import Architecture from "../components/Architecture.astro";
 import Console from "../components/Console.astro";
 import FieldFrames from "../components/FieldFrames.astro";
+import HeroMore from "../components/HeroMore.astro";
 import Manifest from "../components/Manifest.astro";
 import Pipeline from "../components/Pipeline.astro";
 import ComparisonCards from "../components/ComparisonCards.astro";
@@ -53,10 +54,12 @@ const description =
         ))}
       </div>
       <p class="hero__body">
+        <strong>{hero.paragraph.lead}</strong>
         {hero.paragraph.before}
         <code>{hero.paragraph.code}</code>
         {hero.paragraph.after}
       </p>
+      <HeroMore />
     </div>
     <Console />
   </section>

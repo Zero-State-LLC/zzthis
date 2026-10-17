@@ -405,6 +405,27 @@ kbd {
   color: var(--color-ink-2);
 }
 
+.hero__body strong {
+  color: var(--color-ink);
+}
+
+/* [MICHAEL 2026-10-17] Codes in the hero body: only the zz markers take the
+   accent; each code stays on one line. */
+.zzcode {
+  white-space: nowrap;
+}
+
+.zzcode__zz {
+  color: var(--color-accent-ink);
+}
+
+.zzcode__pic {
+  display: inline-block;
+  width: 1.55em;
+  height: 1.55em;
+  vertical-align: -0.42em;
+}
+
 .btn {
   display: inline-flex;
   align-items: center;

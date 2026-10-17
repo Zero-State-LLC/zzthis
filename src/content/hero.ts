@@ -18,7 +18,7 @@ export interface HeroContent {
   eyebrow: string;
   title: string;
   subline: { before: string; code: string; after: string };
-  paragraph: { before: string; code: string; after: string };
+  paragraph: { lead: string; before: string; code: string; after: string };
   photos: readonly HeroPhoto[];
   actions: readonly HeroAction[];
   imageCaption: string;
@@ -45,9 +45,10 @@ export const hero: HeroContent = {
     after:
       " - write it on anything with a marker, and scan it to open its digital record. The “zz” ends tell our scanner exactly where to look, just like the start and end bars on a barcode and the three corner squares on a QR code.",
   },
+  // [MICHAEL 2026-10-17] The first sentence of the hero body is bold.
   paragraph: {
-    before:
-      "zzThis is a human-readable, human-writable code for the physical world. Write a ",
+    lead: "zzThis is a human-readable, human-writable code for the physical world.",
+    before: " Write a ",
     code: "zz-code",
     after:
       " on tape, a crate, a parcel, an envelope, or a sign, or embed it in text or program code. zzThis makes things readable-writable-smart.",
@@ -116,3 +117,47 @@ export const contactAction: TextBlock = {
   heading: "Contact",
   text: "Discuss field feedback, a pilot, or collaboration.",
 };
+
+// [MICHAEL 2026-10-17] Two paragraphs after the hero body, same font, each
+// with a bold lead. In the language codes only the zz markers are orange.
+export type HeroPart =
+  | { kind: "text"; text: string }
+  | { kind: "code"; text: string }
+  | { kind: "zz"; words: string; rtl?: boolean }
+  | { kind: "picture"; label: string };
+
+export interface HeroMoreBlock {
+  lead: string;
+  parts: readonly HeroPart[];
+}
+
+const t = (text: string): HeroPart => ({ kind: "text", text });
+
+export const heroMore: readonly HeroMoreBlock[] = [
+  {
+    lead: "Versatile, custom, any language.",
+    parts: [
+      t(
+        "Write your own words, or draw them from a custom dictionary set by your organization’s rules. Even offline with no phone, a marker is all you need: tag objects with your own words now and register them later. Each position in a code can carry its own meaning, such as a unit, a person, or an action. A code can even hold a hand-drawn picture, ",
+      ),
+      { kind: "picture", label: "a hand-drawn cupcake" },
+      t(", or be written in any language: "),
+      { kind: "zz", words: "구리-등불-하늘" },
+      t(", "),
+      { kind: "zz", words: "נהורא-שמיא", rtl: true },
+      t("."),
+    ],
+  },
+  {
+    lead: "Blockchain, AI, and macros.",
+    parts: [
+      t(
+        "The same codes work three more ways: as readable aliases for blockchain accounts, ledger entries, and smart-contract addresses; as verifiable identifiers for AI agents, such as ",
+      ),
+      { kind: "code", text: "zz-AI@-Agentsmith-zz" },
+      t("; and as macros that trigger a defined task, such as "),
+      { kind: "code", text: "zz-fn-invoice-Acme-zz" },
+      t(", which runs only after an authorized person confirms it."),
+    ],
+  },
+];
