@@ -33,7 +33,7 @@ The `/v1` API and the web client are [spec 005](005-v1-api/spec.md). The zzThat 
 | Cross-artifact analysis | [`analysis-2026-10-02.md`](analysis-2026-10-02.md), [`analysis-2026-10-03.md`](analysis-2026-10-03.md), [`analysis-2026-10-04.md`](analysis-2026-10-04.md), [`analysis-2026-10-05-completeness-audit.md`](analysis-2026-10-05-completeness-audit.md), [`analysis-2026-10-10-architecture-review.md`](analysis-2026-10-10-architecture-review.md) |
 | Release roadmap | [`RELEASE-ROADMAP.md`](RELEASE-ROADMAP.md) |
 | Delivery backlog | [`BACKLOG.md`](BACKLOG.md) |
-| Decision records | [`decisions-2026-10-10.md`](decisions-2026-10-10.md), [`decisions-2026-10-11.md`](decisions-2026-10-11.md), [`decisions-2026-10-13.md`](decisions-2026-10-13.md) |
+| Decision records | [`decisions-2026-10-10.md`](decisions-2026-10-10.md), [`decisions-2026-10-11.md`](decisions-2026-10-11.md), [`decisions-2026-10-13.md`](decisions-2026-10-13.md), [`decisions-2026-10-16.md`](decisions-2026-10-16.md) |
 | Domain model and state machines | [`DOMAIN-MODEL.md`](DOMAIN-MODEL.md) |
 | Cross-spec traceability | [`TRACEABILITY.md`](TRACEABILITY.md) |
 | Operations | [`../docs/OPERATIONS.md`](../docs/OPERATIONS.md) |
