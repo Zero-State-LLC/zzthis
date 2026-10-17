@@ -25,6 +25,14 @@ export interface DecisionBandInput {
   readonly captureIssue?: CaptureIssue | null;
   readonly wordlist: Wordlist | null;
   readonly thresholds: DecisionBandThresholds;
+  /**
+   * Spec 004 FR-023 confirm-only mode: a camera candidate that would be
+   * Accept becomes Clarify. Every other band is unchanged. The platform sets
+   * it: v1.1 runs confirm-only unless a signed PASS receipt exists for that
+   * platform's engine (D-2026-10-13-05). Qualification scores the base table
+   * with `false`.
+   */
+  readonly confirmOnly: boolean;
 }
 
 export interface DecisionBandResult {
@@ -132,6 +140,15 @@ function parsedCandidateResult(
 export function decideCaptureBand(
   input: DecisionBandInput,
 ): DecisionBandResult {
+  const decided = baseCaptureBand(input);
+  if (input.confirmOnly && decided.band === "accept") {
+    return result("clarify", "confirm-only", decided.observedCode);
+  }
+  return decided;
+}
+
+/** The spec 004 "Prototype band values" camera column, before FR-023. */
+function baseCaptureBand(input: DecisionBandInput): DecisionBandResult {
   if (input.captureIssue !== undefined && input.captureIssue !== null) {
     return captureIssueResult(input.captureIssue);
   }
@@ -157,4 +174,40 @@ export function decideCaptureBand(
     ...input,
     candidate: input.candidate,
   });
+}
+
+export interface TypedBandInput {
+  /** The code as the person typed it, markers included. */
+  readonly text: string;
+  readonly wordlist: Wordlist;
+}
+
+/**
+ * Apply the spec 004 "Prototype band values" typed column to one typed code.
+ * Confirm-only mode (FR-023) changes only the camera column, so this function
+ * takes no confirm-only flag.
+ */
+export function decideTypedBand(input: TypedBandInput): DecisionBandResult {
+  const parsed = parseCode(input.text);
+  if (!parsed.ok) return parseFailureResult(parsed.reason);
+  if (parsed.kind === "bare") return result("abstain", "bare-mark");
+  const classification = classifyCode(parsed, input.wordlist);
+  if (classification.class === "confirm") {
+    return result("clarify", "manual-confirmation:confirm", parsed.canonical);
+  }
+  if (classification.class !== "word") {
+    return result(
+      "accept",
+      `as-typed:${classification.class}`,
+      parsed.canonical,
+    );
+  }
+  const check = verifyCheckWord(parsed.words, input.wordlist);
+  if (check.result === "wrong-length") {
+    return result("abstain", "checkword:wrong-length", parsed.canonical);
+  }
+  if (check.result !== "ok") {
+    return result("clarify", `checkword:${check.result}`, parsed.canonical);
+  }
+  return result("accept", "word-code-passed", parsed.canonical);
 }
