@@ -576,7 +576,7 @@ RM-050 production resources ─> RM-053 web build ─> RM-051 deploy ─> RM-052
 
 ### RM-106 Signed AAB release job and Play App Signing (external)
 
-- Release v1.1 · P0 · In review (zzThat #62) · Bundle B3 · Owner: kneelbeforez0D (job), Danny (secrets, Play enrollment)
+- Release v1.1 · P0 · Done for the job (zzThat #62 merged 2026-10-14); Danny adds the upload key secrets and enrolls in Play App Signing · Bundle B3 · Owner: kneelbeforez0D (job), Danny (secrets, Play enrollment)
 - **Scope.** zzThat workflow job `release-android`, `workflow_dispatch` only, behind a protected environment: `bundleProdRelease`, signed with the upload key from secrets, injected API origin and client ids, AAB uploaded as an artifact. No key, password, or keystore in the tree.
 - **Acceptance.** A run produces a signed `.aab`; `jarsigner -verify` passes with the upload certificate; a secret scan of the tree is clean; Danny enrolls the app in Play App Signing at first upload.
 - **Governing.** D-2026-10-10-25 item 6.
