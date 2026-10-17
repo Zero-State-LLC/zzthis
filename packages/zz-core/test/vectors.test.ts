@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import vectors from "../../../specs/003-wordlist-checkword/vectors.json" with { type: "json" };
 import { verifyCheckWord } from "../src/checkword.ts";
 import { classifyCode, type Classification } from "../src/classify.ts";
+import { decideCaptureBand, decideTypedBand } from "../src/decisionBand.ts";
 import { parseCode, type ParseSuccess } from "../src/grammar.ts";
 import { issuable } from "../src/issuer.ts";
 import { fieldMatchingKey } from "../src/matchkey.ts";
@@ -130,6 +131,93 @@ describe("check-word vectors", () => {
       expect(verifyCheckWord(parsed(code).words, list)).toEqual({
         result: "ok",
       });
+    });
+  }
+});
+
+interface CameraBandRow {
+  readonly name: string;
+  readonly source: "camera";
+  readonly canonical: string;
+  readonly rows: readonly { token: string; line: number; confidence: number }[];
+  readonly confirm_only?: boolean;
+  readonly band: string;
+}
+
+interface TypedBandRow {
+  readonly name: string;
+  readonly source: "typed";
+  readonly input: string;
+  readonly confirm_only?: boolean;
+  readonly band: string;
+}
+
+type BandRow = CameraBandRow | TypedBandRow;
+
+function bandRowInput(row: BandRow): string {
+  return JSON.stringify(
+    row.source === "camera" ? [row.canonical, row.rows] : row.input,
+  );
+}
+
+describe("capture-band vectors", () => {
+  const table = vectors.capture_band;
+  const rows = table.rows as readonly BandRow[];
+  const list = loadWordlist("fixture-7");
+  const thresholds = {
+    acceptMinConfidence: table.thresholds.accept_min_confidence,
+    retryBelowConfidence: table.thresholds.retry_below_confidence,
+  };
+
+  it("uses the fixture-7 list and the prototype thresholds", () => {
+    expect(table.wordlist).toBe("fixture-7");
+    expect(list.words).toEqual(vectors.check_word.wordlist);
+    expect(thresholds).toEqual({
+      acceptMinConfidence: 0.8,
+      retryBelowConfidence: 0.5,
+    });
+  });
+
+  it("pairs every row with a confirm_only counterpart (FR-023)", () => {
+    const base = rows.filter((row) => row.confirm_only !== true);
+    const flagged = rows.filter((row) => row.confirm_only === true);
+    expect(flagged).toHaveLength(base.length);
+    for (const row of base) {
+      const twins = flagged.filter(
+        (other) =>
+          other.source === row.source &&
+          bandRowInput(other) === bandRowInput(row),
+      );
+      expect(twins, row.name).toHaveLength(1);
+      const expected =
+        row.source === "camera" && row.band === "accept" ? "clarify" : row.band;
+      expect(twins[0]!.band, row.name).toBe(expected);
+    }
+    expect(
+      base.some((row) => row.source === "camera" && row.band === "accept"),
+    ).toBe(true);
+  });
+
+  for (const row of rows) {
+    it(row.name, () => {
+      if (row.source === "typed") {
+        expect(decideTypedBand({ text: row.input, wordlist: list }).band).toBe(
+          row.band,
+        );
+        return;
+      }
+      const decided = decideCaptureBand({
+        candidate: {
+          rawText: row.rows.map((part) => part.token).join(" "),
+          confidenceStatus: "available",
+          confidence: Math.min(...row.rows.map((part) => part.confidence)),
+        },
+        wordlist: list,
+        thresholds,
+        confirmOnly: row.confirm_only === true,
+      });
+      expect(decided.band).toBe(row.band);
+      expect(decided.observedCode).toBe(row.canonical);
     });
   }
 });

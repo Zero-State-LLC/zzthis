@@ -469,7 +469,7 @@ RM-050 production resources ─> RM-053 web build ─> RM-051 deploy ─> RM-052
 
 ### RM-065 Confirm-only camera mode in spec 004
 
-- Release v1.1 · P1 · Ready (spec text in spec 004 FR-023 and Confirm-only mode, 2026-10-14) · Bundle B2 · Owner: kneelbeforez0D (vectors and zzThat)
+- Release v1.1 · P1 · In review ([#186](https://github.com/Zero-State-LLC/zzthis/pull/186): zz-core confirm-only band and spec 003 `capture_band` vector rows; zzThat T102 next) · Bundle B2 · Owner: kneelbeforez0D (vectors and zzThat)
 - **Scope.** v1.1 ships confirm-only on both platforms unless a signed PASS receipt exists at store submission (RM-064 records it). In confirm-only mode a camera candidate that would be Accept becomes Clarify, showing the full canonical code and Confirm. Typed bands do not change. Threshold numbers wait for the Q34 corpus. zzThat implements it under its FR-025 with a new task.
 - **Acceptance.** Spec 004 band tables define confirm-only (done in the spec); the shared vectors add the camera Accept rows with `confirm_only: true`, expecting Clarify, and every platform's vector runner passes them; both apps show the canonical code and Confirm instead of resolving.
 - **Governing.** D-2026-10-10-03; D-2026-10-13-05 (ACCEPTED, Danny 2026-10-14, [#170](https://github.com/Zero-State-LLC/zzthis/issues/170#issuecomment-6175348667)); spec 004 FR-023.

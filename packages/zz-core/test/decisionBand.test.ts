@@ -19,6 +19,7 @@ describe("decideCaptureBand", () => {
   });
   const evaluate = (confidence: number | null, available = true) =>
     decideCaptureBand({
+      confirmOnly: false,
       candidate: candidateFor(confidence, available),
       wordlist,
       thresholds,
@@ -33,10 +34,16 @@ describe("decideCaptureBand", () => {
 
   it("retries when there is no candidate or capture is unreadable", () => {
     expect(
-      decideCaptureBand({ candidate: null, wordlist, thresholds }).band,
+      decideCaptureBand({
+        confirmOnly: false,
+        candidate: null,
+        wordlist,
+        thresholds,
+      }).band,
     ).toBe("retry");
     expect(
       decideCaptureBand({
+        confirmOnly: false,
         candidate: {
           rawText: " ",
           confidenceStatus: "not-available",
@@ -48,6 +55,7 @@ describe("decideCaptureBand", () => {
     ).toBe("no-candidate");
     expect(
       decideCaptureBand({
+        confirmOnly: false,
         candidate: candidateFor(0.99),
         captureIssue: "glare",
         wordlist,
@@ -63,6 +71,7 @@ describe("decideCaptureBand", () => {
     });
     expect(
       decideCaptureBand({
+        confirmOnly: false,
         candidate: candidateFor(0.99),
         hypothesisCount: 2,
         wordlist,
@@ -74,6 +83,7 @@ describe("decideCaptureBand", () => {
   it("clarifies a parsed word code when its wordlist is unavailable", () => {
     expect(
       decideCaptureBand({
+        confirmOnly: false,
         candidate: candidateFor(0.99),
         wordlist: null,
         thresholds,
@@ -89,6 +99,7 @@ describe("decideCaptureBand", () => {
     for (const rawText of ["@agentsmith", "b2 smith 1", "vitalik.eth"]) {
       expect(
         decideCaptureBand({
+          confirmOnly: false,
           candidate: { rawText, ...confidence },
           wordlist,
           thresholds,
@@ -102,6 +113,7 @@ describe("decideCaptureBand", () => {
     const replacement = wordlist.words.find((word) => word !== issued[2])!;
     expect(
       decideCaptureBand({
+        confirmOnly: false,
         candidate: {
           rawText: [...issued.slice(0, 2), replacement].join(" "),
           confidenceStatus: "available",
@@ -113,6 +125,7 @@ describe("decideCaptureBand", () => {
     ).toBe("clarify");
     expect(
       decideCaptureBand({
+        confirmOnly: false,
         candidate: {
           rawText: "copper lantern",
           confidenceStatus: "available",
@@ -127,6 +140,7 @@ describe("decideCaptureBand", () => {
   it("clarifies near-words and rejects inconsistent confidence evidence", () => {
     expect(
       decideCaptureBand({
+        confirmOnly: false,
         candidate: {
           rawText: "coppr lantern sky",
           confidenceStatus: "available",
@@ -139,6 +153,7 @@ describe("decideCaptureBand", () => {
     expect(evaluate(null).reason).toBe("invalid-confidence");
     expect(
       decideCaptureBand({
+        confirmOnly: false,
         candidate: {
           ...candidateFor(0.99),
           confidenceStatus: "not-available",
@@ -150,6 +165,7 @@ describe("decideCaptureBand", () => {
     ).toBe("confidence-status-mismatch");
     expect(
       decideCaptureBand({
+        confirmOnly: false,
         candidate: { ...candidateFor(1.01) },
         wordlist,
         thresholds,
@@ -160,6 +176,7 @@ describe("decideCaptureBand", () => {
   it("abstains on malformed grammar, bare marks, and invalid thresholds", () => {
     expect(
       decideCaptureBand({
+        confirmOnly: false,
         candidate: {
           rawText: "valid#reserved",
           confidenceStatus: "available",
@@ -171,6 +188,7 @@ describe("decideCaptureBand", () => {
     ).toBe("abstain");
     expect(
       decideCaptureBand({
+        confirmOnly: false,
         candidate: {
           rawText: "",
           confidenceStatus: "not-available",
@@ -182,6 +200,7 @@ describe("decideCaptureBand", () => {
     ).toBe("retry");
     expect(
       decideCaptureBand({
+        confirmOnly: false,
         candidate: null,
         captureIssue: "bare-mark",
         wordlist,
@@ -190,6 +209,7 @@ describe("decideCaptureBand", () => {
     ).toBe("abstain");
     expect(
       decideCaptureBand({
+        confirmOnly: false,
         candidate: candidateFor(0.99),
         wordlist,
         thresholds: { acceptMinConfidence: 0.4, retryBelowConfidence: 0.5 },
@@ -197,6 +217,7 @@ describe("decideCaptureBand", () => {
     ).toBe("invalid-thresholds");
     expect(
       decideCaptureBand({
+        confirmOnly: false,
         candidate: candidateFor(0.99),
         wordlist,
         thresholds: { acceptMinConfidence: -0.1, retryBelowConfidence: 0 },
@@ -204,6 +225,7 @@ describe("decideCaptureBand", () => {
     ).toBe("invalid-thresholds");
     expect(
       decideCaptureBand({
+        confirmOnly: false,
         candidate: candidateFor(0.99),
         hypothesisCount: 0,
         wordlist,
@@ -219,6 +241,7 @@ describe("decideCaptureBand", () => {
     while (observed === expected)
       observed = issueWordCode(wordlist, random).canonical;
     const result = decideCaptureBand({
+      confirmOnly: false,
       candidate: {
         rawText: observed.replace(/^zz-|-zz$/g, "").replaceAll("-", " "),
         confidenceStatus: "available",
@@ -229,5 +252,33 @@ describe("decideCaptureBand", () => {
     });
     expect(result.band).toBe("accept");
     expect(result.observedCode).toBe(observed);
+  });
+
+  it("confirm-only turns only a camera Accept into Clarify (FR-023)", () => {
+    const candidate = candidateFor(0.99);
+    const base = decideCaptureBand({
+      candidate,
+      wordlist,
+      thresholds,
+      confirmOnly: false,
+    });
+    expect(base.band).toBe("accept");
+    expect(
+      decideCaptureBand({ candidate, wordlist, thresholds, confirmOnly: true }),
+    ).toEqual({
+      band: "clarify",
+      reason: "confirm-only",
+      observedCode: base.observedCode,
+    });
+    for (const confidence of [0.3, 0.6]) {
+      const input = {
+        candidate: candidateFor(confidence),
+        wordlist,
+        thresholds,
+      };
+      expect(decideCaptureBand({ ...input, confirmOnly: true })).toEqual(
+        decideCaptureBand({ ...input, confirmOnly: false }),
+      );
+    }
   });
 });

@@ -33,6 +33,9 @@ export function scoreSampleBand(row, wordlist, gateConfig) {
     hypothesisCount: row.candidates.length,
     captureIssue: captureIssueFor(row),
     wordlist,
+    // Qualification scores the base band table; confirm-only (spec 004
+    // FR-023) is what a platform runs without a PASS receipt.
+    confirmOnly: false,
     thresholds: {
       acceptMinConfidence: gateConfig.thresholds.accept_min_confidence,
       retryBelowConfidence: gateConfig.thresholds.retry_below_confidence,
