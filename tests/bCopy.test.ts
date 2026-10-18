@@ -12,7 +12,6 @@ import { consoleCopy } from "../src/content/console";
 import { hackerDojo } from "../src/content/contact";
 import { footerNote } from "../src/content/navigation";
 import { realPhotos } from "../src/content/labels";
-import { decisionBands } from "../src/content/workflows";
 
 describe("B v1.0 copy locks", () => {
   it("does not name Coupang and corrects the delivery step", () => {
@@ -25,24 +24,17 @@ describe("B v1.0 copy locks", () => {
     expect(steps?.[2]?.title).toBe("Delivery man only knows drop-off address");
   });
 
-  it("uses one Hacker Dojo paragraph and the decision bands", () => {
+  it("uses one Hacker Dojo paragraph", () => {
     // [MICHAEL 2026-10-15] Silicon Valley block: two paragraphs, seven skills.
     expect(hackerDojo.heading).toBe("Silicon Valley: The Heart of Tech");
     expect(hackerDojo.paragraphs).toHaveLength(2);
     expect(hackerDojo.paragraphs[0]).toContain("Apple");
     expect(hackerDojo.skills).toHaveLength(7);
     expect(hackerDojo.paragraphs.join(" ")).not.toMatch(/Hacker Dojo/);
-    expect(decisionBands.names).toEqual([
-      "Manual",
-      "Rescan",
-      "Confirm",
-      "Resolve",
-    ]);
-    expect(decisionBands.note).toBe(
-      "Design intent. No threshold has been measured yet.",
-    );
     expect(realPhotos).toBe("Real photos.");
-    expect(footerNote).toContain("except where marked as real photos");
+    expect(footerNote).toContain(
+      "Images and photos are concept and prototype renderings or representations.",
+    );
   });
 
   it("uses Michael's console labels and architecture detail", () => {

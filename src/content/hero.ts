@@ -115,7 +115,7 @@ export const aboutTeaser: LinkBlock = {
 
 export const contactAction: TextBlock = {
   heading: "Contact",
-  text: "Discuss field feedback, a pilot, or collaboration.",
+  text: "We invite collaboration and test partners.",
 };
 
 // [MICHAEL 2026-10-17] Two paragraphs after the hero body, same font, each

@@ -25,7 +25,8 @@ export const images = {
     title: "Hero photo",
     shortCopy: "Crate and damaged inventory label; visible handwritten code.",
     alt: "Olive crate with blue tape reading zz-copper-lantern-sky-zz beside an obscured barcode.",
-    caption: "Word code on blue tape beside an obscured barcode.",
+    caption:
+      "The zzThis word code augments or replaces an obscured barcode.",
     focal: { x: 0.5, y: 0.55 },
     destination: ["home", "demo"],
     status: "concept",
@@ -223,8 +224,7 @@ export const images = {
     title: "Touch first",
     shortCopy: "Drag an identified item to an action.",
     alt: "Phone screen with a recognized item being dragged onto large action buttons.",
-    caption:
-      "Concept illustration: review an identified item and a suggested action.",
+    caption: "zz mark or identify multiple items at once.",
     focal: { x: 0.5, y: 0.5 },
     destination: ["home", "how", "applications"],
     status: "concept",
@@ -244,6 +244,38 @@ export const images = {
     destination: ["home", "applications"],
     status: "concept",
     sourceTag: "BRIEF",
+  },
+  // [MICHAEL 2026-10-17] Section 03 of How it works: contested logistics on the
+  // left, the shared naming layer on the right.
+  p: {
+    id: "p",
+    src: "images/panels/p-drone-cache.webp",
+    width: 1672,
+    height: 941,
+    title: "Contested logistics and sustainment",
+    shortCopy: "Drone feed over a dispersed cache.",
+    alt: "Hand-held tablet showing a drone feed over a dispersed supply cache: five crates are selected and magnified, two of them marked zz-river-anvil-pine-zz and zz-b2-medical-3-zz.",
+    caption:
+      "Hand-marked codes stay readable from the air. A tablet at the node selects a stack from the drone feed and opens what is in it.",
+    focal: { x: 0.5, y: 0.5 },
+    destination: ["how"],
+    status: "concept",
+    sourceTag: "MICHAEL",
+  },
+  q: {
+    id: "q",
+    src: "images/panels/q-relief-shared-naming.webp",
+    width: 1672,
+    height: 941,
+    title: "One uber naming layer across organizations",
+    shortCopy: "Volunteers, engineers, and relief groups marking the same way.",
+    alt: "Disaster recovery site where volunteer builders, an engineering corps, and a relief service have marked lumber, a tool chest, and supply pallets with zz-porch-lumber-zz, zz-repair-tools-zz, and zz-community-supplies-zz.",
+    caption:
+      "Groups that share no system still share words. Lumber, tools, and supplies are marked in plain language that every organization on site can read, say, and look up.",
+    focal: { x: 0.5, y: 0.6 },
+    destination: ["how"],
+    status: "concept",
+    sourceTag: "MICHAEL",
   },
   "demo-01": {
     id: "demo-01",

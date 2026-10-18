@@ -1,19 +1,12 @@
 ---
-import { conceptLabels } from "../content/labels";
 import { images } from "../content/images";
 import { url } from "../lib/url";
-import {
-  coreIdentity,
-  decisionBands,
-  howItWorksPage,
-} from "../content/workflows";
+import { coreIdentity, howItWorksPage } from "../content/workflows";
 ---
 
 <section class="tour" id="how-it-works" aria-labelledby="how-title">
   <div class="tour__head">
     <h2 id="how-title">{coreIdentity.heading}</h2>
-    <p>{coreIdentity.intro}</p>
-    <p class="label">{conceptLabels.group}</p>
   </div>
   <ol class="frames">
     {coreIdentity.steps.map((step) => {
@@ -50,16 +43,6 @@ import {
     </p>
   </div>
   <div class="notes">
-    <article class="notecard">
-      <h3>{howItWorksPage.uncertain.heading}</h3>
-      <p>{howItWorksPage.uncertain.text}</p>
-      <ol class="bands" aria-label={decisionBands.ariaLabel}>
-        {decisionBands.names.map((name) => (
-          <li class:list={{ "is-accept": name === "Resolve" }}>{name}</li>
-        ))}
-      </ol>
-      <p class="label">{decisionBands.note}</p>
-    </article>
     <article class="notecard">
       <h3>{howItWorksPage.publicRecord.heading}</h3>
       <p>{howItWorksPage.publicRecord.text}</p>

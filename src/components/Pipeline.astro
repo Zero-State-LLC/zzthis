@@ -1,6 +1,5 @@
 ---
 import { images } from "../content/images";
-import { conceptLabels } from "../content/labels";
 import { url } from "../lib/url";
 import { photoToAction } from "../content/workflows";
 ---
@@ -8,8 +7,6 @@ import { photoToAction } from "../content/workflows";
 <section class="pipeline" id="photo-to-action" aria-labelledby="action-title">
   <div class="field__head">
     <h2 id="action-title">{photoToAction.heading}</h2>
-    <p>{photoToAction.intro}</p>
-    <p class="label">{conceptLabels.group}</p>
   </div>
   <ol class="pipeline__steps" aria-label={photoToAction.sequenceLabel}>
     {photoToAction.sequence.map((step) => {

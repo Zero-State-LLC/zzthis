@@ -145,39 +145,40 @@ describe("comparison (spec 3.2 H.3)", () => {
 
 describe("workflows (spec 3.2 H.4 to H.6)", () => {
   it("explains the terminal zz marks as camera index marks", () => {
-    expect(whyMarkers.text).toContain("planned on-device camera reader");
+    expect(whyMarkers.text).toContain("are the endpoints");
     expect(whyMarkers.text).toContain("bound the region to inspect");
     expect(whyMarkers.text).not.toContain("in any handwriting");
   });
 
-  it("separates available typed lookup from planned recognition paths", () => {
-    expect(howItWorksPage.intro).toContain("not v1 behavior");
-    expect(howItWorksPage.readWays.heading).toBe(
-      "Manual and planned camera reading",
+  it("names both read paths without hedging", () => {
+    expect(howItWorksPage.intro).toBe(
+      "One code, written by hand, read by camera, spoken over a radio, and linked to the record it names.",
     );
+    expect(howItWorksPage.readWays.heading).toBe("Manual and camera reading");
     expect(howItWorksPage.readWays.methods).toEqual([
-      "Manual entry (available)",
-      "Camera recognition (planned)",
+      "Manual entry",
+      "Camera recognition",
     ]);
-    expect(howItWorksPage.readWays.line).toContain(
-      "On-device camera recognition is planned for v1 but is not implemented yet.",
+  });
+
+  it("pairs contested logistics with the shared naming layer", () => {
+    expect(howItWorksPage.reach.heading).toBe(
+      "Contested logistics and sustainment, and an uber naming space",
     );
-    expect(howItWorksPage.readWays.line).toContain(
-      "Voice recognition is planned for a future release; it is not part of v1.",
-    );
+    expect(howItWorksPage.reach.images).toEqual(["p", "q"]);
   });
 
   it("matches the core workflow", () => {
     expect(coreIdentity.intro).toBe(
-      "Core identity: MARK a lowercase zz code → READ it by manual entry today; on-device camera recognition is planned for v1 → LINK it to a record → REPORT it in a voice handoff to another person if useful.",
+      "Core identity: MARK a zz code → READ it → LINK it to a record → SPEAK it in a voice handoff.",
     );
     expect(
       coreIdentity.steps.map((step) => `${step.title}: ${step.text}`),
     ).toEqual([
       "Mark: Write the code on tape, a crate, or a pallet.",
-      "Read: Manual entry uses the same code grammar and is the available read path in this build. On-device camera recognition is planned for v1 but is not implemented yet.",
+      "Read: Scan it like a bar code or QR code, or type it in.",
       "Link: Connect to an existing record and photo.",
-      "Report: Say the code words to another person if a voice handoff is useful; software voice recognition is not part of v1.",
+      "Speak: Say the code words to another person.",
     ]);
     expect(coreIdentity.closing).toBe(
       "For a field code made with no device, link and reconcile later.",
@@ -191,11 +192,11 @@ describe("workflows (spec 3.2 H.4 to H.6)", () => {
   });
 
   it("matches photo to action", () => {
-    expect(photoToAction.intro).toBe(
-      "Future exploration (B7, queued): a second layer after the handwritten code could identify an item and suggest its next task.",
+    expect(photoToAction.heading).toBe(
+      "Your Super Lens to the Physical World",
     );
     expect(photoToAction.workflow).toBe(
-      "Future concept, not v1: PHOTOGRAPH one or more items → CONFIRM the proposed identification → choose a handling or inventory action by touch → REVIEW the prepared record or form.",
+      "PHOTOGRAPH one or more items → CONFIRM the proposed identification → choose a handling or inventory action by touch → REVIEW the prepared record or form.",
     );
     expect(
       photoToAction.sequence.map((step) => `${step.numeral} ${step.title}`),
