@@ -25,8 +25,7 @@ export const images = {
     title: "Hero photo",
     shortCopy: "Crate and damaged inventory label; visible handwritten code.",
     alt: "Olive crate with blue tape reading zz-copper-lantern-sky-zz beside an obscured barcode.",
-    caption:
-      "The zzThis word code augments or replaces an obscured barcode.",
+    caption: "The zzThis word code augments or replaces an obscured barcode.",
     focal: { x: 0.5, y: 0.55 },
     destination: ["home", "demo"],
     status: "concept",

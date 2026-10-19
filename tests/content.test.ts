@@ -192,9 +192,7 @@ describe("workflows (spec 3.2 H.4 to H.6)", () => {
   });
 
   it("matches photo to action", () => {
-    expect(photoToAction.heading).toBe(
-      "Your Super Lens to the Physical World",
-    );
+    expect(photoToAction.heading).toBe("Your Super Lens to the Physical World");
     expect(photoToAction.workflow).toBe(
       "PHOTOGRAPH one or more items → CONFIRM the proposed identification → choose a handling or inventory action by touch → REVIEW the prepared record or form.",
     );
