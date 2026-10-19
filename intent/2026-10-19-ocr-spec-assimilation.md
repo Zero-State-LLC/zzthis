@@ -2,7 +2,7 @@
 
 Author: Grok Bot, for Danny's 2026-10-19 request ("audit specs and assimilate useful concepts from this research so we can fix")
 Date: 2026-10-19
-Status: draft (accepted when Danny merges the pull request that adds it; Danny approved the D-1 to D-9 defaults on 2026-10-19)
+Status: accepted (Danny, 2026-10-19 1:56 AM PT: "Yes to my defaults. Open the spec PRs and send Prabu his decisions."; merge yes 2:20 AM PT: "admin merge all prs"). P-1 to P-7 stay PROPOSED for Prabu.
 Product: zzThis (`Zero-State-LLC/zzthis`), with a zzThat follow-up
 
 ## Problem / why now
@@ -42,4 +42,4 @@ Implementing the decoder, tolerant markers, or the protocol bump. Touching zzThi
 
 ## Next
 
-Danny merges, which accepts this intent. Prabu answers P-1 to P-7. The FIX-PLAN packets follow as separate pull requests.
+Prabu answers P-1 to P-7. The FIX-PLAN packets follow as separate pull requests.
