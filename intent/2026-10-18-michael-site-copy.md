@@ -59,7 +59,7 @@ Label every non-obvious claim. Prefer a table when there are several.
 | Site copy may say a visitor can scan the mark | `[verified: Danny, repo owner, 2026-10-18]` |
 | The 2026-10-18 page wording is Michael's | `[verified: Michael's site copy patch, 2026-10-18, PR #188]` |
 | AI photo-to-action is not live | `[verified: Danny, 2026-10-18 5:51 PM PT]` |
-| About says zzThat is live, not "launching soon" | `[verified: Danny, repo owner, 2026-10-18]` |
+| About, Home, and the demo say the zzThat Android and iOS apps are live, not "launching soon" or unshipped | `[verified: Danny, repo owner, 2026-10-18]` |
 | This repository holds a camera-engine PASS receipt | `[verified: no PASS receipt is recorded; the apps are not in this repo]` |
 
 ## Next

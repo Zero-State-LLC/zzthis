@@ -24,7 +24,7 @@ const { whyMarkers } = anatomyModule;
 const { footerItems, footerNotice, zzthisSocial, zzthatSocial } =
   navigationModule;
 const { advisors, founder, founderOrigin } = peopleModule;
-const { demoTitle, demoPrototypeLinks } = demoModule;
+const { demoTitle, demoPrototypeLinks, demoPlannedApp } = demoModule;
 const { aboutPage, prototypes } = contactModule;
 const { technologyDraft } = technologyModule;
 const { conceptLabels } = labelsModule;
@@ -215,6 +215,19 @@ describe("About prototypes", () => {
     expect(prototypes.find((site) => site.name === "zzthat.com")?.text).toBe(
       "Working scanner/creator prototype and separate consumer product direction; the Android and iOS apps are live.",
     );
+    expect(demoPlannedApp).toBe(
+      "The zzThat Android and iOS apps are live at zzthat.com.",
+    );
+    const zzThatReleaseClaims = allStrings.filter((text) =>
+      /zzThat/i.test(text),
+    );
+    expect(
+      zzThatReleaseClaims.filter((text) =>
+        /launching soon|not shipped|releases are planned|remain planned|Planned public app/i.test(
+          text,
+        ),
+      ),
+    ).toEqual([]);
   });
 });
 
@@ -388,7 +401,7 @@ describe("top ways (Home section 01)", () => {
     expect(topWays.items.map((item) => item.status)).toEqual([
       "Exploration: field/enterprise workflows are queued in B7; carrier and ledger integrations are not v1 features.",
       "Exploration: postal/parcel workflows are queued in B8; postage, carrier, routing, and tracking integrations are not v1 services.",
-      "Consumer/community uses are queued in B9. zzThat is a working prototype; Android, iOS, and web releases are planned, not shipped.",
+      "Consumer/community uses are queued in B9. The zzThat Android and iOS apps are live.",
       "Exploration: agent/ledger integrations are shadowed in B16; no v1 agent identity or authorization integration.",
       "Exploration: blockchain integration is shadowed in B16 for v2+; it is not a v1 dependency or capability.",
       "Exploration: authorized actions/macros are shadowed in B14; code-triggered actions are not a v1 feature.",
@@ -396,7 +409,7 @@ describe("top ways (Home section 01)", () => {
     expect(topWays.items.map((item) => item.text)).toEqual([
       "A future workflow could use a handwritten code to help identify and hand off items. The pictured shipping, customs, payment-service, and shared-ledger connections are concepts, not available integrations.",
       "A future postal or parcel workflow could use a handwritten code as a reference. This concept is not proof of postage and does not provide routing or tracking.",
-      "Community examples include a lost-pet flyer, a moving box, or a garage-sale item. The zzThat scanner/creator is a working prototype; its consumer releases remain planned.",
+      "Community examples include a lost-pet flyer, a moving box, or a garage-sale item. The zzThat Android and iOS apps are live.",
       "A future integration could give an agent a short, readable alias. Linking that alias to an operator or permissions is not a v1 capability.",
       "A future integration could map a readable code to a wallet, account, smart-contract, or agent address. No blockchain alias integration is available in v1.",
       "A future authorized-actions design could let a code refer to a command, subject to separate authentication, authorization, and confirmation. The code itself carries no authority, and v1 does not execute macros.",
