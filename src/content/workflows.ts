@@ -61,6 +61,8 @@ export const fieldLogistics = {
 export const photoToAction = {
   // [MICHAEL 2026-10-18] Renamed from "From photo to action".
   heading: "Your Super Lens to the Physical World",
+  // [DANNY 2026-10-18 5:51 PM PT] This pipeline is not live.
+  qualifier: "Future exploration, not a live workflow.",
   sequenceLabel: "From photo to action, three steps",
   sequence: [
     { numeral: "01", title: "Photograph", image: "j" },

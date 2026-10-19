@@ -25,6 +25,7 @@ const { footerItems, footerNotice, zzthisSocial, zzthatSocial } =
   navigationModule;
 const { advisors, founder, founderOrigin } = peopleModule;
 const { demoTitle, demoPrototypeLinks } = demoModule;
+const { aboutPage, prototypes } = contactModule;
 const { technologyDraft } = technologyModule;
 const { conceptLabels } = labelsModule;
 const { topWays } = usesModule;
@@ -193,12 +194,27 @@ describe("workflows (spec 3.2 H.4 to H.6)", () => {
 
   it("matches photo to action", () => {
     expect(photoToAction.heading).toBe("Your Super Lens to the Physical World");
+    expect(photoToAction.qualifier).toBe(
+      "Future exploration, not a live workflow.",
+    );
     expect(photoToAction.workflow).toBe(
       "PHOTOGRAPH one or more items → CONFIRM the proposed identification → choose a handling or inventory action by touch → REVIEW the prepared record or form.",
     );
     expect(
       photoToAction.sequence.map((step) => `${step.numeral} ${step.title}`),
     ).toEqual(["01 Photograph", "02 Guide", "03 Review"]);
+  });
+});
+
+describe("About prototypes", () => {
+  it("says zzThat is live", () => {
+    expect(aboutPage.prototypeLabel).toBe(
+      "zzThis is for commercial and government use; zzThat is our free consumer app, and it is live. These are prototypes and explorations; capabilities described as planned are not deployed features.",
+    );
+    expect(aboutPage.prototypeLabel).not.toContain("launching soon");
+    expect(prototypes.find((site) => site.name === "zzthat.com")?.text).toBe(
+      "Working scanner/creator prototype and separate consumer product direction; the Android and iOS apps are live.",
+    );
   });
 });
 

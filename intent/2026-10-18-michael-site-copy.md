@@ -20,7 +20,7 @@ Michael's 2026-10-18 site copy removes the planned/available hedges, the concept
 Observable done (a stranger can check this without reading the chat):
 
 - How it works drops the page intro hedge, the concept-renderings note, and the planned/available labels. Step 04 is Speak. Section 03 is the drone-feed and recovery-site panels. Section 04 is "Your Super Lens to the Physical World".
-- Home tour, field logistics, and the photo-to-action pipeline drop the concept labels and the uncertain-reading / decision-band material.
+- Home tour, field logistics, and the photo-to-action pipeline drop the concept labels and the uncertain-reading / decision-band material. The photo-to-action pipeline keeps Michael's heading and steps, and says "Future exploration, not a live workflow."
 - About invites military and civilian logistics partners and engineers. Contact uses the same invite and collaboration lines as About. Arshi's bio notes the OWASP GenAI Security Project.
 - The footer image note does not call the About "Real photos" photographs concept renderings.
 - `specs/RELEASE-ROADMAP.md`, `docs/SPEC.md`, and `docs/site-reconciliation-2026-10-06.md` say the native apps are live and that site copy may say a visitor can scan the mark.
@@ -34,10 +34,10 @@ Observable done (a stranger can check this without reading the chat):
 
 Product-true locks (do not reopen in implement):
 
-- Michael's 2026-10-18 wording stays. The hedges he removed stay removed.
-- The native zz apps exist and are live. Site copy may say a visitor can scan the mark. [verified: Danny, repo owner, 2026-10-18]
+- Michael's 2026-10-18 wording stays, except the photo-to-action future qualifier Danny required and the About line that zzThat is live.
+- The native zz apps exist and are live. Site copy may say a visitor can scan the mark. About says zzThat is live. [verified: Danny, repo owner, 2026-10-18]
 - Voice stays future scope. This file does not say voice recognition is shipped.
-- AI photo-to-action (photograph an item, confirm an identification, prepare an action) is not recorded here as a shipped workflow.
+- AI photo-to-action (photograph an item, confirm an identification, prepare an action) is not live. The pipeline keeps a future qualifier. [verified: Danny, 2026-10-18 5:51 PM PT]
 
 Non-goals:
 
@@ -47,7 +47,7 @@ Non-goals:
 
 ## Open questions
 
-- Is AI photo-to-action live, as opposed to the apps and scanning? Danny confirmed the apps and that a visitor can scan the mark. He did not confirm that identifying an item from a photo and preparing an action is live. The site copy no longer labels that pipeline as future exploration. The spec still lists it as a concept.
+- None from these two rulings. AI photo-to-action is not live [verified: Danny, 2026-10-18 5:51 PM PT]. zzThat is live, so About does not say "launching soon" [verified: Danny, repo owner, 2026-10-18].
 
 ## Claims
 
@@ -58,9 +58,10 @@ Label every non-obvious claim. Prefer a table when there are several.
 | The native iOS and Android zz apps exist and are live | `[verified: Danny, repo owner, 2026-10-18]` |
 | Site copy may say a visitor can scan the mark | `[verified: Danny, repo owner, 2026-10-18]` |
 | The 2026-10-18 page wording is Michael's | `[verified: Michael's site copy patch, 2026-10-18, PR #188]` |
-| AI photo-to-action is a shipped workflow | `[assumed: not confirmed; left as a concept in the spec]` |
+| AI photo-to-action is not live | `[verified: Danny, 2026-10-18 5:51 PM PT]` |
+| About says zzThat is live, not "launching soon" | `[verified: Danny, repo owner, 2026-10-18]` |
 | This repository holds a camera-engine PASS receipt | `[verified: no PASS receipt is recorded; the apps are not in this repo]` |
 
 ## Next
 
-Danny (repo owner) accepted this file on 2026-10-18 to the extent the native apps are live and the site may say a visitor can scan the mark. The spec sentences that forbade that scan sentence were updated with this file. AI photo-to-action stays an open question above.
+Danny (repo owner) accepted this file on 2026-10-18 to the extent the native apps are live and the site may say a visitor can scan the mark. On 2026-10-18 at 5:51 PM PT he ruled that AI photo-to-action is not live. About now says zzThat is live. The photo-to-action pipeline carries the future qualifier.

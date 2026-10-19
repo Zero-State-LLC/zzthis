@@ -50,7 +50,7 @@ export const aboutPage = {
   explorationsHeading: "Current prototypes and explorations",
   // [MICHAEL 2026-10-07] zzthing.com is replaced by zzthis.com.
   prototypeLabel:
-    "zzThis is for commercial and government use; zzThat is our free consumer app, launching soon. These are prototypes and explorations; capabilities described as planned are not deployed features.",
+    "zzThis is for commercial and government use; zzThat is our free consumer app, and it is live. These are prototypes and explorations; capabilities described as planned are not deployed features.",
   handwrittenHeading: "Codes written by hand",
   handwrittenLabel: "Real photos of handwritten codes.",
   // [MICHAEL 2026-10-08] One explainer across the three Kathy images.
@@ -124,7 +124,7 @@ export const prototypes: readonly Prototype[] = [
   {
     name: "zzthat.com",
     href: "https://zzthat.com",
-    text: "Working scanner/creator prototype and separate consumer product direction; web, Android, and iOS releases are planned.",
+    text: "Working scanner/creator prototype and separate consumer product direction; the Android and iOS apps are live.",
     logo: zzthatLogos[zzthatLogoVariant],
   },
 ];
