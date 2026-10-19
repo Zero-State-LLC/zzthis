@@ -153,33 +153,6 @@
   color: var(--color-ink-2);
 }
 
-.bands {
-  list-style: none;
-  padding: 0;
-  display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  font-family: var(--font-mono);
-  font-size: var(--text-2xs);
-}
-
-.bands li {
-  padding: var(--space-xs) var(--space-2xs);
-  border: var(--rule-hair) solid var(--color-rule);
-  border-inline-start-width: 0;
-  text-align: center;
-  overflow-wrap: anywhere;
-}
-
-.bands li:first-child {
-  border-inline-start-width: 1px;
-}
-
-.bands .is-accept {
-  color: var(--color-on-accent);
-  background: var(--color-accent);
-  border-color: var(--color-accent);
-}
-
 @media (min-width: 48rem) {
   .notes {
     grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);

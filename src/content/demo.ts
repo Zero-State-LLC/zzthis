@@ -41,7 +41,7 @@ export const demoPrototypeLinks: readonly {
 ];
 
 export const demoPlannedApp =
-  "Planned public app: zzThat will be a free app for web, Android, and iOS at zzthat.com.";
+  "The zzThat Android and iOS apps are live at zzthat.com.";
 
 export const demoTryHeading = "Try a workflow";
 

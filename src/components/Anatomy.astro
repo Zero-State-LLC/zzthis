@@ -54,6 +54,13 @@ const specimen = specimenParts
           )}
       </h3>
       <p>{whyMarkers.text}</p>
+      <ul class="why__points">
+        {whyMarkers.points.map((point) => (
+          <li>
+            <strong>{point.label}</strong> {point.text}
+          </li>
+        ))}
+      </ul>
     </div>
     <div class="langs">
       <h3 class="langs__heading">

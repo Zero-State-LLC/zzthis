@@ -1,9 +1,24 @@
 // H.1b. The third label is Michael's v1.0 line. The other labels are prototype microcopy.
 
+// [MICHAEL 2026-10-18] Home-page copy: lede plus three points.
 export const whyMarkers = {
   heading: "Why the zz markers matter",
-  text: "The zz markers are to zzThis what the start and stop bars are to a barcode, or the three corner squares to a QR code: a fixed frame that tells people and machines where a code begins and ends. Two “zz” letters or “marks” form a memorable part of the written code. A planned on-device camera reader could use them as index marks to find the endpoints and bound the region to inspect; the words remain readable and writable by people.",
-};
+  text: "The zz markers are to zzThis what the start and stop bars are to a barcode, or the corner squares are to a QR code: a fixed frame that tells people and machines that a code exists and where it begins and ends.",
+  points: [
+    {
+      label: "Human-friendly:",
+      text: "The two zz marks are a memorable, distinctive anchor. People quickly learn to spot them as the boundaries of a written code.",
+    },
+    {
+      label: "Machine-friendly:",
+      text: "Almost no words begin with \u201czz,\u201d and a phrase framed by zz at both ends almost never occurs in ordinary text, signage, or software. This rare frame keeps false matches low, lets a planned camera scanner find the endpoints and bound the region to inspect, and is friendly to machines.",
+    },
+    {
+      label: "The result:",
+      text: "A simple bridge between physical things and their digital records, where the code stays fully readable and writable by people.",
+    },
+  ],
+} as const;
 
 // [MICHAEL 2026-10-07 change list] Dashes between the words.
 export const languagesHeading = "In - any - language";

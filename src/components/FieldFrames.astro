@@ -1,6 +1,5 @@
 ---
 import { images } from "../content/images";
-import { conceptLabels } from "../content/labels";
 import { url } from "../lib/url";
 import { fieldLogistics } from "../content/workflows";
 
@@ -14,7 +13,6 @@ function captionFor(title: string, caption: string): string {
   <div class="field__head">
     <h2 id="field-title">{fieldLogistics.heading}</h2>
     <p>{fieldLogistics.intro}</p>
-    <p class="label">{conceptLabels.group}</p>
   </div>
   <ul
     class="field__frames"
