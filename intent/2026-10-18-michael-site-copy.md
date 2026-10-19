@@ -25,6 +25,7 @@ Observable done (a stranger can check this without reading the chat):
 - The footer image note does not call the About "Real photos" photographs concept renderings.
 - `specs/RELEASE-ROADMAP.md`, `docs/SPEC.md`, and `docs/site-reconciliation-2026-10-06.md` say the native apps are live and that site copy may say a visitor can scan the mark.
 - README roadmap drops Phase 2 Submission (xTechSearch #11 and #8, handled outside the repo) and renumbers the product-prototype phase to Phase 2. [verified: Michael, for the xTech submission; Danny approved 2026-10-18]
+- Item 4 of Michael's 2026-10-19 xTech patch is applied: Home "Why the zz markers matter" is his lede plus three points. The Machine-friendly point says "a planned camera scanner" because Danny ruled the AI photo/camera workflow is not live and the copy must keep a future qualifier. [MICHAEL 2026-10-18]
 
 ## Affected users / systems
 

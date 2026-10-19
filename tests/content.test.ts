@@ -146,9 +146,12 @@ describe("comparison (spec 3.2 H.3)", () => {
 
 describe("workflows (spec 3.2 H.4 to H.6)", () => {
   it("explains the terminal zz marks as camera index marks", () => {
-    expect(whyMarkers.text).toContain("are the endpoints");
-    expect(whyMarkers.text).toContain("bound the region to inspect");
-    expect(whyMarkers.text).not.toContain("in any handwriting");
+    const all = [whyMarkers.text, ...whyMarkers.points.map((p) => p.text)].join(
+      " ",
+    );
+    expect(all).toContain("camera scanner");
+    expect(all).toContain("bound the region to inspect");
+    expect(all).not.toContain("in any handwriting");
   });
 
   it("names both read paths without hedging", () => {
