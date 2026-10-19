@@ -338,7 +338,7 @@ A Soldier with only a marker (ideally on blue tape, so as not to mark up things)
 
 ### 2.5 Capture (typed lookup now; on-device camera planned for v1)
 
-> The broad product brief below mentions voice. Voice is not in v1. The current prototype supports typed lookup. The engine-neutral OCR decision set and its privacy boundary merged in #89. Camera recognition in the apps remains unqualified. Do not treat the older voice or cloud-retry descriptions in this section as current v1 requirements.
+> The broad product brief below mentions voice. Voice is not in v1. The current prototype supports typed lookup. The engine-neutral OCR decision set and its privacy boundary merged in #89. Camera recognition in the apps remains unqualified in this repository: there is no camera-engine PASS receipt. [DANNY 2026-10-18] The native zz apps are live, and site copy may say a visitor can scan the mark. "Unqualified" means the missing receipt, not that the apps are absent. Do not treat the older voice or cloud-retry descriptions in this section as current v1 requirements. AI photo-to-action stays a concept (Section 2.1); this note does not make that workflow live.
 
 
 - **Input paths.** Read by camera or manual entry. Report the words by voice where useful [BRIEF]. Voice and manual entry are alternate input paths [BRIEF].
@@ -431,8 +431,8 @@ The controlled swipe row uses CSS scroll snap and a visible peek of the next car
 **Concept-gallery label rule.** One short concept-gallery label covers the j–n group, and captions explain each step [WIRE]. The [BRIEF] allows concept status once for the demonstration gallery and once on the prototype links [BRIEF].
 
 - Concept labels [MICHAEL 2026-10-02] (Q17 RESOLVED): a standalone AI-render panel carries the tag "Concept illustration" (the Home hero image b, each Home application card, and single-panel sections on `/applications`). A grouped gallery carries one visible label above its panels: on Home, above the core workflow steps, the Field logistics row, and the From photo to action group. `/how-it-works` and `/applications` keep one page label under the H1, which covers their galleries. Captions name the actual workflow.
-- Label copy: standalone tag "Concept illustration" [MICHAEL 2026-10-02]. Group label (INFERRED): "Concept illustrations. These panels show intended use, not a deployed system." Page label (INFERRED): "Concept renderings. The panel images on this page show intended use, not a deployed system." All three live in `src/content/labels.ts`; replace the INFERRED wording if Daniel supplies exact text.
-- The second label appears on the About prototype links. Copy: "zzThis is for commercial and government use; zzThat is our free consumer app, launching soon." [MICHAEL 2026-10-07] (supersedes the 2026-10-06 zzThing line)
+- Label copy: standalone tag "Concept illustration" [MICHAEL 2026-10-02]. Group label (INFERRED): "Concept illustrations. These panels show intended use, not a deployed system." Page label (INFERRED): "Concept renderings. The panel images on this page show intended use, not a deployed system." All three live in `src/content/labels.ts`; replace the INFERRED wording if Daniel supplies exact text. [DANNY 2026-10-18] The native zz apps are live, and site copy may say a visitor can scan the mark. These labels describe generated illustrations. They are not a finding that the apps are absent or that a visitor cannot scan. They do not make AI photo-to-action a shipped workflow; that row in Section 2.1 stays a concept.
+- The second label appears on the About prototype links. Copy: "zzThis is for commercial and government use; zzThat is our free consumer app, launching soon." [MICHAEL 2026-10-07] (supersedes the 2026-10-06 zzThing line). [DANNY 2026-10-18] "Launching soon" is not the current status: the native apps are live. This note does not rewrite the site string.
 - `/demo` uses its own "Demo · demo data" label instead (Section 4).
 
 **About layout** [WIRE]
@@ -452,7 +452,7 @@ The 2026-10-02 brief and wireframes add Adam Fry and drop the Future space card.
 
 **Overrides to H.1–H.3**
 
-1. H.1: Use a claim-accurate subline: "Write a code on a thing; type it to find its record." The copy must not imply that camera recognition is implemented; on-device camera recognition is planned for v1, while voice is future scope.
+1. H.1: Use a claim-accurate subline. The 2026-10-02 subline was "Write a code on a thing; type it to find its record," and the copy was not to imply that camera recognition was implemented. [DANNY 2026-10-18] The native zz apps are live, and site copy may say a visitor can scan the mark. Voice remains future scope. Do not imply that AI photo-to-action is shipped; Section 2.1 still lists it as a concept.
 2. H.1 phone order becomes: H1, subline, image b, actions, then the [BRIEF] paragraph [WIRE]. This replaces "image above text on phones". The image still comes before the descriptive paragraph.
 3. H.1 desktop: The text column holds the H1, subline, actions, and paragraph. The image column holds b. The 1:1.618 ratio is unchanged.
 4. H.1: The focal point of image b sits on the tape code, so the mark stays visible in every crop [WIRE]. Caption: "Word code on blue tape beside an obscured barcode." [BRIEF]

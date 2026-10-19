@@ -33,8 +33,9 @@ describe("B v1.0 copy locks", () => {
     expect(hackerDojo.paragraphs.join(" ")).not.toMatch(/Hacker Dojo/);
     expect(realPhotos).toBe("Real photos.");
     expect(footerNote).toContain(
-      "Images and photos are concept and prototype renderings or representations.",
+      "Concept illustrations are concept and prototype renderings or representations.",
     );
+    expect(footerNote).not.toContain("Images and photos are concept");
   });
 
   it("uses Michael's console labels and architecture detail", () => {

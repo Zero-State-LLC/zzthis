@@ -114,4 +114,4 @@ export const zzthatSocial: readonly SocialLink[] = shown([
 export const footerNotice = "Patent pending";
 
 export const footerNote =
-  "Images and photos are concept and prototype renderings or representations. Third-party names, logos, trademarks, and artwork are shown for illustrative or referential purposes and remain the property of their respective owners; their appearance does not imply endorsement or affiliation.";
+  "Concept illustrations are concept and prototype renderings or representations. Third-party names, logos, trademarks, and artwork are shown for illustrative or referential purposes and remain the property of their respective owners; their appearance does not imply endorsement or affiliation.";
