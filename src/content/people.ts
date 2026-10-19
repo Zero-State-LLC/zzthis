@@ -106,7 +106,7 @@ export const advisors: readonly Person[] = [
     photo: { src: "images/people/arshi-chadha.webp", width: 440, height: 440 },
     role: "AI security",
     profileUrl: "https://www.linkedin.com/in/arshichadha/",
-    bio: "Arshi is a security engineer at Zscaler and a co-lead of the OWASP Top 10 for LLM Applications work. She earned a master’s degree in information security at Carnegie Mellon.",
+    bio: "Arshi is a security engineer at Zscaler and a co-lead of the OWASP Top 10 for LLM Applications work. She earned a master’s degree in information security at Carnegie Mellon. [The OWASP Top 10 for LLM applications is part of the broader OWASP GenAI Security Project, a global initiative to identify and mitigate security risks in generative AI systems, including LLMs, agentic AI, and AI-driven applications.]",
   },
 ];
 

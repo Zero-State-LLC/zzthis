@@ -37,8 +37,8 @@ export const topWays: TopWaysContent = {
       title: "Everyday use: zzThat",
       codes: ["zz-kathy-lost-cat-zz", "zz-moving-box-kitchen-3-zz"],
       status:
-        "Consumer/community uses are queued in B9. zzThat is a working prototype; Android, iOS, and web releases are planned, not shipped.",
-      text: "Community examples include a lost-pet flyer, a moving box, or a garage-sale item. The zzThat scanner/creator is a working prototype; its consumer releases remain planned.",
+        "Consumer/community uses are queued in B9. The zzThat Android and iOS apps are live.",
+      text: "Community examples include a lost-pet flyer, a moving box, or a garage-sale item. The zzThat Android and iOS apps are live.",
     },
     {
       numeral: "04",

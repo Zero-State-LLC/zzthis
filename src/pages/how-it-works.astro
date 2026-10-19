@@ -1,7 +1,6 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
 import Card from "../components/Card.astro";
-import ConceptLabel from "../components/ConceptLabel.astro";
 import Eyebrow from "../components/Eyebrow.astro";
 import Series from "../components/Series.astro";
 import Steps from "../components/Steps.astro";
@@ -22,13 +21,11 @@ const page = howItWorksPage;
     <header class="intro">
       <h1>{page.title}</h1>
       <p>{page.intro}</p>
-      <ConceptLabel />
     </header>
 
     <section class="section">
       <Eyebrow index="01" />
       <h2>{page.coreHeading}</h2>
-      <p>{coreIdentity.intro}</p>
       <Steps />
     </section>
 
@@ -42,7 +39,6 @@ const page = howItWorksPage;
           </li>
         ))}
       </ul>
-      <p>{page.readWays.line}</p>
       <Series columns="2">
         {page.readWays.images.map((id) => (
           <li>
@@ -58,8 +54,18 @@ const page = howItWorksPage;
 
     <section class="section">
       <Eyebrow index="03" />
-      <h2>{page.uncertain.heading}</h2>
-      <p>{page.uncertain.text}</p>
+      <h2>{page.reach.heading}</h2>
+      <Series columns="2">
+        {page.reach.images.map((id) => (
+          <li>
+            <Card
+              image={id}
+              title={images[id].title}
+              caption={images[id].caption}
+            />
+          </li>
+        ))}
+      </Series>
     </section>
 
     <section class="section">

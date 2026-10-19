@@ -2,12 +2,6 @@ import { contactEmail } from "./navigation";
 
 export const mailto = `mailto:${contactEmail}`;
 
-export const contactPage = {
-  title: "Contact",
-  text: "Discuss a pilot, field feedback, or collaboration.",
-  location: "Silicon Valley (Santa Clara) and New York City.",
-};
-
 export interface Prototype {
   name: string;
   href: string;
@@ -48,14 +42,15 @@ export const zzthatLogo = zzthatLogos[zzthatLogoVariant];
 
 export const aboutPage = {
   title: "About zzThis",
+  // [MICHAEL 2026-10-17] The intro line carries the open invite now.
   intro:
-    "A code a person can write anywhere, linked to a digital record and the next work.",
+    "An active, open invite to military and civilian logistics partners and engineers.",
   contactCardHeading: "Contact",
-  contactCardText: "Invite collaboration and test partners.",
+  contactCardText: "We invite collaboration and test partners.",
   explorationsHeading: "Current prototypes and explorations",
   // [MICHAEL 2026-10-07] zzthing.com is replaced by zzthis.com.
   prototypeLabel:
-    "zzThis is for commercial and government use; zzThat is our free consumer app, launching soon. These are prototypes and explorations; capabilities described as planned are not deployed features.",
+    "zzThis is for commercial and government use; zzThat is our free consumer app, and it is live. These are prototypes and explorations; capabilities described as planned are not deployed features.",
   handwrittenHeading: "Codes written by hand",
   handwrittenLabel: "Real photos of handwritten codes.",
   // [MICHAEL 2026-10-08] One explainer across the three Kathy images.
@@ -68,6 +63,15 @@ export const aboutPage = {
   locationText: "Silicon Valley (Santa Clara) and New York City.",
   nextHeading: "Next action",
   nextText: "Discuss a pilot, test cohort or collaboration.",
+};
+
+// [MICHAEL 2026-10-18] Contact is back in the menu. Its lines match About:
+// the open invite under the title, the collaboration line in the card.
+export const contactPage = {
+  title: "Contact",
+  text: aboutPage.intro,
+  cardText: aboutPage.contactCardText,
+  location: aboutPage.locationText,
 };
 
 export const hackerDojo = {
@@ -120,7 +124,7 @@ export const prototypes: readonly Prototype[] = [
   {
     name: "zzthat.com",
     href: "https://zzthat.com",
-    text: "Working scanner/creator prototype and separate consumer product direction; web, Android, and iOS releases are planned.",
+    text: "Working scanner/creator prototype and separate consumer product direction; the Android and iOS apps are live.",
     logo: zzthatLogos[zzthatLogoVariant],
   },
 ];

@@ -16,7 +16,7 @@ export const coreIdentity = {
   // [MICHAEL 2026-10-14] "- field" distinguishes this from the consumer block.
   heading: "How it works - field",
   intro:
-    "Core identity: MARK a lowercase zz code → READ it by manual entry today; on-device camera recognition is planned for v1 → LINK it to a record → REPORT it in a voice handoff to another person if useful.",
+    "Core identity: MARK a zz code → READ it → LINK it to a record → SPEAK it in a voice handoff.",
   steps: [
     {
       numeral: "01",
@@ -27,7 +27,7 @@ export const coreIdentity = {
     {
       numeral: "02",
       title: "Read",
-      text: "Manual entry uses the same code grammar and is the available read path in this build. On-device camera recognition is planned for v1 but is not implemented yet.",
+      text: "Scan it like a bar code or QR code, or type it in.",
       image: "d",
     },
     {
@@ -38,8 +38,8 @@ export const coreIdentity = {
     },
     {
       numeral: "04",
-      title: "Report",
-      text: "Say the code words to another person if a voice handoff is useful; software voice recognition is not part of v1.",
+      title: "Speak",
+      text: "Say the code words to another person.",
       image: "f",
     },
   ] satisfies WorkflowStep[],
@@ -59,9 +59,10 @@ export const fieldLogistics = {
 };
 
 export const photoToAction = {
-  heading: "From photo to action",
-  intro:
-    "Future exploration (B7, queued): a second layer after the handwritten code could identify an item and suggest its next task.",
+  // [MICHAEL 2026-10-18] Renamed from "From photo to action".
+  heading: "Your Super Lens to the Physical World",
+  // [DANNY 2026-10-18 5:51 PM PT] This pipeline is not live.
+  qualifier: "Future exploration, not a live workflow.",
   sequenceLabel: "From photo to action, three steps",
   sequence: [
     { numeral: "01", title: "Photograph", image: "j" },
@@ -73,33 +74,28 @@ export const photoToAction = {
     { title: "Touch first", image: "n" },
   ] satisfies TitledImage[],
   workflow:
-    "Future concept, not v1: PHOTOGRAPH one or more items → CONFIRM the proposed identification → choose a handling or inventory action by touch → REVIEW the prepared record or form.",
+    "PHOTOGRAPH one or more items → CONFIRM the proposed identification → choose a handling or inventory action by touch → REVIEW the prepared record or form.",
 };
 
 export const howItWorksPage = {
   title: "How it works",
   intro:
-    "One workflow for code identity; photo-based identification remains future exploration, not v1 behavior.",
+    "One code, written by hand, read by camera, spoken over a radio, and linked to the record it names.",
   coreHeading: "Core identity",
   readWays: {
-    heading: "Manual and planned camera reading",
-    methods: ["Manual entry (available)", "Camera recognition (planned)"],
-    line: "Manual entry uses the same code grammar and is the available read path in this build. On-device camera recognition is planned for v1 but is not implemented yet. Voice recognition is planned for a future release; it is not part of v1.",
+    heading: "Manual and camera reading",
+    methods: ["Manual entry", "Camera recognition"],
     images: ["d", "f"] satisfies ImageId[],
   },
-  uncertain: {
-    heading: "When a reading is uncertain",
-    text: "When implemented, the camera reader should ask for confirmation, another view, or manual entry if endpoints or words are uncertain; it should not guess a missing endpoint or another live code.",
+  // [MICHAEL 2026-10-17] Section 03: contested logistics beside the shared
+  // naming layer.
+  reach: {
+    heading: "Contested logistics and sustainment, and an uber naming space",
+    images: ["p", "q"] satisfies ImageId[],
   },
-  aiHeading: "AI-assisted work: future exploration",
+  aiHeading: "Your Super Lens to the Physical World",
   publicRecord: {
     heading: "The code is public; the record is protected",
     text: "The visible words are a public identifier, not a password or private key. Payment and authorization remain in signed backend records.",
   },
-};
-
-export const decisionBands = {
-  ariaLabel: "Decision bands, from low to high confidence",
-  names: ["Manual", "Rescan", "Confirm", "Resolve"] as const,
-  note: "Design intent. No threshold has been measured yet.",
 };
