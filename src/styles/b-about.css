@@ -40,6 +40,14 @@
   color: var(--color-ink-2);
 }
 
+/* [MICHAEL 2026-10-19] Team line: body size so it fits the first mobile screen. */
+.page-head__team {
+  font-size: var(--text-base);
+  line-height: 1.5;
+  color: var(--color-ink-2);
+  max-width: var(--measure);
+}
+
 .nav__links a[aria-current="page"] {
   text-decoration: underline;
   text-decoration-color: var(--color-accent);

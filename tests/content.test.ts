@@ -215,6 +215,8 @@ describe("About prototypes", () => {
       "zzThis is for commercial and government use; zzThat is our free consumer app, and it is live. These are prototypes and explorations; capabilities described as planned are not deployed features.",
     );
     expect(aboutPage.prototypeLabel).not.toContain("launching soon");
+    expect(aboutPage.team).toContain("Silicon Valley-based team");
+    expect(aboutPage.team).toContain("dependable solutions");
     expect(prototypes.find((site) => site.name === "zzthat.com")?.text).toBe(
       "Working scanner/creator prototype and separate consumer product direction; the Android and iOS apps are live.",
     );

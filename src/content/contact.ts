@@ -45,6 +45,8 @@ export const aboutPage = {
   // [MICHAEL 2026-10-17] The intro line carries the open invite now.
   intro:
     "An active, open invite to military and civilian logistics partners and engineers.",
+  // [MICHAEL 2026-10-19] Team line under the intro, exact wording.
+  team: "zzThis is a Silicon Valley-based team of entrepreneurs, founders, engineers, and professionals with decades of experience in business and finance, IP, logistics, full-stack software, cybersecurity, blockchain and tokenization, and AI. Active in innovation communities, we identify emerging technologies, collaborate, and turn them into dependable solutions for consumers, enterprises, and government.",
   contactCardHeading: "Contact",
   contactCardText: "We invite collaboration and test partners.",
   explorationsHeading: "Current prototypes and explorations",
