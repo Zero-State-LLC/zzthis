@@ -201,12 +201,7 @@ The versioned plan is [`specs/RELEASE-ROADMAP.md`](specs/RELEASE-ROADMAP.md): v1
 - [x] Spec Kit constitution and specs 001 to 004 ([PR #17](https://github.com/Zero-State-LLC/zzthis/pull/17), [`specs/`](specs/README.md))
 - [ ] Automate the remaining manual acceptance checks: contrast, reduced motion, Lighthouse, no cross-origin requests
 
-### Phase 2: Submission
-
-- [ ] xTechSearch: confirm eligibility and registrations, decide by Oct 12 ([#11](https://github.com/Zero-State-LLC/zzthis/issues/11))
-- [ ] xTechSearch submission prep ([#8](https://github.com/Zero-State-LLC/zzthis/issues/8))
-
-### Phase 3: Product prototype (implemented in this repo; isolated staging deployed, production gated)
+### Phase 2: Product prototype (implemented in this repo; isolated staging deployed, production gated)
 
 - [x] Wordlist pipeline and check-word library ([#14](https://github.com/Zero-State-LLC/zzthis/issues/14), [`packages/zz-core`](packages/zz-core/))
 - [x] Minimal exact-match resolver ([#13](https://github.com/Zero-State-LLC/zzthis/issues/13), [`workers/api`](workers/api/))
