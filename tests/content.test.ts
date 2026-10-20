@@ -237,13 +237,13 @@ describe("applications (spec 3.2 H.7 and 3.4)", () => {
       "Handwritten codes on bags, crates, pallets, and mixed goods connect items to existing identifiers and prepare inventory work.",
     );
     expect(story("parcel")).toBe(
-      "A future postal/parcel workflow could use a written reference and help prepare items before a parcel code is chosen.",
+      "One zz-code turns a parcel into a node with a digital twin. Shipper, carrier, sorting center, post office, and drop-off store each use their own systems, yet all read and update the same record, the same shared naming layer that lets relief organizations work from one set of words.",
     );
     expect(story("community")).toBe(
       "A handwritten code is linked to its online page or resource.",
     );
     expect(story("aliases")).toBe(
-      "A human-readable code serves as an alias for a longer machine address, with trusted identification and authentication layers.",
+      "Just as domain names stand in for IP addresses, a zz-code stands in for a long machine address, such as an AI agent ID or a wallet address. And just as HTTPS is the verified form of HTTP, an \u201c@\u201d in the code, as in zz-AI@-Agentsmith-zz, marks a trusted alias backed by identification and authentication.",
     );
   });
 

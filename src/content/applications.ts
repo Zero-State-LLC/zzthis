@@ -47,10 +47,10 @@ export const applications: readonly Application[] = [
   {
     id: "parcel",
     title: "Postal and parcel",
-    // [MICHAEL 2026-10-19]
+    // [MICHAEL 2026-10-19] Status and story (node, digital twin, shared layer).
     status: "The postal, parcel, and carrier workflows are illustrative.",
     story:
-      "A future postal/parcel workflow could use a written reference and help prepare items before a parcel code is chosen.",
+      "One zz-code turns a parcel into a node with a digital twin. Shipper, carrier, sorting center, post office, and drop-off store each use their own systems, yet all read and update the same record, the same shared naming layer that lets relief organizations work from one set of words.",
     homeImages: ["o", "g"],
     pageImages: ["o", "g"],
     homeWideOnly: false,
@@ -178,7 +178,7 @@ export const applications: readonly Application[] = [
     title: "Digital aliases",
     // [MICHAEL 2026-10-19] Status line and integrations note removed.
     story:
-      "A human-readable code serves as an alias for a longer machine address, with trusted identification and authentication layers.",
+      "Just as domain names stand in for IP addresses, a zz-code stands in for a long machine address, such as an AI agent ID or a wallet address. And just as HTTPS is the verified form of HTTP, an \u201c@\u201d in the code, as in zz-AI@-Agentsmith-zz, marks a trusted alias backed by identification and authentication.",
     homeImages: ["i"],
     pageImages: ["i"],
     homeWideOnly: false,
