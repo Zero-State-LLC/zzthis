@@ -15,7 +15,7 @@ import { topWays } from "../content/uses";
                 {item.numeral}
               </span>
               <h4>{item.title}</h4>
-              <p class="top-ways__status">{item.status}</p>
+              {item.status && <p class="top-ways__status">{item.status}</p>}
               <ul class="top-ways__codes">
                 {item.codes.map((code) => (
                   <li>

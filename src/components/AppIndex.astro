@@ -39,7 +39,7 @@ const entries = homeAppEntries();
           <h3>
             <a href={url(`applications#${entry.id}`)}>{entry.title}</a>
           </h3>
-          <p>{entry.story}</p>
+          {entry.story && <p>{entry.story}</p>}
         </div>
       </li>
     ))}

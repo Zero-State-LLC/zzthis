@@ -199,15 +199,18 @@ describe("application galleries", () => {
       ["app-super-identifier", "app-postage-letters"],
       ["app-delivery-1", "app-delivery-2", "app-delivery-3", "app-delivery-4"],
     ]);
+    // [MICHAEL 2026-10-20] Lost cat + trail marker lead as a pair; the
+    // U-Haul concept pair closes the page; aliases are one side-by-side pair.
     expect(ids("community")).toEqual([
+      ["h", "app-trail-marker"],
       ["app-for-sale", "app-help-wanted", "app-event-cancelled"],
       ["app-connect", "app-shop-pay", "app-donate"],
-      ["app-trail-marker"],
       ["app-share", "app-community", "app-handwritten-works"],
       ["app-tape-before", "app-tape-after"],
       ["app-truck-before", "app-truck-after"],
+      ["app-uhaul-door", "app-uhaul-scan"],
     ]);
-    expect(ids("aliases")).toEqual([["app-wallet-ens"]]);
+    expect(ids("aliases")).toEqual([["i", "app-wallet-ens"]]);
   });
 
   it("ships every app image under public and at most 2 MB", () => {

@@ -250,32 +250,40 @@ describe("About prototypes", () => {
 describe("applications (spec 3.2 H.7 and 3.4)", () => {
   it("matches the four category stories", () => {
     expect(story("field")).toBe(
-      "Handwritten codes on bags, crates, pallets, and mixed goods connect items to existing identifiers and prepare inventory work.",
+      "Field workflow to use handwritten codes on bags, crates, pallets, and mixed goods to connect items to existing identifiers and prepare tasks and inventory work.",
     );
     expect(story("parcel")).toBe(
-      "One zz-code turns a parcel into a node with a digital twin. Shipper, carrier, sorting center, post office, and drop-off store each use their own systems, yet all read and update the same record, the same shared naming layer that lets relief organizations work from one set of words.",
+      "Future postal or parcel workflow, batch work, or project can have optional reference code words to be used for identity before a final parcel code is chosen.",
     );
-    expect(story("community")).toBe(
-      "A handwritten code is linked to its online page or resource.",
-    );
-    expect(story("aliases")).toBe(
-      "Just as domain names stand in for IP addresses, a zz-code stands in for a long machine address, such as an AI agent ID or a wallet address. And just as HTTPS is the verified form of HTTP, an \u201c@\u201d in the code, as in zz-AI@-Agentsmith-zz, marks a trusted alias backed by identification and authentication.",
-    );
+    // [MICHAEL 2026-10-20] Community and aliases stories removed (page and Home).
+    expect(story("community")).toBeUndefined();
+    expect(story("aliases")).toBeUndefined();
   });
 
-  it("drops the roadmap hedges [MICHAEL 2026-10-19]", () => {
+  it("matches the page intro and the aliases extra sentence", () => {
+    // [MICHAEL 2026-10-20] The visible page intro is removed; only a meta
+    // description remains.
     expect(applicationsPage).not.toHaveProperty("intro");
-    expect(applications.every((entry) => entry.pageExtra === undefined)).toBe(
-      true,
+    expect(applicationsPage.description).toBe(
+      "Ways to use zzThis handwritten codes: field logistics, postal and parcel, everyday and public uses, and digital aliases.",
     );
+    expect(applicationsPage.description).not.toMatch(/B\d|v1/);
+    // [MICHAEL 2026-10-20] All four status lines and the aliases extra
+    // sentence are removed. Field logistics keeps Michael's new extra line.
+    expect(applications.find((entry) => entry.id === "field")?.pageExtra).toBe(
+      "Future structured profiles and private dictionaries would assign authorized, versioned meanings only after recognition and canonicalization.",
+    );
+    expect(
+      applications.find((entry) => entry.id === "aliases")?.pageExtra,
+    ).toBeUndefined();
     expect(applications.map((entry) => entry.status)).toEqual([
       undefined,
-      "The postal, parcel, and carrier workflows are illustrative.",
+      undefined,
       undefined,
       undefined,
     ]);
     expect(applications.find((entry) => entry.id === "community")?.title).toBe(
-      "Personal and community uses",
+      "Everyday, community, and public",
     );
   });
 
@@ -418,21 +426,22 @@ describe("top ways (Home section 01)", () => {
       ["zz-btc-harbor-violet-nine-zz", "zz-harbor-violet-nine-zz"],
       ["zz-fn-pay-agentsmith-zz", "zz-run-reorder-water-zz"],
     ]);
+    // [MICHAEL 2026-10-20] Status lines removed; texts drop the v1 hedges.
     expect(topWays.items.map((item) => item.status)).toEqual([
-      "Exploration: field/enterprise workflows are queued in B7; carrier and ledger integrations are not v1 features.",
-      "Exploration: postal/parcel workflows are queued in B8; postage, carrier, routing, and tracking integrations are not v1 services.",
-      "Consumer/community uses are queued in B9. The zzThat Android and iOS apps are live.",
-      "Exploration: agent/ledger integrations are shadowed in B16; no v1 agent identity or authorization integration.",
-      "Exploration: blockchain integration is shadowed in B16 for v2+; it is not a v1 dependency or capability.",
-      "Exploration: authorized actions/macros are shadowed in B14; code-triggered actions are not a v1 feature.",
+      undefined,
+      undefined,
+      undefined,
+      undefined,
+      undefined,
+      undefined,
     ]);
     expect(topWays.items.map((item) => item.text)).toEqual([
-      "A future workflow could use a handwritten code to help identify and hand off items. The pictured shipping, customs, payment-service, and shared-ledger connections are concepts, not available integrations.",
-      "A future postal or parcel workflow could use a handwritten code as a reference. This concept is not proof of postage and does not provide routing or tracking.",
+      "Future workflows to identify and hand off items with handwritten codes, connected to shipping, customs, payment services, and shared ledgers.",
+      "Future postal and parcel workflows using handwritten codes as references.",
       "Community examples include a lost-pet flyer, a moving box, or a garage-sale item. The zzThat Android and iOS apps are live.",
-      "A future integration could give an agent a short, readable alias. Linking that alias to an operator or permissions is not a v1 capability.",
-      "A future integration could map a readable code to a wallet, account, smart-contract, or agent address. No blockchain alias integration is available in v1.",
-      "A future authorized-actions design could let a code refer to a command, subject to separate authentication, authorization, and confirmation. The code itself carries no authority, and v1 does not execute macros.",
+      "Future integrations to give agents short, readable aliases.",
+      "Future integrations to map readable codes to wallets, accounts, smart-contracts, NFTs, agent addresses, and oracles.",
+      "Future authorized actions to let a code refer to a command, subject to separate authentication, authorization, and confirmation. The code itself carries no authority.",
     ]);
   });
 });

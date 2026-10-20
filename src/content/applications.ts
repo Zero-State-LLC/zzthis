@@ -15,6 +15,8 @@ export interface ApplicationGallery {
   columns: "2" | "3" | "4";
   ordered?: boolean;
   frame: string;
+  /** [MICHAEL 2026-10-20] Crop every image in the gallery to this aspect ratio so a side-by-side pair matches. */
+  crop?: string;
   lead?: ImageId;
   items: readonly ApplicationGalleryItem[];
   closing?: readonly string[];
@@ -23,9 +25,10 @@ export interface ApplicationGallery {
 export interface Application {
   id: ApplicationId;
   title: string;
-  // [MICHAEL 2026-10-19] Optional: only Postal and parcel keeps a line.
+  /** Omitted when the Applications page should show no status line. */
   status?: string;
-  story: string;
+  /** Omitted when neither the Home card nor the Applications page shows a story. */
+  story?: string;
   pageExtra?: string;
   homeImages: readonly ImageId[];
   pageImages: readonly ImageId[];
@@ -37,9 +40,11 @@ export const applications: readonly Application[] = [
   {
     id: "field",
     title: "Field logistics",
-    // [MICHAEL 2026-10-19] Status line and profiles note removed.
+    // [MICHAEL 2026-10-20] B7 status line removed; story and extra are his wording.
     story:
-      "Handwritten codes on bags, crates, pallets, and mixed goods connect items to existing identifiers and prepare inventory work.",
+      "Field workflow to use handwritten codes on bags, crates, pallets, and mixed goods to connect items to existing identifiers and prepare tasks and inventory work.",
+    pageExtra:
+      "Future structured profiles and private dictionaries would assign authorized, versioned meanings only after recognition and canonicalization.",
     homeImages: ["j"],
     pageImages: ["a", "c", "alt-b", "d", "e", "f", "j", "k", "l", "m", "n"],
     homeWideOnly: true,
@@ -47,10 +52,9 @@ export const applications: readonly Application[] = [
   {
     id: "parcel",
     title: "Postal and parcel",
-    // [MICHAEL 2026-10-19] Status and story (node, digital twin, shared layer).
-    status: "The postal, parcel, and carrier workflows are illustrative.",
+    // [MICHAEL 2026-10-20] B8 status line removed; story is his wording.
     story:
-      "One zz-code turns a parcel into a node with a digital twin. Shipper, carrier, sorting center, post office, and drop-off store each use their own systems, yet all read and update the same record, the same shared naming layer that lets relief organizations work from one set of words.",
+      "Future postal or parcel workflow, batch work, or project can have optional reference code words to be used for identity before a final parcel code is chosen.",
     homeImages: ["o", "g"],
     pageImages: ["o", "g"],
     homeWideOnly: false,
@@ -109,13 +113,23 @@ export const applications: readonly Application[] = [
   },
   {
     id: "community",
-    // [MICHAEL 2026-10-19] Renamed; status line removed.
-    title: "Personal and community uses",
-    story: "A handwritten code is linked to its online page or resource.",
+    // [MICHAEL 2026-10-20] Heading renamed; the B9 status line and the story
+    // are removed from the Applications page and the Home card (the images
+    // carry it).
+    title: "Everyday, community, and public",
     homeImages: ["h"],
-    pageImages: ["h"],
+    pageImages: [],
     homeWideOnly: false,
     pageGalleries: [
+      {
+        // [MICHAEL 2026-10-20] Lost cat and the trail marker side by side,
+        // same proportions, edges aligned with the galleries below.
+        label: "standalone",
+        columns: "2",
+        frame: "16 / 9",
+        crop: "16 / 9",
+        items: [{ image: "h" }, { image: "app-trail-marker" }],
+      },
       {
         label: "group",
         columns: "3",
@@ -135,12 +149,6 @@ export const applications: readonly Application[] = [
           { image: "app-shop-pay" },
           { image: "app-donate" },
         ],
-      },
-      {
-        label: "standalone",
-        columns: "2",
-        frame: "812 / 431",
-        items: [{ image: "app-trail-marker" }],
       },
       {
         label: "group",
@@ -171,23 +179,34 @@ export const applications: readonly Application[] = [
         frame: "342 / 281",
         items: [{ image: "app-truck-before" }, { image: "app-truck-after" }],
       },
+      {
+        // [MICHAEL 2026-10-20] U-Haul concept pair, last on the page and
+        // larger than the before/after pairs above (portrait images).
+        label: "standalone",
+        columns: "2",
+        frame: "3 / 4",
+        crop: "3 / 4",
+        items: [{ image: "app-uhaul-door" }, { image: "app-uhaul-scan" }],
+      },
     ],
   },
   {
     id: "aliases",
     title: "Digital aliases",
-    // [MICHAEL 2026-10-19] Status line and integrations note removed.
-    story:
-      "Just as domain names stand in for IP addresses, a zz-code stands in for a long machine address, such as an AI agent ID or a wallet address. And just as HTTPS is the verified form of HTTP, an \u201c@\u201d in the code, as in zz-AI@-Agentsmith-zz, marks a trusted alias backed by identification and authentication.",
+    // [MICHAEL 2026-10-20] B16 status line, the story (page and Home card),
+    // and the "not v1 resolver" extra removed.
     homeImages: ["i"],
-    pageImages: ["i"],
+    pageImages: [],
     homeWideOnly: false,
     pageGalleries: [
       {
+        // [MICHAEL 2026-10-20] Agent alias and wallet address side by side,
+        // sized like the Lost cat / Trail marker pair.
         label: "standalone",
         columns: "2",
-        frame: "733 / 436",
-        items: [{ image: "app-wallet-ens" }],
+        frame: "16 / 9",
+        crop: "16 / 9",
+        items: [{ image: "i" }, { image: "app-wallet-ens" }],
       },
     ],
   },
@@ -201,8 +220,8 @@ export const applicationsHome = {
 
 export const applicationsPage = {
   title: "Applications",
-  // [MICHAEL 2026-10-19] The visible intro and the page concept note are
-  // removed. This line is the page meta description only.
+  // [MICHAEL 2026-10-20] The visible intro ("These are product directions...")
+  // is removed. This line is only the page's search/meta description.
   description:
-    "zzThis applications: field logistics, postal and parcel, personal and community uses, and digital aliases.",
+    "Ways to use zzThis handwritten codes: field logistics, postal and parcel, everyday and public uses, and digital aliases.",
 };
