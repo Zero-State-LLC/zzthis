@@ -234,35 +234,33 @@ describe("About prototypes", () => {
 describe("applications (spec 3.2 H.7 and 3.4)", () => {
   it("matches the four category stories", () => {
     expect(story("field")).toBe(
-      "A future field workflow could use handwritten codes on bags, crates, pallets, and mixed goods to help connect items to existing identifiers and prepare inventory work.",
+      "Handwritten codes on bags, crates, pallets, and mixed goods connect items to existing identifiers and prepare inventory work.",
     );
     expect(story("parcel")).toBe(
       "A future postal/parcel workflow could use a written reference and help prepare items before a parcel code is chosen.",
     );
     expect(story("community")).toBe(
-      "A future community use could place a handwritten code on a lost-pet flyer or other public surface and link it to a useful page.",
+      "A handwritten code is linked to its online page or resource.",
     );
     expect(story("aliases")).toBe(
-      "A future integration could map a short human-readable code to a longer machine address used by software agents.",
+      "A human-readable code serves as an alias for a longer machine address, with trusted identification and authentication layers.",
     );
   });
 
-  it("matches the page intro and the aliases extra sentence", () => {
-    expect(applicationsPage.intro).toBe(
-      "These are product directions, not a list of shipped v1 integrations: field/enterprise (B7), postal/parcel (B8), community/free uses (B9), AI-assisted inventory (B7), and agent/ledger/blockchain integrations (B16). AI may be an interface or connector, not the authority that defines or resolves a zz code.",
-    );
-    expect(applicationsPage.intro).not.toContain("AI is the new UI");
-    expect(
-      applications.find((entry) => entry.id === "aliases")?.pageExtra,
-    ).toBe(
-      "These optional integrations are not v1 resolver capabilities or dependencies.",
+  it("drops the roadmap hedges [MICHAEL 2026-10-19]", () => {
+    expect(applicationsPage).not.toHaveProperty("intro");
+    expect(applications.every((entry) => entry.pageExtra === undefined)).toBe(
+      true,
     );
     expect(applications.map((entry) => entry.status)).toEqual([
-      "Exploration: field/enterprise workflows are queued in B7 for v1.x, not shipped v1 capabilities.",
-      "Exploration: postal/parcel integration is queued in B8 for v1.x; no carrier service is claimed.",
-      "Exploration: free/community use cases are queued in B9 for v1.x.",
-      "Exploration: agent/ledger/blockchain integrations are shadowed in B16 for v2+.",
+      undefined,
+      "The postal, parcel, and carrier workflows are illustrative.",
+      undefined,
+      undefined,
     ]);
+    expect(applications.find((entry) => entry.id === "community")?.title).toBe(
+      "Personal and community uses",
+    );
   });
 
   it("lists the advisors in the 2026-10-13 order, all with initials", () => {

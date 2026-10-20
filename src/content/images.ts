@@ -136,7 +136,7 @@ export const images = {
     src: "images/panels/h-lost-cat.webp",
     width: 1600,
     height: 902,
-    title: "Everyday and community",
+    title: "Personal and community uses",
     shortCopy: "Lost-cat flyer.",
     alt: "Lost-cat flyer with zz-kathy-lost-cat-zz being scanned by a phone.",
     caption: "Lost-cat flyer with handwritten code.",

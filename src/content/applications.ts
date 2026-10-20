@@ -23,7 +23,8 @@ export interface ApplicationGallery {
 export interface Application {
   id: ApplicationId;
   title: string;
-  status: string;
+  // [MICHAEL 2026-10-19] Optional: only Postal and parcel keeps a line.
+  status?: string;
   story: string;
   pageExtra?: string;
   homeImages: readonly ImageId[];
@@ -36,12 +37,9 @@ export const applications: readonly Application[] = [
   {
     id: "field",
     title: "Field logistics",
-    status:
-      "Exploration: field/enterprise workflows are queued in B7 for v1.x, not shipped v1 capabilities.",
+    // [MICHAEL 2026-10-19] Status line and profiles note removed.
     story:
-      "A future field workflow could use handwritten codes on bags, crates, pallets, and mixed goods to help connect items to existing identifiers and prepare inventory work.",
-    pageExtra:
-      "Structured profiles and private dictionaries are B10 shadow exploration for v2 / Contract 2. If advanced, they would assign authorized, versioned meanings only after recognition and canonicalization; the camera reader does not decide them.",
+      "Handwritten codes on bags, crates, pallets, and mixed goods connect items to existing identifiers and prepare inventory work.",
     homeImages: ["j"],
     pageImages: ["a", "c", "alt-b", "d", "e", "f", "j", "k", "l", "m", "n"],
     homeWideOnly: true,
@@ -49,8 +47,8 @@ export const applications: readonly Application[] = [
   {
     id: "parcel",
     title: "Postal and parcel",
-    status:
-      "Exploration: postal/parcel integration is queued in B8 for v1.x; no carrier service is claimed.",
+    // [MICHAEL 2026-10-19]
+    status: "The postal, parcel, and carrier workflows are illustrative.",
     story:
       "A future postal/parcel workflow could use a written reference and help prepare items before a parcel code is chosen.",
     homeImages: ["o", "g"],
@@ -111,10 +109,9 @@ export const applications: readonly Application[] = [
   },
   {
     id: "community",
-    title: "Everyday and community",
-    status: "Exploration: free/community use cases are queued in B9 for v1.x.",
-    story:
-      "A future community use could place a handwritten code on a lost-pet flyer or other public surface and link it to a useful page.",
+    // [MICHAEL 2026-10-19] Renamed; status line removed.
+    title: "Personal and community uses",
+    story: "A handwritten code is linked to its online page or resource.",
     homeImages: ["h"],
     pageImages: ["h"],
     homeWideOnly: false,
@@ -179,12 +176,9 @@ export const applications: readonly Application[] = [
   {
     id: "aliases",
     title: "Digital aliases",
-    status:
-      "Exploration: agent/ledger/blockchain integrations are shadowed in B16 for v2+.",
+    // [MICHAEL 2026-10-19] Status line and integrations note removed.
     story:
-      "A future integration could map a short human-readable code to a longer machine address used by software agents.",
-    pageExtra:
-      "These optional integrations are not v1 resolver capabilities or dependencies.",
+      "A human-readable code serves as an alias for a longer machine address, with trusted identification and authentication layers.",
     homeImages: ["i"],
     pageImages: ["i"],
     homeWideOnly: false,
@@ -207,7 +201,8 @@ export const applicationsHome = {
 
 export const applicationsPage = {
   title: "Applications",
-  // [MICHAEL 2026-10-06 change list] Lead with the kinds of use, then the AI principles.
-  intro:
-    "These are product directions, not a list of shipped v1 integrations: field/enterprise (B7), postal/parcel (B8), community/free uses (B9), AI-assisted inventory (B7), and agent/ledger/blockchain integrations (B16). AI may be an interface or connector, not the authority that defines or resolves a zz code.",
+  // [MICHAEL 2026-10-19] The visible intro and the page concept note are
+  // removed. This line is the page meta description only.
+  description:
+    "zzThis applications: field logistics, postal and parcel, personal and community uses, and digital aliases.",
 };
