@@ -1,4 +1,4 @@
-import { existsSync, statSync } from "node:fs";
+import { existsSync, readFileSync, statSync } from "node:fs";
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
 import * as anatomyModule from "../src/content/anatomy";
@@ -154,12 +154,12 @@ describe("workflows (spec 3.2 H.4 to H.6)", () => {
     expect(all).not.toContain("in any handwriting");
   });
 
-  it("names both read paths without hedging", () => {
+  it("names manual entry as today's path and camera recognition as planned", () => {
     expect(howItWorksPage.intro).toBe(
       "One code, written by hand, read by camera, spoken over a radio, and linked to the record it names.",
     );
     expect(howItWorksPage.readWays.heading).toBe(
-      "Manual entry or camera recognition, then send over radio",
+      "Manual entry today, camera recognition planned, then send over radio",
     );
   });
 
@@ -195,12 +195,28 @@ describe("workflows (spec 3.2 H.4 to H.6)", () => {
 
   it("matches photo to action", () => {
     expect(photoToAction.heading).toBe("Your Super Lens to the Physical World");
+    expect(photoToAction.qualifier).toBe(
+      "Planned: camera recognition is not live yet.",
+    );
     expect(photoToAction.workflow).toBe(
       "PHOTOGRAPH one or more items → CONFIRM the proposed identification → choose a handling or inventory action by touch → REVIEW the prepared record or form.",
     );
     expect(
       photoToAction.sequence.map((step) => `${step.numeral} ${step.title}`),
     ).toEqual(["01 Photograph", "02 Guide", "03 Review"]);
+  });
+
+  it("renders the planned label on the photo-to-action pipeline", () => {
+    const photoToActionTemplate = readFileSync(
+      "src/components/PhotoToAction.astro",
+      "utf8",
+    );
+    const pipelineTemplate = readFileSync(
+      "src/components/Pipeline.astro",
+      "utf8",
+    );
+    expect(photoToActionTemplate).toContain("{photoToAction.qualifier}");
+    expect(pipelineTemplate).toContain("{photoToAction.qualifier}");
   });
 });
 
