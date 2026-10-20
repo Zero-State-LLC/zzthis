@@ -343,6 +343,12 @@ describe("applications (spec 3.2 H.7 and 3.4)", () => {
     );
     expect(founder.bio.startsWith("I “invent” business models.")).toBe(true);
     expect(founderOrigin.text).toBe(founder.bio);
+    // [MICHAEL 2026-10-20] One paragraph, four middle-dot section breaks.
+    expect(founder.bio.split(" · ")).toHaveLength(5);
+    expect(founder.bio).toContain(
+      "8% to 9% of US GDP (Direct Marketing Association)",
+    );
+    expect(founder.bio).not.toContain("\n");
     expect(founder.photo?.src).toBe("images/people/michael-chung.webp");
     expect(byName("Patrick Muggler")?.photo?.src).toBe(
       "images/people/patrick-muggler.webp",
