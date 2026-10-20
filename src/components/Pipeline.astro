@@ -7,7 +7,6 @@ import { photoToAction } from "../content/workflows";
 <section class="pipeline" id="photo-to-action" aria-labelledby="action-title">
   <div class="field__head">
     <h2 id="action-title">{photoToAction.heading}</h2>
-    <p>{photoToAction.qualifier}</p>
   </div>
   <ol class="pipeline__steps" aria-label={photoToAction.sequenceLabel}>
     {photoToAction.sequence.map((step) => {

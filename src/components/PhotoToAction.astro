@@ -15,7 +15,6 @@ const { headingLevel = 3, showConceptLabel = true } = Astro.props;
 ---
 
 <div class="pta">
-  <p>{photoToAction.qualifier}</p>
   {showConceptLabel && <ConceptLabel text={conceptLabels.group} />}
   <ol class="pta__sequence" aria-label={photoToAction.sequenceLabel}>
     {photoToAction.sequence.map((step) => (

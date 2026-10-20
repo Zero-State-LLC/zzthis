@@ -158,16 +158,14 @@ describe("workflows (spec 3.2 H.4 to H.6)", () => {
     expect(howItWorksPage.intro).toBe(
       "One code, written by hand, read by camera, spoken over a radio, and linked to the record it names.",
     );
-    expect(howItWorksPage.readWays.heading).toBe("Manual and camera reading");
-    expect(howItWorksPage.readWays.methods).toEqual([
-      "Manual entry",
-      "Camera recognition",
-    ]);
+    expect(howItWorksPage.readWays.heading).toBe(
+      "Manual entry or camera recognition, then send over radio",
+    );
   });
 
   it("pairs contested logistics with the shared naming layer", () => {
     expect(howItWorksPage.reach.heading).toBe(
-      "Contested logistics and sustainment, and an uber naming space",
+      "Contested logistics and sustainment, disaster relief",
     );
     expect(howItWorksPage.reach.images).toEqual(["p", "q"]);
   });
@@ -197,9 +195,6 @@ describe("workflows (spec 3.2 H.4 to H.6)", () => {
 
   it("matches photo to action", () => {
     expect(photoToAction.heading).toBe("Your Super Lens to the Physical World");
-    expect(photoToAction.qualifier).toBe(
-      "Future exploration, not a live workflow.",
-    );
     expect(photoToAction.workflow).toBe(
       "PHOTOGRAPH one or more items → CONFIRM the proposed identification → choose a handling or inventory action by touch → REVIEW the prepared record or form.",
     );

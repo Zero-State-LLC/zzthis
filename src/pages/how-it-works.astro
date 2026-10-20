@@ -32,13 +32,6 @@ const page = howItWorksPage;
     <section class="section">
       <Eyebrow index="02" />
       <h2>{page.readWays.heading}</h2>
-      <ul class="methods">
-        {page.readWays.methods.map((method) => (
-          <li>
-            <h3>{method}</h3>
-          </li>
-        ))}
-      </ul>
       <Series columns="2">
         {page.readWays.images.map((id) => (
           <li>
@@ -91,20 +84,5 @@ const page = howItWorksPage;
     flex-direction: column;
     gap: var(--s-4);
     padding-block-start: var(--s-6);
-  }
-
-  .methods {
-    list-style: none;
-    display: flex;
-    flex-wrap: wrap;
-    gap: var(--s-3);
-  }
-
-  .methods h3 {
-    padding: var(--s-2) var(--s-4);
-    border: 1px solid var(--edge);
-    font-family: var(--font-mono);
-    font-size: var(--fs-mono);
-    font-weight: 500;
   }
 </style>
