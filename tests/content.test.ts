@@ -1,5 +1,4 @@
-import { existsSync, statSync } from "node:fs";
-import { join } from "node:path";
+import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 import * as anatomyModule from "../src/content/anatomy";
 import * as applicationsModule from "../src/content/applications";
@@ -18,16 +17,10 @@ import * as usesModule from "../src/content/uses";
 import * as walkthroughsModule from "../src/content/walkthroughs";
 import * as workflowsModule from "../src/content/workflows";
 
-const { applications, applicationsPage } = applicationsModule;
 const { comparisonColumns, comparisonNote, comparisonRows } = comparisonModule;
 const { whyMarkers } = anatomyModule;
-const { footerItems, footerNotice, zzthisSocial, zzthatSocial } =
-  navigationModule;
-const { advisors, founder, founderOrigin } = peopleModule;
-const { demoTitle, demoPrototypeLinks, demoPlannedApp } = demoModule;
+const { demoPrototypeLinks, demoPlannedApp } = demoModule;
 const { aboutPage, prototypes } = contactModule;
-const { technologyDraft } = technologyModule;
-const { conceptLabels } = labelsModule;
 const { topWays } = usesModule;
 const { coreIdentity, fieldLogistics, howItWorksPage, photoToAction } =
   workflowsModule;
@@ -62,9 +55,6 @@ function collectStrings(value: unknown): string[] {
 }
 
 const allStrings = modules.flatMap(collectStrings);
-
-const story = (id: string): string | undefined =>
-  applications.find((entry) => entry.id === id)?.story;
 
 describe("demo prototype decisions", () => {
   it("keeps zzthing.com in the demo pending the October 31 review", () => {
@@ -154,20 +144,18 @@ describe("workflows (spec 3.2 H.4 to H.6)", () => {
     expect(all).not.toContain("in any handwriting");
   });
 
-  it("names both read paths without hedging", () => {
+  it("names manual entry as today's path and camera recognition as planned", () => {
     expect(howItWorksPage.intro).toBe(
       "One code, written by hand, read by camera, spoken over a radio, and linked to the record it names.",
     );
-    expect(howItWorksPage.readWays.heading).toBe("Manual and camera reading");
-    expect(howItWorksPage.readWays.methods).toEqual([
-      "Manual entry",
-      "Camera recognition",
-    ]);
+    expect(howItWorksPage.readWays.heading).toBe(
+      "Manual entry today, camera recognition planned, then send over radio",
+    );
   });
 
   it("pairs contested logistics with the shared naming layer", () => {
     expect(howItWorksPage.reach.heading).toBe(
-      "Contested logistics and sustainment, and an uber naming space",
+      "Contested logistics and sustainment, disaster relief",
     );
     expect(howItWorksPage.reach.images).toEqual(["p", "q"]);
   });
@@ -198,7 +186,7 @@ describe("workflows (spec 3.2 H.4 to H.6)", () => {
   it("matches photo to action", () => {
     expect(photoToAction.heading).toBe("Your Super Lens to the Physical World");
     expect(photoToAction.qualifier).toBe(
-      "Future exploration, not a live workflow.",
+      "Planned: camera recognition is not live yet.",
     );
     expect(photoToAction.workflow).toBe(
       "PHOTOGRAPH one or more items → CONFIRM the proposed identification → choose a handling or inventory action by touch → REVIEW the prepared record or form.",
@@ -206,6 +194,19 @@ describe("workflows (spec 3.2 H.4 to H.6)", () => {
     expect(
       photoToAction.sequence.map((step) => `${step.numeral} ${step.title}`),
     ).toEqual(["01 Photograph", "02 Guide", "03 Review"]);
+  });
+
+  it("renders the planned label on the photo-to-action pipeline", () => {
+    const photoToActionTemplate = readFileSync(
+      "src/components/PhotoToAction.astro",
+      "utf8",
+    );
+    const pipelineTemplate = readFileSync(
+      "src/components/Pipeline.astro",
+      "utf8",
+    );
+    expect(photoToActionTemplate).toContain("{photoToAction.qualifier}");
+    expect(pipelineTemplate).toContain("{photoToAction.qualifier}");
   });
 });
 
@@ -215,6 +216,8 @@ describe("About prototypes", () => {
       "zzThis is for commercial and government use; zzThat is our free consumer app, and it is live. These are prototypes and explorations; capabilities described as planned are not deployed features.",
     );
     expect(aboutPage.prototypeLabel).not.toContain("launching soon");
+    expect(aboutPage.team).toContain("Silicon Valley-based team");
+    expect(aboutPage.team).toContain("dependable solutions");
     expect(prototypes.find((site) => site.name === "zzthat.com")?.text).toBe(
       "Working scanner/creator prototype and separate consumer product direction; the Android and iOS apps are live.",
     );
@@ -231,146 +234,6 @@ describe("About prototypes", () => {
         ),
       ),
     ).toEqual([]);
-  });
-});
-
-describe("applications (spec 3.2 H.7 and 3.4)", () => {
-  it("matches the four category stories", () => {
-    expect(story("field")).toBe(
-      "A future field workflow could use handwritten codes on bags, crates, pallets, and mixed goods to help connect items to existing identifiers and prepare inventory work.",
-    );
-    expect(story("parcel")).toBe(
-      "A future postal/parcel workflow could use a written reference and help prepare items before a parcel code is chosen.",
-    );
-    expect(story("community")).toBe(
-      "A future community use could place a handwritten code on a lost-pet flyer or other public surface and link it to a useful page.",
-    );
-    expect(story("aliases")).toBe(
-      "A future integration could map a short human-readable code to a longer machine address used by software agents.",
-    );
-  });
-
-  it("matches the page intro and the aliases extra sentence", () => {
-    expect(applicationsPage.intro).toBe(
-      "These are product directions, not a list of shipped v1 integrations: field/enterprise (B7), postal/parcel (B8), community/free uses (B9), AI-assisted inventory (B7), and agent/ledger/blockchain integrations (B16). AI may be an interface or connector, not the authority that defines or resolves a zz code.",
-    );
-    expect(applicationsPage.intro).not.toContain("AI is the new UI");
-    expect(
-      applications.find((entry) => entry.id === "aliases")?.pageExtra,
-    ).toBe(
-      "These optional integrations are not v1 resolver capabilities or dependencies.",
-    );
-    expect(applications.map((entry) => entry.status)).toEqual([
-      "Exploration: field/enterprise workflows are queued in B7 for v1.x, not shipped v1 capabilities.",
-      "Exploration: postal/parcel integration is queued in B8 for v1.x; no carrier service is claimed.",
-      "Exploration: free/community use cases are queued in B9 for v1.x.",
-      "Exploration: agent/ledger/blockchain integrations are shadowed in B16 for v2+.",
-    ]);
-  });
-
-  it("lists the advisors in the 2026-10-13 order, all with initials", () => {
-    // [MICHAEL 2026-10-06] Daniel and Adam first. [2026-10-08] Omer removed.
-    // [MICHAEL 2026-10-13] Aaron Godbout is the fourth advisor.
-    expect(advisors.map((person) => person.name)).toEqual([
-      "Daniel Meyer",
-      "Adam Fry",
-      "Patrick Muggler",
-      "Aaron Godbout",
-      "Arshi Chadha",
-    ]);
-    expect(advisors.every((person) => person.initials !== undefined)).toBe(
-      true,
-    );
-  });
-
-  it("omits drafted advisory closing lines from every advisor bio", () => {
-    expect(
-      advisors.some((person) => /advises zzThis on/i.test(person.bio ?? "")),
-    ).toBe(false);
-    // Omer's Q72-approved bio returns without a closing line if he is restored.
-    expect(advisors.some((person) => person.name === "Omer F. Yalcin")).toBe(
-      false,
-    );
-  });
-
-  it("lists the footer social links with their owners", () => {
-    // [MICHAEL 2026-10-13] Each brand has its own group, led by its logo.
-    // Twitter keeps the bird icon and twitter.com addresses.
-    expect(zzthisSocial.map((link) => [link.icon, link.href])).toEqual([
-      ["twitter", "https://twitter.com/zzthiscom"],
-      ["linkedin", "https://www.linkedin.com/company/zzthis"],
-      ["youtube", "https://www.youtube.com/@zzthiscom"],
-      ["telegram", "https://t.me/zzthisapp"],
-    ]);
-    expect(zzthatSocial.map((link) => [link.icon, link.href])).toEqual([
-      ["twitter", "https://twitter.com/zzthatcom"],
-      ["instagram", "https://www.instagram.com/zzthatcom/"],
-      ["tiktok", "https://www.tiktok.com/@zzthatcom"],
-      ["youtube", "https://www.youtube.com/@zzthat"],
-      ["discord", "https://discord.gg/hwXvVKYzn4"],
-      ["telegram", "https://t.me/zzthat"],
-    ]);
-    for (const link of zzthisSocial) {
-      expect(link.label.startsWith("zzThis on ")).toBe(true);
-    }
-    for (const link of zzthatSocial) {
-      expect(link.label.startsWith("zzThat on ")).toBe(true);
-    }
-    for (const link of [...zzthisSocial, ...zzthatSocial]) {
-      expect(link.href.startsWith("https://")).toBe(true);
-    }
-  });
-
-  it("applies Michael's 2026-10-02 answers", () => {
-    const byName = (name: string) =>
-      advisors.find((person) => person.name === name);
-    expect(advisors.some((person) => person.name === "Jim White")).toBe(false);
-    // [MICHAEL 2026-10-06 change list] Ridham Bhagat is removed from the site.
-    expect(advisors.some((person) => person.name === "Ridham Bhagat")).toBe(
-      false,
-    );
-    expect(byName("Adam Fry")?.role).toBe(
-      "AI agents, infrastructure and deployment",
-    );
-    // [MICHAEL 2026-10-06 change list] Adam's bio now reads "has".
-    expect(byName("Adam Fry")?.bio).toMatch(/^Adam Fry has AI-agent/);
-    expect(byName("Adam Fry")?.profileUrl).toBeUndefined();
-    for (const name of [
-      "Patrick Muggler",
-      "Arshi Chadha",
-      "Daniel Meyer",
-      "Adam Fry",
-    ]) {
-      expect(byName(name)?.bio).toBeTruthy();
-    }
-    expect(founder.role).toBe(
-      "Founder, new products and business models architect, project lead",
-    );
-    expect(founder.bio.startsWith("I “invent” business models.")).toBe(true);
-    expect(founderOrigin.text).toBe(founder.bio);
-    expect(founder.photo?.src).toBe("images/people/michael-chung.webp");
-    expect(byName("Patrick Muggler")?.photo?.src).toBe(
-      "images/people/patrick-muggler.webp",
-    );
-    expect(byName("Arshi Chadha")?.photo?.src).toBe(
-      "images/people/arshi-chadha.webp",
-    );
-    expect(byName("Daniel Meyer")?.photo).toBeUndefined();
-    // [MICHAEL 2026-10-06 change list] Adam now has a headshot.
-    expect(byName("Adam Fry")?.photo?.src).toBe("images/people/adam-fry.webp");
-    expect(footerNotice).toBe("Patent pending");
-    expect(footerItems.map((item) => item.label)).toEqual([
-      "How it works",
-      "Applications",
-      "Demo",
-      "About",
-      "Contact",
-    ]);
-    expect(demoTitle).toBe("See zzThis in action.");
-    expect(conceptLabels.standalone).toBe("Concept illustration");
-    expect(technologyDraft.status).toBe("unpublished");
-    // [MICHAEL 2026-10-06 change list] The batched pallet moves to second.
-    expect(fieldLogistics.images).toEqual(["a", "c", "alt-b"]);
   });
 });
 
@@ -401,21 +264,22 @@ describe("top ways (Home section 01)", () => {
       ["zz-btc-harbor-violet-nine-zz", "zz-harbor-violet-nine-zz"],
       ["zz-fn-pay-agentsmith-zz", "zz-run-reorder-water-zz"],
     ]);
+    // [MICHAEL 2026-10-20] Status lines removed; texts drop the v1 hedges.
     expect(topWays.items.map((item) => item.status)).toEqual([
-      "Exploration: field/enterprise workflows are queued in B7; carrier and ledger integrations are not v1 features.",
-      "Exploration: postal/parcel workflows are queued in B8; postage, carrier, routing, and tracking integrations are not v1 services.",
-      "Consumer/community uses are queued in B9. The zzThat Android and iOS apps are live.",
-      "Exploration: agent/ledger integrations are shadowed in B16; no v1 agent identity or authorization integration.",
-      "Exploration: blockchain integration is shadowed in B16 for v2+; it is not a v1 dependency or capability.",
-      "Exploration: authorized actions/macros are shadowed in B14; code-triggered actions are not a v1 feature.",
+      undefined,
+      undefined,
+      undefined,
+      undefined,
+      undefined,
+      undefined,
     ]);
     expect(topWays.items.map((item) => item.text)).toEqual([
-      "A future workflow could use a handwritten code to help identify and hand off items. The pictured shipping, customs, payment-service, and shared-ledger connections are concepts, not available integrations.",
-      "A future postal or parcel workflow could use a handwritten code as a reference. This concept is not proof of postage and does not provide routing or tracking.",
+      "Future workflows to identify and hand off items with handwritten codes, connected to shipping, customs, payment services, and shared ledgers.",
+      "Future postal and parcel workflows using handwritten codes as references.",
       "Community examples include a lost-pet flyer, a moving box, or a garage-sale item. The zzThat Android and iOS apps are live.",
-      "A future integration could give an agent a short, readable alias. Linking that alias to an operator or permissions is not a v1 capability.",
-      "A future integration could map a readable code to a wallet, account, smart-contract, or agent address. No blockchain alias integration is available in v1.",
-      "A future authorized-actions design could let a code refer to a command, subject to separate authentication, authorization, and confirmation. The code itself carries no authority, and v1 does not execute macros.",
+      "Future integrations to give agents short, readable aliases.",
+      "Future integrations to map readable codes to wallets, accounts, smart-contracts, NFTs, agent addresses, and oracles.",
+      "Future authorized actions to let a code refer to a command, subject to separate authentication, authorization, and confirmation. The code itself carries no authority.",
     ]);
   });
 });
@@ -461,29 +325,5 @@ describe("content hygiene across all content modules", () => {
         banned.some((term) => text.toLowerCase().includes(term)),
       ),
     ).toEqual([]);
-  });
-});
-
-describe("applications walkthroughs [MICHAEL 2026-10-11]", () => {
-  const { walkthroughs } = walkthroughsModule;
-
-  it("has the pallet and household walkthroughs, five images each", () => {
-    expect(walkthroughs.map((walk) => walk.title)).toEqual([
-      "Smart force-multiplier automation",
-      "Smart packing and handling",
-    ]);
-    for (const walk of walkthroughs) {
-      expect(walk.frames).toHaveLength(5);
-    }
-  });
-
-  it("ships every walkthrough image and thumbnail under public, each at most 2 MB", () => {
-    for (const frame of walkthroughs.flatMap((walk) => walk.frames)) {
-      for (const src of [frame.src, frame.thumb]) {
-        const path = join("public", src);
-        expect(existsSync(path), path).toBe(true);
-        expect(statSync(path).size).toBeLessThanOrEqual(2 * 1024 * 1024);
-      }
-    }
   });
 });

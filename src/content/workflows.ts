@@ -62,7 +62,7 @@ export const photoToAction = {
   // [MICHAEL 2026-10-18] Renamed from "From photo to action".
   heading: "Your Super Lens to the Physical World",
   // [DANNY 2026-10-18 5:51 PM PT] This pipeline is not live.
-  qualifier: "Future exploration, not a live workflow.",
+  qualifier: "Planned: camera recognition is not live yet.",
   sequenceLabel: "From photo to action, three steps",
   sequence: [
     { numeral: "01", title: "Photograph", image: "j" },
@@ -83,14 +83,17 @@ export const howItWorksPage = {
     "One code, written by hand, read by camera, spoken over a radio, and linked to the record it names.",
   coreHeading: "Core identity",
   readWays: {
-    heading: "Manual and camera reading",
-    methods: ["Manual entry", "Camera recognition"],
+    // [MICHAEL 2026-10-19] One heading in place of the two method boxes,
+    // which looked clickable but were labels. Camera recognition is planned,
+    // not a live path.
+    heading:
+      "Manual entry today, camera recognition planned, then send over radio",
     images: ["d", "f"] satisfies ImageId[],
   },
   // [MICHAEL 2026-10-17] Section 03: contested logistics beside the shared
   // naming layer.
   reach: {
-    heading: "Contested logistics and sustainment, and an uber naming space",
+    heading: "Contested logistics and sustainment, disaster relief",
     images: ["p", "q"] satisfies ImageId[],
   },
   aiHeading: "Your Super Lens to the Physical World",

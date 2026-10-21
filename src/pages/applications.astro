@@ -25,13 +25,12 @@ const jumps: Jump[] = applications.flatMap((app): Jump[] =>
 
 <BaseLayout
   title="Applications | zzThis"
-  description={applicationsPage.intro}
+  description={applicationsPage.description}
   current="applications"
 >
   <section class="page-head" aria-labelledby="apps-page-title">
     <div class="page-head__copy">
       <h1 id="apps-page-title">{applicationsPage.title}</h1>
-      <p class="page-head__lede">{applicationsPage.intro}</p>
       <p class="label">{conceptLabels.page}</p>
     </div>
     <nav aria-label="Applications on this page">

@@ -15,6 +15,8 @@ export interface ApplicationGallery {
   columns: "2" | "3" | "4";
   ordered?: boolean;
   frame: string;
+  /** [MICHAEL 2026-10-20] Crop every image in the gallery to this aspect ratio so a side-by-side pair matches. */
+  crop?: string;
   lead?: ImageId;
   items: readonly ApplicationGalleryItem[];
   closing?: readonly string[];
@@ -23,8 +25,10 @@ export interface ApplicationGallery {
 export interface Application {
   id: ApplicationId;
   title: string;
-  status: string;
-  story: string;
+  /** Omitted when the Applications page should show no status line. */
+  status?: string;
+  /** Omitted when neither the Home card nor the Applications page shows a story. */
+  story?: string;
   pageExtra?: string;
   homeImages: readonly ImageId[];
   pageImages: readonly ImageId[];
@@ -36,12 +40,11 @@ export const applications: readonly Application[] = [
   {
     id: "field",
     title: "Field logistics",
-    status:
-      "Exploration: field/enterprise workflows are queued in B7 for v1.x, not shipped v1 capabilities.",
+    // [MICHAEL 2026-10-20] B7 status line removed; story and extra are his wording.
     story:
-      "A future field workflow could use handwritten codes on bags, crates, pallets, and mixed goods to help connect items to existing identifiers and prepare inventory work.",
+      "Field workflow to use handwritten codes on bags, crates, pallets, and mixed goods to connect items to existing identifiers and prepare tasks and inventory work.",
     pageExtra:
-      "Structured profiles and private dictionaries are B10 shadow exploration for v2 / Contract 2. If advanced, they would assign authorized, versioned meanings only after recognition and canonicalization; the camera reader does not decide them.",
+      "Future structured profiles and private dictionaries would assign authorized, versioned meanings only after recognition and canonicalization.",
     homeImages: ["j"],
     pageImages: ["a", "c", "alt-b", "d", "e", "f", "j", "k", "l", "m", "n"],
     homeWideOnly: true,
@@ -49,10 +52,9 @@ export const applications: readonly Application[] = [
   {
     id: "parcel",
     title: "Postal and parcel",
-    status:
-      "Exploration: postal/parcel integration is queued in B8 for v1.x; no carrier service is claimed.",
+    // [MICHAEL 2026-10-20] B8 status line removed; story is his wording.
     story:
-      "A future postal/parcel workflow could use a written reference and help prepare items before a parcel code is chosen.",
+      "Future postal or parcel workflow, batch work, or project can have optional reference code words to be used for identity before a final parcel code is chosen.",
     homeImages: ["o", "g"],
     pageImages: ["o", "g"],
     homeWideOnly: false,
@@ -111,14 +113,23 @@ export const applications: readonly Application[] = [
   },
   {
     id: "community",
-    title: "Everyday and community",
-    status: "Exploration: free/community use cases are queued in B9 for v1.x.",
-    story:
-      "A future community use could place a handwritten code on a lost-pet flyer or other public surface and link it to a useful page.",
+    // [MICHAEL 2026-10-20] Heading renamed; the B9 status line and the story
+    // are removed from the Applications page and the Home card (the images
+    // carry it).
+    title: "Everyday, community, and public",
     homeImages: ["h"],
-    pageImages: ["h"],
+    pageImages: [],
     homeWideOnly: false,
     pageGalleries: [
+      {
+        // [MICHAEL 2026-10-20] Lost cat and the trail marker side by side,
+        // same proportions, edges aligned with the galleries below.
+        label: "standalone",
+        columns: "2",
+        frame: "16 / 9",
+        crop: "16 / 9",
+        items: [{ image: "h" }, { image: "app-trail-marker" }],
+      },
       {
         label: "group",
         columns: "3",
@@ -138,12 +149,6 @@ export const applications: readonly Application[] = [
           { image: "app-shop-pay" },
           { image: "app-donate" },
         ],
-      },
-      {
-        label: "standalone",
-        columns: "2",
-        frame: "812 / 431",
-        items: [{ image: "app-trail-marker" }],
       },
       {
         label: "group",
@@ -174,26 +179,34 @@ export const applications: readonly Application[] = [
         frame: "342 / 281",
         items: [{ image: "app-truck-before" }, { image: "app-truck-after" }],
       },
+      {
+        // [MICHAEL 2026-10-20] U-Haul concept pair, last on the page and
+        // larger than the before/after pairs above (portrait images).
+        label: "standalone",
+        columns: "2",
+        frame: "3 / 4",
+        crop: "3 / 4",
+        items: [{ image: "app-uhaul-door" }, { image: "app-uhaul-scan" }],
+      },
     ],
   },
   {
     id: "aliases",
     title: "Digital aliases",
-    status:
-      "Exploration: agent/ledger/blockchain integrations are shadowed in B16 for v2+.",
-    story:
-      "A future integration could map a short human-readable code to a longer machine address used by software agents.",
-    pageExtra:
-      "These optional integrations are not v1 resolver capabilities or dependencies.",
+    // [MICHAEL 2026-10-20] B16 status line, the story (page and Home card),
+    // and the "not v1 resolver" extra removed.
     homeImages: ["i"],
-    pageImages: ["i"],
+    pageImages: [],
     homeWideOnly: false,
     pageGalleries: [
       {
+        // [MICHAEL 2026-10-20] Agent alias and wallet address side by side,
+        // sized like the Lost cat / Trail marker pair.
         label: "standalone",
         columns: "2",
-        frame: "733 / 436",
-        items: [{ image: "app-wallet-ens" }],
+        frame: "16 / 9",
+        crop: "16 / 9",
+        items: [{ image: "i" }, { image: "app-wallet-ens" }],
       },
     ],
   },
@@ -207,7 +220,8 @@ export const applicationsHome = {
 
 export const applicationsPage = {
   title: "Applications",
-  // [MICHAEL 2026-10-06 change list] Lead with the kinds of use, then the AI principles.
-  intro:
-    "These are product directions, not a list of shipped v1 integrations: field/enterprise (B7), postal/parcel (B8), community/free uses (B9), AI-assisted inventory (B7), and agent/ledger/blockchain integrations (B16). AI may be an interface or connector, not the authority that defines or resolves a zz code.",
+  // [MICHAEL 2026-10-20] The visible intro ("These are product directions...")
+  // is removed. This line is only the page's search/meta description.
+  description:
+    "Ways to use zzThis handwritten codes: field logistics, postal and parcel, everyday and public uses, and digital aliases.",
 };

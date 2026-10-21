@@ -35,7 +35,7 @@ import { conceptLabels } from "../content/labels";
                   (id) => images[id].status === "concept",
                 ) && <p class="concept-tag">{conceptLabels.standalone}</p>}
                 <h3>{app.title}</h3>
-                <p class="caption">{app.story}</p>
+                {app.story && <p class="caption">{app.story}</p>}
               </div>
             </div>
           </div>

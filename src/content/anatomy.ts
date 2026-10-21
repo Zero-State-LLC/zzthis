@@ -48,6 +48,8 @@ export const languageExamples: readonly LanguageExample[] = [
     gloss: "(light, sky)",
     rtl: "נהורא-שמיא",
   },
+  // [MICHAEL 2026-10-19] Sixth example: copper, lantern, sky.
+  { name: "Russian", code: "zz-медь-фонарь-небо-zz", lang: "ru" },
 ];
 
 export const specimenLabel = "zz-copper-lantern-sky-zz";

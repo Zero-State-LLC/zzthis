@@ -64,6 +64,6 @@ describe("home application presentation", () => {
 
   it("renders roadmap status labels beside the Home and Applications examples", () => {
     expect(topWaysTemplate).toContain("{item.status}");
-    expect(appSectionTemplate).toContain("{app.status}");
+    expect(appSectionTemplate).toContain("app.status &&");
   });
 });

@@ -97,6 +97,12 @@
   object-fit: cover;
 }
 
+/* [MICHAEL 2026-10-20] Side-by-side pairs share one aspect ratio, trimmed from the center. */
+.gal--crop img {
+  aspect-ratio: var(--crop);
+  object-fit: cover;
+}
+
 .gal figcaption {
   display: grid;
   gap: 2px;
