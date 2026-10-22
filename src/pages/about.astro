@@ -41,11 +41,9 @@ const handwrittenSet = [
 
   <section class="block" aria-labelledby="explore-title">
     <h2 id="explore-title">{aboutPage.explorationsHeading}</h2>
-    <p class="label">{aboutPage.prototypeLabel}</p>
     <ul class="explore">
       {prototypes.map((site) => (
         <li>
-          <a href={site.href}>{site.name}</a>
           {site.logo?.srcLight && (
             <img
               class="explore__logo only-light"
@@ -71,7 +69,32 @@ const handwrittenSet = [
               decoding="async"
             />
           )}
-          <p>{site.text}</p>
+          {/* [MICHAEL 2026-10-22] Logo above its link. */}
+          <a href={site.href}>{site.name}</a>
+          <p>
+            <strong>{site.lead}</strong>
+            {site.leadRest}
+          </p>
+          {site.codesIntro && <p>{site.codesIntro}</p>}
+          {site.codes && (
+            <ul class="explore__list">
+              {site.codes.map((item) => (
+                <li>
+                  <code class="code">{item.code}</code>: {item.text}
+                </li>
+              ))}
+            </ul>
+          )}
+          {site.points && (
+            <ul class="explore__list">
+              {site.points.map((point) => (
+                <li>{point}</li>
+              ))}
+            </ul>
+          )}
+          {site.notes?.map((note) => (
+            <p>{note}</p>
+          ))}
         </li>
       ))}
     </ul>

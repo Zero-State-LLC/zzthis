@@ -211,18 +211,29 @@ describe("workflows (spec 3.2 H.4 to H.6)", () => {
 });
 
 describe("About prototypes", () => {
-  it("says zzThat is live", () => {
-    expect(aboutPage.prototypeLabel).toBe(
-      "zzThis is for commercial and government use; zzThat is our free consumer app, and it is live. These are prototypes and explorations; capabilities described as planned are not deployed features.",
-    );
-    expect(aboutPage.prototypeLabel).not.toContain("launching soon");
+  it("summarizes zzThis and zzThat, with zzThat in alpha/beta testing", () => {
+    // [MICHAEL 2026-10-22] The label above the two prototype cards is gone.
+    expect("prototypeLabel" in aboutPage).toBe(false);
     expect(aboutPage.team).toContain("Silicon Valley-based team");
-    expect(aboutPage.team).toContain("dependable solutions");
-    expect(prototypes.find((site) => site.name === "zzthat.com")?.text).toBe(
-      "Working scanner/creator prototype and separate consumer product direction; the Android and iOS apps are live.",
+    expect(aboutPage.team).toContain("dependable and valuable solutions");
+    expect(aboutPage.explorationsHeading).toBe("zzThis and zzThat");
+    const zzthat = prototypes.find((site) => site.name === "zzthat.com");
+    expect(zzthat?.lead).toBe("zzThat is our free consumer app,");
+    expect(zzthat?.points).toEqual([
+      "Working proof-of-concept (POC) prototype; the Android and iOS apps are in alpha/beta testing.",
+      "Our vision and mission includes encouraging and supporting app and blockchain developers, enterprises, and NGOs to build on the zzThis platform or partner with us, so that zzThis is adopted and used worldwide.",
+    ]);
+    const zzthing = prototypes.find(
+      (site) => site.name === "zzthing.com (a demo)",
     );
+    expect(zzthing?.href).toBe("https://zzthing.com");
+    expect(zzthing?.lead).toBe("zzThis is the business-grade version.");
+    expect(zzthing?.codes?.map((item) => item.code)).toEqual([
+      "zz-ai@-agentsmith-zz",
+      "zz-fn-AcmePO-accept-zz",
+    ]);
     expect(demoPlannedApp).toBe(
-      "The zzThat Android and iOS apps are live at zzthat.com.",
+      "The zzThat Android and iOS apps are in alpha/beta testing at zzthat.com.",
     );
     const zzThatReleaseClaims = allStrings.filter((text) =>
       /zzThat/i.test(text),
@@ -276,7 +287,7 @@ describe("top ways (Home section 01)", () => {
     expect(topWays.items.map((item) => item.text)).toEqual([
       "Future workflows to identify and hand off items with handwritten codes, connected to shipping, customs, payment services, and shared ledgers.",
       "Future postal and parcel workflows using handwritten codes as references.",
-      "Community examples include a lost-pet flyer, a moving box, or a garage-sale item. The zzThat Android and iOS apps are live.",
+      "Community examples include a lost-pet flyer, a moving box, or a garage-sale item. The zzThat Android and iOS apps are in alpha/beta testing.",
       "Future integrations to give agents short, readable aliases.",
       "Future integrations to map readable codes to wallets, accounts, smart-contracts, NFTs, agent addresses, and oracles.",
       "Future authorized actions to let a code refer to a command, subject to separate authentication, authorization, and confirmation. The code itself carries no authority.",

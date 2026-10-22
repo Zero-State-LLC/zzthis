@@ -7,7 +7,7 @@ describe("hero and featured statement (spec 3.2, home top 2026-10-14)", () => {
     // [MICHAEL 2026-10-14] New home top: eyebrow, headline, the barcode/QR
     // comparison sub-headline, two photos, no hero buttons, and the roadmap
     // caveats removed from the hero body.
-    expect(hero.eyebrow).toBe("The next evolution of the barcode");
+    expect(hero.eyebrow).toBe("The multimodal evolution of the barcode");
     expect(hero.title).toBe("A barcode/QR code you can write by hand");
     const sub = hero.subline;
     expect(sub.code).toBe("zz-Kathy-found-dog-zz");

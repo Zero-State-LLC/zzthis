@@ -132,6 +132,27 @@ a.pill {
   color: var(--color-ink-2);
 }
 
+.explore p strong {
+  color: var(--color-ink);
+}
+
+/* [MICHAEL 2026-10-22] Bullets and example codes inside a card. */
+.explore .explore__list {
+  display: grid;
+  gap: var(--space-3xs);
+  margin: 0;
+  padding-inline-start: 1.1rem;
+  list-style: disc;
+  font-size: var(--text-sm);
+  color: var(--color-ink-2);
+}
+
+.explore .explore__list li {
+  display: list-item;
+  padding: 0;
+  border: 0;
+}
+
 /* [MICHAEL 2026-10-06 change list] Small zzThat wordmark under zzthat.com.
    Keep the aspect ratio; no background, outline, or shadow. */
 .explore__logo {
