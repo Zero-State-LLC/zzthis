@@ -2,10 +2,22 @@ import { contactEmail } from "./navigation";
 
 export const mailto = `mailto:${contactEmail}`;
 
+export interface PrototypeCode {
+  code: string;
+  text: string;
+}
+
+// [MICHAEL 2026-10-22] Each card is a short summary: a bold lead, the rest of
+// that sentence, then optional example codes, bullet points, and closing lines.
 export interface Prototype {
   name: string;
   href: string;
-  text: string;
+  lead: string;
+  leadRest: string;
+  codesIntro?: string;
+  codes?: readonly PrototypeCode[];
+  points?: readonly string[];
+  notes?: readonly string[];
   logo?: {
     src: string;
     /** Optional light-theme version; `src` is then the dark-theme version. */
@@ -46,13 +58,12 @@ export const aboutPage = {
   intro:
     "An active, open invite to consumer, enterprise, and military logistics partners and engineers.",
   // [MICHAEL 2026-10-19] Team line under the intro, exact wording.
-  team: "zzThis is a Silicon Valley-based team of entrepreneurs, founders, engineers, and professionals with decades of experience in business and finance, IP, logistics, full-stack software, cybersecurity, blockchain and tokenization, and AI. Active in innovation communities, we identify emerging technologies, collaborate, and turn them into dependable solutions for consumers, enterprises, and government.",
+  // [MICHAEL 2026-10-22] Middle expanded: the communities and networks.
+  team: "zzThis is a Silicon Valley-based team of entrepreneurs, founders, engineers, and professionals with decades of experience in business and finance, IP, logistics, full-stack software, cybersecurity, blockchain and tokenization, and AI. Here are unmatched communities, networks, and individuals, from unstructured to structured, with a wide range of perspectives and goals, and the creativity, skills, talent, energy, and resources to act on them. We see new ideas early, get involved, learn, and spot emerging ideas and technologies, then lead, share, or collaborate to turn them into dependable and valuable solutions for consumers, enterprises, and government.",
   contactCardHeading: "Contact",
   contactCardText: "We invite collaboration and test partners.",
-  explorationsHeading: "Current prototypes and explorations",
-  // [MICHAEL 2026-10-07] zzthing.com is replaced by zzthis.com.
-  prototypeLabel:
-    "zzThis is for commercial and government use; zzThat is our free consumer app, and it is live. These are prototypes and explorations; capabilities described as planned are not deployed features.",
+  // [MICHAEL 2026-10-22] Was "Current prototypes and explorations".
+  explorationsHeading: "zzThis and zzThat",
   handwrittenHeading: "Codes written by hand",
   handwrittenLabel: "Real photos of handwritten codes.",
   // [MICHAEL 2026-10-08] One explainer across the three Kathy images.
@@ -109,9 +120,10 @@ export const prototypes: readonly Prototype[] = [
   // [MICHAEL 2026-10-07] zzthis.com replaces zzthing.com, with its wordmark:
   // the same two logos as the header
   // (white "this" on the dark theme, black "this" on the light theme).
+  // [MICHAEL 2026-10-22] Back to zzthing.com, the fuller Lovable demo.
   {
-    name: "zzthis.com",
-    href: "https://zzthis.com",
+    name: "zzthing.com (a demo)",
+    href: "https://zzthing.com",
     logo: {
       src: "images/logos/zzthis-logo-on-dark.webp",
       srcLight: "images/logos/zzthis-logo-on-light.webp",
@@ -120,13 +132,37 @@ export const prototypes: readonly Prototype[] = [
       height: 96,
       alt: "zzThis",
     },
-    // [MICHAEL 2026-10-15] "For business uses: companies, ..."
-    text: "For business uses: companies, enterprises, governments, and defense. Logistics, inventory, and postal workflows, built secure and compliant.",
+    // [MICHAEL 2026-10-22] Business summary, then the zzthing.com demo.
+    lead: "zzThis is the business-grade version.",
+    leadRest:
+      " It’s for companies, enterprises, governments, and military, in logistics, inventory, and postal workflows.",
+    codesIntro:
+      "Beyond tagging things, a zz code can name a trusted party or start an approved action:",
+    codes: [
+      {
+        code: "zz-ai@-agentsmith-zz",
+        text: "a trustable alias for an AI agent",
+      },
+      {
+        code: "zz-fn-AcmePO-accept-zz",
+        text: "accept an Acme purchase order (PO)",
+      },
+    ],
+    notes: [
+      "zzthing.com is our demo proof of concept (POC): a fuller version of zzThis, with sample pages for business, blockchain, and agent use cases.",
+    ],
   },
   {
     name: "zzthat.com",
     href: "https://zzthat.com",
-    text: "Working scanner/creator prototype and separate consumer product direction; the Android and iOS apps are live.",
+    // [MICHAEL 2026-10-22] Consumer summary and the open-use vision.
+    lead: "zzThat is our free consumer app,",
+    leadRest:
+      " our version of the many free barcode and QR code apps and barcode label makers.",
+    points: [
+      "Working proof-of-concept (POC) prototype; the Android and iOS apps are in alpha/beta testing.",
+      "Our vision and mission includes encouraging and supporting app and blockchain developers, enterprises, and NGOs to build on the zzThis platform or partner with us, so that zzThis is adopted and used worldwide.",
+    ],
     logo: zzthatLogos[zzthatLogoVariant],
   },
 ];

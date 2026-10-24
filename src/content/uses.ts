@@ -35,7 +35,7 @@ export const topWays: TopWaysContent = {
       numeral: "03",
       title: "Everyday use: zzThat",
       codes: ["zz-kathy-lost-cat-zz", "zz-moving-box-kitchen-3-zz"],
-      text: "Community examples include a lost-pet flyer, a moving box, or a garage-sale item. The zzThat Android and iOS apps are live.",
+      text: "Community examples include a lost-pet flyer, a moving box, or a garage-sale item. The zzThat Android and iOS apps are in alpha/beta testing.",
     },
     {
       numeral: "04",
