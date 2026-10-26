@@ -35,13 +35,15 @@ export const founderOrigin: Origin = {
 export const founder: Founder = {
   name: "Michael Chung",
   initials: "MC",
-  role: "Founder, new products and business models architect, project lead",
+  // [MICHAEL 2026-10-26] Title and bio replaced as given (third person,
+  // shortened); founderOrigin above is kept for a later founder-story page.
+  role: "Founder; new products and business models architect; project lead",
   photo: {
     src: "images/people/michael-chung.webp",
     width: 440,
     height: 440,
   },
-  bio: founderOrigin.text,
+  bio: "Michael invents business models. In 1992–93 he pitched New York City and initiated a pilot for possibly the world’s first electronic card payment authorizations by municipal or state agencies for motor-vehicle fines and fees; the NYC DMV began accepting cards in 1995, and E-ZPass tolling began in New York State in 1996. In 2001 he filed a patent application describing tagging emails and sorting them into dedicated tabs (Priority, Ads, and Bills), 12 years before Gmail introduced its tabs; it has been cited by 158 patent applications, the majority from leading tech and Fortune companies. His 25 years in real estate include two federal GSA lease awards, one a fixed 10-year lease worth over $9 million. He has worked in blockchain since 2013 and AI since 2023.",
   profileUrl: "https://www.linkedin.com/in/unitynow",
 };
 
@@ -67,7 +69,9 @@ export const advisors: readonly Person[] = [
     initials: "DM",
     // [MICHAEL 2026-10-15] Co-founder added to the title.
     role: "Co-founder, Full-stack development",
-    bio: "Daniel works across front-end and back-end software and supports zzThis application development and integration.",
+    // [MICHAEL 2026-10-26] Zero State sentence added (duplicated on Aaron's
+    // card for now; to be cleaned up later).
+    bio: "Daniel works across front-end and back-end software and supports zzThis application development and integration. He and Aaron founded Zero State LLC, an AI studio building custom agent skills and AI-native apps and installing on-premise AI on NVIDIA, AMD, and Apple Silicon for compliance-focused businesses.",
   },
   {
     name: "Adam Fry",
@@ -78,7 +82,8 @@ export const advisors: readonly Person[] = [
       height: 440,
     },
     role: "AI agents, infrastructure and deployment",
-    bio: "Adam Fry has AI-agent, infrastructure, and deployment expertise based on more than 20 years supporting mission-critical hospital, government, and enterprise systems and developing local AI-agent systems focused on data ownership, auditability, verification, and reliability.",
+    // [MICHAEL 2026-10-26] Bio tightened as given.
+    bio: "Adam has more than 20 years supporting mission-critical hospital, government, and enterprise systems, and develops local AI-agent systems focused on data ownership, auditability, verification, and reliability.",
   },
   {
     name: "Patrick Muggler",
@@ -101,7 +106,8 @@ export const advisors: readonly Person[] = [
       height: 440,
     },
     role: "AI transformation and custom AI agents",
-    bio: "Aaron is a founder-operator and AI transformation leader who turns emerging technology into dependable business systems. Over more than 20 years he has built and exited companies across real estate and regulated markets. He founded Zero State LLC, an AI studio building custom agent skills, the Noema multi-agent world, and AI-native apps such as the iOS game HexWire. He also installs on-premise AI across NVIDIA, AMD, and Apple Silicon for compliance-centric businesses.",
+    // [MICHAEL 2026-10-26] Bio trimmed; Zero State sentence as given.
+    bio: "Aaron is a founder-operator and AI transformation leader with more than 20 years building and exiting companies in real estate and regulated markets. He co-founded Zero State LLC, an AI studio building custom agent skills and AI-native apps and installing on-premise AI on NVIDIA, AMD, and Apple Silicon for compliance-focused businesses.",
   },
   {
     name: "Arshi Chadha",
@@ -109,7 +115,8 @@ export const advisors: readonly Person[] = [
     photo: { src: "images/people/arshi-chadha.webp", width: 440, height: 440 },
     role: "AI security",
     profileUrl: "https://www.linkedin.com/in/arshichadha/",
-    bio: "Arshi is a security engineer at Zscaler and a co-lead of the OWASP Top 10 for LLM Applications work. She earned a master’s degree in information security at Carnegie Mellon. [The OWASP Top 10 for LLM applications is part of the broader OWASP GenAI Security Project, a global initiative to identify and mitigate security risks in generative AI systems, including LLMs, agentic AI, and AI-driven applications.]",
+    // [MICHAEL 2026-10-26] OWASP note folded into the bio.
+    bio: "Arshi is a security engineer at Zscaler and a co-lead of the OWASP Top 10 for LLM Applications, part of the global OWASP GenAI Security Project on risks in generative and agentic AI. She holds a master’s in information security from Carnegie Mellon.",
   },
 ];
 
