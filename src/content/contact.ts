@@ -153,15 +153,15 @@ export const prototypes: readonly Prototype[] = [
     ],
   },
   {
-    name: "zzthat.com",
+    name: "zzthat.com (a demo)",
     href: "https://zzthat.com",
-    // [MICHAEL 2026-10-22] Consumer summary and the open-use vision.
-    lead: "zzThat is our free consumer app,",
+    // [MICHAEL 2026-10-26] Lead, status and goals lines replaced as given.
+    lead: "zzThat is our working proof-of-concept (POC) prototype,",
     leadRest:
       " our version of the many free barcode and QR code apps and barcode label makers.",
     points: [
-      "Working proof-of-concept (POC) prototype; the Android and iOS apps are in alpha/beta testing.",
-      "Our vision and mission includes encouraging and supporting app and blockchain developers, enterprises, and NGOs to build on the zzThis platform or partner with us, so that zzThis is adopted and used worldwide.",
+      "The web, Android and iOS apps are in alpha/beta development and testing.",
+      "Our goals and objectives include supporting and developing solutions, platforms, and tokenization models for app, AI, and blockchain developers, enterprises, and NGOs that partner with us.",
     ],
     logo: zzthatLogos[zzthatLogoVariant],
   },
