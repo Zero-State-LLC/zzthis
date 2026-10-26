@@ -217,11 +217,17 @@ describe("About prototypes", () => {
     expect(aboutPage.team).toContain("Silicon Valley-based team");
     expect(aboutPage.team).toContain("dependable and valuable solutions");
     expect(aboutPage.explorationsHeading).toBe("zzThis and zzThat");
-    const zzthat = prototypes.find((site) => site.name === "zzthat.com");
-    expect(zzthat?.lead).toBe("zzThat is our free consumer app,");
+    // [MICHAEL 2026-10-26] zzThat card relabeled as a demo; lead and points replaced.
+    const zzthat = prototypes.find(
+      (site) => site.name === "zzthat.com (a demo)",
+    );
+    expect(zzthat?.href).toBe("https://zzthat.com");
+    expect(zzthat?.lead).toBe(
+      "zzThat is our working proof-of-concept (POC) prototype,",
+    );
     expect(zzthat?.points).toEqual([
-      "Working proof-of-concept (POC) prototype; the Android and iOS apps are in alpha/beta testing.",
-      "Our vision and mission includes encouraging and supporting app and blockchain developers, enterprises, and NGOs to build on the zzThis platform or partner with us, so that zzThis is adopted and used worldwide.",
+      "The web, Android and iOS apps are in alpha/beta development and testing.",
+      "Our goals and objectives include supporting and developing solutions, platforms, and tokenization models for app, AI, and blockchain developers, enterprises, and NGOs that partner with us.",
     ]);
     const zzthing = prototypes.find(
       (site) => site.name === "zzthing.com (a demo)",

@@ -128,7 +128,7 @@ describe("applications (spec 3.2 H.7 and 3.4)", () => {
       "AI agents, infrastructure and deployment",
     );
     // [MICHAEL 2026-10-06 change list] Adam's bio now reads "has".
-    expect(byName("Adam Fry")?.bio).toMatch(/^Adam Fry has AI-agent/);
+    expect(byName("Adam Fry")?.bio).toMatch(/^Adam has more than 20 years/);
     expect(byName("Adam Fry")?.profileUrl).toBeUndefined();
     for (const name of [
       "Patrick Muggler",
