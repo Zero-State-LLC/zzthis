@@ -142,9 +142,13 @@ describe("applications (spec 3.2 H.7 and 3.4)", () => {
       "Founder; new products and business models architect; project lead",
     );
     // [MICHAEL 2026-10-26] Third-person short bio; founderOrigin kept separately.
-    expect(founder.bio.startsWith("Michael invents business models.")).toBe(true);
+    expect(founder.bio.startsWith("Michael invents business models.")).toBe(
+      true,
+    );
     expect(founderOrigin.text).not.toBe(founder.bio);
-    expect(founderOrigin.text.startsWith("I “invent” business models.")).toBe(true);
+    expect(founderOrigin.text.startsWith("I “invent” business models.")).toBe(
+      true,
+    );
     // [MICHAEL 2026-10-20] One paragraph, four middle-dot section breaks (origin story).
     expect(founderOrigin.text.split(" · ")).toHaveLength(5);
     expect(founderOrigin.text).toContain(

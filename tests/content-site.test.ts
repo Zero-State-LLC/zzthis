@@ -152,9 +152,13 @@ describe("navigation and people", () => {
       "Founder; new products and business models architect; project lead",
     );
     // [MICHAEL 2026-10-26] Third-person short bio; founderOrigin kept separately.
-    expect(founder.bio.startsWith("Michael invents business models.")).toBe(true);
+    expect(founder.bio.startsWith("Michael invents business models.")).toBe(
+      true,
+    );
     expect(founderOrigin.text).not.toBe(founder.bio);
-    expect(founderOrigin.text.startsWith("I “invent” business models.")).toBe(true);
+    expect(founderOrigin.text.startsWith("I “invent” business models.")).toBe(
+      true,
+    );
     expect(founder.photo?.src).toBe("images/people/michael-chung.webp");
     expect(byName("Patrick Muggler")?.photo?.src).toBe(
       "images/people/patrick-muggler.webp",
