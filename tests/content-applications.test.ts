@@ -139,13 +139,15 @@ describe("applications (spec 3.2 H.7 and 3.4)", () => {
       expect(byName(name)?.bio).toBeTruthy();
     }
     expect(founder.role).toBe(
-      "Founder, new products and business models architect, project lead",
+      "Founder; new products and business models architect; project lead",
     );
-    expect(founder.bio.startsWith("I “invent” business models.")).toBe(true);
-    expect(founderOrigin.text).toBe(founder.bio);
-    // [MICHAEL 2026-10-20] One paragraph, four middle-dot section breaks.
-    expect(founder.bio.split(" · ")).toHaveLength(5);
-    expect(founder.bio).toContain(
+    // [MICHAEL 2026-10-26] Third-person short bio; founderOrigin kept separately.
+    expect(founder.bio.startsWith("Michael invents business models.")).toBe(true);
+    expect(founderOrigin.text).not.toBe(founder.bio);
+    expect(founderOrigin.text.startsWith("I “invent” business models.")).toBe(true);
+    // [MICHAEL 2026-10-20] One paragraph, four middle-dot section breaks (origin story).
+    expect(founderOrigin.text.split(" · ")).toHaveLength(5);
+    expect(founderOrigin.text).toContain(
       "8% to 9% of US GDP (Direct Marketing Association)",
     );
     expect(founder.bio).not.toContain("\n");

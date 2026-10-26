@@ -149,10 +149,12 @@ describe("navigation and people", () => {
       expect(byName(name)?.bio).toBeTruthy();
     }
     expect(founder.role).toBe(
-      "Founder, new products and business models architect, project lead",
+      "Founder; new products and business models architect; project lead",
     );
-    expect(founder.bio.startsWith("I “invent” business models.")).toBe(true);
-    expect(founderOrigin.text).toBe(founder.bio);
+    // [MICHAEL 2026-10-26] Third-person short bio; founderOrigin kept separately.
+    expect(founder.bio.startsWith("Michael invents business models.")).toBe(true);
+    expect(founderOrigin.text).not.toBe(founder.bio);
+    expect(founderOrigin.text.startsWith("I “invent” business models.")).toBe(true);
     expect(founder.photo?.src).toBe("images/people/michael-chung.webp");
     expect(byName("Patrick Muggler")?.photo?.src).toBe(
       "images/people/patrick-muggler.webp",
