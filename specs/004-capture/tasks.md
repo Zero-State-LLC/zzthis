@@ -49,7 +49,7 @@ The earlier 91-test verification snapshot above is superseded by the latest loca
 ## Phase 3: ZZ-OCR-QUAL-001
 
 - [ ] T010 Run the fiducial stage plus Apple Vision, ML Kit, and PP-OCR payload candidates under qualification.md against the frozen final corpus where platform execution permits. Produce the machine-readable receipt and Markdown report with version/configuration hashes, device/OS evidence, supported-geometry per-bucket metrics, fail-closed safety-probe outcomes, and PASS/FAIL/INCOMPLETE.
-- [ ] T011 Report every metric required by qualification.md, including fiducial precision/recall, same-baseline pair accuracy, false-finder/false-pair, safe ROI/crop-or-rotation performance, safe-refusal/no-OCR behavior on unsupported geometry and candidate overflow, false-valid-decode, False Accept, no-code false positives, band distribution, crash count, median/p95 latency, and footprint. Keep supported OCR-accuracy denominators separate from negative safety probes. Disposition every False Accept by sample_id; resolver state cannot hide it.
+- [ ] T011 Report every metric required by qualification.md, including fiducial precision/recall, same-baseline pair accuracy, false-finder/false-pair, safe ROI/crop-or-rotation performance, safe-refusal/no-OCR behavior on unsupported geometry and candidate overflow, false-valid-decode, False Accept, no-code false positives, band distribution, crash count, median/p95 latency, and footprint. Keep supported OCR-accuracy denominators separate from negative safety probes. Disposition every False Accept by sample_id; resolver state cannot hide it. Also report negative false valid per class with the one-sided 95% upper bound, false finders by marker glyph, truth-at-any-rank coverage, Clarify rate on positives, and per-writer maxima.
 - [ ] T012 Android promotion decision: choose ML Kit or PP-OCR from ZZ-OCR-QUAL-001 evidence. False-valid-decode behavior is the primary safety metric; generic vendor benchmark claims are not promotion evidence. Record the decision and engine/version pin.
 - [ ] T013 iOS release gate: Apple Vision must pass the same product-level qualification. If it does not, stop and open a replacement-engine decision; do not lower validation requirements to make it pass.
 
@@ -61,7 +61,7 @@ The earlier 91-test verification snapshot above is superseded by the latest loca
 
 ## Deferred v2 — B12 Advanced Recognition (RESEARCH; not active v1 tasks)
 
-- [ ] T017 Evaluate a Qwen-class VLM only as a hard-case verifier behind RecognitionResult; no v1 dependency. Candidate: Scry's Qwen3.8 vision reader on Zero State GPUs (BACKLOG RM-128, D-2026-10-16-01).
+- [ ] T017 Evaluate a VLM only as a hard-case tiebreaker among FR-026 offers, behind RecognitionResult; no v1 or v1.1 dependency. Order: an on-device model, then Scry on Zero State GPUs (RM-128, D-2026-10-16-01 as accepted by D-2026-10-19-04). Start gate: the bench reports the rate of attempts where FR-026 leaves two or more offers. Promote gate: an eligible receipt on the frozen manifest, negative false valid compared first, confirmed-wrong rate on N3 not higher with the VLM on, and Danny's R-B12 exit. Third-party hosted VLMs, including Cloudflare Clef, are not run on the private Q34 corpus.
 - [ ] T018 Evaluate a custom zz-specific recognizer after enough governed data exists. Compare it against the frozen qualification baseline before promotion.
 
 ## Definition of done
