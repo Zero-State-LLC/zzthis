@@ -114,3 +114,11 @@ Source: Michael's 2026-10-13 changes (`intent/2026-10-13-michael-about-aaron-fou
 | path | status | source | notes |
 |---|---|---|---|
 | public/images/people/aaron-godbout.webp | headshot | Aaron Godbout's headshot, supplied by Michael 2026-10-13 | Headshot, Aaron Godbout, 440 by 440, WebP. |
+
+## Changed 2026-11-11 (Michael's team changes)
+
+| path | status | source | notes |
+|---|---|---|---|
+| public/images/people/arshi-chadha.webp | removed | Michael's 2026-11-11 changes | Arshi Chadha is removed from the site, with her headshot [MICHAEL 2026-11-11]. |
+| public/images/people/badri-rajendran.webp | headshot | Badri Rajendran's headshot, supplied by Michael 2026-11-11 | Headshot, Badri Rajendran, 400 by 400, WebP. |
+| public/images/people/nicolas-falliere.webp | headshot | Nicolas Falliere's headshot, supplied by Michael 2026-11-11 | Headshot, Nicolas Falliere, 400 by 400, WebP. |

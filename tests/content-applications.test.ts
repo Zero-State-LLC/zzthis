@@ -66,12 +66,14 @@ describe("applications (spec 3.2 H.7 and 3.4)", () => {
   it("lists the advisors in the 2026-10-13 order, all with initials", () => {
     // [MICHAEL 2026-10-06] Daniel and Adam first. [2026-10-08] Omer removed.
     // [MICHAEL 2026-10-13] Aaron Godbout is the fourth advisor.
+    // [MICHAEL 2026-11-11] Arshi removed; Badri fifth, Nicolas sixth.
     expect(advisors.map((person) => person.name)).toEqual([
       "Daniel Meyer",
       "Adam Fry",
       "Patrick Muggler",
       "Aaron Godbout",
-      "Arshi Chadha",
+      "Badri Rajendran",
+      "Nicolas Falliere",
     ]);
     expect(advisors.every((person) => person.initials !== undefined)).toBe(
       true,
@@ -132,7 +134,8 @@ describe("applications (spec 3.2 H.7 and 3.4)", () => {
     expect(byName("Adam Fry")?.profileUrl).toBeUndefined();
     for (const name of [
       "Patrick Muggler",
-      "Arshi Chadha",
+      "Badri Rajendran",
+      "Nicolas Falliere",
       "Daniel Meyer",
       "Adam Fry",
     ]) {
@@ -159,9 +162,8 @@ describe("applications (spec 3.2 H.7 and 3.4)", () => {
     expect(byName("Patrick Muggler")?.photo?.src).toBe(
       "images/people/patrick-muggler.webp",
     );
-    expect(byName("Arshi Chadha")?.photo?.src).toBe(
-      "images/people/arshi-chadha.webp",
-    );
+    // [MICHAEL 2026-11-11] Arshi Chadha is removed from the site.
+    expect(byName("Arshi Chadha")).toBeUndefined();
     expect(byName("Daniel Meyer")?.photo).toBeUndefined();
     // [MICHAEL 2026-10-06 change list] Adam now has a headshot.
     expect(byName("Adam Fry")?.photo?.src).toBe("images/people/adam-fry.webp");
