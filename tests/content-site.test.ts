@@ -42,12 +42,14 @@ describe("navigation and people", () => {
     // [MICHAEL 2026-10-06 change list] Daniel and Adam move to first.
     // [MICHAEL 2026-10-08] Omer F. Yalcin is removed until his employer
     // gives permission. Aaron Godbout joined on 2026-10-13.
+    // [MICHAEL 2026-11-11] Arshi removed; Badri fifth, Nicolas sixth.
     expect(advisors.map((person) => person.name)).toEqual([
       "Daniel Meyer",
       "Adam Fry",
       "Patrick Muggler",
       "Aaron Godbout",
-      "Arshi Chadha",
+      "Badri Rajendran",
+      "Nicolas Falliere",
     ]);
     expect(advisors.every((person) => person.initials !== undefined)).toBe(
       true,
@@ -142,7 +144,8 @@ describe("navigation and people", () => {
     for (const name of [
       "Patrick Muggler",
       "Aaron Godbout",
-      "Arshi Chadha",
+      "Badri Rajendran",
+      "Nicolas Falliere",
       "Daniel Meyer",
       "Adam Fry",
     ]) {
@@ -163,9 +166,8 @@ describe("navigation and people", () => {
     expect(byName("Patrick Muggler")?.photo?.src).toBe(
       "images/people/patrick-muggler.webp",
     );
-    expect(byName("Arshi Chadha")?.photo?.src).toBe(
-      "images/people/arshi-chadha.webp",
-    );
+    // [MICHAEL 2026-11-11] Arshi Chadha is removed from the site.
+    expect(byName("Arshi Chadha")).toBeUndefined();
     expect(byName("Ridham Bhagat")?.photo).toBeUndefined();
     expect(byName("Daniel Meyer")?.photo).toBeUndefined();
     // [MICHAEL 2026-10-06 change list] Adam now has a headshot.
