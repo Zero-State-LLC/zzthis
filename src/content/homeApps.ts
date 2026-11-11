@@ -9,7 +9,7 @@ import type { ImageMeta } from "./types";
 export interface HomeAppEntry {
   id: ApplicationId;
   title: string;
-  story: string;
+  story?: string;
   wideOnly: boolean;
   images: readonly ImageMeta[];
 }

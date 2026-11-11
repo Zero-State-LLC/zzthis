@@ -136,7 +136,7 @@ export const images = {
     src: "images/panels/h-lost-cat.webp",
     width: 1600,
     height: 902,
-    title: "Everyday and community",
+    title: "Everyday, community, and public",
     shortCopy: "Lost-cat flyer.",
     alt: "Lost-cat flyer with zz-kathy-lost-cat-zz being scanned by a phone.",
     caption: "Lost-cat flyer with handwritten code.",
@@ -266,7 +266,7 @@ export const images = {
     src: "images/panels/q-relief-shared-naming.webp",
     width: 1672,
     height: 941,
-    title: "One uber naming layer across organizations",
+    title: "One shared naming layer across organizations",
     shortCopy: "Volunteers, engineers, and relief groups marking the same way.",
     alt: "Disaster recovery site where volunteer builders, an engineering corps, and a relief service have marked lumber, a tool chest, and supply pallets with zz-porch-lumber-zz, zz-repair-tools-zz, and zz-community-supplies-zz.",
     caption:

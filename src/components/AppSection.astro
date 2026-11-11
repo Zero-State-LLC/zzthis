@@ -37,19 +37,21 @@ function isConcept(id: ImageId): boolean {
 
 <section class="app-sec" id={app.id} aria-labelledby={`${app.id}-title`}>
   <h2 id={`${app.id}-title`}>{app.title}</h2>
-  <p class="label">{app.status}</p>
-  <p class="app-sec__story">{app.story}</p>
+  {app.status && <p class="label">{app.status}</p>}
+  {app.story && <p class="app-sec__story">{app.story}</p>}
   {app.pageExtra && <p class="app-sec__extra">{app.pageExtra}</p>}
-  <ul class={pageClass(app.pageImages.length)}>
-    {app.pageImages.map((id) => (
-      <li>
-        <Figure
-          id={id}
-          concept={app.pageImages.length === 1 && isConcept(id)}
-        />
-      </li>
-    ))}
-  </ul>
+  {app.pageImages.length > 0 && (
+    <ul class={pageClass(app.pageImages.length)}>
+      {app.pageImages.map((id) => (
+        <li>
+          <Figure
+            id={id}
+            concept={app.pageImages.length === 1 && isConcept(id)}
+          />
+        </li>
+      ))}
+    </ul>
+  )}
   {app.pageGalleries?.map((gallery) => {
     const allReal = gallery.items.every((item) => isReal(item.image));
     const anyConcept = gallery.items.some((item) => isConcept(item.image));
@@ -88,7 +90,13 @@ function isConcept(id: ImageId): boolean {
             ))}
           </ul>
         ) : (
-          <ul class={galleryClass(gallery.items.length, gallery.columns)}>
+          <ul
+            class:list={[
+              galleryClass(gallery.items.length, gallery.columns),
+              { "gal--crop": Boolean(gallery.crop) },
+            ]}
+            style={gallery.crop ? `--crop: ${gallery.crop}` : undefined}
+          >
             {gallery.items.map((item) => (
               <li>
                 <Figure

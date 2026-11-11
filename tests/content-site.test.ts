@@ -42,12 +42,14 @@ describe("navigation and people", () => {
     // [MICHAEL 2026-10-06 change list] Daniel and Adam move to first.
     // [MICHAEL 2026-10-08] Omer F. Yalcin is removed until his employer
     // gives permission. Aaron Godbout joined on 2026-10-13.
+    // [MICHAEL 2026-11-11] Arshi removed; Badri fifth, Nicolas sixth.
     expect(advisors.map((person) => person.name)).toEqual([
       "Daniel Meyer",
       "Adam Fry",
       "Patrick Muggler",
       "Aaron Godbout",
-      "Arshi Chadha",
+      "Badri Rajendran",
+      "Nicolas Falliere",
     ]);
     expect(advisors.every((person) => person.initials !== undefined)).toBe(
       true,
@@ -137,29 +139,35 @@ describe("navigation and people", () => {
       "AI agents, infrastructure and deployment",
     );
     // [MICHAEL 2026-10-06 change list] Adam's bio now reads "has".
-    expect(byName("Adam Fry")?.bio).toMatch(/^Adam Fry has AI-agent/);
+    expect(byName("Adam Fry")?.bio).toMatch(/^Adam has more than 20 years/);
     expect(byName("Adam Fry")?.profileUrl).toBeUndefined();
     for (const name of [
       "Patrick Muggler",
       "Aaron Godbout",
-      "Arshi Chadha",
+      "Badri Rajendran",
+      "Nicolas Falliere",
       "Daniel Meyer",
       "Adam Fry",
     ]) {
       expect(byName(name)?.bio).toBeTruthy();
     }
     expect(founder.role).toBe(
-      "Founder, new products and business models architect, project lead",
+      "Founder; new products and business models architect; project lead",
     );
-    expect(founder.bio.startsWith("I “invent” business models.")).toBe(true);
-    expect(founderOrigin.text).toBe(founder.bio);
+    // [MICHAEL 2026-10-26] Third-person short bio; founderOrigin kept separately.
+    expect(founder.bio.startsWith("Michael invents business models.")).toBe(
+      true,
+    );
+    expect(founderOrigin.text).not.toBe(founder.bio);
+    expect(founderOrigin.text.startsWith("I “invent” business models.")).toBe(
+      true,
+    );
     expect(founder.photo?.src).toBe("images/people/michael-chung.webp");
     expect(byName("Patrick Muggler")?.photo?.src).toBe(
       "images/people/patrick-muggler.webp",
     );
-    expect(byName("Arshi Chadha")?.photo?.src).toBe(
-      "images/people/arshi-chadha.webp",
-    );
+    // [MICHAEL 2026-11-11] Arshi Chadha is removed from the site.
+    expect(byName("Arshi Chadha")).toBeUndefined();
     expect(byName("Ridham Bhagat")?.photo).toBeUndefined();
     expect(byName("Daniel Meyer")?.photo).toBeUndefined();
     // [MICHAEL 2026-10-06 change list] Adam now has a headshot.
@@ -199,15 +207,18 @@ describe("application galleries", () => {
       ["app-super-identifier", "app-postage-letters"],
       ["app-delivery-1", "app-delivery-2", "app-delivery-3", "app-delivery-4"],
     ]);
+    // [MICHAEL 2026-10-20] Lost cat + trail marker lead as a pair; the
+    // U-Haul concept pair closes the page; aliases are one side-by-side pair.
     expect(ids("community")).toEqual([
+      ["h", "app-trail-marker"],
       ["app-for-sale", "app-help-wanted", "app-event-cancelled"],
       ["app-connect", "app-shop-pay", "app-donate"],
-      ["app-trail-marker"],
       ["app-share", "app-community", "app-handwritten-works"],
       ["app-tape-before", "app-tape-after"],
       ["app-truck-before", "app-truck-after"],
+      ["app-uhaul-door", "app-uhaul-scan"],
     ]);
-    expect(ids("aliases")).toEqual([["app-wallet-ens"]]);
+    expect(ids("aliases")).toEqual([["i", "app-wallet-ens"]]);
   });
 
   it("ships every app image under public and at most 2 MB", () => {

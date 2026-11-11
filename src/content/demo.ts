@@ -41,7 +41,7 @@ export const demoPrototypeLinks: readonly {
 ];
 
 export const demoPlannedApp =
-  "The zzThat Android and iOS apps are live at zzthat.com.";
+  "The zzThat Android and iOS apps are in alpha/beta testing at zzthat.com.";
 
 export const demoTryHeading = "Try a workflow";
 

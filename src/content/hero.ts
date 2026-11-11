@@ -36,7 +36,8 @@ export interface LinkBlock extends TextBlock {
 // [MICHAEL 2026-10-15] Sub-headline ends with the barcode start and end bars
 // and the QR corner squares.
 export const hero: HeroContent = {
-  eyebrow: "The next evolution of the barcode",
+  // [MICHAEL 2026-10-22] Eyebrow adds multimodal: write, scan, speak.
+  eyebrow: "The multimodal evolution of the barcode",
   title: "A barcode/QR code you can write by hand",
   subline: {
     before:
@@ -76,7 +77,9 @@ export const hero: HeroContent = {
       variant: "secondary",
     },
   ],
-  imageCaption: "Word code on blue tape beside an obscured barcode.",
+  // [MICHAEL 2026-10-18] Same caption as image b.
+  imageCaption:
+    "The zzThis word code augments or replaces an obscured barcode.",
 };
 
 // [MICHAEL 2026-10-14] "How it works - consumer" block, right under the hero.

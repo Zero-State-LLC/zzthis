@@ -70,14 +70,20 @@ describe("B v1.0 copy locks", () => {
     expect(shown).toContain("Attached (demo image)");
   });
 
-  it("keeps the confirmed Korean, Japanese, and Aramaic examples", () => {
+  it("keeps the confirmed Korean, Japanese, Aramaic, and Russian examples", () => {
     expect(languageExamples.map((example) => example.name)).toEqual([
       "Korean",
       "Japanese",
       "German",
       "French",
       "Aramaic",
+      "Russian",
     ]);
+    expect(languageExamples[5]).toEqual({
+      name: "Russian",
+      code: "zz-медь-фонарь-небо-zz",
+      lang: "ru",
+    });
     expect(languageExamples[0]).toEqual({
       name: "Korean",
       code: "zz-구리-등불-하늘-zz",
