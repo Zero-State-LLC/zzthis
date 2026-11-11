@@ -98,6 +98,29 @@ Full records: [decisions-2026-10-13.md](decisions-2026-10-13.md). Rows in docs/S
 | D-2026-10-13-08 | Operator account deletion and data-subject requests | ACCEPTED | Michael for the `account.id` copy |
 | D-2026-10-13-09 | Unknown enum values gate the first store build | ACCEPTED | - |
 
+## Decisions recorded 2026-10-19
+
+Full records: [decisions-2026-10-19.md](decisions-2026-10-19.md). Rows in docs/SPEC.md Section 9a. Evidence: [analysis-2026-10-19-ocr-spec-audit.md](analysis-2026-10-19-ocr-spec-audit.md).
+
+| ID | Subject | Status | Owner of any pending yes |
+|---|---|---|---|
+| D-2026-10-19-01 | Negative false valid is the primary v1.1 safety gate (`ZZ-OCR-QUAL-002`) | ADOPTED (Danny, 2026-10-19) | Implementation pull request for the protocol bump |
+| D-2026-10-19-02 | Upper-bound thresholds: 0.1% per entry, 1% per class, per-writer maximum | ADOPTED (Danny, 2026-10-19) | - |
+| D-2026-10-19-03 | Bench: 60 final and 30 tuning writers | ADOPTED (Danny, 2026-10-19) | - |
+| D-2026-10-19-04 | VLM v2 tiebreaker only; accepts D-2026-10-16-01 narrowed; no third-party host on the private corpus | ADOPTED (Danny, 2026-10-19) | - |
+| D-2026-10-19-05 | Android classify fallback becomes `prod-v1` | ADOPTED (Danny, 2026-10-19) | Waits for `prod-v1` |
+| D-2026-10-19-06 | FR-017 online check sends the canonical code only | ADOPTED (Danny, 2026-10-19) | - |
+| D-2026-10-19-07 | Clarify shows candidates and offers, not raw rank-2+ strings | ADOPTED (Danny, 2026-10-19) | - |
+| D-2026-10-19-08 | No `fixture-7` in release app bundles | ADOPTED (Danny, 2026-10-19) | zzThat implementation |
+| D-2026-10-19-09 | Public claim boundaries | ADOPTED (Danny, 2026-10-19) | - |
+| D-2026-10-19-10 | Tolerant markers `marker-confusion-v1` (P-1) | PROPOSED | Prabu |
+| D-2026-10-19-11 | Declared joint decoder layer (P-2) | PROPOSED | Prabu |
+| D-2026-10-19-12 | zzThat #102 fallback recast (P-3) | PROPOSED | Prabu |
+| D-2026-10-19-13 | Wordlist (version, SHA-256) allowlist (P-4) | PROPOSED | Prabu |
+| D-2026-10-19-14 | Negative classes N5 and N7 (P-5) | PROPOSED | Prabu |
+| D-2026-10-19-15 | Write check on a tolerant pair (P-6) | PROPOSED | Prabu |
+| D-2026-10-19-16 | Meaning of "snapped" (P-7) | PROPOSED | Prabu |
+
 ## Genuinely open or evidence-gated
 
 | Item | Owner/evidence | Blocking effect |

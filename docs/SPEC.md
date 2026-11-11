@@ -312,7 +312,7 @@ The parser returns exactly one reason. When several apply, it returns the first 
 
 Handwriting and cameras confuse 0/o, 1/l/i, 5/s, 2/z, and 8/b, and Michael agrees these lookalikes are confusing [MICHAEL 2026-10-03 #44]. He wants firm rules later; until then, v1 uses this key (INFERRED from the issue #44 proposal, which he answered "yes"):
 
-1. Start from the canonical form (G2). The key is internal; the code is still stored and shown in canonical form. The key covers the parts only; the markers are not part of it (INFERRED, D-2026-10-04-09).
+1. Start from the canonical form (G2). The key is internal; the code is still stored and shown in canonical form. The key covers the parts only; the markers are not part of it (INFERRED, D-2026-10-04-09). **PENDING P-1 (default: adopt `marker-confusion-v1` with the exact-first, outer-end, and Clarify-cap rules; Prabu decides, D-2026-10-19-10).** Camera marker detection may use the z/2 lookalike to locate markers (spec 004 FR-024); this matching key still never covers markers, and a code is never rewritten.
 2. Number words `zero` to `nine` become digits, so `zz-bravo-one-two-three-four-zz` and `zz-bravo-1-2-3-4-zz` match. Michael writes field numbers both ways [MICHAEL 2026-10-03 #44].
 3. Lookalikes fold to one character: `o` to `0`; `i` and `l` to `1`; `s` to `5`; `z` to `2`; `b` to `8` (like Crockford base32).
 4. A run of consecutive all-digit parts joins into one part, so `1-2-3-4` and `1234` match. This runs after the fold, so a lookalike inside a number run still joins (INFERRED, D-2026-10-04-09).
@@ -1259,6 +1259,22 @@ One running list of decisions, so every agent and advisor works from the same ru
 
 | ID | Date | Issue | Decision | Source |
 |---|---|---|---|---|
+| D-2026-10-19-16 | 2026-10-19 | - | PROPOSED (Prabu): Meaning of "snapped". | [decisions-2026-10-19](../specs/decisions-2026-10-19.md) |
+| D-2026-10-19-15 | 2026-10-19 | - | PROPOSED (Prabu): Write check on a tolerant pair. | [decisions-2026-10-19](../specs/decisions-2026-10-19.md) |
+| D-2026-10-19-14 | 2026-10-19 | - | PROPOSED (Prabu): Negative classes N5 and N7. | [decisions-2026-10-19](../specs/decisions-2026-10-19.md) |
+| D-2026-10-19-13 | 2026-10-19 | - | PROPOSED (Prabu): Wordlist (version, SHA-256) allowlist (spec 003 FR-025). | [decisions-2026-10-19](../specs/decisions-2026-10-19.md) |
+| D-2026-10-19-12 | 2026-10-19 | - | PROPOSED (Prabu): zzThat #102 fallback recast. | [decisions-2026-10-19](../specs/decisions-2026-10-19.md) |
+| D-2026-10-19-11 | 2026-10-19 | - | PROPOSED (Prabu): Declared joint decoder layer (spec 004 FR-026). | [decisions-2026-10-19](../specs/decisions-2026-10-19.md) |
+| D-2026-10-19-10 | 2026-10-19 | - | PROPOSED (Prabu): Tolerant markers `marker-confusion-v1`. | [decisions-2026-10-19](../specs/decisions-2026-10-19.md) |
+| D-2026-10-19-09 | 2026-10-19 | - | ADOPTED (Danny, 2026-10-19): Public claim boundaries (spec 004 qualification.md). | [decisions-2026-10-19](../specs/decisions-2026-10-19.md) |
+| D-2026-10-19-08 | 2026-10-19 | - | ADOPTED (Danny, 2026-10-19): No `fixture-7` in release app bundles; Demo uses it for exact lookup only. | [decisions-2026-10-19](../specs/decisions-2026-10-19.md) |
+| D-2026-10-19-07 | 2026-10-19 | - | ADOPTED (Danny, 2026-10-19): Clarify shows candidates and offers, not raw rank-2+ engine strings. | [decisions-2026-10-19](../specs/decisions-2026-10-19.md) |
+| D-2026-10-19-06 | 2026-10-19 | - | ADOPTED (Danny, 2026-10-19): FR-017 online uniqueness check sends the canonical code only. | [decisions-2026-10-19](../specs/decisions-2026-10-19.md) |
+| D-2026-10-19-05 | 2026-10-19 | - | ADOPTED (Danny, 2026-10-19): Android classify fallback becomes `prod-v1` when it exists. | [decisions-2026-10-19](../specs/decisions-2026-10-19.md) |
+| D-2026-10-19-04 | 2026-10-19 | - | ADOPTED (Danny, 2026-10-19): VLM is a v2 tiebreaker only; accepts D-2026-10-16-01 narrowed; no third-party host on the private corpus. | [decisions-2026-10-19](../specs/decisions-2026-10-19.md) |
+| D-2026-10-19-03 | 2026-10-19 | - | ADOPTED (Danny, 2026-10-19): Bench: at least 60 final and 30 tuning writers. | [decisions-2026-10-19](../specs/decisions-2026-10-19.md) |
+| D-2026-10-19-02 | 2026-10-19 | - | ADOPTED (Danny, 2026-10-19): Upper-bound thresholds: 0.1% per device entry, 1% per class, plus a per-writer maximum. | [decisions-2026-10-19](../specs/decisions-2026-10-19.md) |
+| D-2026-10-19-01 | 2026-10-19 | - | ADOPTED (Danny, 2026-10-19): Negative false valid (N1 to N7) is the primary v1.1 safety gate; protocol `ZZ-OCR-QUAL-002`. | [decisions-2026-10-19](../specs/decisions-2026-10-19.md) |
 | D-2026-10-13-09 | 2026-10-13 | #170 | ACCEPTED (Danny, 2026-10-14, #170): Unknown enum values gate the first store build: zzThat's unknown-enum tolerance (RM-075, zzThat #54) is P0 for v1.1; until it passes, no new value in any existing response enum within contract 1 (`docs/CONTRACT-EVOLUTION.md`). | [`specs/decisions-2026-10-13.md`](../specs/decisions-2026-10-13.md) |
 | D-2026-10-13-08 | 2026-10-13 | #170 | ACCEPTED (Danny, 2026-10-14, #170): Operator account deletion with `ops/delete-account.sql` (FR-023 step 2 batch, `account.delete` with no actor, Apple token queued in `pending_revocations`); identity check by the account id on `/account/` (copy key `account.id`, pending Michael); access requests answered as JSON; restores re-insert `audit_events` and `pending_revocations` written after the target (RM-023, RM-027). | [`specs/decisions-2026-10-13.md`](../specs/decisions-2026-10-13.md) |
 | D-2026-10-13-07 | 2026-10-13 | #170 | ACCEPTED (Danny, 2026-10-14, #170): The production wordlist `prod-v1`: filter 3 drops every English cardinal number word; filter 4 shape keys from `confusable-v1.json` (letter groups pending Michael); filter 5 Double Metaphone primary codes; earlier word in sort order kept; blocklist from `ZZ_BLOCKLIST_FILE` after filter 6 and before the prime cut, reported as count and SHA-256 only; CI subsequence check; production accepts only `prod-v1`; freeze cites the D-2026-10-10-04 risk acceptance (spec 003, RM-020). | [`specs/decisions-2026-10-13.md`](../specs/decisions-2026-10-13.md) |
@@ -1387,10 +1403,10 @@ flowchart LR
 
 AI reads, grammar verifies [OPERATOR 2026-10-02].
 
-1. Recognition runs on the device with an AI vision model, preferably a small on-device model [OPERATOR 2026-10-02]; Apple Vision is the iOS baseline, and the Android engine choice is gated by qualification on a shared frozen corpus (merged in #89).
+1. Recognition runs on the device with an AI vision model, preferably a small on-device model [OPERATOR 2026-10-02]; Apple Vision is the iOS baseline, and the Android engine choice is gated by qualification on a shared frozen corpus (merged in #89). In v1 this means a text recognizer (Apple Vision, ML Kit, or PP-OCR); VLM readers are v2 (spec 004 Q18, D-2026-10-19-04).
 2. Only the decoded code goes to the API. The photo stays on the device by default [OPERATOR 2026-10-02]; raw scan photos stay on-device in v1.
 3. There is no cloud or server vision fallback in v1: no cloud reader, and `photo_reads` stays false. A server read is a v2.2 research item (B12). The older operator note that photos go to the server on a retry or a hard case [OPERATOR 2026-10-02] is superseded for v1.
-4. Every model read, on device or in the cloud, is snapped to the closed wordlist, and the checksum word is verified [OPERATOR 2026-10-02]. Every candidate also passes the shared grammar and check-word validation before lookup.
+4. Every model read, on device or in the cloud, is snapped to the closed wordlist, and the checksum word is verified [OPERATOR 2026-10-02]. Every candidate also passes the shared grammar and check-word validation before lookup. **PENDING P-7 (default: "snapped" means per-part wordlist candidates plus FR-026 offers when enabled, never an automatic replacement; Prabu decides, D-2026-10-19-16).** Snapping means per-part wordlist candidates, plus spec 004 FR-026 whole-code offers when enabled; it is never an automatic replacement.
 5. Low-confidence reads go to clarify, rescan, or abstain, with a human confirm step, using the decision bands in Section 2.5 [OPERATOR 2026-10-02] [PRODUCT]; thresholds require measured qualification evidence.
 
 Apple Vision is the iOS baseline; Android engine selection remains gated on the qualification corpus. The remaining Option B benchmark is a v2 candidate, not a v1 requirement.
