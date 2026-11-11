@@ -59,6 +59,8 @@ export const founder: Founder = {
 // using the Q72-approved bio with no closing line (D-2026-10-07-03).
 // [MICHAEL 2026-10-13] Aaron Godbout added as the fourth advisor, with
 // headshot and the bio Michael chose on 2026-10-09; no profile link.
+// [MICHAEL 2026-11-11] Arshi Chadha removed from the site, with her
+// photo. Badri Rajendran added fifth; Nicolas Falliere added sixth.
 // Earlier: Profile links only where a URL
 // was supplied. The 2026-10-02 brief and wireframes drop the Future space
 // card. Michael's later 2026-10-02 answers remove Jim White and update
@@ -110,13 +112,32 @@ export const advisors: readonly Person[] = [
     bio: "Aaron is a founder-operator and AI transformation leader with more than 20 years building and exiting companies in real estate and regulated markets. He co-founded Zero State LLC, an AI studio building custom agent skills and AI-native apps and installing on-premise AI on NVIDIA, AMD, and Apple Silicon for compliance-focused businesses.",
   },
   {
-    name: "Arshi Chadha",
-    initials: "AC",
-    photo: { src: "images/people/arshi-chadha.webp", width: 440, height: 440 },
-    role: "AI security",
-    profileUrl: "https://www.linkedin.com/in/arshichadha/",
-    // [MICHAEL 2026-10-26] OWASP note folded into the bio.
-    bio: "Arshi is a security engineer at Zscaler and a co-lead of the OWASP Top 10 for LLM Applications, part of the global OWASP GenAI Security Project on risks in generative and agentic AI. She holds a master’s in information security from Carnegie Mellon.",
+    name: "Badri Rajendran",
+    initials: "BR",
+    photo: {
+      src: "images/people/badri-rajendran.webp",
+      width: 400,
+      height: 400,
+    },
+    // [MICHAEL 2026-11-11] Added in the fifth place; title and profile link
+    // as given; prose bio approved by Michael; headshot supplied by Michael.
+    role: "AI Engineer",
+    profileUrl: "https://www.linkedin.com/in/badri-rajendran/",
+    bio: "Badri is a generative AI engineer who ships production AI. He builds agents, retrieval-augmented generation (RAG) systems, and LLM evaluations; fine-tunes and serves models with PyTorch, Hugging Face, and vLLM; and builds data pipelines and MLOps. He also works full-stack in Python, Java, and React. He holds a master’s in computer science from Stevens Institute of Technology.",
+  },
+  {
+    name: "Nicolas Falliere",
+    initials: "NF",
+    photo: {
+      src: "images/people/nicolas-falliere.webp",
+      width: 400,
+      height: 400,
+    },
+    // [MICHAEL 2026-11-08] Title and bio exactly as given (the 2026-11-08
+    // patch was not applied; carried here). Headshot supplied by Michael.
+    role: "Founder and architect of JEB Decompiler at PNF Software",
+    profileUrl: "https://www.linkedin.com/in/nfalliere/",
+    bio: "Thousands of customers worldwide use JEB (a decompiler and code-analysis platform) to reverse engineer state-of-the-art malware or perform code audits. Customers include: domestic and foreign government agencies, defense contractors, anti-virus vendors, security consultants, research labs and universities, and large technology companies, including financial institutions. Previously a security researcher at Symantec, Nicolas was a lead analyst of high-profile threats including Stuxnet and Duqu.",
   },
 ];
 
